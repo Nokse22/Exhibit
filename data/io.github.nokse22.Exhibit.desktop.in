@@ -4,5 +4,5 @@ Exec=exhibit
 Icon=io.github.nokse22.Exhibit
 Terminal=false
 Type=Application
-Categories=GTK;
+Categories=GTK;Graphics;Science;
 StartupNotify=true
