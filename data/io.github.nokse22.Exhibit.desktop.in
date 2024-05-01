@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=viewer3d
+Exec=viewer3d
+Icon=io.github.nokse22.Exhibit
+Terminal=false
+Type=Application
+Categories=GTK;
+StartupNotify=true

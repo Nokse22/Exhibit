@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   height="16px"
+   viewBox="0 0 16 16"
+   width="16px"
+   version="1.1"
+   id="svg6"
+   sodipodi:docname="perspective-symbolic.svg"
+   inkscape:version="1.3.2 (091e20ef0f, 2023-11-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs6" />
+  <sodipodi:namedview
+     id="namedview6"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="47.75"
+     inkscape:cx="7.9895288"
+     inkscape:cy="8"
+     inkscape:window-width="1920"
+     inkscape:window-height="1011"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg6" />
+  <g
+     fill="none"
+     stroke="#241f31"
+     stroke-linecap="round"
+     stroke-width="2.472162"
+     id="g6">
+    <path
+       d="m 1.73042577803 3.42575679999 l 6.17968683694 2.8593742619 l 6.17968560086 -2.8593742619 m -2.65234305521 2.60156113948"
+       id="path1"
+       style="stroke:#000000;stroke-opacity:1;stroke-width:1.872;stroke-dasharray:none" />
+    <path
+       d="m 3.37495738367 11.07809817952 l 4.5351552313 2.91796820954 l 4.5351552313 -2.80078031426"
+       id="path2"
+       style="stroke:#000000;stroke-opacity:1;stroke-width:1.872;stroke-dasharray:none" />
+    <path
+       d="m 14.08979821583 3.42575679999 l -1.64453036956 7.76952927482"
+       id="path3"
+       style="stroke:#000000;stroke-opacity:1;stroke-width:1.872;stroke-dasharray:none" />
+    <path
+       d="m 1.73042577803 3.42575679999 l 1.64453160564 7.65234137953"
+       id="path4"
+       style="stroke:#000000;stroke-opacity:1;stroke-width:1.872;stroke-dasharray:none" />
+    <path
+       d="m 7.91011261497 6.28513106189 v 7.71093532717 m 1.45703047875 -2.80468633022"
+       id="path5"
+       style="stroke:#000000;stroke-opacity:1;stroke-width:1.872;stroke-dasharray:none" />
+    <path
+       d="m 14.08979821583 3.42575679999 l -6.2382795485 -1.23437520822 l -6.1210928893 1.23437520822"
+       id="path6"
+       style="stroke:#000000;stroke-opacity:1;stroke-width:1.872;stroke-dasharray:none" />
+  </g>
+</svg>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="viewer3d">
+	<schema id="io.github.nokse22.Exhibit" path="/io/github/nokse22/Viewer3D/">
+	</schema>
+</schemalist>
