@@ -48,18 +48,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.options = {
             "scene.up-direction": "+Y",
-            "render.raytracing.enable": False,
             "render.background.color": [1.0, 1.0, 1.0],
-            "render.grid.enable": True,
-            "render.effect.tone-mapping": False,
-            "render.effect.ambient-occlusion": False,
-            "render.effect.anti-aliasing": False,
-            "render.effect.translucency-support": False,
-            "scene.animation.index": -1,
-            "scene.animation.autoplay": True,
-            "ui.bar": True,
-            "render.show-edges": False,
-            "render.hdri.ambient": True
         }
 
         self.engine = Engine(Window.EXTERNAL)
@@ -138,14 +127,14 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.open_button.set_sensitive(False)
             self.stack.set_visible_child_name("3d_page")
 
-            options = {
-                "render.effect.tone-mapping": True,
-                "render.effect.ambient-occlusion": True,
-                "render.effect.anti-aliasing": True,
-                "render.effect.translucency-support": True,
-            }
+            # options = {
+            #     "render.effect.tone-mapping": True,
+            #     "render.effect.ambient-occlusion": True,
+            #     "render.effect.anti-aliasing": True,
+            #     "render.effect.translucency-support": True,
+            # }
 
-            self.engine.options.update(options)
+            # self.engine.options.update(options)
 
             self.gl_area.queue_render()
 
