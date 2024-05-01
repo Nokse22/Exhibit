@@ -96,10 +96,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def on_scroll(self, gesture, dx, dy):
         if (dy == -1.0):
             self.camera.dolly(1.1)
-            print("dolling", 1.1)
         elif (dy == 1.0):
             self.camera.dolly(0.9)
-            print("dolling", 0.9)
 
         self.gl_area.queue_render()
 

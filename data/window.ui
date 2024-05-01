@@ -98,7 +98,7 @@ suggested-action</property>
                         <property name="description">Open a file to view it in 3D</property>
                         <property name="hexpand">True</property>
                         <property name="hexpand-set">True</property>
-                        <property name="icon-name">folder-drag-accept-symbolic</property>
+                        <property name="icon-name">io.github.nokse22.Exhibit</property>
                         <property name="title">Exhibit</property>
                         <property name="vexpand">True</property>
                       </object>
