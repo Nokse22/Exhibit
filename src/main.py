@@ -25,6 +25,7 @@ gi.require_version('Adw', '1')
 
 from gi.repository import Gtk, Gio, Adw
 from .window import Viewer3dWindow
+from .preferences import Preferences
 
 
 class Viewer3dApplication(Adw.Application):
@@ -37,7 +38,8 @@ class Viewer3dApplication(Adw.Application):
         self.create_action('about', self.on_about_action)
         self.create_action('preferences', self.on_preferences_action)
         self.create_action('play-animation', self.on_play_animation, ['space'])
-        self.create_action('save-as-image', self.on_save_as_image_action)
+        self.create_action('save-as-image', self.on_save_as_image_action, ['<primary>s'])
+        self.create_action('toggle-grid', self.on_toggle_grid_action, ['<primary>g'])
 
     def do_activate(self):
         """Called when the application is activated.
@@ -52,18 +54,26 @@ class Viewer3dApplication(Adw.Application):
 
     def on_about_action(self, widget, _):
         """Callback for the app.about action."""
-        about = Adw.AboutWindow(transient_for=self.props.active_window,
-                                application_name='exhibit',
+        about = Adw.AboutDialog(
+                                application_name='Exhibit',
                                 application_icon='io.github.nokse22.Exhibit',
                                 developer_name='Nokse22',
                                 version='0.1.0',
+                                website='https://github.com/Nokse22/Exhibit',
+                                issue_url='https://github.com/Nokse22/Exhibit/issues',
                                 developers=['Nokse22'],
                                 copyright='© 2024 Nokse22')
-        about.present()
+
+        about.present(self.win)
 
     def on_preferences_action(self, widget, _):
         """Callback for the app.preferences action."""
-        print('app.preferences action activated')
+
+        preferences = Preferences()
+
+        self.win.settings.bind("view-grid", preferences.grid_switch, "active", Gio.SettingsBindFlags.DEFAULT)
+
+        preferences.present(self.win)
 
     def create_action(self, name, callback, shortcuts=None):
         """Add an application action.
@@ -85,6 +95,9 @@ class Viewer3dApplication(Adw.Application):
 
     def on_save_as_image_action(self, *args):
         self.win.open_save_file_chooser()
+
+    def on_toggle_grid_action(self, *args):
+        self.win.toggle_grid()
 
 def main(version):
     """The application's entry point."""

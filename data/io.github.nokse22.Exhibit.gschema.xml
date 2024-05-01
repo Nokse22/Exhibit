@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="exhibit">
 	<schema id="io.github.nokse22.Exhibit" path="/io/github/nokse22/Viewer3D/">
+	  <key name="view-grid" type="b">
+      <default>true</default>
+    </key>
+	  <key name="orthographic" type="b">
+      <default>false</default>
+    </key>
 	</schema>
 </schemalist>

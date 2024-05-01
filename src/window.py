@@ -19,12 +19,13 @@
 
 import gi
 from gi.repository import Adw
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk, Gdk, Gio
 
 import f3d
 from f3d import *
 
 import math
+import os
 
 @Gtk.Template(resource_path='/io/github/nokse22/Exhibit/window.ui')
 class Viewer3dWindow(Adw.ApplicationWindow):
@@ -36,8 +37,14 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     open_button = Gtk.Template.Child()
     stack = Gtk.Template.Child()
 
+    view_button_headerbar = Gtk.Template.Child()
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
+        self.settings = Gio.Settings.new('io.github.nokse22.Exhibit')
+
+        self.settings.connect("notify::view-grid", self.toggle_grid)
 
         self.options = {
             "scene.up-direction": "+Y",
@@ -66,6 +73,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.camera.setFocalPoint((0,0,0))
 
+        if self.settings.get_boolean("orthographic"):
+            self.toggle_orthographic()
+
         self.gl_area.set_auto_render(True)
         self.gl_area.connect("realize", self.on_realize)
         self.gl_area.connect("render", self.on_render)
@@ -86,8 +96,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def on_scroll(self, gesture, dx, dy):
         if (dy == -1.0):
             self.camera.dolly(1.1)
+            print("dolling", 1.1)
         elif (dy == 1.0):
             self.camera.dolly(0.9)
+            print("dolling", 0.9)
 
         self.gl_area.queue_render()
 
@@ -122,9 +134,20 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.camera.resetToBounds()
             self.camera.setCurrentAsDefault()
 
-            self.title_widget.set_subtitle(filepath)
+            file_name = os.path.basename(filepath)
+
+            self.title_widget.set_subtitle(file_name)
             self.open_button.set_sensitive(False)
             self.stack.set_visible_child_name("3d_page")
+
+            options = {
+                "render.effect.tone-mapping": True,
+                "render.effect.ambient-occlusion": True,
+                "render.effect.anti-aliasing": True,
+                "render.effect.translucency-support": True,
+            }
+
+            self.engine.options.update(options)
 
             self.gl_area.queue_render()
 
@@ -160,12 +183,23 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.open_file_chooser()
 
     @Gtk.Template.Callback("on_view_clicked")
-    def on_view_clicked(self, btn):
+    def toggle_orthographic(self, *args):
+        btn = self.view_button_headerbar
         if (btn.get_icon_name() == "perspective-symbolic"):
             btn.set_icon_name("orthographic-symbolic")
             camera_options = {"scene.camera.orthographic": True}
+            self.settings.set_boolean("orthographic", True)
         else:
             btn.set_icon_name("perspective-symbolic")
             camera_options = {"scene.camera.orthographic": False}
+            self.settings.set_boolean("orthographic", False)
         self.engine.options.update(camera_options)
+        self.gl_area.queue_render()
+
+    def toggle_grid(self, val=None):
+        if val == None:
+            val = not self.settings.get_boolean("view-grid")
+        options = {"render.grid.enable": val}
+        self.settings.set_boolean("view-grid", val)
+        self.engine.options.update(options)
         self.gl_area.queue_render()
