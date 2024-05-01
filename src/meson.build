@@ -1,5 +1,5 @@
 pkgdatadir = get_option('prefix') / get_option('datadir') / meson.project_name()
-moduledir = pkgdatadir / 'viewer3d'
+moduledir = pkgdatadir / 'exhibit'
 gnome = import('gnome')
 
 python = import('python')
@@ -11,18 +11,18 @@ conf.set('localedir', get_option('prefix') / get_option('localedir'))
 conf.set('pkgdatadir', pkgdatadir)
 
 configure_file(
-  input: 'viewer3d.in',
-  output: 'viewer3d',
+  input: 'exhibit.in',
+  output: 'exhibit',
   configuration: conf,
   install: true,
   install_dir: get_option('bindir'),
   install_mode: 'r-xr-xr-x'
 )
 
-viewer3d_sources = [
+exhibit_sources = [
   '__init__.py',
   'main.py',
   'window.py',
 ]
 
-install_data(viewer3d_sources, install_dir: moduledir)
+install_data(exhibit_sources, install_dir: moduledir)

@@ -1,1 +1,1 @@
-i18n.gettext('viewer3d', preset: 'glib')
+i18n.gettext('exhibit', preset: 'glib')

@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=viewer3d
-Exec=viewer3d
+Name=exhibit
+Exec=exhibit
 Icon=io.github.nokse22.Exhibit
 Terminal=false
 Type=Application

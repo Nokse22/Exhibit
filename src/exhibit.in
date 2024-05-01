@@ -1,6 +1,6 @@
 #!@PYTHON@
 
-# viewer3d.in
+# exhibit.in
 #
 # Copyright 2024 Nokse22
 #
@@ -31,16 +31,16 @@ localedir = '@localedir@'
 
 sys.path.insert(1, pkgdatadir)
 signal.signal(signal.SIGINT, signal.SIG_DFL)
-locale.bindtextdomain('viewer3d', localedir)
-locale.textdomain('viewer3d')
-gettext.install('viewer3d', localedir)
+locale.bindtextdomain('exhibit', localedir)
+locale.textdomain('exhibit')
+gettext.install('exhibit', localedir)
 
 if __name__ == '__main__':
     import gi
 
     from gi.repository import Gio
-    resource = Gio.Resource.load(os.path.join(pkgdatadir, 'viewer3d.gresource'))
+    resource = Gio.Resource.load(os.path.join(pkgdatadir, 'exhibit.gresource'))
     resource._register()
 
-    from viewer3d import main
+    from exhibit import main
     sys.exit(main.main(VERSION))

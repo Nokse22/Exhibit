@@ -26,7 +26,7 @@ from f3d import *
 
 import math
 
-@Gtk.Template(resource_path='/io/github/nokse22/Viewer3D/window.ui')
+@Gtk.Template(resource_path='/io/github/nokse22/Exhibit/window.ui')
 class Viewer3dWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'Viewer3dWindow'
 
@@ -84,7 +84,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback("on_scroll")
     def on_scroll(self, gesture, dx, dy):
-        self.camera.dolly(-1.1 * dy)
+        if (dy == -1.0):
+            self.camera.dolly(1.1)
+        elif (dy == 1.0):
+            self.camera.dolly(0.9)
+
         self.gl_area.queue_render()
 
     @Gtk.Template.Callback("on_drag_update")

@@ -3,7 +3,7 @@
     "runtime" : "org.gnome.Platform",
     "runtime-version" : "46",
     "sdk" : "org.gnome.Sdk",
-    "command" : "viewer3d",
+    "command" : "exhibit",
     "finish-args" : [
         "--share=ipc",
         "--socket=x11",
@@ -56,7 +56,7 @@
 	    ]
 	},
         {
-            "name" : "viewer3d",
+            "name" : "exhibit",
             "builddir" : true,
             "buildsystem" : "meson",
             "sources" : [

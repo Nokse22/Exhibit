@@ -24,7 +24,7 @@
           <object class="AdwHeaderBar" id="header_bar">
             <property name="title-widget">
               <object class="AdwWindowTitle" id="title_widget">
-                <property name="title" translatable="yes">3D Viewer</property>
+                <property name="title" translatable="yes">Exhibit</property>
               </object>
             </property>
             <child type="start">
@@ -99,7 +99,7 @@ suggested-action</property>
                         <property name="hexpand">True</property>
                         <property name="hexpand-set">True</property>
                         <property name="icon-name">folder-drag-accept-symbolic</property>
-                        <property name="title">3D Viewer</property>
+                        <property name="title">Exhibit</property>
                         <property name="vexpand">True</property>
                       </object>
                     </property>
@@ -157,7 +157,7 @@ suggested-action</property>
         <attribute name="action">win.show-help-overlay</attribute>
       </item>
       <item>
-        <attribute name="label" translatable="yes">_About Viewer3D</attribute>
+        <attribute name="label" translatable="yes">_About Exhibit</attribute>
         <attribute name="action">app.about</attribute>
       </item>
     </section>

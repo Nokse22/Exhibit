@@ -1,3 +1,3 @@
-# viewer3d
+# exhibit
 
 A description of this project.

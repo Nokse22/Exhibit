@@ -53,7 +53,7 @@ class Viewer3dApplication(Adw.Application):
     def on_about_action(self, widget, _):
         """Callback for the app.about action."""
         about = Adw.AboutWindow(transient_for=self.props.active_window,
-                                application_name='viewer3d',
+                                application_name='exhibit',
                                 application_icon='io.github.nokse22.Exhibit',
                                 developer_name='Nokse22',
                                 version='0.1.0',

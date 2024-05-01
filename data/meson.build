@@ -1,9 +1,9 @@
 pkgdatadir = get_option('prefix') / get_option('datadir') / meson.project_name()
-moduledir = pkgdatadir / 'viewer3d'
+moduledir = pkgdatadir / 'exhibit'
 gnome = import('gnome')
 
-gnome.compile_resources('viewer3d',
-  'viewer3d.gresource.xml',
+gnome.compile_resources('exhibit',
+  'exhibit.gresource.xml',
   gresource_bundle: true,
   install: true,
   install_dir: pkgdatadir,
