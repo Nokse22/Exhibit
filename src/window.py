@@ -27,6 +27,8 @@ from f3d import *
 import math
 import os
 
+from OpenGL.GL import *
+
 @Gtk.Template(resource_path='/io/github/nokse22/Exhibit/window.ui')
 class Viewer3dWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'Viewer3dWindow'
@@ -42,6 +44,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
+        self.add_css_class("devel")
+
         self.settings = Gio.Settings.new('io.github.nokse22.Exhibit')
 
         self.settings.connect("notify::view-grid", self.toggle_grid)
@@ -49,6 +53,17 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.options = {
             "scene.up-direction": "+Y",
             "render.background.color": [1.0, 1.0, 1.0],
+            # "render.raytracing.enable": False,
+            "render.grid.enable": True,
+            "render.effect.translucency-support": True,
+            # "render.effect.tone-mapping": False,
+            # "render.effect.ambient-occlusion": False,
+            # "render.effect.anti-aliasing": False,
+            # "render.effect.translucency-support": False,
+            # "scene.animation.index": -1,
+            # "scene.animation.autoplay": False,
+            # "render.show-edges": False,
+            # "render.hdri.ambient": False
         }
 
         self.engine = Engine(Window.EXTERNAL)
@@ -69,6 +84,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.gl_area.connect("realize", self.on_realize)
         self.gl_area.connect("render", self.on_render)
 
+        self.gl_area.set_allowed_apis(Gdk.GLAPI.GL)
+        # self.gl_area.set_required_version(1, 0)
+
         self.prev_pan_offset = 0
         self.drag_prev_offset = (0, 0)
         self.drag_start_angle = 0
@@ -79,6 +97,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def on_render(self, area, ctx):
         self.gl_area.get_context().make_current()
         self.engine.window.render()
+        print(ctx.get_forward_compatible())
         return True
 
     @Gtk.Template.Callback("on_scroll")
@@ -124,19 +143,19 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             file_name = os.path.basename(filepath)
 
             self.title_widget.set_subtitle(file_name)
-            self.open_button.set_sensitive(False)
+            # self.open_button.set_sensitive(False)
             self.stack.set_visible_child_name("3d_page")
 
             # options = {
-            #     "render.effect.tone-mapping": True,
-            #     "render.effect.ambient-occlusion": True,
-            #     "render.effect.anti-aliasing": True,
-            #     "render.effect.translucency-support": True,
+                # "render.effect.tone-mapping": True,
+                # "render.effect.ambient-occlusion": True,
+                # "render.effect.anti-aliasing": True,
+                # "render.effect.translucency-support": True,
             # }
 
             # self.engine.options.update(options)
 
-            self.gl_area.queue_render()
+            # self.gl_area.queue_render()
 
     def save_as_image(self, filepath):
         self.gl_area.get_context().make_current()
