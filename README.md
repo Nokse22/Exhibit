@@ -6,7 +6,7 @@
   [![Downloads](https://img.shields.io/badge/dynamic/json?color=brightgreen&label=Flathub%20Downloads&query=%24.installs_total&url=https%3A%2F%2Fflathub.org%2Fapi%2Fv2%2Fstats%2Fio.github.nokse22.high-tide)](https://flathub.org/apps/details/io.github.nokse22.Exhibit)
   
 
-View 3D models, powered by [F3D](https://github.com/f3d-app/f3d) 
+View 3D models, powered by the [F3D](https://github.com/f3d-app/f3d) library that supports many file formats, from digital content to scientific datasets (including glTF, USD, STL, STEP, PLY, OBJ, FBX, Alembic)
 
 
   <div align="center">
