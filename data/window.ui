@@ -152,13 +152,13 @@ This application is experimental, crashes are expected.</property>
     <section>
       <item>
         <attribute name="label" translatable="yes">_Open New</attribute>
-        <attribute name="action">app.open-new</attribute>
+        <attribute name="action">win.open-new</attribute>
       </item>
     </section>
     <section>
       <item>
         <attribute name="label" translatable="yes">_Save As Image</attribute>
-        <attribute name="action">app.save-as-image</attribute>
+        <attribute name="action">win.save-as-image</attribute>
       </item>
     </section>
     <section>
@@ -172,7 +172,7 @@ This application is experimental, crashes are expected.</property>
       </item>
       <item>
         <attribute name="label" translatable="yes">_About Exhibit</attribute>
-        <attribute name="action">app.about</attribute>
+        <attribute name="action">win.about</attribute>
       </item>
     </section>
   </menu>

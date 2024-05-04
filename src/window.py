@@ -27,7 +27,7 @@ from f3d import *
 import math
 import os
 
-from OpenGL.GL import *
+# from OpenGL.GL import *
 
 from .preferences import Preferences
 
@@ -66,6 +66,8 @@ class WindowSettings():
         self.saved_settings.set_boolean("orthographic", self.settings["orthographic"])
         self.saved_settings.set_boolean("point-up", self.settings["point-up"])
 
+        print("settings saved")
+
 @Gtk.Template(resource_path='/io/github/nokse22/Exhibit/window.ui')
 class Viewer3dWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'Viewer3dWindow'
@@ -88,6 +90,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         "background-skybox": "render.background.skybox",
         "background-blur": "background.blur",
         "light-intensity": "render.light.intensity",
+        "orthographic": "scene.camera.orthographic",
     }
 
     up_dirs = {
@@ -99,12 +102,15 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         5: "+Z"
     }
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, application=None, filepath=None):
+        super().__init__(application=application)
 
         self.add_css_class("devel")
 
         self.create_action('preferences', self.on_preferences_action)
+        self.create_action('about', self.on_about_action)
+        self.create_action('save-as-image', self.open_save_file_chooser)
+        self.create_action('open-new', self.open_file_chooser)
 
         self.window_settings = WindowSettings()
 
@@ -138,10 +144,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.drag_prev_offset = (0, 0)
         self.drag_start_angle = 0
 
-        self.point_up = True
-
         self.style_manager = Adw.StyleManager()
         self.style_manager.connect("notify::dark", self.update_theme)
+
+        if filepath:
+            self.open_file(filepath)
 
     def update_theme(self, *args):
         if self.style_manager.get_dark():
@@ -174,7 +181,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.camera.elevation(-(self.drag_prev_offset[1] - y_offset))
         self.camera.azimuth(self.drag_prev_offset[0] - x_offset)
 
-        if self.point_up:
+        if self.window_settings.get_setting("point-up"):
             self.camera.setViewUp((0.0, 1.0, 0.0))
 
         self.gl_area.queue_render()
@@ -185,10 +192,25 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def on_drag_end(self, gesture, *args):
         self.drag_prev_offset = (0, 0)
 
-    def open_file_chooser(self):
+    def open_file_chooser(self, *args):
+        file_filter = Gtk.FileFilter(name="All supported formats")
+
+        file_patterns = ["*.vtk", "*.vt[p|u|r|i|s|m]", "*.ply", "*.stl", "*.dcm", "*.nrrd",
+            "*.nhrd", "*.mhd", "*.mha", "*.tif", "*.tiff", "*.ex2", "*.e", "*.exo", "*.g", "*.gml", "*.pts",
+            "*.step", "*.stp", "*.iges", "*.igs", "*.brep", "*.abc", "*.vdb", "*.obj", "*.gltf",
+            "*.glb", "*.3ds", "*.wrl", "*.fbx", "*.dae", "*.off", "*.dxf", "*.x", "*.3mf", "*.usd"]
+
+        for patt in file_patterns:
+            file_filter.add_pattern(patt)
+
+        filter_list = Gio.ListStore.new(Gtk.FileFilter())
+        filter_list.append(file_filter)
+
         dialog = Gtk.FileDialog(
             title=_("Open File"),
+            filters=filter_list,
         )
+
         dialog.open(self, None, self.on_open_file_response)
 
     def on_open_file_response(self, dialog, response):
@@ -196,20 +218,32 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         if file:
             filepath = file.get_path()
-            self.engine.loader.load_scene(filepath)
 
-            self.camera.resetToBounds()
-            self.camera.setCurrentAsDefault()
+            self.open_file(filepath)
 
-            file_name = os.path.basename(filepath)
+    def open_file(self, filepath):
+        self.engine.loader.load_scene(filepath)
 
-            self.title_widget.set_subtitle(file_name)
-            self.stack.set_visible_child_name("3d_page")
+        self.camera.resetToBounds()
+        self.camera.setCurrentAsDefault()
 
-            GLib.timeout_add(200, self.update_options)
+        file_name = os.path.basename(filepath)
+
+        self.title_widget.set_subtitle(file_name)
+        self.stack.set_visible_child_name("3d_page")
+
+        GLib.timeout_add(200, self.update_options)
 
     def update_options(self):
-        self.engine.options.update(self.options)
+        options = {}
+        for key, value in self.window_settings.settings.items():
+            try:
+                f3d_key = self.keys[key]
+            except:
+                continue
+            options.setdefault(f3d_key, value)
+
+        self.engine.options.update(options)
         self.update_theme()
         self.gl_area.queue_render()
 
@@ -220,7 +254,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         img = self.engine.window.render_to_image()
         img.save(filepath)
 
-    def open_save_file_chooser(self):
+    def open_save_file_chooser(self, *args):
         dialog = Gtk.FileDialog(
             title=_("Save File"),
             initial_name=_("image.png"),
@@ -261,8 +295,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.gl_area.queue_render()
 
     def on_switch_toggled(self, switch, active, name):
-        options = {self.keys[name]: switch.get_active()}
         self.window_settings.set_setting(name, switch.get_active())
+        options = {self.keys[name]: switch.get_active()}
         self.engine.options.update(options)
         self.gl_area.queue_render()
 
@@ -272,9 +306,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.engine.options.update(options)
         self.gl_area.queue_render()
 
-    def set_point_up(self, switch, active):
+    def set_point_up(self, switch, active, name):
         val = switch.get_active()
-        self.point_up = val
+        self.window_settings.set_setting(name, val)
         if val:
             self.camera.setViewUp((0.0, 1.0, 0.0))
             self.gl_area.queue_render()
@@ -296,8 +330,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.set_preference_values(preferences)
 
-        # preferences.light_intensity_spin.set_value(self.window_settings.get_boolean("hdri-ambient"))
-
         preferences.translucency_switch.connect("notify::active", self.on_switch_toggled, "translucency")
         preferences.grid_switch.connect("notify::active", self.on_switch_toggled, "grid")
         preferences.tone_mapping_switch.connect("notify::active", self.on_switch_toggled, "tone-mapping")
@@ -305,7 +337,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         preferences.anti_aliasing_switch.connect("notify::active", self.on_switch_toggled, "anti-aliasing")
         preferences.hdri_ambient_switch.connect("notify::active", self.on_switch_toggled, "hdri-ambient")
 
-        preferences.point_up_switch.connect("notify::active", self.set_point_up)
+        preferences.point_up_switch.connect("notify::active", self.set_point_up, "point-up")
 
         preferences.light_intensity_spin.connect("notify::value", self.on_spin_changed, "light-intensity")
 
@@ -324,8 +356,21 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         preferences.anti_aliasing_switch.set_active(self.window_settings.get_setting("anti-aliasing"))
         preferences.hdri_ambient_switch.set_active(self.window_settings.get_setting("hdri-ambient"))
         preferences.point_up_switch.set_active(self.window_settings.get_setting("point-up"))
+        preferences.light_intensity_spin.set_value(self.window_settings.get_setting("light-intensity"))
 
     def create_action(self, name, callback):
         action = Gio.SimpleAction.new(name, None)
         action.connect("activate", callback)
         self.add_action(action)
+
+    def on_about_action(self, *args):
+        about = Adw.AboutDialog(
+                                application_name='Exhibit',
+                                application_icon='io.github.nokse22.Exhibit',
+                                developer_name='Nokse22',
+                                version='0.1.0',
+                                website='https://github.com/Nokse22/Exhibit',
+                                issue_url='https://github.com/Nokse22/Exhibit/issues',
+                                developers=['Nokse22'],
+                                copyright='© 2024 Nokse22')
+        about.present(self)
