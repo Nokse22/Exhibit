@@ -25,7 +25,6 @@ gi.require_version('Adw', '1')
 
 from gi.repository import Gtk, Gio, Adw
 from .window import Viewer3dWindow
-from .preferences import Preferences
 
 
 class Viewer3dApplication(Adw.Application):
@@ -36,7 +35,7 @@ class Viewer3dApplication(Adw.Application):
                          flags=Gio.ApplicationFlags.DEFAULT_FLAGS)
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action)
-        self.create_action('preferences', self.on_preferences_action)
+
         self.create_action('play-animation', self.on_play_animation, ['space'])
         self.create_action('save-as-image', self.on_save_as_image_action, ['<primary>s'])
         self.create_action('toggle-grid', self.on_toggle_grid_action, ['<primary>g'])
@@ -72,42 +71,6 @@ class Viewer3dApplication(Adw.Application):
                                 copyright='© 2024 Nokse22')
 
         about.present(self.win)
-
-    def on_preferences_action(self, widget, _):
-        """Callback for the app.preferences action."""
-
-        preferences = Preferences()
-
-        self.set_preference_values(preferences)
-
-        preferences.light_intensity_spin.set_value(self.win.settings.get_boolean("hdri-ambient"))
-
-        preferences.translucency_switch.connect("notify::active", self.win.on_switch_toggled, "translucency")
-        preferences.grid_switch.connect("notify::active", self.win.on_switch_toggled, "grid")
-        preferences.tone_mapping_switch.connect("notify::active", self.win.on_switch_toggled, "tone-mapping")
-        preferences.ambient_occlusion_switch.connect("notify::active", self.win.on_switch_toggled, "ambient-occlusion")
-        preferences.anti_aliasing_switch.connect("notify::active", self.win.on_switch_toggled, "anti-aliasing")
-        preferences.hdri_ambient_switch.connect("notify::active", self.win.on_switch_toggled, "hdri-ambient")
-
-        preferences.point_up_switch.connect("notify::active", self.win.set_point_up)
-
-        preferences.light_intensity_spin.connect("notify::value", self.win.on_spin_changed, "light-intensity")
-
-        preferences.reset_button.connect("clicked", self.win.on_reset_settings_clicked)
-        preferences.reset_button.connect("clicked", lambda self, btn, pref: self.set_preference_values(pref))
-
-        preferences.save_button.connect("clicked", self.win.on_save_settings_clicked)
-
-        preferences.present()
-
-    def set_preference_values(self, preferences):
-        preferences.translucency_switch.set_active(self.win.settings.get_boolean("translucency"))
-        preferences.grid_switch.set_active(self.win.settings.get_boolean("grid"))
-        preferences.tone_mapping_switch.set_active(self.win.settings.get_boolean("tone-mapping"))
-        preferences.ambient_occlusion_switch.set_active(self.win.settings.get_boolean("ambient-occlusion"))
-        preferences.anti_aliasing_switch.set_active(self.win.settings.get_boolean("anti-aliasing"))
-        preferences.hdri_ambient_switch.set_active(self.win.settings.get_boolean("hdri-ambient"))
-        preferences.point_up_switch.set_active(self.win.settings.get_boolean("point-up"))
 
     def create_action(self, name, callback, shortcuts=None):
         """Add an application action.

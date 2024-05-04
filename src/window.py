@@ -29,6 +29,43 @@ import os
 
 from OpenGL.GL import *
 
+from .preferences import Preferences
+
+class WindowSettings():
+    def __init__(self):
+        super().__init__()
+
+        self.saved_settings = Gio.Settings.new('io.github.nokse22.Exhibit')
+
+        self.settings = {
+            "grid": self.saved_settings.get_boolean("grid"),
+            "translucency": self.saved_settings.get_boolean("translucency"),
+            "tone-mapping": self.saved_settings.get_boolean("tone-mapping"),
+            "ambient-occlusion": self.saved_settings.get_boolean("ambient-occlusion"),
+            "anti-aliasing": self.saved_settings.get_boolean("anti-aliasing"),
+            "hdri-ambient": self.saved_settings.get_boolean("hdri-ambient"),
+            "light-intensity": self.saved_settings.get_double("light-intensity"),
+            "orthographic": self.saved_settings.get_boolean("orthographic"),
+            "point-up": self.saved_settings.get_boolean("point-up"),
+        }
+
+    def set_setting(self, key, val):
+        self.settings[key] = val
+
+    def get_setting(self, key):
+        return self.settings[key]
+
+    def save_all_settings(self):
+        self.saved_settings.set_boolean("grid", self.settings["grid"])
+        self.saved_settings.set_boolean("translucency", self.settings["translucency"])
+        self.saved_settings.set_boolean("tone-mapping", self.settings["tone-mapping"])
+        self.saved_settings.set_boolean("ambient-occlusion", self.settings["ambient-occlusion"])
+        self.saved_settings.set_boolean("anti-aliasing", self.settings["anti-aliasing"])
+        self.saved_settings.set_boolean("hdri-ambient", self.settings["hdri-ambient"])
+        self.saved_settings.set_double("light-intensity", self.settings["light-intensity"])
+        self.saved_settings.set_boolean("orthographic", self.settings["orthographic"])
+        self.saved_settings.set_boolean("point-up", self.settings["point-up"])
+
 @Gtk.Template(resource_path='/io/github/nokse22/Exhibit/window.ui')
 class Viewer3dWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'Viewer3dWindow'
@@ -42,15 +79,15 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     view_button_headerbar = Gtk.Template.Child()
 
     keys = {
-    "grid": "render.grid.enable",
-    "translucency": "render.effect.translucency-support",
-    "tone-mapping":"render.effect.tone-mapping",
-    "ambient-occlusion": "render.effect.ambient-occlusion",
-    "anti-aliasing" :"render.effect.anti-aliasing",
-    "hdri-ambient" :"render.hdri.ambient",
-    "background-skybox": "render.background.skybox",
-    "background-blur": "background.blur",
-    "light-intensity": "render.light.intensity",
+        "grid": "render.grid.enable",
+        "translucency": "render.effect.translucency-support",
+        "tone-mapping":"render.effect.tone-mapping",
+        "ambient-occlusion": "render.effect.ambient-occlusion",
+        "anti-aliasing" :"render.effect.anti-aliasing",
+        "hdri-ambient" :"render.hdri.ambient",
+        "background-skybox": "render.background.skybox",
+        "background-blur": "background.blur",
+        "light-intensity": "render.light.intensity",
     }
 
     up_dirs = {
@@ -67,18 +104,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.add_css_class("devel")
 
-        self.settings = Gio.Settings.new('io.github.nokse22.Exhibit')
+        self.create_action('preferences', self.on_preferences_action)
 
-        self.options = {
-            # "scene.up-direction": self.up_dirs[self.settings.get_int("up-direction")],
-            "render.grid.enable": self.settings.get_boolean("grid"),
-            "render.effect.translucency-support": self.settings.get_boolean("translucency"),
-            "render.effect.tone-mapping": self.settings.get_boolean("tone-mapping"),
-            "render.effect.ambient-occlusion": self.settings.get_boolean("ambient-occlusion"),
-            "render.effect.anti-aliasing": self.settings.get_boolean("anti-aliasing"),
-            "render.hdri.ambient": self.settings.get_boolean("hdri-ambient"),
-            "render.light.intensity": self.settings.get_boolean("light-intensity"),
-        }
+        self.window_settings = WindowSettings()
 
         self.engine = Engine(Window.EXTERNAL)
         self.loader = self.engine.getLoader()
@@ -88,7 +116,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.camera.setFocalPoint((0,0,0))
 
-        if self.settings.get_boolean("orthographic"):
+        if self.window_settings.get_setting("orthographic"):
             self.toggle_orthographic()
 
         inital_options = {
@@ -224,23 +252,23 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if (btn.get_icon_name() == "perspective-symbolic"):
             btn.set_icon_name("orthographic-symbolic")
             camera_options = {"scene.camera.orthographic": True}
-            self.settings.set_boolean("orthographic", True)
+            self.window_settings.set_setting("orthographic", True)
         else:
             btn.set_icon_name("perspective-symbolic")
             camera_options = {"scene.camera.orthographic": False}
-            self.settings.set_boolean("orthographic", False)
+            self.window_settings.set_setting("orthographic", False)
         self.engine.options.update(camera_options)
         self.gl_area.queue_render()
 
     def on_switch_toggled(self, switch, active, name):
         options = {self.keys[name]: switch.get_active()}
-        self.settings.set_boolean(name, switch.get_active())
+        self.window_settings.set_setting(name, switch.get_active())
         self.engine.options.update(options)
         self.gl_area.queue_render()
 
     def on_spin_changed(self, spin, value, name):
         options = {self.keys[name]: spin.get_value()}
-        self.settings.set_double(name, spin.get_value())
+        self.window_settings.set_setting(name, spin.get_value())
         self.engine.options.update(options)
         self.gl_area.queue_render()
 
@@ -254,21 +282,50 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def on_direction_changed(self, combo, selected):
         options = {"scene.up-direction": self.up_dirs(selected)}
         self.engine.options.update(options)
-        self.settings.set_int("up-direction", selected)
+        self.window_settings.set_setting("up-direction", selected)
 
     def on_reset_settings_clicked(self, btn):
-        self.options = {
-            # "scene.up-direction": self.up_dirs[self.settings.get_default_value("up-direction")],
-            "render.grid.enable": self.settings.get_default_value("grid"),
-            "render.effect.translucency-support": self.settings.get_default_value("translucency"),
-            "render.effect.tone-mapping": self.settings.get_default_value("tone-mapping"),
-            "render.effect.ambient-occlusion": self.settings.get_default_value("ambient-occlusion"),
-            "render.effect.anti-aliasing": self.settings.get_default_value("anti-aliasing"),
-            "render.hdri.ambient": self.settings.get_default_value("hdri-ambient"),
-            "render.light.intensity": self.settings.get_default_value("light-intensity"),
-        }
-        self.engine.options.update(self.options)
+        self.engine.options.update(self.window_settings.settings)
         self.gl_area.queue_render()
 
     def on_save_settings_clicked(self, btn):
-        pass
+        self.window_settings.save_all_settings()
+
+    def on_preferences_action(self, *args):
+        preferences = Preferences()
+
+        self.set_preference_values(preferences)
+
+        # preferences.light_intensity_spin.set_value(self.window_settings.get_boolean("hdri-ambient"))
+
+        preferences.translucency_switch.connect("notify::active", self.on_switch_toggled, "translucency")
+        preferences.grid_switch.connect("notify::active", self.on_switch_toggled, "grid")
+        preferences.tone_mapping_switch.connect("notify::active", self.on_switch_toggled, "tone-mapping")
+        preferences.ambient_occlusion_switch.connect("notify::active", self.on_switch_toggled, "ambient-occlusion")
+        preferences.anti_aliasing_switch.connect("notify::active", self.on_switch_toggled, "anti-aliasing")
+        preferences.hdri_ambient_switch.connect("notify::active", self.on_switch_toggled, "hdri-ambient")
+
+        preferences.point_up_switch.connect("notify::active", self.set_point_up)
+
+        preferences.light_intensity_spin.connect("notify::value", self.on_spin_changed, "light-intensity")
+
+        preferences.reset_button.connect("clicked", self.on_reset_settings_clicked)
+        preferences.reset_button.connect("clicked", lambda self, btn, pref: self.set_preference_values(pref))
+
+        preferences.save_button.connect("clicked", self.on_save_settings_clicked)
+
+        preferences.present()
+
+    def set_preference_values(self, preferences):
+        preferences.translucency_switch.set_active(self.window_settings.get_setting("translucency"))
+        preferences.grid_switch.set_active(self.window_settings.get_setting("grid"))
+        preferences.tone_mapping_switch.set_active(self.window_settings.get_setting("tone-mapping"))
+        preferences.ambient_occlusion_switch.set_active(self.window_settings.get_setting("ambient-occlusion"))
+        preferences.anti_aliasing_switch.set_active(self.window_settings.get_setting("anti-aliasing"))
+        preferences.hdri_ambient_switch.set_active(self.window_settings.get_setting("hdri-ambient"))
+        preferences.point_up_switch.set_active(self.window_settings.get_setting("point-up"))
+
+    def create_action(self, name, callback):
+        action = Gio.SimpleAction.new(name, None)
+        action.connect("activate", callback)
+        self.add_action(action)
