@@ -7,8 +7,7 @@
     "finish-args" : [
         "--share=ipc",
         "--socket=x11",
-        "--device=dri",
-        "--env=GDK_DEBUG=opengl, gl-debug"
+        "--device=dri"
     ],
     "cleanup" : [
         "/include",
@@ -22,20 +21,6 @@
         "*.a"
     ],
     "modules" : [
-	    {
-	    "name": "python3-pyopengl",
-	    "buildsystem": "simple",
-	    "build-commands": [
-		"pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"pyopengl\" --no-build-isolation"
-	    ],
-	    "sources": [
-		{
-		    "type": "file",
-		    "url": "https://files.pythonhosted.org/packages/99/48/00e31747821d3fc56faddd00a4725454d1e694a8b67d715cf20f531506a5/PyOpenGL-3.1.7-py3-none-any.whl",
-		    "sha256": "a6ab19cf290df6101aaf7470843a9c46207789855746399d0af92521a0a92b7a"
-		}
-	    ]
-	},
             {
 	    "name": "python3-f3d",
 	    "buildsystem": "simple",
