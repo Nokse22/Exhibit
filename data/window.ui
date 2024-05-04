@@ -120,6 +120,7 @@ This application is experimental, crashes are expected.</property>
                               <object class="GtkGestureDrag">
                                 <signal name="drag-update" handler="on_drag_update"/>
                                 <signal name="drag-end" handler="on_drag_end"/>
+                                <property name="button">0</property>
                               </object>
                             </child>
                             <child>

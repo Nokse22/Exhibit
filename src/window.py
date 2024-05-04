@@ -178,11 +178,17 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback("on_drag_update")
     def on_drag_update(self, gesture, x_offset, y_offset):
-        self.camera.elevation(-(self.drag_prev_offset[1] - y_offset))
-        self.camera.azimuth(self.drag_prev_offset[0] - x_offset)
+        if gesture.get_current_button() == 1:
+            self.camera.elevation(-(self.drag_prev_offset[1] - y_offset))
+            self.camera.azimuth(self.drag_prev_offset[0] - x_offset)
+        elif gesture.get_current_button() == 2:
+            self.camera.pitch(-(self.drag_prev_offset[1] - y_offset)*0.05)
+            self.camera.yaw(-(self.drag_prev_offset[0] - x_offset)*0.05)
 
         if self.window_settings.get_setting("point-up"):
             self.camera.setViewUp((0.0, 1.0, 0.0))
+
+        print(gesture.get_current_button())
 
         self.gl_area.queue_render()
 

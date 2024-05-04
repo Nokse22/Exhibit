@@ -8,19 +8,19 @@
       <default>true</default>
     </key>
 	  <key name="tone-mapping" type="b">
-      <default>false</default>
+      <default>true</default>
     </key>
 	  <key name="ambient-occlusion" type="b">
-      <default>false</default>
+      <default>true</default>
     </key>
 	  <key name="anti-aliasing" type="b">
-      <default>false</default>
+      <default>true</default>
     </key>
 	  <key name="hdri-ambient" type="b">
-      <default>false</default>
+      <default>true</default>
     </key>
 	  <key name="orthographic" type="b">
-      <default>false</default>
+      <default>true</default>
     </key>
 	  <key name="light-intensity" type="d">
       <default>1.0</default>
