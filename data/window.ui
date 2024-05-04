@@ -145,6 +145,12 @@ This application is experimental, crashes are expected.</property>
   <menu id="primary_menu">
     <section>
       <item>
+        <attribute name="label" translatable="yes">_Open New</attribute>
+        <attribute name="action">app.open-new</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
         <attribute name="label" translatable="yes">_Save As Image</attribute>
         <attribute name="action">app.save-as-image</attribute>
       </item>

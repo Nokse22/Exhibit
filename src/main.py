@@ -41,6 +41,8 @@ class Viewer3dApplication(Adw.Application):
         self.create_action('save-as-image', self.on_save_as_image_action, ['<primary>s'])
         self.create_action('toggle-grid', self.on_toggle_grid_action, ['<primary>g'])
 
+        self.create_action('open-new', self.open_new_action, ['<primary>n'])
+
     def do_activate(self):
         """Called when the application is activated.
 
@@ -117,6 +119,9 @@ class Viewer3dApplication(Adw.Application):
 
     def on_toggle_grid_action(self, *args):
         self.win.toggle_grid()
+
+    def open_new_action(self, *args):
+        self.win.open_file_chooser()
 
 def main(version):
     """The application's entry point."""
