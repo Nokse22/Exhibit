@@ -42,6 +42,7 @@ class Viewer3dApplication(Adw.Application):
         self.create_action('toggle-grid', self.on_toggle_grid_action, ['<primary>g'])
 
         self.create_action('open-new', self.open_new_action, ['<primary>n'])
+        self.create_action('open-new-window', self.open_new_window_action, ['<primary><shift>n'])
 
     def do_activate(self):
         """Called when the application is activated.
@@ -52,6 +53,10 @@ class Viewer3dApplication(Adw.Application):
         self.win = self.props.active_window
         if not self.win:
             self.win = Viewer3dWindow(application=self)
+        self.win.present()
+
+    def open_new_window_action(self, *args):
+        self.win = Viewer3dWindow(application=self)
         self.win.present()
 
     def on_about_action(self, widget, _):
@@ -73,13 +78,7 @@ class Viewer3dApplication(Adw.Application):
 
         preferences = Preferences()
 
-        preferences.translucency_switch.set_active(self.win.settings.get_boolean("translucency"))
-        preferences.grid_switch.set_active(self.win.settings.get_boolean("grid"))
-        preferences.tone_mapping_switch.set_active(self.win.settings.get_boolean("tone-mapping"))
-        preferences.ambient_occlusion_switch.set_active(self.win.settings.get_boolean("ambient-occlusion"))
-        preferences.anti_aliasing_switch.set_active(self.win.settings.get_boolean("anti-aliasing"))
-        preferences.hdri_ambient_switch.set_active(self.win.settings.get_boolean("hdri-ambient"))
-        preferences.point_up_switch.set_active(self.win.settings.get_boolean("point-up"))
+        self.set_preference_values(preferences)
 
         preferences.light_intensity_spin.set_value(self.win.settings.get_boolean("hdri-ambient"))
 
@@ -94,7 +93,21 @@ class Viewer3dApplication(Adw.Application):
 
         preferences.light_intensity_spin.connect("notify::value", self.win.on_spin_changed, "light-intensity")
 
+        preferences.reset_button.connect("clicked", self.win.on_reset_settings_clicked)
+        preferences.reset_button.connect("clicked", lambda self, btn, pref: self.set_preference_values(pref))
+
+        preferences.save_button.connect("clicked", self.win.on_save_settings_clicked)
+
         preferences.present()
+
+    def set_preference_values(self, preferences):
+        preferences.translucency_switch.set_active(self.win.settings.get_boolean("translucency"))
+        preferences.grid_switch.set_active(self.win.settings.get_boolean("grid"))
+        preferences.tone_mapping_switch.set_active(self.win.settings.get_boolean("tone-mapping"))
+        preferences.ambient_occlusion_switch.set_active(self.win.settings.get_boolean("ambient-occlusion"))
+        preferences.anti_aliasing_switch.set_active(self.win.settings.get_boolean("anti-aliasing"))
+        preferences.hdri_ambient_switch.set_active(self.win.settings.get_boolean("hdri-ambient"))
+        preferences.point_up_switch.set_active(self.win.settings.get_boolean("point-up"))
 
     def create_action(self, name, callback, shortcuts=None):
         """Add an application action.

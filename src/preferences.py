@@ -34,6 +34,10 @@ class Preferences(Adw.PreferencesWindow):
     light_intensity_spin = Gtk.Template.Child()
 
     point_up_switch = Gtk.Template.Child()
+    # up_direction_combo = Gtk.Template.Child()
+
+    reset_button = Gtk.Template.Child()
+    save_button = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

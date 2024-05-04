@@ -9,10 +9,9 @@
     <child>
       <object class="AdwPreferencesPage">
         <property name="icon-name">applications-system-symbolic</property>
-        <property name="title">Generals</property>
+        <property name="title">Render</property>
         <child>
           <object class="AdwPreferencesGroup">
-            <property name="title">View and Render</property>
             <property name="hexpand">True</property>
             <property name="hexpand-set">True</property>
             <child>
@@ -72,6 +71,19 @@
                 <property name="title">Light Intensity</property>
               </object>
             </child>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="AdwPreferencesPage">
+        <property name="icon-name">applications-system-symbolic</property>
+        <property name="title">App and Navigation</property>
+        <child>
+          <object class="AdwPreferencesGroup">
+            <property name="hexpand">True</property>
+            <property name="hexpand-set">True</property>
             <child>
               <object class="AdwSwitchRow" id="point_up_switch">
                 <property name="hexpand">True</property>
@@ -81,38 +93,54 @@
             </child>
           </object>
         </child>
-      </object>
-    </child>
-
-    <child>
-      <object class="AdwPreferencesPage">
-        <property name="icon-name">applications-system-symbolic</property>
-        <property name="title">Model</property>
         <child>
+        <object class="AdwPreferencesGroup">
+          <property name="hexpand">True</property>
+          <property name="hexpand-set">True</property>
+            <child>
+              <object class="GtkButton" id="save_button">
+                <property name="hexpand">True</property>
+                <property name="hexpand-set">True</property>
+                <property name="label">Save Settings</property>
+                <property name="css-classes">card</property>
+                <property name="height-request">50</property>
+              </object>
+            </child>
+          <child>
           <object class="AdwPreferencesGroup">
             <property name="hexpand">True</property>
             <property name="hexpand-set">True</property>
-            <child>
-              <object class="AdwSwitchRow" id="model_volume_switch">
-                <property name="hexpand">True</property>
-                <property name="hexpand-set">True</property>
-                <property name="title">Volume</property>
-              </object>
-            </child>
-            <child>
-              <object class="AdwSwitchRow" id="point_sprites_switch">
-                <property name="hexpand">True</property>
-                <property name="hexpand-set">True</property>
-                <property name="title">Point Sprites</property>
-              </object>
-            </child>
-            <child>
-              <object class="AdwSwitchRow" id="inverse_volume_switch">
-                <property name="hexpand">True</property>
-                <property name="hexpand-set">True</property>
-                <property name="title">Inverse Volume</property>
-              </object>
-            </child>
+              <child>
+                <object class="GtkButton" id="reset_button">
+                  <property name="hexpand">True</property>
+                  <property name="hexpand-set">True</property>
+                  <property name="label">Reset Settings</property>
+                  <property name="css-classes">card</property>
+                  <property name="height-request">50</property>
+                </object>
+              </child>
+            </object>
+          </child>
+            <!-- <child> -->
+            <!--   <object class="AdwComboRow" id="up_direction_combo"> -->
+            <!--     <property name="hexpand">True</property> -->
+            <!--     <property name="visible">False</property> -->
+            <!--     <property name="hexpand-set">True</property> -->
+            <!--     <property name="title">Up Direction</property> -->
+            <!--     <property name="model"> -->
+            <!--       <object class="GtkStringList"> -->
+            <!--         <items> -->
+            <!--           <item translatable="yes">-X</item> -->
+            <!--           <item translatable="yes">+X</item> -->
+            <!--           <item translatable="yes">-Y</item> -->
+            <!--           <item translatable="yes">+Y</item> -->
+            <!--           <item translatable="yes">-Z</item> -->
+            <!--           <item translatable="yes">+Z</item> -->
+            <!--         </items> -->
+            <!--       </object> -->
+            <!--     </property> -->
+            <!--   </object> -->
+            <!-- </child> -->
           </object>
         </child>
       </object>

@@ -53,6 +53,15 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     "light-intensity": "render.light.intensity",
     }
 
+    up_dirs = {
+        0: "-X",
+        1: "+X",
+        2: "-Y",
+        3: "+Y",
+        4: "-Z",
+        5: "+Z"
+    }
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -60,17 +69,15 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.settings = Gio.Settings.new('io.github.nokse22.Exhibit')
 
-        # self.settings.on_bool_setting_changed("changed", self.on_setting_changed)
-
         self.options = {
-            "scene.up-direction": "+Y",
-            "render.background.color": [1.0, 1.0, 1.0],
+            # "scene.up-direction": self.up_dirs[self.settings.get_int("up-direction")],
             "render.grid.enable": self.settings.get_boolean("grid"),
             "render.effect.translucency-support": self.settings.get_boolean("translucency"),
             "render.effect.tone-mapping": self.settings.get_boolean("tone-mapping"),
             "render.effect.ambient-occlusion": self.settings.get_boolean("ambient-occlusion"),
             "render.effect.anti-aliasing": self.settings.get_boolean("anti-aliasing"),
             "render.hdri.ambient": self.settings.get_boolean("hdri-ambient"),
+            "render.light.intensity": self.settings.get_boolean("light-intensity"),
         }
 
         self.engine = Engine(Window.EXTERNAL)
@@ -87,6 +94,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         inital_options = {
             "scene.up-direction": "+Y",
             "render.background.color": [1.0, 1.0, 1.0],
+            "scene.animation.autoplay": True,
         }
 
         self.engine.options.update(inital_options)
@@ -242,3 +250,25 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if val:
             self.camera.setViewUp((0.0, 1.0, 0.0))
             self.gl_area.queue_render()
+
+    def on_direction_changed(self, combo, selected):
+        options = {"scene.up-direction": self.up_dirs(selected)}
+        self.engine.options.update(options)
+        self.settings.set_int("up-direction", selected)
+
+    def on_reset_settings_clicked(self, btn):
+        self.options = {
+            # "scene.up-direction": self.up_dirs[self.settings.get_default_value("up-direction")],
+            "render.grid.enable": self.settings.get_default_value("grid"),
+            "render.effect.translucency-support": self.settings.get_default_value("translucency"),
+            "render.effect.tone-mapping": self.settings.get_default_value("tone-mapping"),
+            "render.effect.ambient-occlusion": self.settings.get_default_value("ambient-occlusion"),
+            "render.effect.anti-aliasing": self.settings.get_default_value("anti-aliasing"),
+            "render.hdri.ambient": self.settings.get_default_value("hdri-ambient"),
+            "render.light.intensity": self.settings.get_default_value("light-intensity"),
+        }
+        self.engine.options.update(self.options)
+        self.gl_area.queue_render()
+
+    def on_save_settings_clicked(self, btn):
+        pass

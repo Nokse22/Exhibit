@@ -146,6 +146,12 @@ This application is experimental, crashes are expected.</property>
     <section>
       <item>
         <attribute name="label" translatable="yes">_Open New</attribute>
+        <attribute name="action">app.open-new-window</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Open New</attribute>
         <attribute name="action">app.open-new</attribute>
       </item>
     </section>
