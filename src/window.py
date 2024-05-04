@@ -19,7 +19,7 @@
 
 import gi
 from gi.repository import Adw
-from gi.repository import Gtk, Gdk, Gio
+from gi.repository import Gtk, Gdk, Gio, GLib
 
 import f3d
 from f3d import *
@@ -48,6 +48,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     "ambient-occlusion": "render.effect.ambient-occlusion",
     "anti-aliasing" :"render.effect.anti-aliasing",
     "hdri-ambient" :"render.hdri.ambient",
+    "background-skybox": "render.background.skybox",
+    "background-blur": "background.blur",
+    "light-intensity": "render.light.intensity",
     }
 
     def __init__(self, **kwargs):
@@ -67,22 +70,26 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             "render.effect.tone-mapping": self.settings.get_boolean("tone-mapping"),
             "render.effect.ambient-occlusion": self.settings.get_boolean("ambient-occlusion"),
             "render.effect.anti-aliasing": self.settings.get_boolean("anti-aliasing"),
-            "render.hdri.ambient": self.settings.get_boolean("hdri-ambient")
+            "render.hdri.ambient": self.settings.get_boolean("hdri-ambient"),
         }
 
         self.engine = Engine(Window.EXTERNAL)
         self.loader = self.engine.getLoader()
         self.camera = self.engine.window.getCamera()
 
-        self.engine.options.update(self.options)
-
         self.engine.autoload_plugins()
-        self.options = self.engine.getOptions()
 
         self.camera.setFocalPoint((0,0,0))
 
         if self.settings.get_boolean("orthographic"):
             self.toggle_orthographic()
+
+        inital_options = {
+            "scene.up-direction": "+Y",
+            "render.background.color": [1.0, 1.0, 1.0],
+        }
+
+        self.engine.options.update(inital_options)
 
         self.gl_area.set_auto_render(True)
         self.gl_area.connect("realize", self.on_realize)
@@ -95,12 +102,13 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.drag_prev_offset = (0, 0)
         self.drag_start_angle = 0
 
-        style_manager = Adw.StyleManager()
-        style_manager.connect("notify::color-scheme", self.on_theme_changed)
+        self.point_up = True
 
-    def on_theme_changed(self, manager, dark):
-        print(dark)
-        if dark:
+        self.style_manager = Adw.StyleManager()
+        self.style_manager.connect("notify::dark", self.update_theme)
+
+    def update_theme(self, *args):
+        if self.style_manager.get_dark():
             options = {"render.background.color": [0.2, 0.2, 0.2]}
         else:
             options = {"render.background.color": [1.0, 1.0, 1.0]}
@@ -109,7 +117,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     def on_realize(self, area):
         self.gl_area.get_context().make_current()
-        self.gl_area.get_context().set_forward_compatible(True)
 
     def on_render(self, area, ctx):
         self.gl_area.get_context().make_current()
@@ -131,7 +138,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.camera.elevation(-(self.drag_prev_offset[1] - y_offset))
         self.camera.azimuth(self.drag_prev_offset[0] - x_offset)
 
-        self.camera.setViewUp((0.0, 1.0, 0.0))
+        if self.point_up:
+            self.camera.setViewUp((0.0, 1.0, 0.0))
 
         self.gl_area.queue_render()
 
@@ -160,19 +168,16 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             file_name = os.path.basename(filepath)
 
             self.title_widget.set_subtitle(file_name)
-            # self.open_button.set_sensitive(False)
             self.stack.set_visible_child_name("3d_page")
 
-            # options = {
-                # "render.effect.tone-mapping": True,
-                # "render.effect.ambient-occlusion": True,
-                # "render.effect.anti-aliasing": True,
-                # "render.effect.translucency-support": True,
-            # }
+            GLib.timeout_add(200, self.update_options)
 
-            # self.engine.options.update(options)
+    def update_options(self):
+        self.engine.options.update(self.options)
+        self.update_theme()
+        self.gl_area.queue_render()
 
-            # self.gl_area.queue_render()
+        return False
 
     def save_as_image(self, filepath):
         self.gl_area.get_context().make_current()
@@ -221,7 +226,19 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     def on_switch_toggled(self, switch, active, name):
         options = {self.keys[name]: switch.get_active()}
-        print(options)
         self.settings.set_boolean(name, switch.get_active())
         self.engine.options.update(options)
         self.gl_area.queue_render()
+
+    def on_spin_changed(self, spin, value, name):
+        options = {self.keys[name]: spin.get_value()}
+        self.settings.set_double(name, spin.get_value())
+        self.engine.options.update(options)
+        self.gl_area.queue_render()
+
+    def set_point_up(self, switch, active):
+        val = switch.get_active()
+        self.point_up = val
+        if val:
+            self.camera.setViewUp((0.0, 1.0, 0.0))
+            self.gl_area.queue_render()

@@ -77,6 +77,9 @@ class Viewer3dApplication(Adw.Application):
         preferences.ambient_occlusion_switch.set_active(self.win.settings.get_boolean("ambient-occlusion"))
         preferences.anti_aliasing_switch.set_active(self.win.settings.get_boolean("anti-aliasing"))
         preferences.hdri_ambient_switch.set_active(self.win.settings.get_boolean("hdri-ambient"))
+        preferences.point_up_switch.set_active(self.win.settings.get_boolean("point-up"))
+
+        preferences.light_intensity_spin.set_value(self.win.settings.get_boolean("hdri-ambient"))
 
         preferences.translucency_switch.connect("notify::active", self.win.on_switch_toggled, "translucency")
         preferences.grid_switch.connect("notify::active", self.win.on_switch_toggled, "grid")
@@ -84,6 +87,10 @@ class Viewer3dApplication(Adw.Application):
         preferences.ambient_occlusion_switch.connect("notify::active", self.win.on_switch_toggled, "ambient-occlusion")
         preferences.anti_aliasing_switch.connect("notify::active", self.win.on_switch_toggled, "anti-aliasing")
         preferences.hdri_ambient_switch.connect("notify::active", self.win.on_switch_toggled, "hdri-ambient")
+
+        preferences.point_up_switch.connect("notify::active", self.win.set_point_up)
+
+        preferences.light_intensity_spin.connect("notify::value", self.win.on_spin_changed, "light-intensity")
 
         preferences.present()
 

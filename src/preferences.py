@@ -31,6 +31,9 @@ class Preferences(Adw.PreferencesWindow):
     ambient_occlusion_switch = Gtk.Template.Child()
     anti_aliasing_switch = Gtk.Template.Child()
     hdri_ambient_switch = Gtk.Template.Child()
+    light_intensity_spin = Gtk.Template.Child()
+
+    point_up_switch = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

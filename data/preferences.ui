@@ -5,12 +5,14 @@
   <requires lib="Adw" version="1.0"/>
   <requires lib="gtk" version="4.0"/>
   <template class="Preferences" parent="AdwPreferencesWindow">
+    <property name="modal">false</property>
     <child>
       <object class="AdwPreferencesPage">
         <property name="icon-name">applications-system-symbolic</property>
         <property name="title">Generals</property>
         <child>
           <object class="AdwPreferencesGroup">
+            <property name="title">View and Render</property>
             <property name="hexpand">True</property>
             <property name="hexpand-set">True</property>
             <child>
@@ -53,6 +55,62 @@
                 <property name="hexpand">True</property>
                 <property name="hexpand-set">True</property>
                 <property name="title">HDRI Ambient</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwSpinRow" id="light_intensity_spin">
+                <property name="adjustment">
+                  <object class="GtkAdjustment">
+                    <property name="upper">50.0</property>
+                    <property name="value">1.0</property>
+                    <property name="step-increment">0.1</property>
+                  </object>
+                </property>
+                <property name="hexpand">True</property>
+                <property name="digits">1</property>
+                <property name="hexpand-set">True</property>
+                <property name="title">Light Intensity</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwSwitchRow" id="point_up_switch">
+                <property name="hexpand">True</property>
+                <property name="hexpand-set">True</property>
+                <property name="title">Alwayas Point Up</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="AdwPreferencesPage">
+        <property name="icon-name">applications-system-symbolic</property>
+        <property name="title">Model</property>
+        <child>
+          <object class="AdwPreferencesGroup">
+            <property name="hexpand">True</property>
+            <property name="hexpand-set">True</property>
+            <child>
+              <object class="AdwSwitchRow" id="model_volume_switch">
+                <property name="hexpand">True</property>
+                <property name="hexpand-set">True</property>
+                <property name="title">Volume</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwSwitchRow" id="point_sprites_switch">
+                <property name="hexpand">True</property>
+                <property name="hexpand-set">True</property>
+                <property name="title">Point Sprites</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwSwitchRow" id="inverse_volume_switch">
+                <property name="hexpand">True</property>
+                <property name="hexpand-set">True</property>
+                <property name="title">Inverse Volume</property>
               </object>
             </child>
           </object>
