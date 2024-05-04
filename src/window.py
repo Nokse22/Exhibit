@@ -41,6 +41,15 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     view_button_headerbar = Gtk.Template.Child()
 
+    keys = {
+    "grid": "render.grid.enable",
+    "translucency": "render.effect.translucency-support",
+    "tone-mapping":"render.effect.tone-mapping",
+    "ambient-occlusion": "render.effect.ambient-occlusion",
+    "anti-aliasing" :"render.effect.anti-aliasing",
+    "hdri-ambient" :"render.hdri.ambient",
+    }
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -48,22 +57,17 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.settings = Gio.Settings.new('io.github.nokse22.Exhibit')
 
-        self.settings.connect("notify::view-grid", self.toggle_grid)
+        # self.settings.on_bool_setting_changed("changed", self.on_setting_changed)
 
         self.options = {
             "scene.up-direction": "+Y",
             "render.background.color": [1.0, 1.0, 1.0],
-            # "render.raytracing.enable": False,
-            "render.grid.enable": True,
-            "render.effect.translucency-support": True,
-            # "render.effect.tone-mapping": False,
-            # "render.effect.ambient-occlusion": False,
-            # "render.effect.anti-aliasing": False,
-            # "render.effect.translucency-support": False,
-            # "scene.animation.index": -1,
-            # "scene.animation.autoplay": False,
-            # "render.show-edges": False,
-            # "render.hdri.ambient": False
+            "render.grid.enable": self.settings.get_boolean("grid"),
+            "render.effect.translucency-support": self.settings.get_boolean("translucency"),
+            "render.effect.tone-mapping": self.settings.get_boolean("tone-mapping"),
+            "render.effect.ambient-occlusion": self.settings.get_boolean("ambient-occlusion"),
+            "render.effect.anti-aliasing": self.settings.get_boolean("anti-aliasing"),
+            "render.hdri.ambient": self.settings.get_boolean("hdri-ambient")
         }
 
         self.engine = Engine(Window.EXTERNAL)
@@ -91,13 +95,26 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.drag_prev_offset = (0, 0)
         self.drag_start_angle = 0
 
+        style_manager = Adw.StyleManager()
+        style_manager.connect("notify::color-scheme", self.on_theme_changed)
+
+    def on_theme_changed(self, manager, dark):
+        print(dark)
+        if dark:
+            options = {"render.background.color": [0.2, 0.2, 0.2]}
+        else:
+            options = {"render.background.color": [1.0, 1.0, 1.0]}
+        self.engine.options.update(options)
+        self.gl_area.queue_render()
+
     def on_realize(self, area):
         self.gl_area.get_context().make_current()
+        self.gl_area.get_context().set_forward_compatible(True)
 
     def on_render(self, area, ctx):
         self.gl_area.get_context().make_current()
         self.engine.window.render()
-        print(ctx.get_forward_compatible())
+
         return True
 
     @Gtk.Template.Callback("on_scroll")
@@ -202,10 +219,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.engine.options.update(camera_options)
         self.gl_area.queue_render()
 
-    def toggle_grid(self, val=None):
-        if val == None:
-            val = not self.settings.get_boolean("view-grid")
-        options = {"render.grid.enable": val}
-        self.settings.set_boolean("view-grid", val)
+    def on_switch_toggled(self, switch, active, name):
+        options = {self.keys[name]: switch.get_active()}
+        print(options)
+        self.settings.set_boolean(name, switch.get_active())
         self.engine.options.update(options)
         self.gl_area.queue_render()

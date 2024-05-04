@@ -4,7 +4,7 @@
   <!-- interface-name 3dpref.ui -->
   <requires lib="Adw" version="1.0"/>
   <requires lib="gtk" version="4.0"/>
-  <template class="Preferences" parent="AdwPreferencesDialog">
+  <template class="Preferences" parent="AdwPreferencesWindow">
     <child>
       <object class="AdwPreferencesPage">
         <property name="icon-name">applications-system-symbolic</property>
@@ -18,6 +18,41 @@
                 <property name="hexpand">True</property>
                 <property name="hexpand-set">True</property>
                 <property name="title">View Grid</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwSwitchRow" id="translucency_switch">
+                <property name="hexpand">True</property>
+                <property name="hexpand-set">True</property>
+                <property name="title">Translucency</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwSwitchRow" id="tone_mapping_switch">
+                <property name="hexpand">True</property>
+                <property name="hexpand-set">True</property>
+                <property name="title">Tone Mapping</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwSwitchRow" id="ambient_occlusion_switch">
+                <property name="hexpand">True</property>
+                <property name="hexpand-set">True</property>
+                <property name="title">Ambient Occlusion</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwSwitchRow" id="anti_aliasing_switch">
+                <property name="hexpand">True</property>
+                <property name="hexpand-set">True</property>
+                <property name="title">Anti Aliasing</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwSwitchRow" id="hdri_ambient_switch">
+                <property name="hexpand">True</property>
+                <property name="hexpand-set">True</property>
+                <property name="title">HDRI Ambient</property>
               </object>
             </child>
           </object>

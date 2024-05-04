@@ -22,10 +22,15 @@ from gi.repository import Adw
 from gi.repository import Gtk, Gdk
 
 @Gtk.Template(resource_path='/io/github/nokse22/Exhibit/preferences.ui')
-class Preferences(Adw.PreferencesDialog):
+class Preferences(Adw.PreferencesWindow):
     __gtype_name__ = 'Preferences'
 
     grid_switch = Gtk.Template.Child()
+    translucency_switch = Gtk.Template.Child()
+    tone_mapping_switch = Gtk.Template.Child()
+    ambient_occlusion_switch = Gtk.Template.Child()
+    anti_aliasing_switch = Gtk.Template.Child()
+    hdri_ambient_switch = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

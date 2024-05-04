@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="exhibit">
 	<schema id="io.github.nokse22.Exhibit" path="/io/github/nokse22/Viewer3D/">
-	  <key name="view-grid" type="b">
+	  <key name="grid" type="b">
       <default>true</default>
+    </key>
+	  <key name="translucency" type="b">
+      <default>true</default>
+    </key>
+	  <key name="tone-mapping" type="b">
+      <default>false</default>
+    </key>
+	  <key name="ambient-occlusion" type="b">
+      <default>false</default>
+    </key>
+	  <key name="anti-aliasing" type="b">
+      <default>false</default>
+    </key>
+	  <key name="hdri-ambient" type="b">
+      <default>false</default>
     </key>
 	  <key name="orthographic" type="b">
       <default>false</default>

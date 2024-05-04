@@ -71,9 +71,21 @@ class Viewer3dApplication(Adw.Application):
 
         preferences = Preferences()
 
-        self.win.settings.bind("view-grid", preferences.grid_switch, "active", Gio.SettingsBindFlags.DEFAULT)
+        preferences.translucency_switch.set_active(self.win.settings.get_boolean("translucency"))
+        preferences.grid_switch.set_active(self.win.settings.get_boolean("grid"))
+        preferences.tone_mapping_switch.set_active(self.win.settings.get_boolean("tone-mapping"))
+        preferences.ambient_occlusion_switch.set_active(self.win.settings.get_boolean("ambient-occlusion"))
+        preferences.anti_aliasing_switch.set_active(self.win.settings.get_boolean("anti-aliasing"))
+        preferences.hdri_ambient_switch.set_active(self.win.settings.get_boolean("hdri-ambient"))
 
-        preferences.present(self.win)
+        preferences.translucency_switch.connect("notify::active", self.win.on_switch_toggled, "translucency")
+        preferences.grid_switch.connect("notify::active", self.win.on_switch_toggled, "grid")
+        preferences.tone_mapping_switch.connect("notify::active", self.win.on_switch_toggled, "tone-mapping")
+        preferences.ambient_occlusion_switch.connect("notify::active", self.win.on_switch_toggled, "ambient-occlusion")
+        preferences.anti_aliasing_switch.connect("notify::active", self.win.on_switch_toggled, "anti-aliasing")
+        preferences.hdri_ambient_switch.connect("notify::active", self.win.on_switch_toggled, "hdri-ambient")
+
+        preferences.present()
 
     def create_action(self, name, callback, shortcuts=None):
         """Add an application action.
