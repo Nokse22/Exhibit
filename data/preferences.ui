@@ -8,7 +8,7 @@
     <property name="modal">false</property>
     <child>
       <object class="AdwPreferencesPage">
-        <property name="icon-name">applications-system-symbolic</property>
+        <property name="icon-name">photo-camera-symbolic</property>
         <property name="title">Render</property>
         <child>
           <object class="AdwPreferencesGroup">
