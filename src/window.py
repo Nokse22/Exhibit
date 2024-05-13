@@ -102,6 +102,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         5: "+Z"
     }
 
+    preference_window = None
+
     def __init__(self, application=None, filepath=None):
         super().__init__(application=application)
 
@@ -332,7 +334,12 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.window_settings.save_all_settings()
 
     def on_preferences_action(self, *args):
+        if self.preference_window:
+            self.preference_window.present()
+            return
+
         preferences = Preferences()
+        preferences.connect("close-request", self.on_preferences_close)
 
         self.set_preference_values(preferences)
 
@@ -353,6 +360,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         preferences.save_button.connect("clicked", self.on_save_settings_clicked)
 
         preferences.present()
+
+        self.preference_window = preferences
+
+    def on_preferences_close(self, *args):
+        self.preference_window = None
 
     def set_preference_values(self, preferences):
         preferences.translucency_switch.set_active(self.window_settings.get_setting("translucency"))
