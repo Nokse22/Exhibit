@@ -211,8 +211,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.camera.position = v_add(self.camera.position, delta)
             self.camera.focal_point = v_add(self.camera.focal_point, delta)
 
-            print(0.0000001*self.width + 0.001*self.distance)
-
         if self.window_settings.get_setting("point-up"):
             self.camera.setViewUp((0.0, 1.0, 0.0))
 
