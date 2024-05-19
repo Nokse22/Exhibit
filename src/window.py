@@ -158,6 +158,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if filepath:
             self.open_file(filepath)
 
+        # self.update_options()
+
     def on_resize(self, gl_area, width, heigh):
         self.width = width
         self.height = heigh
@@ -266,7 +268,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.title_widget.set_subtitle(self.file_name)
         self.stack.set_visible_child_name("3d_page")
 
-        GLib.timeout_add(200, self.update_options)
+        GLib.timeout_add(100, self.update_options)
 
     def update_options(self):
         options = {}
