@@ -103,6 +103,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     }
 
     preference_window = None
+    width = 600
+    height = 600
+    distance = 0
+
+    file_name = ""
 
     def __init__(self, application=None, filepath=None):
         super().__init__(application=application)
@@ -138,6 +143,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.gl_area.set_auto_render(True)
         self.gl_area.connect("realize", self.on_realize)
         self.gl_area.connect("render", self.on_render)
+        self.gl_area.connect("resize", self.on_resize)
 
         self.gl_area.set_allowed_apis(Gdk.GLAPI.GL)
         # self.gl_area.set_required_version(1, 0)
@@ -151,6 +157,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         if filepath:
             self.open_file(filepath)
+
+    def on_resize(self, gl_area, width, heigh):
+        self.width = width
+        self.height = heigh
 
     def update_theme(self, *args):
         if self.style_manager.get_dark():
@@ -167,15 +177,22 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.gl_area.get_context().make_current()
         self.engine.window.render()
 
+        # print(self.gl_area.get_context().get_allowed_apis())
+
         return True
 
     @Gtk.Template.Callback("on_scroll")
     def on_scroll(self, gesture, dx, dy):
+        if self.window_settings.settings["orthographic"]:
+            return
+        self.engine.options.update({"scene.camera.orthographic": False})
         if (dy == -1.0):
             self.camera.dolly(1.1)
         elif (dy == 1.0):
             self.camera.dolly(0.9)
+        self.engine.options.update({"scene.camera.orthographic": self.window_settings.settings["orthographic"]}) #
 
+        self.get_distance()
         self.gl_area.queue_render()
 
     @Gtk.Template.Callback("on_drag_update")
@@ -184,13 +201,20 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.camera.elevation(-(self.drag_prev_offset[1] - y_offset))
             self.camera.azimuth(self.drag_prev_offset[0] - x_offset)
         elif gesture.get_current_button() == 2:
-            self.camera.pitch(-(self.drag_prev_offset[1] - y_offset)*0.05)
-            self.camera.yaw(-(self.drag_prev_offset[0] - x_offset)*0.05)
+            w = v_norm(v_sub(self.camera.focal_point, self.camera.position))
+            v = self.camera.view_up
+            u = v_cross(v, w)
+            delta = v_add(
+                v_mul(u, -(self.drag_prev_offset[0] - x_offset) * (0.0000001*self.width + 0.001*self.distance)), #
+                v_mul(v, -(self.drag_prev_offset[1] - y_offset) * (0.0000001*self.height + 0.001*self.distance)), #
+            )
+            self.camera.position = v_add(self.camera.position, delta)
+            self.camera.focal_point = v_add(self.camera.focal_point, delta)
+
+            print(0.0000001*self.width + 0.001*self.distance)
 
         if self.window_settings.get_setting("point-up"):
             self.camera.setViewUp((0.0, 1.0, 0.0))
-
-        print(gesture.get_current_button())
 
         self.gl_area.queue_render()
 
@@ -235,9 +259,13 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.camera.resetToBounds()
         self.camera.setCurrentAsDefault()
 
-        file_name = os.path.basename(filepath)
+        self.get_distance()
 
-        self.title_widget.set_subtitle(file_name)
+        self.file_name = os.path.basename(filepath)
+
+        self.set_title(f"View {self.file_name}")
+        self.title_widget.set_title("Exhibit")
+        self.title_widget.set_subtitle(self.file_name)
         self.stack.set_visible_child_name("3d_page")
 
         GLib.timeout_add(200, self.update_options)
@@ -282,6 +310,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     @Gtk.Template.Callback("on_home_clicked")
     def on_home_clicked(self, btn):
         self.camera.resetToDefault()
+        self.get_distance()
         self.gl_area.queue_render()
 
     @Gtk.Template.Callback("on_open_button_clicked")
@@ -326,6 +355,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.engine.options.update(options)
         self.window_settings.set_setting("up-direction", selected)
 
+    def get_distance(self):
+        self.distance = p_dist(self.camera.position, (0,0,0))
+
     def on_reset_settings_clicked(self, btn):
         self.engine.options.update(self.window_settings.settings)
         self.gl_area.queue_render()
@@ -339,6 +371,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             return
 
         preferences = Preferences()
+        preferences.set_title(f"Preferences {self.file_name}")
         preferences.connect("close-request", self.on_preferences_close)
 
         self.set_preference_values(preferences)
@@ -392,3 +425,33 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                                 developers=['Nokse22'],
                                 copyright='© 2024 Nokse22')
         about.present(self)
+
+def p_dist(point1, point2):
+    if len(point1) != len(point2):
+        raise ValueError("Points must have the same dimension")
+
+    squared_diffs = [(x - y) ** 2 for x, y in zip(point1, point2)]
+    return math.sqrt(sum(squared_diffs))
+
+def v_norm(vector):
+    norm = math.sqrt(sum(x**2 for x in vector))
+    return tuple(x / norm for x in vector)
+
+def v_add(vector1, vector2):
+    return tuple(v1 + v2 for v1, v2 in zip(vector1, vector2))
+
+def v_sub(vector1, vector2):
+    return tuple(v1 - v2 for v1, v2 in zip(vector1, vector2))
+
+def v_mul(vector, scalar):
+    return tuple(v * scalar for v in vector)
+
+def v_cross(vector1, vector2):
+    if len(vector1) != 3 or len(vector2) != 3:
+        raise ValueError("Cross product is defined only for 3-dimensional vectors.")
+
+    x = vector1[1] * vector2[2] - vector1[2] * vector2[1]
+    y = vector1[2] * vector2[0] - vector1[0] * vector2[2]
+    z = vector1[0] * vector2[1] - vector1[1] * vector2[0]
+
+    return (x, y, z)
