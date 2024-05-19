@@ -152,7 +152,7 @@ This application is experimental, crashes are expected.</property>
     </section>
     <section>
       <item>
-        <attribute name="label" translatable="yes">_Open New</attribute>
+        <attribute name="label" translatable="yes">_Load New Model</attribute>
         <attribute name="action">win.open-new</attribute>
       </item>
     </section>
