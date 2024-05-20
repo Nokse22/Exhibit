@@ -188,6 +188,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         # if self.window_settings.settings["orthographic"]:
         #     return
         self.engine.options.update({"scene.camera.orthographic": False})
+        self.gl_area.get_context().make_current()
+        self.engine.window.render_to_image()
         self.camera.dolly(1 - 0.1*dy)
         self.engine.options.update({"scene.camera.orthographic": self.window_settings.settings["orthographic"]})
         self.get_distance()
