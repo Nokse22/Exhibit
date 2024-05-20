@@ -185,15 +185,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback("on_scroll")
     def on_scroll(self, gesture, dx, dy):
-        if self.window_settings.settings["orthographic"]:
-            return
+        # if self.window_settings.settings["orthographic"]:
+        #     return
         self.engine.options.update({"scene.camera.orthographic": False})
-        if (dy == -1.0):
-            self.camera.dolly(1.1)
-        elif (dy == 1.0):
-            self.camera.dolly(0.9)
-        self.engine.options.update({"scene.camera.orthographic": self.window_settings.settings["orthographic"]}) #
-
+        self.camera.dolly(1 - 0.1*dy)
+        self.engine.options.update({"scene.camera.orthographic": self.window_settings.settings["orthographic"]})
         self.get_distance()
         self.gl_area.queue_render()
 
@@ -207,8 +203,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             v = self.camera.view_up
             u = v_cross(v, w)
             delta = v_add(
-                v_mul(u, -(self.drag_prev_offset[0] - x_offset) * (0.0000001*self.width + 0.001*self.distance)), #
-                v_mul(v, -(self.drag_prev_offset[1] - y_offset) * (0.0000001*self.height + 0.001*self.distance)), #
+                v_mul(u, -(self.drag_prev_offset[0] - x_offset) * (0.0000001*self.width + 0.001*self.distance)),
+                v_mul(v, -(self.drag_prev_offset[1] - y_offset) * (0.0000001*self.height + 0.001*self.distance)),
             )
             self.camera.position = v_add(self.camera.position, delta)
             self.camera.focal_point = v_add(self.camera.focal_point, delta)
