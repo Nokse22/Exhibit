@@ -440,7 +440,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 self.engine.options.update(options)
                 self.gl_area.queue_render()
                 return
-        print(self.style_manager.get_dark())
         if self.style_manager.get_dark():
             options = {"render.background.color": [0.2, 0.2, 0.2]}
         else:

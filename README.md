@@ -12,6 +12,7 @@ View 3D models, powered by the [F3D](https://github.com/f3d-app/f3d) library tha
   <div align="center">
   <img src="data/resources/screenshot 1.png" height="400"/>
   <img src="data/resources/screenshot 2.png" height="400"/>
+  <img src="data/resources/screenshot 3.png" height="400"/>
   </div>
 
 ### From source
