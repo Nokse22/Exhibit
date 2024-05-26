@@ -212,7 +212,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if self.window_settings.get_setting("point-up"):
             self.camera.setViewUp((0.0, 1.0, 0.0))
 
-        print(self.camera.position, self.camera.focal_point)
         self.gl_area.queue_render()
 
         self.drag_prev_offset = (x_offset, y_offset)

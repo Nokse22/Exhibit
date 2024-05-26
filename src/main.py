@@ -42,8 +42,12 @@ class Viewer3dApplication(Adw.Application):
         self.create_action('right-view', self.right_view, ['3'])
         self.create_action('top-view', self.top_view, ['7'])
         self.create_action('isometric-view', self.isometric_view, ['9'])
+        self.create_action('open-preferences', self.open_preferences, ['<primary>comma'])
 
         # self.connect("open", self.on_open)
+
+    def open_preferences(self, *args):
+        self.props.active_window.on_preferences_action()
 
     def toggle_orthographic(self, *args):
         self.props.active_window.toggle_orthographic()
