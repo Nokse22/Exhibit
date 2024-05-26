@@ -14,6 +14,7 @@
           <object class="AdwPreferencesGroup">
             <property name="hexpand">True</property>
             <property name="hexpand-set">True</property>
+            <property name="title">Grid</property>
             <child>
               <object class="AdwSwitchRow" id="grid_switch">
                 <property name="hexpand">True</property>
@@ -21,6 +22,20 @@
                 <property name="title">View Grid</property>
               </object>
             </child>
+            <child>
+              <object class="AdwSwitchRow" id="absolute_grid_switch">
+                <property name="hexpand">True</property>
+                <property name="hexpand-set">True</property>
+                <property name="title">Grid Absolute</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwPreferencesGroup">
+            <property name="hexpand">True</property>
+            <property name="hexpand-set">True</property>
+            <property name="title">Render</property>
             <child>
               <object class="AdwSwitchRow" id="translucency_switch">
                 <property name="hexpand">True</property>
@@ -71,6 +86,86 @@
                 <property name="title">Light Intensity</property>
               </object>
             </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwPreferencesGroup">
+            <property name="hexpand">True</property>
+            <property name="hexpand-set">True</property>
+            <property name="title">Background</property>
+            <child>
+              <object class="AdwSwitchRow" id="use_skybox_switch">
+                <property name="hexpand">True</property>
+                <property name="hexpand-set">True</property>
+                <property name="title">Use Hdri Skybox</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwEntryRow" id="skybox_row">
+                <property name="hexpand">True</property>
+                <property name="hexpand-set">True</property>
+                <property name="title">Hdri Skybox Image</property>
+                <child>
+                  <object class="GtkButton" id="open_skybox_button">
+                    <property name="valign">center</property>
+                    <property name="icon-name">document-open-symbolic</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="AdwSwitchRow" id="blur_switch">
+                <property name="hexpand">True</property>
+                <property name="hexpand-set">True</property>
+                <property name="title">Blur Background</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwSpinRow" id="blur_coc_spin">
+                <property name="hexpand">True</property>
+                <property name="hexpand-set">True</property>
+                <property name="title">Blur Circle Of Confusion</property>
+                <property name="adjustment">
+                  <object class="GtkAdjustment">
+                    <property name="lower">5</property>
+                    <property name="upper">120</property>
+                    <property name="value">20</property>
+                    <property name="page-increment">10</property>
+                    <property name="step-increment">1</property>
+                  </object>
+                </property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwPreferencesGroup">
+            <property name="hexpand">True</property>
+            <property name="hexpand-set">True</property>
+            <child>
+              <object class="AdwSwitchRow" id="use_color_switch">
+                <property name="hexpand">True</property>
+                <property name="hexpand-set">True</property>
+                <property name="title">Use Custom Color</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwActionRow">
+                <property name="hexpand">True</property>
+                <property name="hexpand-set">True</property>
+                <property name="title">Background Color</property>
+                <child>
+                  <object class="GtkColorDialogButton" id="background_color_button">
+                    <property name="valign">center</property>
+                    <property name="rgba">rgb(246,97,81)</property>
+                    <property name="dialog">
+                      <object class="GtkColorDialog"/>
+                    </property>
+                  </object>
+                </child>
+              </object>
+            </child>
+
           </object>
         </child>
       </object>

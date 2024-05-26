@@ -39,6 +39,7 @@ class WindowSettings():
 
         self.settings = {
             "grid": self.saved_settings.get_boolean("grid"),
+            "absolute-grid": self.saved_settings.get_boolean("absolute-grid"),
             "translucency": self.saved_settings.get_boolean("translucency"),
             "tone-mapping": self.saved_settings.get_boolean("tone-mapping"),
             "ambient-occlusion": self.saved_settings.get_boolean("ambient-occlusion"),
@@ -47,6 +48,11 @@ class WindowSettings():
             "light-intensity": self.saved_settings.get_double("light-intensity"),
             "orthographic": self.saved_settings.get_boolean("orthographic"),
             "point-up": self.saved_settings.get_boolean("point-up"),
+            "skybox-path": "",
+            "blur-background": self.saved_settings.get_boolean("blur-background"),
+            "blur-coc": self.saved_settings.get_double("blur-coc"),
+            "use-skybox": False,
+            "background-color": [1.0, 1.0, 1.0],
         }
 
     def set_setting(self, key, val):
@@ -57,6 +63,7 @@ class WindowSettings():
 
     def save_all_settings(self):
         self.saved_settings.set_boolean("grid", self.settings["grid"])
+        self.saved_settings.set_boolean("absolute-grid", self.settings["absolute-grid"])
         self.saved_settings.set_boolean("translucency", self.settings["translucency"])
         self.saved_settings.set_boolean("tone-mapping", self.settings["tone-mapping"])
         self.saved_settings.set_boolean("ambient-occlusion", self.settings["ambient-occlusion"])
@@ -65,6 +72,8 @@ class WindowSettings():
         self.saved_settings.set_double("light-intensity", self.settings["light-intensity"])
         self.saved_settings.set_boolean("orthographic", self.settings["orthographic"])
         self.saved_settings.set_boolean("point-up", self.settings["point-up"])
+        self.saved_settings.set_boolean("blur-background", self.settings["blur-background"])
+        self.saved_settings.set_double("blur-coc", self.settings["blur-coc"])
 
         print("settings saved")
 
@@ -82,6 +91,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     keys = {
         "grid": "render.grid.enable",
+        "absolute-grid": "render.grid.absolute",
         "translucency": "render.effect.translucency-support",
         "tone-mapping":"render.effect.tone-mapping",
         "ambient-occlusion": "render.effect.ambient-occlusion",
@@ -91,6 +101,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         "background-blur": "background.blur",
         "light-intensity": "render.light.intensity",
         "orthographic": "scene.camera.orthographic",
+        "blur-background": "render.background.blur",
+        "blur-coc": "render.background.blur.coc",
+        "use-skybox": "render.background.skybox",
+        "background-color": "render.background.color",
     }
 
     up_dirs = {
@@ -135,7 +149,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         inital_options = {
             "scene.up-direction": "+Y",
             "render.background.color": [1.0, 1.0, 1.0],
-            "scene.animation.autoplay": True,
         }
 
         self.engine.options.update(inital_options)
@@ -153,7 +166,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.drag_start_angle = 0
 
         self.style_manager = Adw.StyleManager()
-        self.style_manager.connect("notify::dark", self.update_theme)
+        self.style_manager.connect("notify::dark", self.update_background_color)
 
         if filepath:
             self.open_file(filepath)
@@ -163,14 +176,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def on_resize(self, gl_area, width, heigh):
         self.width = width
         self.height = heigh
-
-    def update_theme(self, *args):
-        if self.style_manager.get_dark():
-            options = {"render.background.color": [0.2, 0.2, 0.2]}
-        else:
-            options = {"render.background.color": [1.0, 1.0, 1.0]}
-        self.engine.options.update(options)
-        self.gl_area.queue_render()
 
     def on_realize(self, area):
         self.gl_area.get_context().make_current()
@@ -276,7 +281,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             options.setdefault(f3d_key, value)
 
         self.engine.options.update(options)
-        self.update_theme()
+        self.update_background_color()
         self.gl_area.queue_render()
 
         return False
@@ -396,8 +401,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.set_preference_values(preferences)
 
-        preferences.translucency_switch.connect("notify::active", self.on_switch_toggled, "translucency")
         preferences.grid_switch.connect("notify::active", self.on_switch_toggled, "grid")
+        preferences.absolute_grid_switch.connect("notify::active", self.on_switch_toggled, "absolute-grid")
+
+        preferences.translucency_switch.connect("notify::active", self.on_switch_toggled, "translucency")
         preferences.tone_mapping_switch.connect("notify::active", self.on_switch_toggled, "tone-mapping")
         preferences.ambient_occlusion_switch.connect("notify::active", self.on_switch_toggled, "ambient-occlusion")
         preferences.anti_aliasing_switch.connect("notify::active", self.on_switch_toggled, "anti-aliasing")
@@ -406,6 +413,14 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         preferences.point_up_switch.connect("notify::active", self.set_point_up, "point-up")
 
         preferences.light_intensity_spin.connect("notify::value", self.on_spin_changed, "light-intensity")
+
+        preferences.use_skybox_switch.connect("notify::active", self.on_switch_toggled, "use-skybox")
+        preferences.open_skybox_button.connect("clicked", self.on_open_skybox_clicked)
+        preferences.blur_switch.connect("notify::active", self.on_switch_toggled, "blur-background")
+        preferences.blur_coc_spin.connect("notify::value", self.on_spin_changed, "blur-coc")
+
+        preferences.use_color_switch.connect("notify::active", self.update_background_color)
+        preferences.background_color_button.connect("notify::rgba", self.update_background_color)
 
         preferences.reset_button.connect("clicked", self.on_reset_settings_clicked)
         preferences.reset_button.connect("clicked", lambda self, btn, pref: self.set_preference_values(pref))
@@ -416,18 +431,76 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.preference_window = preferences
 
+    def update_background_color(self, *args):
+        if self.preference_window:
+            if self.preference_window.use_color_switch.get_active():
+                options = {
+                    "render.background.color": self.convert_to_rgba(self.preference_window.background_color_button.get_rgba().to_string()),
+                }
+                self.engine.options.update(options)
+                self.gl_area.queue_render()
+                return
+        print(self.style_manager.get_dark())
+        if self.style_manager.get_dark():
+            options = {"render.background.color": [0.2, 0.2, 0.2]}
+        else:
+            options = {"render.background.color": [1.0, 1.0, 1.0]}
+        self.engine.options.update(options)
+        self.gl_area.queue_render()
+
+    def convert_to_rgba(self, rgb):
+        values = [int(x) / 255 for x in rgb[4:-1].split(',')]
+        return values
+
+    def on_open_skybox_clicked(self, *args):
+        file_filter = Gtk.FileFilter(name="All supported formats")
+
+        file_patterns = ["*.hdr", "*.exr", "*.png", "*.jpg", "*.pnm", "*.tiff", "*.bmp"]
+
+        for patt in file_patterns:
+            file_filter.add_pattern(patt)
+
+        filter_list = Gio.ListStore.new(Gtk.FileFilter())
+        filter_list.append(file_filter)
+
+        dialog = Gtk.FileDialog(
+            title=_("Open Skybox File"),
+            filters=filter_list,
+        )
+
+        dialog.open(self, None, self.on_open_skybox_file_response)
+
+    def on_open_skybox_file_response(self, dialog, response):
+        file = dialog.open_finish(response)
+
+        if file:
+            filepath = file.get_path()
+
+            self.window_settings.set_setting("skybox-path", filepath)
+            options = {"render.hdri.file": filepath, "render.background.skybox": True}
+            self.engine.options.update(options)
+            self.preference_window.skybox_row.set_text(filepath)
+
+            self.gl_area.queue_render()
+
     def on_preferences_close(self, *args):
         self.preference_window = None
 
     def set_preference_values(self, preferences):
-        preferences.translucency_switch.set_active(self.window_settings.get_setting("translucency"))
         preferences.grid_switch.set_active(self.window_settings.get_setting("grid"))
+        preferences.absolute_grid_switch.set_active(self.window_settings.get_setting("absolute-grid"))
+
+        preferences.translucency_switch.set_active(self.window_settings.get_setting("translucency"))
         preferences.tone_mapping_switch.set_active(self.window_settings.get_setting("tone-mapping"))
         preferences.ambient_occlusion_switch.set_active(self.window_settings.get_setting("ambient-occlusion"))
         preferences.anti_aliasing_switch.set_active(self.window_settings.get_setting("anti-aliasing"))
         preferences.hdri_ambient_switch.set_active(self.window_settings.get_setting("hdri-ambient"))
         preferences.point_up_switch.set_active(self.window_settings.get_setting("point-up"))
         preferences.light_intensity_spin.set_value(self.window_settings.get_setting("light-intensity"))
+        preferences.skybox_row.set_text(self.window_settings.get_setting("skybox-path"))
+        preferences.blur_switch.set_active(self.window_settings.get_setting("blur-background"))
+        preferences.blur_coc_spin.set_value(self.window_settings.get_setting("blur-coc"))
+        preferences.use_skybox_switch.set_active(self.window_settings.get_setting("use-skybox"))
 
     def create_action(self, name, callback):
         action = Gio.SimpleAction.new(name, None)

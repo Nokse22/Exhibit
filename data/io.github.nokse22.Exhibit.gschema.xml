@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="exhibit">
 	<schema id="io.github.nokse22.Exhibit" path="/io/github/nokse22/Viewer3D/">
+	  <key name="absolute-grid" type="b">
+      <default>false</default>
+    </key>
 	  <key name="grid" type="b">
       <default>true</default>
     </key>
@@ -30,6 +33,12 @@
     </key>
 	  <key name="up-direction" type="i">
       <default>0</default>
+    </key>
+	  <key name="blur-background" type="b">
+      <default>true</default>
+    </key>
+	  <key name="blur-coc" type="d">
+      <default>20.0</default>
     </key>
 	</schema>
 </schemalist>

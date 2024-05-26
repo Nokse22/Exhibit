@@ -26,12 +26,24 @@ class Preferences(Adw.PreferencesWindow):
     __gtype_name__ = 'Preferences'
 
     grid_switch = Gtk.Template.Child()
+    absolute_grid_switch = Gtk.Template.Child()
+
     translucency_switch = Gtk.Template.Child()
     tone_mapping_switch = Gtk.Template.Child()
     ambient_occlusion_switch = Gtk.Template.Child()
     anti_aliasing_switch = Gtk.Template.Child()
     hdri_ambient_switch = Gtk.Template.Child()
     light_intensity_spin = Gtk.Template.Child()
+
+    use_skybox_switch = Gtk.Template.Child()
+
+    open_skybox_button = Gtk.Template.Child()
+    skybox_row = Gtk.Template.Child()
+    blur_switch = Gtk.Template.Child()
+    blur_coc_spin = Gtk.Template.Child()
+
+    use_color_switch = Gtk.Template.Child()
+    background_color_button = Gtk.Template.Child()
 
     point_up_switch = Gtk.Template.Child()
     # up_direction_combo = Gtk.Template.Child()
