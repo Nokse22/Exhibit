@@ -37,8 +37,28 @@ class Viewer3dApplication(Adw.Application):
                          flags=Gio.ApplicationFlags.DEFAULT_FLAGS)
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('open-new-window', self.open_new_window_action, ['<primary><shift>n'])
+        self.create_action('toggle-orthographic', self.toggle_orthographic, ['5'])
+        self.create_action('front-view', self.front_view, ['1'])
+        self.create_action('right-view', self.right_view, ['3'])
+        self.create_action('top-view', self.top_view, ['7'])
+        self.create_action('isometric-view', self.isometric_view, ['9'])
 
         # self.connect("open", self.on_open)
+
+    def toggle_orthographic(self, *args):
+        self.props.active_window.toggle_orthographic()
+
+    def front_view(self, *args):
+        self.props.active_window.front_view()
+
+    def right_view(self, *args):
+        self.props.active_window.right_view()
+
+    def top_view(self, *args):
+        self.props.active_window.top_view()
+
+    def isometric_view(self, *args):
+        self.props.active_window.isometric_view()
 
     def on_open(self, window, files, *args):
         for file in files:

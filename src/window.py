@@ -212,6 +212,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if self.window_settings.get_setting("point-up"):
             self.camera.setViewUp((0.0, 1.0, 0.0))
 
+        print(self.camera.position, self.camera.focal_point)
         self.gl_area.queue_render()
 
         self.drag_prev_offset = (x_offset, y_offset)
@@ -302,6 +303,30 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if file:
             file_path = file.get_path()
             self.save_as_image(file_path)
+
+    def front_view(self, *args):
+        self.camera.position = v_add(self.camera.focal_point, (0, 0, 100))
+        self.camera.setViewUp((0.0, 1.0, 0.0))
+        self.camera.resetToBounds()
+        self.gl_area.queue_render()
+
+    def right_view(self, *args):
+        self.camera.position = v_add(self.camera.focal_point, (100, 0, 0))
+        self.camera.setViewUp((0.0, 1.0, 0.0))
+        self.camera.resetToBounds()
+        self.gl_area.queue_render()
+
+    def top_view(self, *args):
+        self.camera.position = v_add(self.camera.focal_point, (0, 100, 0))
+        self.camera.setViewUp((0.0, 0.0, -1.0))
+        self.camera.resetToBounds()
+        self.gl_area.queue_render()
+
+    def isometric_view(self, *args):
+        self.camera.position = v_add(self.camera.focal_point, (100, 100 , 100))
+        self.camera.setViewUp((0.0, 1.0, 0.0))
+        self.camera.resetToBounds()
+        self.gl_area.queue_render()
 
     @Gtk.Template.Callback("on_home_clicked")
     def on_home_clicked(self, btn):
