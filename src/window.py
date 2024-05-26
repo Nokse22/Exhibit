@@ -185,8 +185,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback("on_scroll")
     def on_scroll(self, gesture, dx, dy):
-        # if self.window_settings.settings["orthographic"]:
-        #     return
         self.engine.options.update({"scene.camera.orthographic": False})
         self.gl_area.get_context().make_current()
         self.engine.window.render_to_image()
