@@ -31,9 +31,6 @@
 	  <key name="point-up" type="b">
       <default>true</default>
     </key>
-	  <key name="up-direction" type="i">
-      <default>0</default>
-    </key>
 	  <key name="blur-background" type="b">
       <default>true</default>
     </key>
@@ -51,6 +48,17 @@
     </key>
 	  <key name="edges-width" type="d">
       <default>1.0</default>
+    </key>
+	  <key name="up-direction" type="s">
+      <choices>
+        <choice value="-X"/>
+        <choice value="+X"/>
+        <choice value="-Y"/>
+        <choice value="+Y"/>
+        <choice value="-Z"/>
+        <choice value="+Z"/>
+      </choices>
+      <default>'-Y'</default>
     </key>
 	</schema>
 </schemalist>

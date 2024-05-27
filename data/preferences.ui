@@ -224,6 +224,25 @@
                 <property name="title">Alwayas Point Up</property>
               </object>
             </child>
+            <child>
+              <object class="AdwComboRow" id="up_direction_combo">
+                <property name="hexpand">True</property>
+                <property name="hexpand-set">True</property>
+                <property name="title">Up Direction</property>
+                <property name="model">
+                  <object class="GtkStringList">
+                    <items>
+                      <item translatable="yes">- X</item>
+                      <item translatable="yes">+ X</item>
+                      <item translatable="yes">- Y</item>
+                      <item translatable="yes">+ Y</item>
+                      <item translatable="yes">- Z</item>
+                      <item translatable="yes">+ Z</item>
+                    </items>
+                  </object>
+                </property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
@@ -260,26 +279,6 @@
               <property name="xalign">0</property>
             </object>
           </child>
-            <!-- <child> -->
-            <!--   <object class="AdwComboRow" id="up_direction_combo"> -->
-            <!--     <property name="hexpand">True</property> -->
-            <!--     <property name="visible">False</property> -->
-            <!--     <property name="hexpand-set">True</property> -->
-            <!--     <property name="title">Up Direction</property> -->
-            <!--     <property name="model"> -->
-            <!--       <object class="GtkStringList"> -->
-            <!--         <items> -->
-            <!--           <item translatable="yes">-X</item> -->
-            <!--           <item translatable="yes">+X</item> -->
-            <!--           <item translatable="yes">-Y</item> -->
-            <!--           <item translatable="yes">+Y</item> -->
-            <!--           <item translatable="yes">-Z</item> -->
-            <!--           <item translatable="yes">+Z</item> -->
-            <!--         </items> -->
-            <!--       </object> -->
-            <!--     </property> -->
-            <!--   </object> -->
-            <!-- </child> -->
           </object>
         </child>
       </object>

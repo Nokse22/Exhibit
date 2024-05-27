@@ -31,6 +31,33 @@ import os
 
 from .preferences import Preferences
 
+up_dir_n_to_string = {
+    0: "-X",
+    1: "+X",
+    2: "-Y",
+    3: "+Y",
+    4: "-Z",
+    5: "+Z"
+}
+
+up_dir_string_to_n = {
+    "-X": 0,
+    "+X": 1,
+    "-Y": 2,
+    "+Y": 3,
+    "-Z": 4,
+    "+Z": 5
+}
+
+up_dirs_vector = {
+    "-X": (-1.0, 0.0, 0.0),
+    "+X": (1.0, 0.0, 0.0),
+    "-Y": (0.0, -1.0, 0.0),
+    "+Y": (0.0, 1.0, 0.0),
+    "-Z": (0.0, 0.0, -1.0),
+    "+Z": (0.0, 0.0, 1.0)
+}
+
 class WindowSettings():
     def __init__(self):
         super().__init__()
@@ -53,9 +80,10 @@ class WindowSettings():
             "blur-coc": self.saved_settings.get_double("blur-coc"),
             "use-skybox": False,
             "background-color": rgb_to_list(self.saved_settings.get_string("background-color")),
-            "use-color": False,
+            "use-color": self.saved_settings.get_boolean("use-color"),
             "show-edges": self.saved_settings.get_boolean("show-edges"),
-            "edges-width": self.saved_settings.get_double("edges-width")
+            "edges-width": self.saved_settings.get_double("edges-width"),
+            "up-direction": self.saved_settings.get_string("up-direction")
         }
 
     def set_setting(self, key, val):
@@ -80,6 +108,7 @@ class WindowSettings():
         self.saved_settings.set_boolean("use-color", self.settings["use-color"])
         self.saved_settings.set_string("background-color", list_to_rgb(self.settings["background-color"]))
         self.saved_settings.set_double("edges-width", self.settings["edges-width"])
+        self.saved_settings.set_string("up-direction", self.settings["up-direction"])
 
         print("settings saved")
 
@@ -113,15 +142,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         "background-color": "render.background.color",
         "show-edges": "render.show-edges",
         "edges-width": "render.line-width",
-    }
-
-    up_dirs = {
-        0: "-X",
-        1: "+X",
-        2: "-Y",
-        3: "+Y",
-        4: "-Z",
-        5: "+Z"
+        "up-direction": "scene.up-direction",
     }
 
     preference_window = None
@@ -155,8 +176,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.toggle_orthographic()
 
         inital_options = {
-            "scene.up-direction": "+Y",
             "render.background.color": [1.0, 1.0, 1.0],
+            "scene.up-direction": self.window_settings.get_setting("up-direction")
         }
 
         self.engine.options.update(inital_options)
@@ -177,7 +198,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.style_manager.connect("notify::dark", self.update_background_color)
 
         if filepath:
-            self.open_file(filepath)
+            self.filepath = filepath
+            self.load_file()
 
         # self.update_options()
 
@@ -191,18 +213,18 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def on_render(self, area, ctx):
         self.gl_area.get_context().make_current()
         self.engine.window.render()
-
-        # print(self.gl_area.get_context().get_allowed_apis())
-
         return True
 
     @Gtk.Template.Callback("on_scroll")
     def on_scroll(self, gesture, dx, dy):
-        self.engine.options.update({"scene.camera.orthographic": False})
-        self.gl_area.get_context().make_current()
-        self.engine.window.render_to_image()
-        self.camera.dolly(1 - 0.1*dy)
-        self.engine.options.update({"scene.camera.orthographic": self.window_settings.settings["orthographic"]})
+        if self.window_settings.get_setting("orthographic"):
+            self.engine.options.update({"scene.camera.orthographic": False})
+            self.gl_area.get_context().make_current()
+            self.engine.window.render_to_image()
+            self.camera.dolly(1 - 0.1*dy)
+            self.engine.options.update({"scene.camera.orthographic": self.window_settings.settings["orthographic"]})
+        else:
+            self.camera.dolly(1 - 0.1*dy)
         self.get_distance()
         self.gl_area.queue_render()
 
@@ -223,7 +245,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.camera.focal_point = v_add(self.camera.focal_point, delta)
 
         if self.window_settings.get_setting("point-up"):
-            self.camera.setViewUp((0.0, 1.0, 0.0))
+            up = up_dirs_vector[self.window_settings.get_setting("up-direction")]
+            self.camera.setViewUp(up)
 
         self.gl_area.queue_render()
 
@@ -258,19 +281,22 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         file = dialog.open_finish(response)
 
         if file:
-            filepath = file.get_path()
+            self.filepath = file.get_path()
 
-            self.open_file(filepath)
+            self.load_file()
 
-    def open_file(self, filepath):
-        self.engine.loader.load_scene(filepath)
+    def load_file(self):
+        try:
+            self.engine.loader.load_scene(self.filepath)
+        except:
+            self.engine.loader.load_geometry(self.filepath, True)
 
         self.camera.resetToBounds()
         self.camera.setCurrentAsDefault()
 
         self.get_distance()
 
-        self.file_name = os.path.basename(filepath)
+        self.file_name = os.path.basename(self.filepath)
 
         self.set_title(f"View {self.file_name}")
         self.title_widget.set_title("Exhibit")
@@ -318,13 +344,13 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     def front_view(self, *args):
         self.camera.position = v_add(self.camera.focal_point, (0, 0, 100))
-        self.camera.setViewUp((0.0, 1.0, 0.0))
+        self.camera.setViewUp(up_dirs_vector[self.window_settings.get_setting("up-direction")])
         self.camera.resetToBounds()
         self.gl_area.queue_render()
 
     def right_view(self, *args):
         self.camera.position = v_add(self.camera.focal_point, (100, 0, 0))
-        self.camera.setViewUp((0.0, 1.0, 0.0))
+        self.camera.setViewUp(up_dirs_vector[self.window_settings.get_setting("up-direction")])
         self.camera.resetToBounds()
         self.gl_area.queue_render()
 
@@ -336,7 +362,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     def isometric_view(self, *args):
         self.camera.position = v_add(self.camera.focal_point, (100, 100 , 100))
-        self.camera.setViewUp((0.0, 1.0, 0.0))
+        self.camera.setViewUp(up_dirs_vector[self.window_settings.get_setting("up-direction")])
         self.camera.resetToBounds()
         self.gl_area.queue_render()
 
@@ -380,13 +406,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         val = switch.get_active()
         self.window_settings.set_setting(name, val)
         if val:
-            self.camera.setViewUp((0.0, 1.0, 0.0))
+            self.camera.setViewUp(up_dirs_vector[self.window_settings.get_setting("up-direction")])
             self.gl_area.queue_render()
-
-    def on_direction_changed(self, combo, selected):
-        options = {"scene.up-direction": self.up_dirs(selected)}
-        self.engine.options.update(options)
-        self.window_settings.set_setting("up-direction", selected)
 
     def get_distance(self):
         self.distance = p_dist(self.camera.position, (0,0,0))
@@ -418,8 +439,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         preferences.anti_aliasing_switch.connect("notify::active", self.on_switch_toggled, "anti-aliasing")
         preferences.hdri_ambient_switch.connect("notify::active", self.on_switch_toggled, "hdri-ambient")
 
-        preferences.point_up_switch.connect("notify::active", self.set_point_up, "point-up")
-
         preferences.edges_switch.connect("notify::active", self.on_switch_toggled, "show-edges")
         preferences.edges_width_spin.connect("notify::value", self.on_spin_changed, "edges-width")
 
@@ -431,8 +450,16 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         preferences.blur_coc_spin.connect("notify::value", self.on_spin_changed, "blur-coc")
 
         preferences.use_color_switch.connect("notify::active", self.update_background_color)
-        preferences.use_color_switch.connect("notify::active",  lambda switch, *args: self.window_settings.set_setting("use-color", switch.get_active()))
+        preferences.use_color_switch.connect("notify::active",
+                lambda switch, *args: self.window_settings.set_setting("use-color", switch.get_active())
+        )
         preferences.background_color_button.connect("notify::rgba", self.update_background_color)
+        preferences.background_color_button.connect("notify::rgba",
+                lambda btn, *args: self.window_settings.set_setting("background-color", rgb_to_list(btn.get_rgba().to_string()))
+        )
+
+        preferences.point_up_switch.connect("notify::active", self.set_point_up, "point-up")
+        preferences.up_direction_combo.connect("notify::selected", self.set_up_direction)
 
         preferences.reset_button.connect("clicked", self.on_reset_settings_clicked)
         preferences.reset_button.connect("clicked", lambda self, btn, pref: self.set_preference_values(pref))
@@ -442,6 +469,13 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         preferences.present()
 
         self.preference_window = preferences
+
+    def set_up_direction(self, combo, *args):
+        direction = up_dir_n_to_string[combo.get_selected()]
+        options = {"scene.up-direction": direction}
+        self.engine.options.update(options)
+        self.load_file()
+        self.window_settings.set_setting("up-direction", direction)
 
     def update_background_color(self, *args):
         if self.preference_window:
@@ -502,7 +536,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         preferences.ambient_occlusion_switch.set_active(self.window_settings.get_setting("ambient-occlusion"))
         preferences.anti_aliasing_switch.set_active(self.window_settings.get_setting("anti-aliasing"))
         preferences.hdri_ambient_switch.set_active(self.window_settings.get_setting("hdri-ambient"))
-        preferences.point_up_switch.set_active(self.window_settings.get_setting("point-up"))
         preferences.light_intensity_spin.set_value(self.window_settings.get_setting("light-intensity"))
         preferences.skybox_row.set_text(self.window_settings.get_setting("skybox-path"))
         preferences.blur_switch.set_active(self.window_settings.get_setting("blur-background"))
@@ -512,7 +545,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         preferences.edges_switch.set_active(self.window_settings.get_setting("show-edges"))
         preferences.edges_width_spin.set_value(self.window_settings.get_setting("edges-width"))
 
+        preferences.point_up_switch.set_active(self.window_settings.get_setting("point-up"))
+        preferences.up_direction_combo.set_selected(up_dir_string_to_n[self.window_settings.get_setting("up-direction")])
+
         preferences.use_color_switch.set_active(self.window_settings.get_setting("use-color"))
+        print(self.window_settings.get_setting("use-color"))
         rgba = Gdk.RGBA()
         rgba.parse(list_to_rgb(self.window_settings.get_setting("background-color")))
         preferences.background_color_button.set_rgba(rgba)

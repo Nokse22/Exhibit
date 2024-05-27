@@ -49,7 +49,7 @@ class Preferences(Adw.PreferencesWindow):
     background_color_button = Gtk.Template.Child()
 
     point_up_switch = Gtk.Template.Child()
-    # up_direction_combo = Gtk.Template.Child()
+    up_direction_combo = Gtk.Template.Child()
 
     reset_button = Gtk.Template.Child()
     save_button = Gtk.Template.Child()
