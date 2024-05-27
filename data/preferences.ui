@@ -48,6 +48,7 @@
                 <property name="hexpand">True</property>
                 <property name="hexpand-set">True</property>
                 <property name="title">Tone Mapping</property>
+                <property name="subtitle">Map colors properly to the monitor colors</property>
               </object>
             </child>
             <child>
@@ -55,6 +56,7 @@
                 <property name="hexpand">True</property>
                 <property name="hexpand-set">True</property>
                 <property name="title">Ambient Occlusion</property>
+                <property name="subtitle">Provides approximate shadows</property>
               </object>
             </child>
             <child>
@@ -68,7 +70,8 @@
               <object class="AdwSwitchRow" id="hdri_ambient_switch">
                 <property name="hexpand">True</property>
                 <property name="hexpand-set">True</property>
-                <property name="title">HDRI Ambient</property>
+                <property name="title">Light with HDRI</property>
+                <property name="subtitle">Light the scene using a HDRI image, if none is loaded one is provided</property>
               </object>
             </child>
             <child>
@@ -92,12 +95,45 @@
           <object class="AdwPreferencesGroup">
             <property name="hexpand">True</property>
             <property name="hexpand-set">True</property>
+            <property name="title">Edges</property>
+            <child>
+              <object class="AdwSwitchRow" id="edges_switch">
+                <property name="hexpand">True</property>
+                <property name="hexpand-set">True</property>
+                <property name="title">Show Edges</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwSpinRow" id="edges_width_spin">
+                <property name="hexpand">True</property>
+                <property name="hexpand-set">True</property>
+                <property name="title">Edges Width</property>
+                <property name="digits">1</property>
+                <property name="adjustment">
+                  <object class="GtkAdjustment">
+                    <property name="lower">0.1</property>
+                    <property name="upper">10</property>
+                    <property name="value">1</property>
+                    <property name="page-increment">1</property>
+                    <property name="step-increment">0.1</property>
+                  </object>
+                </property>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwPreferencesGroup">
+            <property name="hexpand">True</property>
+            <property name="hexpand-set">True</property>
             <property name="title">Background</property>
             <child>
               <object class="AdwSwitchRow" id="use_skybox_switch">
                 <property name="hexpand">True</property>
                 <property name="hexpand-set">True</property>
                 <property name="title">Use Hdri Skybox</property>
+                <property name="subtitle">Use an HDRI image as a background</property>
               </object>
             </child>
             <child>
@@ -147,6 +183,7 @@
                 <property name="hexpand">True</property>
                 <property name="hexpand-set">True</property>
                 <property name="title">Use Custom Color</property>
+                <property name="subtitle">HDRI background takes priority over this</property>
               </object>
             </child>
             <child>
@@ -154,6 +191,7 @@
                 <property name="hexpand">True</property>
                 <property name="hexpand-set">True</property>
                 <property name="title">Background Color</property>
+                <property name="subtitle">Transparent colors not supported</property>
                 <child>
                   <object class="GtkColorDialogButton" id="background_color_button">
                     <property name="valign">center</property>

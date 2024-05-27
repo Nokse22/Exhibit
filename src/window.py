@@ -52,7 +52,10 @@ class WindowSettings():
             "blur-background": self.saved_settings.get_boolean("blur-background"),
             "blur-coc": self.saved_settings.get_double("blur-coc"),
             "use-skybox": False,
-            "background-color": [1.0, 1.0, 1.0],
+            "background-color": rgb_to_list(self.saved_settings.get_string("background-color")),
+            "use-color": False,
+            "show-edges": self.saved_settings.get_boolean("show-edges"),
+            "edges-width": self.saved_settings.get_double("edges-width")
         }
 
     def set_setting(self, key, val):
@@ -74,6 +77,9 @@ class WindowSettings():
         self.saved_settings.set_boolean("point-up", self.settings["point-up"])
         self.saved_settings.set_boolean("blur-background", self.settings["blur-background"])
         self.saved_settings.set_double("blur-coc", self.settings["blur-coc"])
+        self.saved_settings.set_boolean("use-color", self.settings["use-color"])
+        self.saved_settings.set_string("background-color", list_to_rgb(self.settings["background-color"]))
+        self.saved_settings.set_double("edges-width", self.settings["edges-width"])
 
         print("settings saved")
 
@@ -105,6 +111,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         "blur-coc": "render.background.blur.coc",
         "use-skybox": "render.background.skybox",
         "background-color": "render.background.color",
+        "show-edges": "render.show-edges",
+        "edges-width": "render.line-width",
     }
 
     up_dirs = {
@@ -412,6 +420,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         preferences.point_up_switch.connect("notify::active", self.set_point_up, "point-up")
 
+        preferences.edges_switch.connect("notify::active", self.on_switch_toggled, "show-edges")
+        preferences.edges_width_spin.connect("notify::value", self.on_spin_changed, "edges-width")
+
         preferences.light_intensity_spin.connect("notify::value", self.on_spin_changed, "light-intensity")
 
         preferences.use_skybox_switch.connect("notify::active", self.on_switch_toggled, "use-skybox")
@@ -420,6 +431,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         preferences.blur_coc_spin.connect("notify::value", self.on_spin_changed, "blur-coc")
 
         preferences.use_color_switch.connect("notify::active", self.update_background_color)
+        preferences.use_color_switch.connect("notify::active",  lambda switch, *args: self.window_settings.set_setting("use-color", switch.get_active()))
         preferences.background_color_button.connect("notify::rgba", self.update_background_color)
 
         preferences.reset_button.connect("clicked", self.on_reset_settings_clicked)
@@ -435,7 +447,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if self.preference_window:
             if self.preference_window.use_color_switch.get_active():
                 options = {
-                    "render.background.color": self.convert_to_rgba(self.preference_window.background_color_button.get_rgba().to_string()),
+                    "render.background.color": rgb_to_list(self.preference_window.background_color_button.get_rgba().to_string()),
                 }
                 self.engine.options.update(options)
                 self.gl_area.queue_render()
@@ -446,10 +458,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             options = {"render.background.color": [1.0, 1.0, 1.0]}
         self.engine.options.update(options)
         self.gl_area.queue_render()
-
-    def convert_to_rgba(self, rgb):
-        values = [int(x) / 255 for x in rgb[4:-1].split(',')]
-        return values
 
     def on_open_skybox_clicked(self, *args):
         file_filter = Gtk.FileFilter(name="All supported formats")
@@ -476,7 +484,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             filepath = file.get_path()
 
             self.window_settings.set_setting("skybox-path", filepath)
-            options = {"render.hdri.file": filepath, "render.background.skybox": True}
+            options = {"render.hdri.file": filepath}
             self.engine.options.update(options)
             self.preference_window.skybox_row.set_text(filepath)
 
@@ -500,6 +508,14 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         preferences.blur_switch.set_active(self.window_settings.get_setting("blur-background"))
         preferences.blur_coc_spin.set_value(self.window_settings.get_setting("blur-coc"))
         preferences.use_skybox_switch.set_active(self.window_settings.get_setting("use-skybox"))
+
+        preferences.edges_switch.set_active(self.window_settings.get_setting("show-edges"))
+        preferences.edges_width_spin.set_value(self.window_settings.get_setting("edges-width"))
+
+        preferences.use_color_switch.set_active(self.window_settings.get_setting("use-color"))
+        rgba = Gdk.RGBA()
+        rgba.parse(list_to_rgb(self.window_settings.get_setting("background-color")))
+        preferences.background_color_button.set_rgba(rgba)
 
     def create_action(self, name, callback):
         action = Gio.SimpleAction.new(name, None)
@@ -547,3 +563,10 @@ def v_cross(vector1, vector2):
     z = vector1[0] * vector2[1] - vector1[1] * vector2[0]
 
     return (x, y, z)
+
+def rgb_to_list(rgb):
+    values = [int(x) / 255 for x in rgb[4:-1].split(',')]
+    return values
+
+def list_to_rgb(lst):
+    return f"rgb({int(lst[0] * 255)},{int(lst[1] * 255)},{int(lst[2] * 255)})"

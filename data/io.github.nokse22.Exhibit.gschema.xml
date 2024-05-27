@@ -40,5 +40,17 @@
 	  <key name="blur-coc" type="d">
       <default>20.0</default>
     </key>
+	  <key name="use-color" type="b">
+      <default>false</default>
+    </key>
+	  <key name="background-color" type="s">
+      <default>'rgb(10,10,10)'</default>
+    </key>
+	  <key name="show-edges" type="b">
+      <default>false</default>
+    </key>
+	  <key name="edges-width" type="d">
+      <default>1.0</default>
+    </key>
 	</schema>
 </schemalist>

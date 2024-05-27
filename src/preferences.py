@@ -35,6 +35,9 @@ class Preferences(Adw.PreferencesWindow):
     hdri_ambient_switch = Gtk.Template.Child()
     light_intensity_spin = Gtk.Template.Child()
 
+    edges_switch = Gtk.Template.Child()
+    edges_width_spin = Gtk.Template.Child()
+
     use_skybox_switch = Gtk.Template.Child()
 
     open_skybox_button = Gtk.Template.Child()
