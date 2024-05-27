@@ -15,6 +15,15 @@ View 3D models, powered by the [F3D](https://github.com/f3d-app/f3d) library tha
   <img src="data/resources/screenshot 3.png" height="400"/>
   </div>
 
+## Installation
+
+### From latest build
+
+Go to the [Actions page](https://github.com/Nokse22/Exhibit/actions), click on the latest working build and download the Artifact.
+Extract the downloaded .zip file and install it clicking on the flatpak file or with:
+
+`flatpak install io.github.nokse22.Exhibit.flatpak`
+
 ### From source
 
 You just need to clone the repository
