@@ -7,7 +7,9 @@
   <name>Exhibit</name>
   <summary>Preview your 3D models</summary>
   <description>
-    <p>View 3D models, based on the F3D library that supports many file formats, from digital content to scientific datasets (including glTF, USD, STL, STEP, PLY, OBJ, FBX, Alembic)</p>
+    <p>View 3D models, based on the F3D library that supports many file formats, from digital content to scientific datasets (including glTF, USD, STL, STEP, PLY, OBJ, FBX, Alembic)
+
+It only runs on X11/XWayland, on some computer it might not work very well.</p>
   </description>
 
   <developer id="io.github.nokse22">
@@ -46,13 +48,8 @@
 
   <releases>
     <release version="1.0.1" date="2024-01-18">
-      <url type="details">https://example.org/changelog.html#version_1.0.1</url>
       <description translate="no">
-        <p>Release description</p>
-        <ul>
-          <li>List of changes</li>
-          <li>List of changes</li>
-        </ul>
+        <p>First Release</p>
       </description>
     </release>
   </releases>
