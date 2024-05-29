@@ -14,27 +14,6 @@
           <object class="AdwPreferencesGroup">
             <property name="hexpand">True</property>
             <property name="hexpand-set">True</property>
-            <property name="title">Grid</property>
-            <child>
-              <object class="AdwSwitchRow" id="grid_switch">
-                <property name="hexpand">True</property>
-                <property name="hexpand-set">True</property>
-                <property name="title">View Grid</property>
-              </object>
-            </child>
-            <child>
-              <object class="AdwSwitchRow" id="absolute_grid_switch">
-                <property name="hexpand">True</property>
-                <property name="hexpand-set">True</property>
-                <property name="title">Grid Absolute</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="AdwPreferencesGroup">
-            <property name="hexpand">True</property>
-            <property name="hexpand-set">True</property>
             <property name="title">Render</property>
             <child>
               <object class="AdwSwitchRow" id="translucency_switch">
@@ -71,7 +50,7 @@
                 <property name="hexpand">True</property>
                 <property name="hexpand-set">True</property>
                 <property name="title">Light with HDRI</property>
-                <property name="subtitle">Light the scene using a HDRI image, if none is loaded one is provided</property>
+                <property name="subtitle">Light the scene using a the loaded HDRI or the default</property>
               </object>
             </child>
             <child>
@@ -132,15 +111,15 @@
               <object class="AdwSwitchRow" id="use_skybox_switch">
                 <property name="hexpand">True</property>
                 <property name="hexpand-set">True</property>
-                <property name="title">Use Hdri Skybox</property>
-                <property name="subtitle">Use an HDRI image as a background</property>
+                <property name="title">HDRI as Backgound</property>
+                <property name="subtitle">Use the loaded HDRI or the default one as a background</property>
               </object>
             </child>
             <child>
               <object class="AdwEntryRow" id="skybox_row">
                 <property name="hexpand">True</property>
                 <property name="hexpand-set">True</property>
-                <property name="title">Hdri Skybox Image</property>
+                <property name="title">HDRI Image</property>
                 <child>
                   <object class="GtkButton" id="open_skybox_button">
                     <property name="valign">center</property>
@@ -217,6 +196,28 @@
           <object class="AdwPreferencesGroup">
             <property name="hexpand">True</property>
             <property name="hexpand-set">True</property>
+            <property name="title">Grid</property>
+            <child>
+              <object class="AdwSwitchRow" id="grid_switch">
+                <property name="hexpand">True</property>
+                <property name="hexpand-set">True</property>
+                <property name="title">View Grid</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwSwitchRow" id="absolute_grid_switch">
+                <property name="hexpand">True</property>
+                <property name="hexpand-set">True</property>
+                <property name="title">Grid Absolute</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwPreferencesGroup">
+            <property name="hexpand">True</property>
+            <property name="hexpand-set">True</property>
+            <property name="title">Navigation</property>
             <child>
               <object class="AdwSwitchRow" id="point_up_switch">
                 <property name="hexpand">True</property>
@@ -249,6 +250,7 @@
         <object class="AdwPreferencesGroup">
           <property name="hexpand">True</property>
           <property name="hexpand-set">True</property>
+          <property name="title">Settings</property>
             <child>
               <object class="GtkButton" id="save_button">
                 <property name="hexpand">True</property>
