@@ -18,7 +18,7 @@
     <!-- </child> -->
     <property name="content">
       <object class="AdwToolbarView" id="toolbar_view">
-        <property name="top-bar-style">raised</property>
+        <property name="top-bar-style">flat</property>
         <property name="bottom-bar-style">raised</property>
         <property name="reveal-bottom-bars">false</property>
         <child type="top">
@@ -96,8 +96,7 @@ suggested-action</property>
                             <signal name="clicked" handler="on_open_button_clicked"/>
                           </object>
                         </property>
-                        <property name="description">Open a file to view it in 3D
-This application is experimental, crashes are expected.</property>
+                        <property name="description">Load any file to view it in 3D</property>
                         <property name="hexpand">True</property>
                         <property name="hexpand-set">True</property>
                         <property name="icon-name">io.github.nokse22.Exhibit</property>

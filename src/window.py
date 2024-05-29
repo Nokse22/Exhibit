@@ -131,6 +131,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     title_widget = Gtk.Template.Child()
     open_button = Gtk.Template.Child()
     stack = Gtk.Template.Child()
+    toolbar_view = Gtk.Template.Child()
 
     view_button_headerbar = Gtk.Template.Child()
 
@@ -164,8 +165,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     def __init__(self, application=None, filepath=None):
         super().__init__(application=application)
-
-        self.add_css_class("devel")
 
         self.preferences_action = self.create_action('preferences', self.on_preferences_action)
         self.preferences_action.set_enabled(False)
@@ -321,6 +320,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.preferences_action.set_enabled(True)
         self.open_new_action.set_enabled(True)
         self.save_as_action.set_enabled(True)
+        self.toolbar_view.set_top_bar_style(Adw.ToolbarStyle.RAISED)
 
         GLib.timeout_add(100, self.update_options)
 
