@@ -8,14 +8,14 @@
     <property name="default-height">600</property>
     <property name="width-request">360</property>
     <property name="height-request">360</property>
-    <child>
-      <object class="AdwBreakpoint">
-        <condition>max-width: 460px</condition>
-        <setter object="toolbar_view" property="reveal-bottom-bars">true</setter>
-        <setter object="view_button_headerbar" property="visible">false</setter>
-        <setter object="home_button_headerbar" property="visible">false</setter>
-      </object>
-    </child>
+    <!-- <child> -->
+    <!--   <object class="AdwBreakpoint"> -->
+    <!--     <condition>max-width: 460px</condition> -->
+    <!--     <setter object="toolbar_view" property="reveal-bottom-bars">true</setter> -->
+    <!--     <setter object="view_button_headerbar" property="visible">false</setter> -->
+    <!--     <setter object="home_button_headerbar" property="visible">false</setter> -->
+    <!--   </object> -->
+    <!-- </child> -->
     <property name="content">
       <object class="AdwToolbarView" id="toolbar_view">
         <property name="top-bar-style">raised</property>
