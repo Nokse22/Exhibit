@@ -343,25 +343,34 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.save_as_image(file_path)
 
     def front_view(self, *args):
-        self.camera.position = v_add(self.camera.focal_point, (0, 0, 100))
+        up_v = up_dirs_vector[self.window_settings.get_setting("up-direction")]
+        vector = v_mul(tuple([up_v[1], up_v[2], up_v[0]]), 1000)
+        self.camera.position = v_add(self.camera.focal_point, vector)
         self.camera.setViewUp(up_dirs_vector[self.window_settings.get_setting("up-direction")])
         self.camera.resetToBounds()
         self.gl_area.queue_render()
 
     def right_view(self, *args):
-        self.camera.position = v_add(self.camera.focal_point, (100, 0, 0))
+        up_v = up_dirs_vector[self.window_settings.get_setting("up-direction")]
+        vector = v_mul(tuple([up_v[2], up_v[0], up_v[1]]), 1000)
+        self.camera.position = v_add(self.camera.focal_point, vector)
         self.camera.setViewUp(up_dirs_vector[self.window_settings.get_setting("up-direction")])
         self.camera.resetToBounds()
         self.gl_area.queue_render()
 
     def top_view(self, *args):
-        self.camera.position = v_add(self.camera.focal_point, (0, 100, 0))
-        self.camera.setViewUp((0.0, 0.0, -1.0))
+        up_v = up_dirs_vector[self.window_settings.get_setting("up-direction")]
+        vector = v_mul(up_v, 1000)
+        self.camera.position = v_add(self.camera.focal_point, vector)
+        vector = v_mul(tuple([up_v[1], up_v[2], up_v[0]]), 1000)
+        self.camera.setViewUp(vector)
         self.camera.resetToBounds()
         self.gl_area.queue_render()
 
     def isometric_view(self, *args):
-        self.camera.position = v_add(self.camera.focal_point, (100, 100 , 100))
+        up_v = up_dirs_vector[self.window_settings.get_setting("up-direction")]
+        vector = v_add(tuple([up_v[2], up_v[0], up_v[1]]), tuple([up_v[1], up_v[2], up_v[0]]))
+        self.camera.position = v_mul(v_norm(v_add(vector, up_v)), 1000)
         self.camera.setViewUp(up_dirs_vector[self.window_settings.get_setting("up-direction")])
         self.camera.resetToBounds()
         self.gl_area.queue_render()
