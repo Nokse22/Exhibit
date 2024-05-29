@@ -11,19 +11,19 @@
       <default>true</default>
     </key>
 	  <key name="tone-mapping" type="b">
-      <default>true</default>
+      <default>false</default>
     </key>
 	  <key name="ambient-occlusion" type="b">
-      <default>true</default>
+      <default>false</default>
     </key>
 	  <key name="anti-aliasing" type="b">
       <default>true</default>
     </key>
 	  <key name="hdri-ambient" type="b">
-      <default>true</default>
+      <default>false</default>
     </key>
 	  <key name="orthographic" type="b">
-      <default>true</default>
+      <default>false</default>
     </key>
 	  <key name="light-intensity" type="d">
       <default>1.0</default>
@@ -32,7 +32,7 @@
       <default>true</default>
     </key>
 	  <key name="blur-background" type="b">
-      <default>true</default>
+      <default>false</default>
     </key>
 	  <key name="blur-coc" type="d">
       <default>20.0</default>
