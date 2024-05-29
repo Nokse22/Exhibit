@@ -568,7 +568,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                                 website='https://github.com/Nokse22/Exhibit',
                                 issue_url='https://github.com/Nokse22/Exhibit/issues',
                                 developers=['Nokse22'],
-                                copyright='© 2024 Nokse22')
+                                copyright='© 2024 Nokse22',
+                                artists=["Jakub Steiner https://jimmac.eu"])
         about.present(self)
 
 def p_dist(point1, point2):
