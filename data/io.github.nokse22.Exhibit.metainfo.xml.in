@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component type="desktop">
-	<id>io.github.nokse22.Exhibit.desktop</id>
-	<metadata_license>CC0-1.0</metadata_license>
-	<project_license>GPL-3.0-or-later</project_license>
+<component type="desktop-application">
+  <id>io.github.nokse22.Exhibit</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+
+  <name>Exhibit</name>
   <summary>Preview your 3D models</summary>
-	<description>
-	  <p>View 3D models, based on the F3D library that supports many file formats, from digital content to scientific datasets (including glTF, USD, STL, STEP, PLY, OBJ, FBX, Alembic)</p>
-	</description>
+  <description>
+    <p>View 3D models, based on the F3D library that supports many file formats, from digital content to scientific datasets (including glTF, USD, STL, STEP, PLY, OBJ, FBX, Alembic)</p>
+  </description>
+
   <developer id="io.github.nokse22">
     <name translate="no">Nokse</name>
   </developer>
-  <content_rating type="oars-1.1" />
 
   <url type="homepage">https://github.com/Nokse22/Exhibit</url>
   <url type="bugtracker">https://github.com/Nokse22/Exhibit/issues</url>
@@ -18,29 +20,41 @@
   <url type="translate">https://github.com/Nokse22/Exhibit/tree/master/po</url>
   <url type="donation">https://ko-fi.com/nokse22</url>
 
-  <branding>
-    <color type="primary" scheme_preference="light">#86c7ff</color>
-    <color type="primary" scheme_preference="dark">#014085</color>
-  </branding>
+  <translation type="gettext">exhibit</translation>
+  <!-- All graphical applications having a desktop file must have this tag in the MetaInfo.
+     If this is present, appstreamcli compose will pull icons, keywords and categories from the desktop file. -->
+  <launchable type="desktop-id">io.github.nokse22.Exhibit.desktop</launchable>
+  <!-- Use the OARS website (https://hughsie.github.io/oars/generate.html) to generate these and make sure to use oars-1.1 -->
+  <content_rating type="oars-1.1" />
 
-  <releases>
-    <release version="0.1.0" date="2024-05-03">
-		  <description translate="no">
-		    <p>Initial release</p>
-		  </description>
-	  </release>
-  </releases>
+  <!-- Applications should set a brand color in both light and dark variants like so -->
+  <branding>
+    <color type="primary" scheme_preference="light">#ff00ff</color>
+    <color type="primary" scheme_preference="dark">#993d3d</color>
+  </branding>
 
   <screenshots>
     <screenshot type="default">
       <image>https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%201.png</image>
       <caption>Planetary gearbox</caption>
     </screenshot>
-
 	  <screenshot>
 	    <image>https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%202.png</image>
 	    <caption>Nissan Fairlady</caption>
 	  </screenshot>
   </screenshots>
+
+  <releases>
+    <release version="1.0.1" date="2024-01-18">
+      <url type="details">https://example.org/changelog.html#version_1.0.1</url>
+      <description translate="no">
+        <p>Release description</p>
+        <ul>
+          <li>List of changes</li>
+          <li>List of changes</li>
+        </ul>
+      </description>
+    </release>
+  </releases>
 
 </component>
