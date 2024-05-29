@@ -64,6 +64,11 @@ class WindowSettings():
 
         self.saved_settings = Gio.Settings.new('io.github.nokse22.Exhibit')
 
+        self.settings = None
+
+        self.load_settings()
+
+    def load_settings(self):
         self.settings = {
             "grid": self.saved_settings.get_boolean("grid"),
             "absolute-grid": self.saved_settings.get_boolean("absolute-grid"),
@@ -110,7 +115,12 @@ class WindowSettings():
         self.saved_settings.set_double("edges-width", self.settings["edges-width"])
         self.saved_settings.set_string("up-direction", self.settings["up-direction"])
 
-        print("settings saved")
+    def reset_all(self):
+        for key in self.settings:
+            self.saved_settings.reset(key)
+        self.load_settings()
+        self.save_all_settings()
+        print(self.settings)
 
 @Gtk.Template(resource_path='/io/github/nokse22/Exhibit/window.ui')
 class Viewer3dWindow(Adw.ApplicationWindow):
@@ -157,10 +167,16 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.add_css_class("devel")
 
-        self.create_action('preferences', self.on_preferences_action)
+        self.preferences_action = self.create_action('preferences', self.on_preferences_action)
+        self.preferences_action.set_enabled(False)
+
+        self.save_as_action = self.create_action('save-as-image', self.open_save_file_chooser)
+        self.save_as_action.set_enabled(False)
+
+        self.open_new_action = self.create_action('open-new', self.open_file_chooser)
+        self.open_new_action.set_enabled(False)
+
         self.create_action('about', self.on_about_action)
-        self.create_action('save-as-image', self.open_save_file_chooser)
-        self.create_action('open-new', self.open_file_chooser)
 
         self.window_settings = WindowSettings()
 
@@ -302,6 +318,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.title_widget.set_title("Exhibit")
         self.title_widget.set_subtitle(self.file_name)
         self.stack.set_visible_child_name("3d_page")
+        self.preferences_action.set_enabled(True)
+        self.open_new_action.set_enabled(True)
+        self.save_as_action.set_enabled(True)
 
         GLib.timeout_add(100, self.update_options)
 
@@ -422,7 +441,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.distance = p_dist(self.camera.position, (0,0,0))
 
     def on_reset_settings_clicked(self, btn):
-        self.engine.options.update(self.window_settings.settings)
+        self.window_settings.reset_all()
+        self.update_options()
+        self.set_preference_values(self.preference_window)
         self.gl_area.queue_render()
 
     def on_save_settings_clicked(self, btn):
@@ -458,10 +479,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         preferences.blur_switch.connect("notify::active", self.on_switch_toggled, "blur-background")
         preferences.blur_coc_spin.connect("notify::value", self.on_spin_changed, "blur-coc")
 
-        preferences.use_color_switch.connect("notify::active", self.update_background_color)
         preferences.use_color_switch.connect("notify::active",
                 lambda switch, *args: self.window_settings.set_setting("use-color", switch.get_active())
         )
+        preferences.use_color_switch.connect("notify::active", self.update_background_color)
+
         preferences.background_color_button.connect("notify::rgba", self.update_background_color)
         preferences.background_color_button.connect("notify::rgba",
                 lambda btn, *args: self.window_settings.set_setting("background-color", rgb_to_list(btn.get_rgba().to_string()))
@@ -471,7 +493,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         preferences.up_direction_combo.connect("notify::selected", self.set_up_direction)
 
         preferences.reset_button.connect("clicked", self.on_reset_settings_clicked)
-        preferences.reset_button.connect("clicked", lambda self, btn, pref: self.set_preference_values(pref))
 
         preferences.save_button.connect("clicked", self.on_save_settings_clicked)
 
@@ -557,7 +578,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         preferences.up_direction_combo.set_selected(up_dir_string_to_n[self.window_settings.get_setting("up-direction")])
 
         preferences.use_color_switch.set_active(self.window_settings.get_setting("use-color"))
-        print(self.window_settings.get_setting("use-color"))
         rgba = Gdk.RGBA()
         rgba.parse(list_to_rgb(self.window_settings.get_setting("background-color")))
         preferences.background_color_button.set_rgba(rgba)
@@ -566,6 +586,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         action = Gio.SimpleAction.new(name, None)
         action.connect("activate", callback)
         self.add_action(action)
+        return action
 
     def on_about_action(self, *args):
         about = Adw.AboutDialog(
