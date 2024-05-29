@@ -176,7 +176,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.toggle_orthographic()
 
         inital_options = {
-            "render.background.color": [1.0, 1.0, 1.0],
             "scene.up-direction": self.window_settings.get_setting("up-direction")
         }
 
@@ -201,6 +200,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.filepath = filepath
             self.load_file()
 
+        self.update_background_color()
         # self.update_options()
 
     def on_resize(self, gl_area, width, heigh):
@@ -478,14 +478,13 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.window_settings.set_setting("up-direction", direction)
 
     def update_background_color(self, *args):
-        if self.preference_window:
-            if self.preference_window.use_color_switch.get_active():
-                options = {
-                    "render.background.color": rgb_to_list(self.preference_window.background_color_button.get_rgba().to_string()),
-                }
-                self.engine.options.update(options)
-                self.gl_area.queue_render()
-                return
+        if self.window_settings.get_setting("use-color"):
+            options = {
+                "render.background.color": self.window_settings.get_setting("background-color"),
+            }
+            self.engine.options.update(options)
+            self.gl_area.queue_render()
+            return
         if self.style_manager.get_dark():
             options = {"render.background.color": [0.2, 0.2, 0.2]}
         else:
