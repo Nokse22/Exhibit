@@ -19,7 +19,7 @@
 
 import gi
 from gi.repository import Adw
-from gi.repository import Gtk, Gdk, Gio, GLib
+from gi.repository import Gtk, Gdk, Gio, GLib, GObject
 
 import f3d
 from f3d import *
@@ -134,6 +134,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     view_button_headerbar = Gtk.Template.Child()
 
+    drop_revealer = Gtk.Template.Child()
+    drop_target = Gtk.Template.Child()
+
     keys = {
         "grid": "render.grid.enable",
         "absolute-grid": "render.grid.absolute",
@@ -175,6 +178,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.open_new_action.set_enabled(False)
 
         self.create_action('about', self.on_about_action)
+
+        self.drop_target.set_gtypes([str])
 
         self.window_settings = WindowSettings()
 
@@ -295,17 +300,18 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         if file:
             self.filepath = file.get_path()
-
             self.load_file()
 
     def load_file(self):
+        print("loading")
         try:
             self.engine.loader.load_scene(self.filepath)
         except:
             self.engine.loader.load_geometry(self.filepath, True)
 
+        print("loaded")
+
         self.camera.resetToBounds()
-        self.camera.setCurrentAsDefault()
 
         self.get_distance()
 
@@ -320,10 +326,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.save_as_action.set_enabled(True)
         self.toolbar_view.set_top_bar_style(Adw.ToolbarStyle.RAISED)
 
-        self.gl_area.get_context().make_current()
-        self.engine.window.render_to_image()
+        self.present()
 
-        self.update_options()
+        GLib.timeout_add(100, self.update_options)
 
     def update_options(self):
         options = {}
@@ -368,6 +373,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.camera.position = v_add(self.camera.focal_point, vector)
         self.camera.setViewUp(up_dirs_vector[self.window_settings.get_setting("up-direction")])
         self.camera.resetToBounds()
+        self.get_distance()
         self.gl_area.queue_render()
 
     def right_view(self, *args):
@@ -376,6 +382,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.camera.position = v_add(self.camera.focal_point, vector)
         self.camera.setViewUp(up_dirs_vector[self.window_settings.get_setting("up-direction")])
         self.camera.resetToBounds()
+        self.get_distance()
         self.gl_area.queue_render()
 
     def top_view(self, *args):
@@ -385,6 +392,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         vector = v_mul(tuple([up_v[1], up_v[2], up_v[0]]), 1000)
         self.camera.setViewUp(vector)
         self.camera.resetToBounds()
+        self.get_distance()
         self.gl_area.queue_render()
 
     def isometric_view(self, *args):
@@ -393,11 +401,12 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.camera.position = v_mul(v_norm(v_add(vector, up_v)), 1000)
         self.camera.setViewUp(up_dirs_vector[self.window_settings.get_setting("up-direction")])
         self.camera.resetToBounds()
+        self.get_distance()
         self.gl_area.queue_render()
 
     @Gtk.Template.Callback("on_home_clicked")
     def on_home_clicked(self, btn):
-        self.camera.resetToDefault()
+        self.camera.resetToBounds()
         self.get_distance()
         self.gl_area.queue_render()
 
@@ -418,6 +427,23 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.window_settings.set_setting("orthographic", False)
         self.engine.options.update(camera_options)
         self.gl_area.queue_render()
+
+    @Gtk.Template.Callback("on_drop_received")
+    def on_drop_received(self, drop, value, x, y):
+        print("drop", value, x, y)
+
+        self.filepath = value
+        self.load_file()
+
+    @Gtk.Template.Callback("on_drop_enter")
+    def on_drop_enter(self, *args):
+        self.drop_revealer.set_reveal_child(True)
+        self.stack.add_css_class("blurred")
+
+    @Gtk.Template.Callback("on_drop_leave")
+    def on_drop_leave(self, *args):
+        self.drop_revealer.set_reveal_child(False)
+        self.stack.remove_css_class("blurred")
 
     def on_switch_toggled(self, switch, active, name):
         self.window_settings.set_setting(name, switch.get_active())
@@ -605,6 +631,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                                 website='https://github.com/Nokse22/Exhibit',
                                 issue_url='https://github.com/Nokse22/Exhibit/issues',
                                 developers=['Nokse22'],
+                                license_type="GTK_LICENSE_GPL_3_0",
                                 copyright='© 2024 Nokse22',
                                 artists=["Jakub Steiner https://jimmac.eu"])
         about.present(self)

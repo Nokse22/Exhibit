@@ -1,3 +1,14 @@
 .bg{
   background-color:black;
 }
+
+.drag-overlay-status-page {
+  background-color: alpha(@accent_bg_color, 0.5);
+  color: @accent_fg_color;
+  padding: 32px;
+}
+
+.blurred {
+  filter: blur(6px);
+}
+
