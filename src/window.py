@@ -320,7 +320,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.save_as_action.set_enabled(True)
         self.toolbar_view.set_top_bar_style(Adw.ToolbarStyle.RAISED)
 
-        GLib.timeout_add(100, self.update_options)
+        self.gl_area.get_context().make_current()
+        self.engine.window.render_to_image()
+
+        self.update_options()
 
     def update_options(self):
         options = {}
@@ -502,6 +505,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         direction = up_dir_n_to_string[combo.get_selected()]
         options = {"scene.up-direction": direction}
         self.engine.options.update(options)
+        self.gl_area.get_context().make_current()
+        self.engine.window.render_to_image()
         self.load_file()
         self.window_settings.set_setting("up-direction", direction)
 
