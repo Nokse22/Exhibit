@@ -260,27 +260,42 @@
                 <property name="height-request">50</property>
               </object>
             </child>
-          <child>
-            <object class="GtkButton" id="reset_button">
-              <property name="hexpand">True</property>
-              <property name="hexpand-set">True</property>
-              <property name="label">Reset Settings</property>
-              <property name="css-classes">card</property>
-              <property name="height-request">50</property>
-              <property name="margin-top">24</property>
-            </object>
-          </child>
-          <child>
-            <object class="GtkLabel">
-              <property name="hexpand">True</property>
-              <property name="hexpand-set">True</property>
-              <property name="label">Preferences are per window basis, if you save them next time you will open the app it will start with these preferences</property>
-              <property name="margin-top">24</property>
-              <property name="css-classes">dim-label</property>
-              <property name="wrap">True</property>
-              <property name="xalign">0</property>
-            </object>
-          </child>
+            <child>
+              <object class="GtkButton" id="restore_button">
+                <property name="hexpand">True</property>
+                <property name="hexpand-set">True</property>
+                <property name="label">Restore Settings</property>
+                <property name="css-classes">card</property>
+                <property name="height-request">50</property>
+                <property name="margin-top">24</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="reset_button">
+                <property name="hexpand">True</property>
+                <property name="hexpand-set">True</property>
+                <property name="css-classes">card</property>
+                <property name="height-request">50</property>
+                <property name="margin-top">24</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="css-classes">error</property>
+                    <property name="label">Reset Settings</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="hexpand">True</property>
+                <property name="hexpand-set">True</property>
+                <property name="label">Preferences are per window basis, if you save them next time you will open the app it will start with these preferences</property>
+                <property name="margin-top">24</property>
+                <property name="css-classes">dim-label</property>
+                <property name="wrap">True</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
           </object>
         </child>
       </object>

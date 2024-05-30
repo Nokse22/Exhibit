@@ -53,6 +53,7 @@ class Preferences(Adw.PreferencesWindow):
 
     reset_button = Gtk.Template.Child()
     save_button = Gtk.Template.Child()
+    restore_button = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

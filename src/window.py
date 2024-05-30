@@ -441,15 +441,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def get_distance(self):
         self.distance = p_dist(self.camera.position, (0,0,0))
 
-    def on_reset_settings_clicked(self, btn):
-        self.window_settings.reset_all()
-        self.update_options()
-        self.set_preference_values(self.preference_window)
-        self.gl_area.queue_render()
-
-    def on_save_settings_clicked(self, btn):
-        self.window_settings.save_all_settings()
-
     def on_preferences_action(self, *args):
         if self.preference_window:
             self.preference_window.present()
@@ -485,21 +476,22 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         )
         preferences.use_color_switch.connect("notify::active", self.update_background_color)
 
-        preferences.background_color_button.connect("notify::rgba", self.update_background_color)
-        preferences.background_color_button.connect("notify::rgba",
-                lambda btn, *args: self.window_settings.set_setting("background-color", rgb_to_list(btn.get_rgba().to_string()))
-        )
+        preferences.background_color_button.connect("notify::rgba", self.on_color_changed)
 
         preferences.point_up_switch.connect("notify::active", self.set_point_up, "point-up")
         preferences.up_direction_combo.connect("notify::selected", self.set_up_direction)
 
         preferences.reset_button.connect("clicked", self.on_reset_settings_clicked)
-
+        preferences.restore_button.connect("clicked", self.on_restore_settings_clicked)
         preferences.save_button.connect("clicked", self.on_save_settings_clicked)
 
         preferences.present()
 
         self.preference_window = preferences
+
+    def on_color_changed(self, btn, *args):
+        self.window_settings.set_setting("background-color", rgb_to_list(btn.get_rgba().to_string()))
+        self.update_background_color()
 
     def set_up_direction(self, combo, *args):
         direction = up_dir_n_to_string[combo.get_selected()]
@@ -584,6 +576,19 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         rgba = Gdk.RGBA()
         rgba.parse(list_to_rgb(self.window_settings.get_setting("background-color")))
         preferences.background_color_button.set_rgba(rgba)
+
+    def on_restore_settings_clicked(self, btn):
+         self.window_settings.load_settings()
+         self.set_preference_values(self.preference_window)
+
+    def on_reset_settings_clicked(self, btn):
+        self.window_settings.reset_all()
+        self.update_options()
+        self.set_preference_values(self.preference_window)
+        self.gl_area.queue_render()
+
+    def on_save_settings_clicked(self, btn):
+        self.window_settings.save_all_settings()
 
     def create_action(self, name, callback):
         action = Gio.SimpleAction.new(name, None)
