@@ -34,7 +34,7 @@ class Viewer3dApplication(Adw.Application):
 
     def __init__(self):
         super().__init__(application_id='io.github.nokse22.Exhibit',
-                         flags=Gio.ApplicationFlags.DEFAULT_FLAGS)
+                         flags=Gio.ApplicationFlags.HANDLES_OPEN)
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('open-new-window', self.open_new_window_action, ['<primary><shift>n'])
         self.create_action('toggle-orthographic', self.toggle_orthographic, ['5'])
@@ -45,6 +45,11 @@ class Viewer3dApplication(Adw.Application):
         self.create_action('open-preferences', self.open_preferences, ['<primary>comma'])
 
         # self.connect("open", self.on_open)
+    def do_open(self, files, n_files, hint):
+        for file in files:
+            file_path = file.get_path()
+            win = Viewer3dWindow(application=self, filepath=file_path)
+            win.present()
 
     def open_preferences(self, *args):
         self.props.active_window.on_preferences_action()
@@ -63,14 +68,6 @@ class Viewer3dApplication(Adw.Application):
 
     def isometric_view(self, *args):
         self.props.active_window.isometric_view()
-
-    def on_open(self, window, files, *args):
-        for file in files:
-            file_path = file.get_path()
-            if file_path:
-                if not os.path.exists(file_path):
-                    self.open_filepath = file_path
-        self.do_activate()
 
     def do_activate(self):
         """Called when the application is activated.

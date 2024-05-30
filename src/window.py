@@ -120,7 +120,6 @@ class WindowSettings():
             self.saved_settings.reset(key)
         self.load_settings()
         self.save_all_settings()
-        print(self.settings)
 
 @Gtk.Template(resource_path='/io/github/nokse22/Exhibit/window.ui')
 class Viewer3dWindow(Adw.ApplicationWindow):
@@ -211,12 +210,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.style_manager = Adw.StyleManager()
         self.style_manager.connect("notify::dark", self.update_background_color)
 
+        self.update_background_color()
+
         if filepath:
             self.filepath = filepath
             self.load_file()
-
-        self.update_background_color()
-        # self.update_options()
 
     def on_resize(self, gl_area, width, heigh):
         self.width = width
@@ -327,9 +325,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def update_options(self):
         options = {}
         for key, value in self.window_settings.settings.items():
-            try:
+            if key in self.keys:
                 f3d_key = self.keys[key]
-            except:
+            else:
                 continue
             options.setdefault(f3d_key, value)
 
