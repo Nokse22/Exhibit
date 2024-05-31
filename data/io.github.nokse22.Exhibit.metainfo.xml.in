@@ -38,11 +38,19 @@ It only runs on X11/XWayland, on some computer it might not work very well.</p>
   <screenshots>
     <screenshot type="default">
       <image>https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%201.png</image>
-      <caption>Planetary gearbox</caption>
+      <caption>Planetary Reducer</caption>
     </screenshot>
 	  <screenshot>
 	    <image>https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%202.png</image>
 	    <caption>Nissan Fairlady</caption>
+	  </screenshot>
+    <screenshot>
+	    <image>https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%203.png</image>
+	    <caption>Retro Computer Setup with a HDRI background</caption>
+	  </screenshot>
+    <screenshot>
+	    <image>https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%204.png</image>
+	    <caption>Benchy with dark theme</caption>
 	  </screenshot>
   </screenshots>
 

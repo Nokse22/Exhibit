@@ -15,6 +15,12 @@ View 3D models, powered by the [F3D](https://github.com/f3d-app/f3d) library tha
   <img src="data/resources/screenshot 3.png" height="400"/>
   </div>
 
+### Screenshots Credits
+- [Planetary reducer](https://sketchfab.com/3d-models/planet-reducer-animation-273823b0b7014a31a1ef2e1148ca8205)
+- [Retro computer setup](https://sketchfab.com/3d-models/retro-computer-setup-free-82eaf2047e0447a1bfea22482f1d1404)
+- [Benchy](https://www.printables.com/model/3161-3d-benchy#preview:file-3QVl)
+- [Nissan Fairlady](https://sketchfab.com/3d-models/nissan-fairlady-z-s30240z-1978-0d9286ebb8cc426e993e1d398b874a34)
+
 ## Installation
 
 ### From latest build
