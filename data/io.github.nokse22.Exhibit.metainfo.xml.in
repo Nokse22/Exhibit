@@ -7,9 +7,12 @@
   <name>Exhibit</name>
   <summary>Preview your 3D models</summary>
   <description>
-    <p>View 3D models, based on the F3D library that supports many file formats, from digital content to scientific datasets (including glTF, USD, STL, STEP, PLY, OBJ, FBX, Alembic)
+    <p>Based on the F3D library that supports many file formats, from digital content to scientific datasets including glTF, USD, STL, STEP, PLY, OBJ, FBX, Alembic and many more.
+Drag and drop 3d models into the app and export an image of the 3d model.
+It supports tone mapping, ambient occlusion, anti aliasing and more.
+You can use an HDRI image or a custom color as a background.
 
-It only runs on X11/XWayland, on some computer it might not work very well.</p>
+It only runs on X11/XWayland for now, on some computer it might not work too well.</p>
   </description>
 
   <developer id="io.github.nokse22">
@@ -55,7 +58,7 @@ It only runs on X11/XWayland, on some computer it might not work very well.</p>
   </screenshots>
 
   <releases>
-    <release version="1.0.1" date="2024-01-18">
+    <release version="1.0.1" date="2024-05-31">
       <description translate="no">
         <p>First Release</p>
       </description>
