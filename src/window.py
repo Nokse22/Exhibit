@@ -179,7 +179,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.create_action('about', self.on_about_action)
 
-        self.drop_target.set_gtypes([str])
+        self.drop_target.set_gtypes([Gdk.FileList])
 
         self.window_settings = WindowSettings()
 
@@ -430,9 +430,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback("on_drop_received")
     def on_drop_received(self, drop, value, x, y):
-        print("drop", value, x, y)
-
-        self.filepath = value
+        self.filepath = value.get_files()[0].get_path()
         self.load_file()
 
     @Gtk.Template.Callback("on_drop_enter")
