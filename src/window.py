@@ -304,9 +304,12 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.load_file()
 
     def load_file(self):
-        th = threading.Thread(target=self._load)
-        th.deamon = True
-        th.start()
+        options = {"scene.up-direction": self.window_settings.get_setting("up-direction")}
+        self.engine.options.update(options)
+
+        threading.Thread(target=self._load, daemon=True).start()
+
+        self.present()
 
         self.file_name = os.path.basename(self.filepath)
 
@@ -318,8 +321,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.open_new_action.set_enabled(True)
         self.save_as_action.set_enabled(True)
         self.toolbar_view.set_top_bar_style(Adw.ToolbarStyle.RAISED)
-
-        self.present()
 
     def _load(self):
         try:
@@ -521,10 +522,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         direction = up_dir_n_to_string[combo.get_selected()]
         options = {"scene.up-direction": direction}
         self.engine.options.update(options)
-        self.gl_area.get_context().make_current()
-        self.engine.window.render_to_image()
-        self.load_file()
         self.window_settings.set_setting("up-direction", direction)
+        self.load_file()
 
     def update_background_color(self, *args):
         if self.window_settings.get_setting("use-color"):
