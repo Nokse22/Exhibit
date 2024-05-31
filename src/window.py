@@ -26,6 +26,7 @@ from f3d import *
 
 import math
 import os
+import threading
 
 # from OpenGL.GL import *
 
@@ -303,17 +304,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.load_file()
 
     def load_file(self):
-        print("loading")
-        try:
-            self.engine.loader.load_scene(self.filepath)
-        except:
-            self.engine.loader.load_geometry(self.filepath, True)
-
-        print("loaded")
-
-        self.camera.resetToBounds()
-
-        self.get_distance()
+        th = threading.Thread(target=self._load)
+        th.deamon = True
+        th.start()
 
         self.file_name = os.path.basename(self.filepath)
 
@@ -328,7 +321,14 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.present()
 
-        GLib.timeout_add(100, self.update_options)
+    def _load(self):
+        try:
+            self.engine.loader.load_scene(self.filepath)
+        except:
+            self.engine.loader.load_geometry(self.filepath, True)
+
+        self.get_distance()
+        self.update_options()
 
     def update_options(self):
         options = {}
