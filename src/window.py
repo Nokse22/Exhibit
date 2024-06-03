@@ -138,6 +138,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     drop_revealer = Gtk.Template.Child()
     drop_target = Gtk.Template.Child()
 
+    toast_overlay = Gtk.Template.Child()
+
     keys = {
         "grid": "render.grid.enable",
         "absolute-grid": "render.grid.absolute",
@@ -311,6 +313,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.present()
 
+    def on_file_opened(self):
         self.file_name = os.path.basename(self.filepath)
 
         self.set_title(f"View {self.file_name}")
@@ -326,10 +329,20 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         try:
             self.engine.loader.load_scene(self.filepath)
         except:
-            self.engine.loader.load_geometry(self.filepath, True)
+            try:
+                self.engine.loader.load_geometry(self.filepath, True)
+            except:
+                self.send_toast(_("Can't open ") + os.path.basename(self.filepath))
+                return
+
+        GLib.idle_add(self.on_file_opened)
 
         self.get_distance()
         self.update_options()
+
+    def send_toast(self, message):
+        toast = Adw.Toast(title=message, timeout=2)
+        self.toast_overlay.add_toast(toast)
 
     def update_options(self):
         options = {}
