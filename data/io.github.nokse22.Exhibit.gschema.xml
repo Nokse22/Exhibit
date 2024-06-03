@@ -60,5 +60,8 @@
       </choices>
       <default>'-Y'</default>
     </key>
+	  <key name="auto-up-dir" type="b">
+      <default>true</default>
+    </key>
 	</schema>
 </schemalist>

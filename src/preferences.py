@@ -55,5 +55,8 @@ class Preferences(Adw.PreferencesWindow):
     save_button = Gtk.Template.Child()
     restore_button = Gtk.Template.Child()
 
+    automatic_up_direction_switch = Gtk.Template.Child()
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+

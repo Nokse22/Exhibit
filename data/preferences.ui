@@ -230,6 +230,7 @@
                 <property name="hexpand">True</property>
                 <property name="hexpand-set">True</property>
                 <property name="title">Up Direction</property>
+                <!-- <property name="sensitive" bind-source="automatic_up_direction_switch" bind-property="active" bind-flags="invert-boolean | sync-create">True</property> -->
                 <property name="model">
                   <object class="GtkStringList">
                     <items>
@@ -250,7 +251,15 @@
         <object class="AdwPreferencesGroup">
           <property name="hexpand">True</property>
           <property name="hexpand-set">True</property>
-          <property name="title">Settings</property>
+          <property name="title">Other Settings</property>
+          <child>
+              <object class="AdwSwitchRow" id="automatic_up_direction_switch">
+                <property name="hexpand">True</property>
+                <property name="hexpand-set">True</property>
+                <property name="title">Automatic Up Direction</property>
+                <property name="subtitle">When loading choose the best up direction</property>
+              </object>
+            </child>
             <child>
               <object class="GtkButton" id="save_button">
                 <property name="hexpand">True</property>
@@ -258,6 +267,7 @@
                 <property name="label">Save Settings</property>
                 <property name="css-classes">card</property>
                 <property name="height-request">50</property>
+                <property name="margin-top">24</property>
               </object>
             </child>
             <child>
