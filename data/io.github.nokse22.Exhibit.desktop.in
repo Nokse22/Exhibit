@@ -2,7 +2,7 @@
 Name=Exhibit
 Exec=exhibit %U
 Icon=io.github.nokse22.Exhibit
-MimeType=text/plain;model/3mf;model/step;model/obj;model/stl;
+MimeType=text/plain;model/3mf;model/step;model/obj;model/stl;application/octet-stream;
 Terminal=false
 Type=Application
 Categories=GTK;Graphics;Science;3DGraphics;Viewer;GNOME;
