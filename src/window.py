@@ -90,7 +90,7 @@ class WindowSettings():
             "show-edges": self.saved_settings.get_boolean("show-edges"),
             "edges-width": self.saved_settings.get_double("edges-width"),
             "up-direction": self.saved_settings.get_string("up-direction"),
-            "auto-up-dir" : self.saved_settings.get_boolean("auto-up-dir")
+            "auto-up-dir" : self.saved_settings.get_boolean("auto-up-dir"),
         }
 
     def set_setting(self, key, val):
@@ -307,8 +307,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.filepath = file.get_path()
             self.load_file()
 
-    def load_file(self):
-        if self.window_settings.get_setting("auto-up-dir"):
+    def load_file(self, override=False):
+        if self.window_settings.get_setting("auto-up-dir") and not override:
             up = get_up_from_path(self.filepath)
             self.window_settings.set_setting("up-direction", up)
         options = {"scene.up-direction": self.window_settings.get_setting("up-direction")}
@@ -340,7 +340,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 self.engine.loader.load_geometry(self.filepath, True)
             except:
                 self.send_toast(_("Can't open ") + os.path.basename(self.filepath))
-                return
+                options = {"scene.up-direction": self.window_settings.get_setting("up-direction")}
+                self.engine.options.update(options)
 
         GLib.idle_add(self.on_file_opened)
 
@@ -529,7 +530,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         preferences.restore_button.connect("clicked", self.on_restore_settings_clicked)
         preferences.save_button.connect("clicked", self.on_save_settings_clicked)
 
-        preferences.automatic_up_direction_switch.connect("notify::active", self.on_switch_toggled, "auto-up-dir")
+        preferences.automatic_up_direction_switch.connect("notify::active",
+                lambda switch, *args: self.window_settings.set_setting("auto-up-dir", switch.get_active())
+        )
 
         preferences.present()
 
@@ -542,7 +545,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         options = {"scene.up-direction": direction}
         self.engine.options.update(options)
         self.window_settings.set_setting("up-direction", direction)
-        self.load_file()
+        self.load_file(True)
 
     def update_background_color(self, *args):
         if self.window_settings.get_setting("use-color"):
