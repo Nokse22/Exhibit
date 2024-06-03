@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="model/stl">
+    <comment>STL 3D model</comment>
+    <glob pattern="*.stl"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+  <mime-type type="model/obj">
+    <comment>OBJ 3D model</comment>
+    <glob pattern="*.obj"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+  <mime-type type="model/step">
+    <comment>STEP 3D model</comment>
+    <glob pattern="*.step"/>
+    <glob pattern="*.stp"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+  <mime-type type="model/x-other">
+    <comment>3D model</comment>
+    <glob pattern="*.brep"/>
+    <glob pattern="*.vtk"/>
+    <glob pattern="*.fbx"/>
+    <glob pattern="*.ex2"/>
+    <glob pattern="*.drc"/>
+    <glob pattern="*.3ds"/>
+    <glob pattern="*.3mf"/>
+    <glob pattern="*.vtp"/>
+    <glob pattern="*.dae"/>
+    <glob pattern="*.gml"/>
+    <glob pattern="*.vtu"/>
+    <glob pattern="*.vtr"/>
+    <glob pattern="*.pts"/>
+    <glob pattern="*.ply"/>
+    <glob pattern="*.off"/>
+    <glob pattern="*.abc"/>
+    <glob pattern="*.e"/>
+    <generic-icon name="io.github.nokse22.Exhibit"/>
+  </mime-type>
+</mime-info>
+

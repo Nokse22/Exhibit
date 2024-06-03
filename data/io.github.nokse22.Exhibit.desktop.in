@@ -1,8 +1,9 @@
 [Desktop Entry]
 Name=Exhibit
+GenericName=3D Model Viewer
 Exec=exhibit %U
 Icon=io.github.nokse22.Exhibit
-MimeType=text/plain;model/3mf;model/step;model/obj;model/stl;application/octet-stream;
+MimeType=text/plain;model/3mf;model/step;model/obj;model/stl;application/octet-stream;model/x-other;application/vnd.ms-3mfdocument;application/prs.wavefront-obj;
 Terminal=false
 Type=Application
 Categories=GTK;Graphics;Science;3DGraphics;Viewer;GNOME;
