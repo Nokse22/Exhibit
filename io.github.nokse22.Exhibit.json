@@ -25,7 +25,6 @@
         "*.a",
         "/etc",
         "/vtkext",
-        "/python",
         "/cmake",
         "/CMakeFiles"
     ],
