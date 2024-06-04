@@ -253,15 +253,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.camera.elevation(-(self.drag_prev_offset[1] - y_offset))
             self.camera.azimuth(self.drag_prev_offset[0] - x_offset)
         elif gesture.get_current_button() == 2:
-            w = v_norm(v_sub(self.camera.focal_point, self.camera.position))
-            v = self.camera.view_up
-            u = v_cross(v, w)
-            delta = v_add(
-                v_mul(u, -(self.drag_prev_offset[0] - x_offset) * (0.0000001*self.width + 0.001*self.distance)),
-                v_mul(v, -(self.drag_prev_offset[1] - y_offset) * (0.0000001*self.height + 0.001*self.distance)),
+            self.camera.pan(
+                (self.drag_prev_offset[0] - x_offset) * (0.0000001*self.width + 0.001*self.distance),
+                -(self.drag_prev_offset[1] - y_offset) * (0.0000001*self.height + 0.001*self.distance),
+                0
             )
-            self.camera.position = v_add(self.camera.position, delta)
-            self.camera.focal_point = v_add(self.camera.focal_point, delta)
 
         if self.window_settings.get_setting("point-up"):
             up = up_dirs_vector[self.window_settings.get_setting("up-direction")]
