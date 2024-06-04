@@ -35,7 +35,7 @@
     <glob pattern="*.off"/>
     <glob pattern="*.abc"/>
     <glob pattern="*.e"/>
-    <generic-icon name="io.github.nokse22.Exhibit"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
   </mime-type>
 </mime-info>
 
