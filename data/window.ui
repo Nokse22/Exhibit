@@ -24,6 +24,7 @@
               <object class="GtkButton" id="home_button_headerbar">
                 <property name="css-classes">flat</property>
                 <property name="icon-name">go-home-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Reset to Bounds</property>
                 <signal name="clicked" handler="on_home_clicked"/>
               </object>
             </child>
@@ -31,6 +32,7 @@
               <object class="GtkButton" id="view_button_headerbar">
                 <property name="css-classes">flat</property>
                 <property name="icon-name">perspective-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Toggle Orthographic</property>
                 <signal name="clicked" handler="on_view_clicked"/>
               </object>
             </child>
@@ -71,15 +73,15 @@
                                     <property name="css-classes">pill
 suggested-action</property>
                                     <property name="halign">center</property>
-                                    <property name="label">Load</property>
+                                    <property name="label" translatable="yes">Load</property>
                                     <signal name="clicked" handler="on_open_button_clicked"/>
                                   </object>
                                 </property>
-                                <property name="description">Load any file to view it in 3D</property>
+                                <property name="description" translatable="yes">Load any file to view it in 3D</property>
                                 <property name="hexpand">True</property>
                                 <property name="hexpand-set">True</property>
                                 <property name="icon-name">io.github.nokse22.Exhibit</property>
-                                <property name="title">Exhibit</property>
+                                <property name="title" translatable="yes">Exhibit</property>
                                 <property name="vexpand">True</property>
                               </object>
                             </property>
