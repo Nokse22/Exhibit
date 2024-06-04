@@ -28,7 +28,7 @@
         "/python",
         "/cmake",
         "/CMakeFiles"
-    ]
+    ],
     "modules" : [
          "shared-modules/glew/glew.json",
         {
