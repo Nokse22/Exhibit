@@ -1,0 +1,300 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-04 22:15+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: data/io.github.nokse22.Exhibit.desktop.in:3
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:7 data/window.ui:20
+#: data/window.ui:84
+msgid "Exhibit"
+msgstr ""
+
+#: data/io.github.nokse22.Exhibit.desktop.in:4
+msgid "3D Model Viewer"
+msgstr ""
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:8
+msgid "Preview your 3D models"
+msgstr ""
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:10
+msgid ""
+"Based on the F3D library that supports many file formats, from digital "
+"content to scientific datasets including glTF, USD, STL, STEP, PLY, OBJ, "
+"FBX, Alembic and many more. Drag and drop 3d models into the app and export "
+"an image of the 3d model. It supports tone mapping, ambient occlusion, anti "
+"aliasing and more. You can use an HDRI image or a custom color as a "
+"background."
+msgstr ""
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:42
+msgid "Planetary Reducer"
+msgstr ""
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:46
+msgid "Nissan Fairlady"
+msgstr ""
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:50
+msgid "Retro Computer Setup with a HDRI background"
+msgstr ""
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:54
+msgid "Benchy with dark theme"
+msgstr ""
+
+#: src/window.py:293
+msgid "Open File"
+msgstr ""
+
+#: src/window.py:341
+msgid "Can't open "
+msgstr ""
+
+#: src/window.py:374
+msgid "Save File"
+msgstr ""
+
+#: src/window.py:375
+msgid "image.png"
+msgstr ""
+
+#: src/window.py:576
+msgid "Open Skybox File"
+msgstr ""
+
+#: data/window.ui:27
+msgid "Reset to Bounds"
+msgstr ""
+
+#: data/window.ui:35
+msgid "Toggle Orthographic"
+msgstr ""
+
+#: data/window.ui:43
+msgid "Menu"
+msgstr ""
+
+#: data/window.ui:76
+msgid "Load"
+msgstr ""
+
+#: data/window.ui:80
+msgid "Load any file to view it in 3D"
+msgstr ""
+
+#: data/window.ui:145
+msgid "_Open New Window"
+msgstr ""
+
+#: data/window.ui:151
+msgid "_Load New Model"
+msgstr ""
+
+#: data/window.ui:157
+msgid "_Save As Image"
+msgstr ""
+
+#: data/window.ui:163
+msgid "_Preferences"
+msgstr ""
+
+#: data/window.ui:167
+msgid "_Keyboard Shortcuts"
+msgstr ""
+
+#: data/window.ui:171
+msgid "_About Exhibit"
+msgstr ""
+
+#: data/preferences.ui:12 data/preferences.ui:17
+msgid "Render"
+msgstr ""
+
+#: data/preferences.ui:22
+msgid "Translucency"
+msgstr ""
+
+#: data/preferences.ui:29
+msgid "Tone Mapping"
+msgstr ""
+
+#: data/preferences.ui:30
+msgid "Map colors properly to the monitor colors"
+msgstr ""
+
+#: data/preferences.ui:37
+msgid "Ambient Occlusion"
+msgstr ""
+
+#: data/preferences.ui:38
+msgid "Provides approximate shadows"
+msgstr ""
+
+#: data/preferences.ui:45
+msgid "Anti Aliasing"
+msgstr ""
+
+#: data/preferences.ui:52
+msgid "Light with HDRI"
+msgstr ""
+
+#: data/preferences.ui:53
+msgid "Light the scene using a the loaded HDRI or the default"
+msgstr ""
+
+#: data/preferences.ui:68
+msgid "Light Intensity"
+msgstr ""
+
+#: data/preferences.ui:77
+msgid "Edges"
+msgstr ""
+
+#: data/preferences.ui:82
+msgid "Show Edges"
+msgstr ""
+
+#: data/preferences.ui:89
+msgid "Edges Width"
+msgstr ""
+
+#: data/preferences.ui:109
+msgid "Scene"
+msgstr ""
+
+#: data/preferences.ui:114
+msgid "Grid"
+msgstr ""
+
+#: data/preferences.ui:119
+msgid "View Grid"
+msgstr ""
+
+#: data/preferences.ui:126
+msgid "Grid Absolute"
+msgstr ""
+
+#: data/preferences.ui:135
+msgid "Background"
+msgstr ""
+
+#: data/preferences.ui:140
+msgid "HDRI as Backgound"
+msgstr ""
+
+#: data/preferences.ui:141
+msgid "Use the loaded HDRI or the default one as a background"
+msgstr ""
+
+#: data/preferences.ui:148
+msgid "HDRI Image"
+msgstr ""
+
+#: data/preferences.ui:161
+msgid "Blur Background"
+msgstr ""
+
+#: data/preferences.ui:168
+msgid "Blur Circle Of Confusion"
+msgstr ""
+
+#: data/preferences.ui:190
+msgid "Use Custom Color"
+msgstr ""
+
+#: data/preferences.ui:191
+msgid "HDRI background takes priority over this"
+msgstr ""
+
+#: data/preferences.ui:198
+msgid "Background Color"
+msgstr ""
+
+#: data/preferences.ui:199
+msgid "Transparent colors not supported"
+msgstr ""
+
+#: data/preferences.ui:219
+msgid "More"
+msgstr ""
+
+#: data/preferences.ui:225
+msgid "Navigation"
+msgstr ""
+
+#: data/preferences.ui:230
+msgid "Alwayas Point Up"
+msgstr ""
+
+#: data/preferences.ui:237
+msgid "Up Direction"
+msgstr ""
+
+#: data/preferences.ui:242
+msgid "- X"
+msgstr ""
+
+#: data/preferences.ui:243
+msgid "+ X"
+msgstr ""
+
+#: data/preferences.ui:244
+msgid "- Y"
+msgstr ""
+
+#: data/preferences.ui:245
+msgid "+ Y"
+msgstr ""
+
+#: data/preferences.ui:246
+msgid "- Z"
+msgstr ""
+
+#: data/preferences.ui:247
+msgid "+ Z"
+msgstr ""
+
+#: data/preferences.ui:259
+msgid "Other Settings"
+msgstr ""
+
+#: data/preferences.ui:264
+msgid "Automatic Up Direction"
+msgstr ""
+
+#: data/preferences.ui:265
+msgid "When loading choose the best up direction"
+msgstr ""
+
+#: data/preferences.ui:272
+msgid "Save Settings"
+msgstr ""
+
+#: data/preferences.ui:282
+msgid "Restore Settings"
+msgstr ""
+
+#: data/preferences.ui:298
+msgid "Reset Settings"
+msgstr ""
+
+#: data/preferences.ui:307
+msgid ""
+"Preferences are per window basis, if you save them next time you will open "
+"the app it will start with these preferences"
+msgstr ""

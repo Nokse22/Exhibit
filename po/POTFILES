@@ -3,4 +3,5 @@ data/io.github.nokse22.Exhibit.metainfo.xml.in
 data/io.github.nokse22.Exhibit.gschema.xml
 src/main.py
 src/window.py
-src/window.ui
+data/window.ui
+data/preferences.ui
