@@ -326,6 +326,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.save_as_action.set_enabled(True)
         self.toolbar_view.set_top_bar_style(Adw.ToolbarStyle.RAISED)
 
+        self.drop_revealer.set_reveal_child(False)
+        self.stack.remove_css_class("blurred")
+
         self.set_preference_values()
 
     def _load(self):
