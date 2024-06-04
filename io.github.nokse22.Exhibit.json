@@ -7,7 +7,9 @@
     "finish-args" : [
         "--share=ipc",
         "--socket=wayland",
-        "--device=dri"
+        "--socket=fallback-x11",
+        "--device=dri",
+        "--env=GDK_DEBUG=gl-egl"
     ],
     "cleanup" : [
         "/include",
@@ -360,8 +362,6 @@
                 "-DF3D_PLUGIN_BUILD_DRACO:BOOL=ON",
                 "-DF3D_PLUGIN_BUILD_EXODUS:BOOL=ON",
                 "-DF3D_PLUGIN_BUILD_OCCT:BOOL=ON"
-            ],
-            "post-install": [
             ],
             "sources": [
                 {
