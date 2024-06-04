@@ -649,7 +649,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                                 application_name='Exhibit',
                                 application_icon='io.github.nokse22.Exhibit',
                                 developer_name='Nokse22',
-                                version='0.1.0',
+                                version='1.0.0',
                                 website='https://github.com/Nokse22/Exhibit',
                                 issue_url='https://github.com/Nokse22/Exhibit/issues',
                                 developers=['Nokse22'],
