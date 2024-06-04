@@ -39,6 +39,10 @@ install_data('io.github.nokse22.Exhibit.gschema.xml',
   install_dir: get_option('datadir') / 'glib-2.0' / 'schemas'
 )
 
+install_data('io.github.nokse22.Exhibit.mime.xml',
+    install_dir: join_paths(get_option('datadir'), 'mime', 'packages')
+)
+
 compile_schemas = find_program('glib-compile-schemas', required: false, disabler: true)
 test('Validate schema file',
      compile_schemas,

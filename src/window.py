@@ -89,7 +89,8 @@ class WindowSettings():
             "use-color": self.saved_settings.get_boolean("use-color"),
             "show-edges": self.saved_settings.get_boolean("show-edges"),
             "edges-width": self.saved_settings.get_double("edges-width"),
-            "up-direction": self.saved_settings.get_string("up-direction")
+            "up-direction": self.saved_settings.get_string("up-direction"),
+            "auto-up-dir" : self.saved_settings.get_boolean("auto-up-dir"),
         }
 
     def set_setting(self, key, val):
@@ -115,6 +116,7 @@ class WindowSettings():
         self.saved_settings.set_string("background-color", list_to_rgb(self.settings["background-color"]))
         self.saved_settings.set_double("edges-width", self.settings["edges-width"])
         self.saved_settings.set_string("up-direction", self.settings["up-direction"])
+        self.saved_settings.set_boolean("auto-up-dir", self.settings["auto-up-dir"])
 
     def reset_all(self):
         for key in self.settings:
@@ -137,6 +139,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     drop_revealer = Gtk.Template.Child()
     drop_target = Gtk.Template.Child()
+
+    toast_overlay = Gtk.Template.Child()
 
     keys = {
         "grid": "render.grid.enable",
@@ -299,7 +303,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.filepath = file.get_path()
             self.load_file()
 
-    def load_file(self):
+    def load_file(self, override=False):
+        if self.window_settings.get_setting("auto-up-dir") and not override:
+            up = get_up_from_path(self.filepath)
+            self.window_settings.set_setting("up-direction", up)
         options = {"scene.up-direction": self.window_settings.get_setting("up-direction")}
         self.engine.options.update(options)
 
@@ -307,6 +314,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.present()
 
+    def on_file_opened(self):
         self.file_name = os.path.basename(self.filepath)
 
         self.set_title(f"View {self.file_name}")
@@ -318,22 +326,33 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.save_as_action.set_enabled(True)
         self.toolbar_view.set_top_bar_style(Adw.ToolbarStyle.RAISED)
 
+        self.set_preference_values()
+
     def _load(self):
         try:
             self.engine.loader.load_scene(self.filepath)
         except:
-            self.engine.loader.load_geometry(self.filepath, True)
+            try:
+                self.engine.loader.load_geometry(self.filepath, True)
+            except:
+                self.send_toast(_("Can't open ") + os.path.basename(self.filepath))
+                options = {"scene.up-direction": self.window_settings.get_setting("up-direction")}
+                self.engine.options.update(options)
+
+        GLib.idle_add(self.on_file_opened)
 
         self.get_distance()
         self.update_options()
+
+    def send_toast(self, message):
+        toast = Adw.Toast(title=message, timeout=2)
+        self.toast_overlay.add_toast(toast)
 
     def update_options(self):
         options = {}
         for key, value in self.window_settings.settings.items():
             if key in self.keys:
                 f3d_key = self.keys[key]
-            else:
-                continue
             options.setdefault(f3d_key, value)
 
         self.engine.options.update(options)
@@ -471,7 +490,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         preferences.set_title(f"Preferences {self.file_name}")
         preferences.connect("close-request", self.on_preferences_close)
 
-        self.set_preference_values(preferences)
+        self.preference_window = preferences
+        self.set_preference_values()
 
         preferences.grid_switch.connect("notify::active", self.on_switch_toggled, "grid")
         preferences.absolute_grid_switch.connect("notify::active", self.on_switch_toggled, "absolute-grid")
@@ -506,9 +526,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         preferences.restore_button.connect("clicked", self.on_restore_settings_clicked)
         preferences.save_button.connect("clicked", self.on_save_settings_clicked)
 
-        preferences.present()
+        preferences.automatic_up_direction_switch.connect("notify::active",
+                lambda switch, *args: self.window_settings.set_setting("auto-up-dir", switch.get_active())
+        )
 
-        self.preference_window = preferences
+        preferences.present()
 
     def on_color_changed(self, btn, *args):
         self.window_settings.set_setting("background-color", rgb_to_list(btn.get_rgba().to_string()))
@@ -519,7 +541,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         options = {"scene.up-direction": direction}
         self.engine.options.update(options)
         self.window_settings.set_setting("up-direction", direction)
-        self.load_file()
+        self.load_file(True)
 
     def update_background_color(self, *args):
         if self.window_settings.get_setting("use-color"):
@@ -570,40 +592,44 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def on_preferences_close(self, *args):
         self.preference_window = None
 
-    def set_preference_values(self, preferences):
-        preferences.grid_switch.set_active(self.window_settings.get_setting("grid"))
-        preferences.absolute_grid_switch.set_active(self.window_settings.get_setting("absolute-grid"))
+    def set_preference_values(self):
+        if not self.preference_window:
+            return
 
-        preferences.translucency_switch.set_active(self.window_settings.get_setting("translucency"))
-        preferences.tone_mapping_switch.set_active(self.window_settings.get_setting("tone-mapping"))
-        preferences.ambient_occlusion_switch.set_active(self.window_settings.get_setting("ambient-occlusion"))
-        preferences.anti_aliasing_switch.set_active(self.window_settings.get_setting("anti-aliasing"))
-        preferences.hdri_ambient_switch.set_active(self.window_settings.get_setting("hdri-ambient"))
-        preferences.light_intensity_spin.set_value(self.window_settings.get_setting("light-intensity"))
-        preferences.skybox_row.set_text(self.window_settings.get_setting("skybox-path"))
-        preferences.blur_switch.set_active(self.window_settings.get_setting("blur-background"))
-        preferences.blur_coc_spin.set_value(self.window_settings.get_setting("blur-coc"))
-        preferences.use_skybox_switch.set_active(self.window_settings.get_setting("use-skybox"))
+        self.preference_window.grid_switch.set_active(self.window_settings.get_setting("grid"))
+        self.preference_window.absolute_grid_switch.set_active(self.window_settings.get_setting("absolute-grid"))
 
-        preferences.edges_switch.set_active(self.window_settings.get_setting("show-edges"))
-        preferences.edges_width_spin.set_value(self.window_settings.get_setting("edges-width"))
+        self.preference_window.translucency_switch.set_active(self.window_settings.get_setting("translucency"))
+        self.preference_window.tone_mapping_switch.set_active(self.window_settings.get_setting("tone-mapping"))
+        self.preference_window.ambient_occlusion_switch.set_active(self.window_settings.get_setting("ambient-occlusion"))
+        self.preference_window.anti_aliasing_switch.set_active(self.window_settings.get_setting("anti-aliasing"))
+        self.preference_window.hdri_ambient_switch.set_active(self.window_settings.get_setting("hdri-ambient"))
+        self.preference_window.light_intensity_spin.set_value(self.window_settings.get_setting("light-intensity"))
+        self.preference_window.skybox_row.set_text(self.window_settings.get_setting("skybox-path"))
+        self.preference_window.blur_switch.set_active(self.window_settings.get_setting("blur-background"))
+        self.preference_window.blur_coc_spin.set_value(self.window_settings.get_setting("blur-coc"))
+        self.preference_window.use_skybox_switch.set_active(self.window_settings.get_setting("use-skybox"))
 
-        preferences.point_up_switch.set_active(self.window_settings.get_setting("point-up"))
-        preferences.up_direction_combo.set_selected(up_dir_string_to_n[self.window_settings.get_setting("up-direction")])
+        self.preference_window.edges_switch.set_active(self.window_settings.get_setting("show-edges"))
+        self.preference_window.edges_width_spin.set_value(self.window_settings.get_setting("edges-width"))
 
-        preferences.use_color_switch.set_active(self.window_settings.get_setting("use-color"))
+        self.preference_window.point_up_switch.set_active(self.window_settings.get_setting("point-up"))
+        self.preference_window.up_direction_combo.set_selected(up_dir_string_to_n[self.window_settings.get_setting("up-direction")])
+        self.preference_window.automatic_up_direction_switch.set_active(self.window_settings.get_setting("auto-up-dir"))
+
+        self.preference_window.use_color_switch.set_active(self.window_settings.get_setting("use-color"))
         rgba = Gdk.RGBA()
         rgba.parse(list_to_rgb(self.window_settings.get_setting("background-color")))
-        preferences.background_color_button.set_rgba(rgba)
+        self.preference_window.background_color_button.set_rgba(rgba)
 
     def on_restore_settings_clicked(self, btn):
          self.window_settings.load_settings()
-         self.set_preference_values(self.preference_window)
+         self.set_preference_values()
 
     def on_reset_settings_clicked(self, btn):
         self.window_settings.reset_all()
         self.update_options()
-        self.set_preference_values(self.preference_window)
+        self.set_preference_values()
         self.gl_area.queue_render()
 
     def on_save_settings_clicked(self, btn):
@@ -665,3 +691,12 @@ def rgb_to_list(rgb):
 
 def list_to_rgb(lst):
     return f"rgb({int(lst[0] * 255)},{int(lst[1] * 255)},{int(lst[2] * 255)})"
+
+def get_up_from_path(path):
+    extension = os.path.splitext(path)[1][1:]
+    up_ext = {
+        "stl" : "+Z"
+    }
+    if extension in up_ext:
+        return up_ext[extension]
+    return "+Y"
