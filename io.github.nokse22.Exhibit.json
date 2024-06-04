@@ -316,6 +316,27 @@
             ]
         },
         {
+            "name": "pybind11",
+            "config-opts": [
+                "-DPYBIND11_FINDPYTHON=ON",
+                "-DPYBIND11_TEST=OFF"
+            ],
+            "buildsystem": "cmake-ninja",
+            "builddir": true,
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/pybind/pybind11/archive/refs/tags/v2.12.0.tar.gz",
+                    "sha256": "bf8f242abd1abcd375d516a7067490fb71abd79519a282d22b6e4d19282185a7",
+                    "x-checker-data": {
+                        "type": "anitya",
+                        "project-id": 13384,
+                        "url-template": "https://github.com/pybind/pybind11/archive/refs/tags/v$version.tar.gz"
+                    }
+                }
+            ]
+        },
+        {
             "name": "F3D",
             "buildsystem": "cmake-ninja",
             "builddir": true,
@@ -326,44 +347,21 @@
                 }
             },
             "config-opts": [
-                "-DCMAKE_BUILD_TYPE=Release",
-                "-DBUILD_SHARED_LIBS=ON",
-                "-DBUILD_TESTING=OFF",
-                "-DF3D_MACOS_BUNDLE=OFF",
-                "-DF3D_WINDOWS_GUI=OFF",
-                "-DF3D_PLUGIN_BUILD_ALEMBIC=OFF",
-                "-DF3D_PLUGIN_BUILD_ASSIMP=OFF",
-                "-DF3D_PLUGIN_BUILD_EXODUS=OFF",
-                "-DF3D_PLUGIN_BUILD_FBX=OFF",
-                "-DF3D_PLUGIN_BUILD_GLTF=OFF",
-                "-DF3D_PLUGIN_BUILD_OSPRAY=OFF",
-                "-DF3D_PLUGIN_BUILD_PARAVIEW=OFF",
-                "-DF3D_PLUGIN_BUILD_PDAL=OFF",
-                "-DF3D_PLUGIN_BUILD_PLY=OFF",
-                "-DF3D_PLUGIN_BUILD_RIVET=OFF",
-                "-DF3D_PLUGIN_BUILD_SDL2=OFF",
-                "-DF3D_PLUGIN_BUILD_SVTK=OFF",
-                "-DF3D_PLUGIN_BUILD_VTP=OFF",
-                "-DF3D_PLUGIN_BUILD_VTU=OFF",
-                "-DF3D_PLUGIN_BUILD_X3D=OFF",
-                "-DF3D_PLUGIN_BUILD_ZLIB=OFF",
-                "-DF3D_BUILD_DOCUMENTATION=OFF",
-                "-DF3D_BUILD_EXAMPLES=OFF",
-                "-DF3D_BUILD_PYTHON=ON",
-                "-DPython3_EXECUTABLE=/usr/bin/python3",
-                "-DPython3_INCLUDE_DIR=/usr/include/python3.10",
-                "-DPython3_LIBRARY=/usr/lib/libpython3.10.so"
+            	"-DF3D_BUILD_APPLICATION:BOOL=OFF",
+            	"-DF3D_MODULE_EXTERNAL_RENDERING:BOOL=ON",
+            	"-DF3D_BINDINGS_PYTHON:BOOL=ON",
+                "-DCMAKE_INSTALL_PREFIX:PATH=/app",
+                "-DBUILD_TESTING:BOOL=OFF",
+                "-DF3D_LINUX_INSTALL_DEFAULT_CONFIGURATION_FILE_IN_PREFIX:BOOL=ON",
+                "-DF3D_PLUGINS_STATIC_BUILD=ON",
+                "-DF3D_PLUGIN_BUILD_ALEMBIC=ON",
+                "-DF3D_PLUGIN_BUILD_ASSIMP:BOOL=ON",
+                "-DF3D_PLUGIN_BUILD_DRACO:BOOL=ON",
+                "-DF3D_PLUGIN_BUILD_EXODUS:BOOL=ON",
+                "-DF3D_PLUGIN_BUILD_OCCT:BOOL=ON",
+                "-DF3D_LINUX_APPLICATION_LINK_FILESYSTEM:BOOL=OFF"
             ],
             "post-install": [
-		{
-                    "name": "Build and Install Python Bindings",
-                    "commands": [
-                        "cd build",
-                        "cmake --build . --target python-install",
-                        "cd ../python",
-                        "python3 setup.py install --prefix=/app"
-                    ]
-                }
             ],
             "sources": [
                 {
