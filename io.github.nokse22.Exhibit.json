@@ -13,15 +13,22 @@
     ],
     "cleanup" : [
         "/include",
-        "/lib/pkgconfig",
+        "/lib",
+        "/library",
+        "/plugins",
         "/man",
         "/share/doc",
         "/share/gtk-doc",
         "/share/man",
         "/share/pkgconfig",
         "*.la",
-        "*.a"
-    ],
+        "*.a",
+        "/etc",
+        "/vtkext",
+        "/python",
+        "/cmake",
+        "/CMakeFiles"
+    ]
     "modules" : [
          "shared-modules/glew/glew.json",
         {
