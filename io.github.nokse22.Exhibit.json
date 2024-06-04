@@ -13,9 +13,7 @@
     ],
     "cleanup" : [
         "/include",
-        "/lib",
-        "/library",
-        "/plugins",
+        "/lib/pkgconfig",
         "/man",
         "/share/doc",
         "/share/gtk-doc",
