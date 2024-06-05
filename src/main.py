@@ -36,23 +36,35 @@ class Viewer3dApplication(Adw.Application):
         super().__init__(application_id='io.github.nokse22.Exhibit',
                          flags=Gio.ApplicationFlags.HANDLES_OPEN)
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
+        self.create_action('about', self.on_about_action)
+
         self.create_action('open-new-window', self.open_new_window_action, ['<primary><shift>n'])
         self.create_action('toggle-orthographic', self.toggle_orthographic, ['5'])
         self.create_action('front-view', self.front_view, ['1'])
         self.create_action('right-view', self.right_view, ['3'])
         self.create_action('top-view', self.top_view, ['7'])
         self.create_action('isometric-view', self.isometric_view, ['9'])
-        self.create_action('open-preferences', self.open_preferences, ['<primary>comma'])
 
-        # self.connect("open", self.on_open)
     def do_open(self, files, n_files, hint):
         for file in files:
             file_path = file.get_path()
             win = Viewer3dWindow(application=self, filepath=file_path)
             win.present()
 
-    def open_preferences(self, *args):
-        self.props.active_window.on_preferences_action()
+    def on_about_action(self, *args):
+        about = Adw.AboutDialog(
+                                application_name='Exhibit',
+                                application_icon='io.github.nokse22.Exhibit',
+                                developer_name='Nokse22',
+                                version='1.0.1',
+                                website='https://github.com/Nokse22/Exhibit',
+                                issue_url='https://github.com/Nokse22/Exhibit/issues',
+                                developers=['Nokse22'],
+                                license_type="GTK_LICENSE_GPL_3_0",
+                                copyright='© 2024 Nokse22',
+                                artists=["Jakub Steiner https://jimmac.eu"])
+        about.add_link(_("Checkout F3D"), "https://f3d.app")
+        about.present(self.props.active_window)
 
     def toggle_orthographic(self, *args):
         self.props.active_window.toggle_orthographic()

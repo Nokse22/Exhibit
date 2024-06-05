@@ -182,8 +182,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.open_new_action = self.create_action('open-new', self.open_file_chooser)
         self.open_new_action.set_enabled(False)
 
-        self.create_action('about', self.on_about_action)
-
         self.drop_target.set_gtypes([Gdk.FileList])
 
         self.window_settings = WindowSettings()
@@ -388,7 +386,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     def front_view(self, *args):
         up_v = up_dirs_vector[self.window_settings.get_setting("up-direction")]
-        vector = v_mul(tuple([up_v[1], up_v[2], up_v[0]]), 1000)
+        vector = v_mul(tuple([up_v[2], up_v[0], up_v[1]]), 1000)
         self.camera.position = v_add(self.camera.focal_point, vector)
         self.camera.setViewUp(up_dirs_vector[self.window_settings.get_setting("up-direction")])
         self.camera.resetToBounds()
@@ -397,7 +395,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     def right_view(self, *args):
         up_v = up_dirs_vector[self.window_settings.get_setting("up-direction")]
-        vector = v_mul(tuple([up_v[2], up_v[0], up_v[1]]), 1000)
+        vector = v_mul(tuple([up_v[1], up_v[2], up_v[0]]), 1000)
         self.camera.position = v_add(self.camera.focal_point, vector)
         self.camera.setViewUp(up_dirs_vector[self.window_settings.get_setting("up-direction")])
         self.camera.resetToBounds()
@@ -643,20 +641,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         action.connect("activate", callback)
         self.add_action(action)
         return action
-
-    def on_about_action(self, *args):
-        about = Adw.AboutDialog(
-                                application_name='Exhibit',
-                                application_icon='io.github.nokse22.Exhibit',
-                                developer_name='Nokse22',
-                                version='1.0.0',
-                                website='https://github.com/Nokse22/Exhibit',
-                                issue_url='https://github.com/Nokse22/Exhibit/issues',
-                                developers=['Nokse22'],
-                                license_type="GTK_LICENSE_GPL_3_0",
-                                copyright='© 2024 Nokse22',
-                                artists=["Jakub Steiner https://jimmac.eu"])
-        about.present(self)
 
 def p_dist(point1, point2):
     if len(point1) != len(point2):
