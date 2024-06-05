@@ -341,6 +341,28 @@
             ]
         },
         {
+            "name": "libdeflate",
+            "buildsystem": "cmake-ninja",
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/ebiggers/libdeflate/releases/download/v1.20/libdeflate-1.20.tar.gz",
+                    "sha256": "c52cf0239fd644d71c9e88613dd7431a5306ebee1280c5791c71ca264869250a"
+                }
+            ]
+        },
+        {
+            "name": "openexr",
+            "buildsystem": "cmake-ninja",
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/AcademySoftwareFoundation/openexr/archive/refs/tags/v3.2.4.tar.gz",
+                    "sha256": "81e6518f2c4656fdeaf18a018f135e96a96e7f66dbe1c1f05860dd94772176cc"
+                }
+            ]
+        },
+        {
             "name": "F3D",
             "buildsystem": "cmake-ninja",
             "builddir": true,
@@ -353,6 +375,7 @@
             "config-opts": [
             	"-DF3D_BUILD_APPLICATION:BOOL=OFF",
             	"-DF3D_MODULE_EXTERNAL_RENDERING:BOOL=ON",
+            	"-DF3D_MODULE_EXR:BOOL=ON",
             	"-DF3D_BINDINGS_PYTHON:BOOL=ON",
                 "-DCMAKE_INSTALL_PREFIX:PATH=/app",
                 "-DBUILD_TESTING:BOOL=OFF",
