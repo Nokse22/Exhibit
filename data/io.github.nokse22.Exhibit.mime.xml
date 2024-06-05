@@ -1,40 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
   <mime-type type="model/stl">
-    <comment>STL 3D model</comment>
-    <glob pattern="*.stl"/>
     <generic-icon name="io.github.nokse22.Exhibit.mime"/>
   </mime-type>
+
   <mime-type type="model/obj">
-    <comment>OBJ 3D model</comment>
-    <glob pattern="*.obj"/>
     <generic-icon name="io.github.nokse22.Exhibit.mime"/>
   </mime-type>
+
   <mime-type type="model/step">
-    <comment>STEP 3D model</comment>
-    <glob pattern="*.step"/>
-    <glob pattern="*.stp"/>
     <generic-icon name="io.github.nokse22.Exhibit.mime"/>
   </mime-type>
+
+  <mime-type type="image/x-3ds">
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+
+  <mime-type type="image/tiff">
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+
+  <mime-type type="model/3mf">
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+
+  <mime-type type="model/gltf-binary">
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+
+  <mime-type type="model/gltf-json">
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+
+  <mime-type type="application/dicom">
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+
+  <mime-type type="application/dicom">
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+
+  <mime-type type="text/vnd.abc">
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+
   <mime-type type="model/x-other">
     <comment>3D model</comment>
-    <glob pattern="*.brep"/>
+    <comment xml:lang="it">Modello 3D</comment>
     <glob pattern="*.vtk"/>
-    <glob pattern="*.fbx"/>
-    <glob pattern="*.ex2"/>
-    <glob pattern="*.drc"/>
-    <glob pattern="*.3ds"/>
-    <glob pattern="*.3mf"/>
     <glob pattern="*.vtp"/>
-    <glob pattern="*.dae"/>
-    <glob pattern="*.gml"/>
     <glob pattern="*.vtu"/>
     <glob pattern="*.vtr"/>
+    <glob pattern="*.vti"/>
+    <glob pattern="*.vts"/>
+    <glob pattern="*.vtm"/>
+    <glob pattern="*.drc"/>
+    <glob pattern="*.dcm"/>
+    <glob pattern="*.nrrd"/>
+    <glob pattern="*.nhrd"/>
+    <glob pattern="*.mha"/>
+    <glob pattern="*.ex2"/>
+    <glob pattern="*.exo"/>
+    <glob pattern="*.g"/>
+    <glob pattern="*.gml"/>
+    <glob pattern="*.vtp"/>
+    <glob pattern="*.dae"/>
     <glob pattern="*.pts"/>
     <glob pattern="*.ply"/>
+    <glob pattern="*.brep"/>
+    <glob pattern="*.vdb"/>
+    <glob pattern="*.wrl"/>
+    <glob pattern="*.fbx"/>
+    <glob pattern="*.dae"/>
     <glob pattern="*.off"/>
-    <glob pattern="*.abc"/>
-    <glob pattern="*.e"/>
+    <glob pattern="*.usd"/>
     <generic-icon name="io.github.nokse22.Exhibit.mime"/>
   </mime-type>
 </mime-info>
