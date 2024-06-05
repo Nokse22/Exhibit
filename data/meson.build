@@ -43,6 +43,10 @@ install_data('io.github.nokse22.Exhibit.mime.xml',
     install_dir: join_paths(get_option('datadir'), 'mime', 'packages')
 )
 
+install_data('io.github.nokse22.Exhibit.mime.svg',
+  install_dir: join_paths(get_option('datadir'), 'icons', 'hicolor', 'scalable', 'mimetypes')
+)
+
 compile_schemas = find_program('glib-compile-schemas', required: false, disabler: true)
 test('Validate schema file',
      compile_schemas,
