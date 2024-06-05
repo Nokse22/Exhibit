@@ -59,7 +59,7 @@ class Viewer3dApplication(Adw.Application):
                                 version='1.0.1',
                                 website='https://github.com/Nokse22/Exhibit',
                                 issue_url='https://github.com/Nokse22/Exhibit/issues',
-                                developers=['Nokse22'],
+                                developers=['Nokse'],
                                 license_type="GTK_LICENSE_GPL_3_0",
                                 copyright='© 2024 Nokse22',
                                 artists=["Jakub Steiner https://jimmac.eu"])
