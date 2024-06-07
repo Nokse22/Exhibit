@@ -1,0 +1,311 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# twlvnn <kraft_werk@tutanota.com>, 2024.
+# twlvnn kraftwerk <kraft_werk@tutanota.com>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: exhibit\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-04 22:15+0200\n"
+"PO-Revision-Date: 2024-06-07 23:03+0200\n"
+"Last-Translator: twlvnn kraftwerk <kraft_werk@tutanota.com>\n"
+"Language-Team: Bulgarian <dict-notifications@fsa-bg.org>\n"
+"Language: bg\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"X-Generator: Gtranslator 46.1\n"
+
+#: data/io.github.nokse22.Exhibit.desktop.in:3
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:7 data/window.ui:20
+#: data/window.ui:84
+msgid "Exhibit"
+msgstr "Изложба"
+
+#: data/io.github.nokse22.Exhibit.desktop.in:4
+msgid "3D Model Viewer"
+msgstr "Преглед на 3D файлове"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:8
+msgid "Preview your 3D models"
+msgstr "Преглеждайте вашите 3D модели"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:10
+msgid ""
+"Based on the F3D library that supports many file formats, from digital "
+"content to scientific datasets including glTF, USD, STL, STEP, PLY, OBJ, "
+"FBX, Alembic and many more. Drag and drop 3d models into the app and export "
+"an image of the 3d model. It supports tone mapping, ambient occlusion, anti "
+"aliasing and more. You can use an HDRI image or a custom color as a "
+"background."
+msgstr ""
+"Основана на F3D библиотеката, която поддържа много типове файлове - от "
+"цифрово съдържание до набор от научни данни, включително glTF, USD, STL, "
+"STEP, PLY, OBJ, FBX, Alembic и много други. Изтегляйте и пускайте 3D модели "
+"в приложението и изнасяйте изображение на 3D модела. Поддържа транслиране на "
+"тоналностите, оклузия, заглаждане и др. Може да използвате HDRI изображение "
+"или друг цвят като фон."
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:42
+msgid "Planetary Reducer"
+msgstr "Planetary Reducer"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:46
+msgid "Nissan Fairlady"
+msgstr "Nissan Fairlady"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:50
+msgid "Retro Computer Setup with a HDRI background"
+msgstr "Ретро компютър с HDRI фон"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:54
+msgid "Benchy with dark theme"
+msgstr "Benchy с тъмна тема"
+
+#: src/window.py:293
+msgid "Open File"
+msgstr "Отваряне на файл"
+
+#: src/window.py:341
+msgid "Can't open "
+msgstr "Не може да се отвори"
+
+#: src/window.py:374
+msgid "Save File"
+msgstr "Запазване на файл"
+
+#: src/window.py:375
+msgid "image.png"
+msgstr "изображение.png"
+
+#: src/window.py:576
+msgid "Open Skybox File"
+msgstr "Отваряне на файл небесно поле"
+
+#: data/window.ui:27
+msgid "Reset to Bounds"
+msgstr "Връщане до границите"
+
+#: data/window.ui:35
+msgid "Toggle Orthographic"
+msgstr "Превключване на ортографиране"
+
+#: data/window.ui:43
+msgid "Menu"
+msgstr "Меню"
+
+#: data/window.ui:76
+msgid "Load"
+msgstr "Отваряне"
+
+#: data/window.ui:80
+msgid "Load any file to view it in 3D"
+msgstr "Отворете файл, за да го видите в 3D"
+
+#: data/window.ui:145
+msgid "_Open New Window"
+msgstr "_Отваряне на нов прозорец"
+
+#: data/window.ui:151
+msgid "_Load New Model"
+msgstr "_Отваряне на нов модел"
+
+#: data/window.ui:157
+msgid "_Save As Image"
+msgstr "_Запазване като изображение"
+
+#: data/window.ui:163
+msgid "_Preferences"
+msgstr "_Настройки"
+
+#: data/window.ui:167
+msgid "_Keyboard Shortcuts"
+msgstr "_Клавишни комбинации"
+
+#: data/window.ui:171
+msgid "_About Exhibit"
+msgstr "_Относно „Изложба“"
+
+#: data/preferences.ui:12 data/preferences.ui:17
+msgid "Render"
+msgstr "Генериране"
+
+#: data/preferences.ui:22
+msgid "Translucency"
+msgstr "Полупрозрачно"
+
+#: data/preferences.ui:29
+msgid "Tone Mapping"
+msgstr "Транслиране на тоналностите"
+
+#: data/preferences.ui:30
+msgid "Map colors properly to the monitor colors"
+msgstr "Правилно картографиране на цветовете спрямо цветовете на монитора"
+
+#: data/preferences.ui:37
+msgid "Ambient Occlusion"
+msgstr "Оклузия "
+
+#: data/preferences.ui:38
+msgid "Provides approximate shadows"
+msgstr "Предоставя приблизителни сенки"
+
+#: data/preferences.ui:45
+msgid "Anti Aliasing"
+msgstr "Заглаждане"
+
+#: data/preferences.ui:52
+msgid "Light with HDRI"
+msgstr "Светлина с HDRI"
+
+#: data/preferences.ui:53
+msgid "Light the scene using a the loaded HDRI or the default"
+msgstr "Осветете сцената с помощта на заредения HDRI или по подразбиране"
+
+#: data/preferences.ui:68
+msgid "Light Intensity"
+msgstr "Светлинен интензитет"
+
+#: data/preferences.ui:77
+msgid "Edges"
+msgstr "Ръбове"
+
+#: data/preferences.ui:82
+msgid "Show Edges"
+msgstr "Показване на ръбовете"
+
+#: data/preferences.ui:89
+msgid "Edges Width"
+msgstr "Широчина на ръбовете"
+
+#: data/preferences.ui:109
+msgid "Scene"
+msgstr "Сцена"
+
+#: data/preferences.ui:114
+msgid "Grid"
+msgstr "Мрежа"
+
+#: data/preferences.ui:119
+msgid "View Grid"
+msgstr "Показване на мрежата"
+
+#: data/preferences.ui:126
+msgid "Grid Absolute"
+msgstr "Абсолютна мрежа"
+
+#: data/preferences.ui:135
+msgid "Background"
+msgstr "Фон"
+
+#: data/preferences.ui:140
+msgid "HDRI as Backgound"
+msgstr "HDRI като фон"
+
+#: data/preferences.ui:141
+msgid "Use the loaded HDRI or the default one as a background"
+msgstr "Използвайте заредения HDRI или фона по подразбиране"
+
+#: data/preferences.ui:148
+msgid "HDRI Image"
+msgstr "HDRI изображение"
+
+#: data/preferences.ui:161
+msgid "Blur Background"
+msgstr "Замъгляване на фона"
+
+#: data/preferences.ui:168
+msgid "Blur Circle Of Confusion"
+msgstr "Кръг на замъгляване"
+
+#: data/preferences.ui:190
+msgid "Use Custom Color"
+msgstr "Друг цвят"
+
+#: data/preferences.ui:191
+msgid "HDRI background takes priority over this"
+msgstr "HDRI фона има приоритет"
+
+#: data/preferences.ui:198
+msgid "Background Color"
+msgstr "Цвят на фона"
+
+#: data/preferences.ui:199
+msgid "Transparent colors not supported"
+msgstr "Прозрачни цветове не се поддържат"
+
+#: data/preferences.ui:219
+msgid "More"
+msgstr "Още"
+
+#: data/preferences.ui:225
+msgid "Navigation"
+msgstr "Навигация"
+
+#: data/preferences.ui:230
+msgid "Alwayas Point Up"
+msgstr "Винаги насочвайте нагоре"
+
+#: data/preferences.ui:237
+msgid "Up Direction"
+msgstr "Посока нагоре"
+
+#: data/preferences.ui:242
+msgid "- X"
+msgstr "- X"
+
+#: data/preferences.ui:243
+msgid "+ X"
+msgstr "+ X"
+
+#: data/preferences.ui:244
+msgid "- Y"
+msgstr "- Y"
+
+#: data/preferences.ui:245
+msgid "+ Y"
+msgstr "+ Y"
+
+#: data/preferences.ui:246
+msgid "- Z"
+msgstr "- Z"
+
+#: data/preferences.ui:247
+msgid "+ Z"
+msgstr "+ Z"
+
+#: data/preferences.ui:259
+msgid "Other Settings"
+msgstr "Допълнителни настройки"
+
+#: data/preferences.ui:264
+msgid "Automatic Up Direction"
+msgstr "Автоматична посока нагоре"
+
+#: data/preferences.ui:265
+msgid "When loading choose the best up direction"
+msgstr "При зареждане се избира най-добрата посока нагоре"
+
+#: data/preferences.ui:272
+msgid "Save Settings"
+msgstr "Запазване на настройките"
+
+#: data/preferences.ui:282
+msgid "Restore Settings"
+msgstr "Възстановяване на настройките"
+
+#: data/preferences.ui:298
+msgid "Reset Settings"
+msgstr "Връщане на настройките"
+
+#: data/preferences.ui:307
+msgid ""
+"Preferences are per window basis, if you save them next time you will open "
+"the app it will start with these preferences"
+msgstr ""
+"Настройките са за всеки прозорец, ако ги запазите, следващият път, когато "
+"отворите приложението, то ще започне с тези настройки."
