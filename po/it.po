@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-04 22:15+0200\n"
-"PO-Revision-Date: 2024-06-05 22:47+0200\n"
+"PO-Revision-Date: 2024-06-07 08:00+0200\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -84,11 +84,11 @@ msgstr "Apri il file Skybox"
 
 #: data/window.ui:27
 msgid "Reset to Bounds"
-msgstr ""
+msgstr "Ripristina i limiti"
 
 #: data/window.ui:35
 msgid "Toggle Orthographic"
-msgstr ""
+msgstr "Attiva/disattiva ortografica"
 
 #: data/window.ui:43
 msgid "Menu"
