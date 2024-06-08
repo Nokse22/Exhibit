@@ -423,20 +423,18 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 self.engine.loader.load_geometry(self.filepath, True)
                 geometry_loaded = True
             except:
-                print("can't open shit")
+                pass
 
         if scene_loaded or geometry_loaded:
             self.get_distance()
             self.update_options()
             GLib.idle_add(self.on_file_opened)
-            print("opened")
             return
-        print(scene_loaded, geometry_loaded)
+
         if not scene_loaded and not geometry_loaded:
             GLib.idle_add(self.on_file_not_opened)
 
     def send_toast(self, message):
-        print(message)
         toast = Adw.Toast(title=message, timeout=2)
         self.toast_overlay.add_toast(toast)
 
@@ -545,6 +543,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.load_file()
         elif "*." + extension in image_patterns:
             self.load_hdri(filepath)
+        else:
+            self.send_toast(_("Can't open") + " " + os.path.basename(filepath))
 
     @Gtk.Template.Callback("on_drop_enter")
     def on_drop_enter(self, *args):
