@@ -1,0 +1,309 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Scrambled777 <weblate.scrambled777@simplelogin.com>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: exhibit\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-04 22:15+0200\n"
+"PO-Revision-Date: 2024-06-08 13:17+0530\n"
+"Last-Translator: Scrambled777 <weblate.scrambled777@simplelogin.com>\n"
+"Language-Team: Hindi <indlinux-hindi@lists.sourceforge.net>\n"
+"Language: hi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Gtranslator 46.1\n"
+
+#: data/io.github.nokse22.Exhibit.desktop.in:3
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:7 data/window.ui:20
+#: data/window.ui:84
+msgid "Exhibit"
+msgstr "एक्ज़िबिट"
+
+#: data/io.github.nokse22.Exhibit.desktop.in:4
+msgid "3D Model Viewer"
+msgstr "3D मॉडल दर्शक"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:8
+msgid "Preview your 3D models"
+msgstr "अपने 3D मॉडल का पूर्वावलोकन करें"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:10
+msgid ""
+"Based on the F3D library that supports many file formats, from digital "
+"content to scientific datasets including glTF, USD, STL, STEP, PLY, OBJ, "
+"FBX, Alembic and many more. Drag and drop 3d models into the app and export "
+"an image of the 3d model. It supports tone mapping, ambient occlusion, anti "
+"aliasing and more. You can use an HDRI image or a custom color as a "
+"background."
+msgstr ""
+"F3D लाइब्रेरी पर आधारित है जो डिजिटल सामग्री से लेकर वैज्ञानिक डेटासेट तक कई फाइल "
+"स्वरूपों का समर्थन करता है जिसमें glTF, USD, STL, STEP, PLY, OBJ, FBX, Alembic और "
+"कई अन्य शामिल हैं। 3D मॉडल को ऐप में खींचें और छोड़ें और 3D मॉडल की एक छवि निर्यात करें। "
+"यह टोन मैपिंग, परिवेशीय समावेशन, एंटी एलियासिंग और बहुत कुछ का समर्थन करता है। आप "
+"पृष्ठभूमि के रूप में एक HDRI छवि या एक तदनुकूल रंग का उपयोग कर सकते हैं।"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:42
+msgid "Planetary Reducer"
+msgstr "प्लेनेटरी रिड्यूसर"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:46
+msgid "Nissan Fairlady"
+msgstr "निसान फेयरलेडी"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:50
+msgid "Retro Computer Setup with a HDRI background"
+msgstr "HDRI पृष्ठभूमि के साथ रेट्रो कंप्यूटर सेटअप"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:54
+msgid "Benchy with dark theme"
+msgstr "गहरे रंग की थीम के साथ बेंची"
+
+#: src/window.py:293
+msgid "Open File"
+msgstr "फाइल खोलें"
+
+#: src/window.py:341
+msgid "Can't open "
+msgstr "खोल नहीं सके"
+
+#: src/window.py:374
+msgid "Save File"
+msgstr "फाइल सहेजें"
+
+#: src/window.py:375
+msgid "image.png"
+msgstr "छवि.png"
+
+#: src/window.py:576
+msgid "Open Skybox File"
+msgstr "स्काईबॉक्स फाइल खोलें"
+
+#: data/window.ui:27
+msgid "Reset to Bounds"
+msgstr "सीमाओं पर रीसेट करें"
+
+#: data/window.ui:35
+msgid "Toggle Orthographic"
+msgstr "ऑर्थोग्राफ़िक टॉगल करें"
+
+#: data/window.ui:43
+msgid "Menu"
+msgstr "मेनू"
+
+#: data/window.ui:76
+msgid "Load"
+msgstr "लोड करें"
+
+#: data/window.ui:80
+msgid "Load any file to view it in 3D"
+msgstr "किसी भी फाइल को 3D में देखने के लिए उसे लोड करें"
+
+#: data/window.ui:145
+msgid "_Open New Window"
+msgstr "नई खिड़की खोलें (_O)"
+
+#: data/window.ui:151
+msgid "_Load New Model"
+msgstr "नया मॉडल लोड करें (_L)"
+
+#: data/window.ui:157
+msgid "_Save As Image"
+msgstr "छवि के रूप में सहेजें (_S)"
+
+#: data/window.ui:163
+msgid "_Preferences"
+msgstr "प्राथमिकताएं (_P)"
+
+#: data/window.ui:167
+msgid "_Keyboard Shortcuts"
+msgstr "कीबोर्ड शॉर्टकट (_K)"
+
+#: data/window.ui:171
+msgid "_About Exhibit"
+msgstr "एक्ज़िबिट का परिचय (_A)"
+
+#: data/preferences.ui:12 data/preferences.ui:17
+msgid "Render"
+msgstr "प्रतिपादन करें"
+
+#: data/preferences.ui:22
+msgid "Translucency"
+msgstr "पारदर्शता"
+
+#: data/preferences.ui:29
+msgid "Tone Mapping"
+msgstr "टोन मैपिंग"
+
+#: data/preferences.ui:30
+msgid "Map colors properly to the monitor colors"
+msgstr "रंगों को मॉनिटर के रंगों के साथ उचित रूप से मैप करें"
+
+#: data/preferences.ui:37
+msgid "Ambient Occlusion"
+msgstr "परिवेशीय समावेशन"
+
+#: data/preferences.ui:38
+msgid "Provides approximate shadows"
+msgstr "अनुमानित छायाएं प्रदान करता है"
+
+#: data/preferences.ui:45
+msgid "Anti Aliasing"
+msgstr "एंटी एलियासिंग"
+
+#: data/preferences.ui:52
+msgid "Light with HDRI"
+msgstr "HDRI के साथ प्रकाश"
+
+#: data/preferences.ui:53
+msgid "Light the scene using a the loaded HDRI or the default"
+msgstr "लोड किए गए HDRI या तयशुदा का उपयोग करके दृश्य को रोशन करें"
+
+#: data/preferences.ui:68
+msgid "Light Intensity"
+msgstr "प्रकाश तीव्रता"
+
+#: data/preferences.ui:77
+msgid "Edges"
+msgstr "किनारे"
+
+#: data/preferences.ui:82
+msgid "Show Edges"
+msgstr "किनारे दिखाएं"
+
+#: data/preferences.ui:89
+msgid "Edges Width"
+msgstr "किनारों की चौड़ाई"
+
+#: data/preferences.ui:109
+msgid "Scene"
+msgstr "दृश्य"
+
+#: data/preferences.ui:114
+msgid "Grid"
+msgstr "ग्रिड"
+
+#: data/preferences.ui:119
+msgid "View Grid"
+msgstr "ग्रिड दृश्य"
+
+#: data/preferences.ui:126
+msgid "Grid Absolute"
+msgstr "ग्रिड निरपेक्ष"
+
+#: data/preferences.ui:135
+msgid "Background"
+msgstr "पृष्ठभूमि"
+
+#: data/preferences.ui:140
+msgid "HDRI as Backgound"
+msgstr "पृष्ठभूमि के रूप में HDRI"
+
+#: data/preferences.ui:141
+msgid "Use the loaded HDRI or the default one as a background"
+msgstr "लोड किए गए HDRI या तयशुदा को पृष्ठभूमि के रूप में उपयोग करें"
+
+#: data/preferences.ui:148
+msgid "HDRI Image"
+msgstr "HDRI छवि"
+
+#: data/preferences.ui:161
+msgid "Blur Background"
+msgstr "पृष्ठभूमि धुंधला करें"
+
+#: data/preferences.ui:168
+msgid "Blur Circle Of Confusion"
+msgstr "भ्रांति का धुंधला घेरा"
+
+#: data/preferences.ui:190
+msgid "Use Custom Color"
+msgstr "तदनुकूल रंग का प्रयोग करें"
+
+#: data/preferences.ui:191
+msgid "HDRI background takes priority over this"
+msgstr "HDRI पृष्ठभूमि को इस पर प्राथमिकता दी जाती है"
+
+#: data/preferences.ui:198
+msgid "Background Color"
+msgstr "पृष्ठभूमि रंग"
+
+#: data/preferences.ui:199
+msgid "Transparent colors not supported"
+msgstr "पारदर्शी रंग समर्थित नहीं हैं"
+
+#: data/preferences.ui:219
+msgid "More"
+msgstr "अधिक"
+
+#: data/preferences.ui:225
+msgid "Navigation"
+msgstr "पथ-प्रदर्शन"
+
+#: data/preferences.ui:230
+msgid "Alwayas Point Up"
+msgstr "हमेशा ऊपर इंगित करें"
+
+#: data/preferences.ui:237
+msgid "Up Direction"
+msgstr "ऊपर की दिशा"
+
+#: data/preferences.ui:242
+msgid "- X"
+msgstr "- X"
+
+#: data/preferences.ui:243
+msgid "+ X"
+msgstr "+ X"
+
+#: data/preferences.ui:244
+msgid "- Y"
+msgstr "- Y"
+
+#: data/preferences.ui:245
+msgid "+ Y"
+msgstr "+ Y"
+
+#: data/preferences.ui:246
+msgid "- Z"
+msgstr "- Z"
+
+#: data/preferences.ui:247
+msgid "+ Z"
+msgstr "+ Z"
+
+#: data/preferences.ui:259
+msgid "Other Settings"
+msgstr "अन्य सेटिंग"
+
+#: data/preferences.ui:264
+msgid "Automatic Up Direction"
+msgstr "स्वचालित ऊपर की दिशा"
+
+#: data/preferences.ui:265
+msgid "When loading choose the best up direction"
+msgstr "लोड करते समय सर्वोत्तम ऊपर की दिशा चुनें"
+
+#: data/preferences.ui:272
+msgid "Save Settings"
+msgstr "सेटिंग सहेजें"
+
+#: data/preferences.ui:282
+msgid "Restore Settings"
+msgstr "सेटिंग पुनर्स्थापित करें"
+
+#: data/preferences.ui:298
+msgid "Reset Settings"
+msgstr "सेटिंग रीसेट करें"
+
+#: data/preferences.ui:307
+msgid ""
+"Preferences are per window basis, if you save them next time you will open "
+"the app it will start with these preferences"
+msgstr ""
+"प्राथमिकताएं प्रति खिड़की आधार पर होती हैं, यदि आप उन्हें सहेजते हैं तो अगली बार जब आप ऐप "
+"खोलेंगे तो यह इन प्राथमिकताओं के साथ शुरू होगा"
