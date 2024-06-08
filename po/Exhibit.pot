@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-04 22:15+0200\n"
+"POT-Creation-Date: 2024-06-08 12:09+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,13 +18,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: data/io.github.nokse22.Exhibit.desktop.in:3
-#: data/io.github.nokse22.Exhibit.metainfo.xml.in:7 data/window.ui:20
-#: data/window.ui:84
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:7 src/window.py:333
+#: src/window.py:334 data/window.ui:20 data/window.ui:84
 msgid "Exhibit"
 msgstr ""
 
 #: data/io.github.nokse22.Exhibit.desktop.in:4
 msgid "3D Model Viewer"
+msgstr ""
+
+#: data/io.github.nokse22.Exhibit.desktop.in:11
+msgid "fbx;step;stl;dcm;ex2;gml;obj;3ds;gltf;pbr;rendering,3d-model"
 msgstr ""
 
 #: data/io.github.nokse22.Exhibit.metainfo.xml.in:8
@@ -57,23 +61,27 @@ msgstr ""
 msgid "Benchy with dark theme"
 msgstr ""
 
-#: src/window.py:293
+#: src/main.py:66
+msgid "Checkout F3D"
+msgstr ""
+
+#: src/window.py:291
 msgid "Open File"
 msgstr ""
 
-#: src/window.py:341
-msgid "Can't open "
+#: src/window.py:353
+msgid "Can't open"
 msgstr ""
 
-#: src/window.py:374
+#: src/window.py:390
 msgid "Save File"
 msgstr ""
 
-#: src/window.py:375
-msgid "image.png"
+#: src/window.py:391
+msgid "image"
 msgstr ""
 
-#: src/window.py:576
+#: src/window.py:592
 msgid "Open Skybox File"
 msgstr ""
 
