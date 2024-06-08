@@ -277,7 +277,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         file_filter = Gtk.FileFilter(name="All supported formats")
 
         file_patterns = ["*.vtk", "*.vt[p|u|r|i|s|m]", "*.ply", "*.stl", "*.dcm", "*.drc", "*.nrrd",
-            "*.nhrd", "*.mhd", "*.mha", "*.tif", "*.tiff", "*.ex2", "*.e", "*.exo", "*.g", "*.gml", "*.pts",
+            "*.nhrd", "*.mhd", "*.mha", "*.ex2", "*.e", "*.exo", "*.g", "*.gml", "*.pts",
             "*.ply", "*.step", "*.stp", "*.iges", "*.igs", "*.brep", "*.abc", "*.vdb", "*.obj", "*.gltf",
             "*.glb", "*.3ds", "*.wrl", "*.fbx", "*.dae", "*.off", "*.dxf", "*.x", "*.3mf", "*.usd"]
 
@@ -329,21 +329,39 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.set_preference_values()
 
+    def on_file_not_opened(self):
+        self.set_title(_("Exhibit"))
+        self.title_widget.set_title(_("Exhibit"))
+        self.title_widget.set_subtitle("")
+        self.stack.set_visible_child_name("startup_page")
+        self.preferences_action.set_enabled(False)
+        self.open_new_action.set_enabled(False)
+        self.save_as_action.set_enabled(False)
+        self.toolbar_view.set_top_bar_style(Adw.ToolbarStyle.FLAT)
+
     def _load(self):
+        scene_loaded = False
+        geometry_loaded = False
         try:
             self.engine.loader.load_scene(self.filepath)
+            scene_loaded = True
         except:
             try:
                 self.engine.loader.load_geometry(self.filepath, True)
+                geometry_loaded = True
             except:
-                self.send_toast(_("Can't open ") + os.path.basename(self.filepath))
+                self.send_toast(_("Can't open") + " " + os.path.basename(self.filepath))
                 options = {"scene.up-direction": self.window_settings.get_setting("up-direction")}
                 self.engine.options.update(options)
 
-        GLib.idle_add(self.on_file_opened)
+        if scene_loaded or geometry_loaded:
+            self.get_distance()
+            self.update_options()
+            GLib.idle_add(self.on_file_opened)
+            return
 
-        self.get_distance()
-        self.update_options()
+        if not scene_loaded and not geometry_loaded:
+            GLib.idle_add(self.on_file_not_opened)
 
     def send_toast(self, message):
         toast = Adw.Toast(title=message, timeout=2)
@@ -370,7 +388,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def open_save_file_chooser(self, *args):
         dialog = Gtk.FileDialog(
             title=_("Save File"),
-            initial_name=_("image.png"),
+            initial_name=_("image") + ".png",
         )
         dialog.save(self, None, self.on_save_file_response)
 
