@@ -256,7 +256,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             y = -(self.drag_prev_offset[1] - y_offset)
             if dist > 5 or (dist < 5 and direction == 1 and y < 0) or (dist < 5 and direction == -1 and y > 0):
                 self.camera.elevation(y)
-            self.camera.azimuth(self.drag_prev_offset[0] - x_offset)
+            self.camera.azimuth((self.drag_prev_offset[0] - x_offset) * (0.1 if dist < 20 else 1))
         elif gesture.get_current_button() == 2:
             self.camera.pan(
                 (self.drag_prev_offset[0] - x_offset) * (0.0000001*self.width + 0.001*self.distance),
