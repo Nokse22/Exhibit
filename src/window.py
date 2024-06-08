@@ -252,7 +252,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     @Gtk.Template.Callback("on_drag_update")
     def on_drag_update(self, gesture, x_offset, y_offset):
         if gesture.get_current_button() == 1:
-            self.camera.elevation(-(self.drag_prev_offset[1] - y_offset))
+            dist, direction = self.get_camera_to_focal_distance()
+            y = -(self.drag_prev_offset[1] - y_offset)
+            if dist > 5 or (dist < 5 and direction == 1 and y < 0) or (dist < 5 and direction == -1 and y > 0):
+                self.camera.elevation(y)
             self.camera.azimuth(self.drag_prev_offset[0] - x_offset)
         elif gesture.get_current_button() == 2:
             self.camera.pan(
@@ -272,6 +275,66 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     @Gtk.Template.Callback("on_drag_end")
     def on_drag_end(self, gesture, *args):
         self.drag_prev_offset = (0, 0)
+
+    @Gtk.Template.Callback("on_key_pressed")
+    def on_key_pressed(self, controller, keyval, keycode, state):
+        val = self.distance / 40
+
+        focal_point = self.camera.focal_point
+
+        match keycode:
+            case 25:
+                self.camera.pan(0, 0, val)
+            case 38:
+                self.camera.pan(-val, 0, 0)
+            case 39:
+                self.camera.pan(0, 0, -val)
+            case 40:
+                self.camera.pan(val, 0, 0)
+            case 50:
+                self.camera.pan(0, val, 0)
+            case 113:
+                self.camera.pan(-val, 0, 0)
+                self.camera.focal_point = focal_point
+            case 114:
+                self.camera.pan(val, 0, 0)
+                self.camera.focal_point = focal_point
+            case 111:
+                dist, direction = self.get_camera_to_focal_distance()
+                if dist > 5 or (dist < 5 and direction == -1):
+                    self.camera.pan(0, val, 0)
+                    self.camera.focal_point = focal_point
+            case 116:
+                dist, direction = self.get_camera_to_focal_distance()
+                if dist > 5 or (dist < 5 and direction == 1):
+                    self.camera.pan(0, -val, 0)
+                    self.camera.focal_point = focal_point
+
+        if self.window_settings.get_setting("point-up"):
+            up = up_dirs_vector[self.window_settings.get_setting("up-direction")]
+            self.camera.setViewUp(up)
+
+        self.gl_area.queue_render()
+
+    def get_camera_to_focal_distance(self):
+        up = up_dirs_vector[self.window_settings.get_setting("up-direction")]
+        pos = self.camera.position
+        foc = self.camera.focal_point
+
+        pos_proj = v_sub(v_dot_p(pos, v_abs(up)), pos)
+        foc_proj = v_sub(v_dot_p(foc, v_abs(up)), foc)
+
+        dist = p_dist(pos_proj, foc_proj)
+
+        pos_height = v_dot_p(pos, v_abs(up))
+        foc_height = v_dot_p(foc, v_abs(up))
+
+        diff = v_sub(pos_height, foc_height)
+
+        for number in diff:
+            if number != 0:
+                return dist, (1 if number > 0 else -1)
+        return dist, 1
 
     def open_file_chooser(self, *args):
         file_filter = Gtk.FileFilter(name="All supported formats")
@@ -667,6 +730,12 @@ def p_dist(point1, point2):
     squared_diffs = [(x - y) ** 2 for x, y in zip(point1, point2)]
     return math.sqrt(sum(squared_diffs))
 
+def v_mod(vector):
+    return math.sqrt(sum([(x) ** 2 for x in vector]))
+
+def v_abs(vector):
+    return tuple(abs(x) for x in vector)
+
 def v_norm(vector):
     norm = math.sqrt(sum(x**2 for x in vector))
     return tuple(x / norm for x in vector)
@@ -679,6 +748,9 @@ def v_sub(vector1, vector2):
 
 def v_mul(vector, scalar):
     return tuple(v * scalar for v in vector)
+
+def v_dot_p(vector1, vector2):
+    return tuple(v1 * v2 for v1, v2 in zip(vector1, vector2))
 
 def v_cross(vector1, vector2):
     if len(vector1) != 3 or len(vector2) != 3:
@@ -700,7 +772,8 @@ def list_to_rgb(lst):
 def get_up_from_path(path):
     extension = os.path.splitext(path)[1][1:]
     up_ext = {
-        "stl" : "+Z"
+        "stl" : "+Z",
+        "3ds" : "+Z"
     }
     if extension in up_ext:
         return up_ext[extension]

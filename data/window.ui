@@ -3,6 +3,11 @@
   <requires lib="gtk" version="4.0"/>
   <requires lib="Adw" version="1.0"/>
   <template class="Viewer3dWindow" parent="AdwApplicationWindow">
+    <child>
+      <object class="GtkEventControllerKey">
+        <signal name="key-pressed" handler="on_key_pressed"/>
+      </object>
+    </child>
 
     <property name="default-width">600</property>
     <property name="default-height">600</property>
@@ -109,6 +114,7 @@ suggested-action</property>
                                     <property name="flags">both-axes | horizontal | vertical | kinetic</property>
                                   </object>
                                 </child>
+
                               </object>
                             </property>
                             <property name="name">3d_page</property>
