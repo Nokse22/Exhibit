@@ -59,6 +59,13 @@ up_dirs_vector = {
     "+Z": (0.0, 0.0, 1.0)
 }
 
+file_patterns = ["*.vtk", "*.vtp", "*.vtu", "*.vtr", "*.vti", "*.vts", "*.vtm", "*.ply", "*.stl", "*.dcm", "*.drc", "*.nrrd",
+    "*.nhrd", "*.mhd", "*.mha", "*.ex2", "*.e", "*.exo", "*.g", "*.gml", "*.pts",
+    "*.ply", "*.step", "*.stp", "*.iges", "*.igs", "*.brep", "*.abc", "*.vdb", "*.obj", "*.gltf",
+    "*.glb", "*.3ds", "*.wrl", "*.fbx", "*.dae", "*.off", "*.dxf", "*.x", "*.3mf", "*.usd"]
+
+image_patterns = ["*.hdr", "*.exr", "*.png", "*.jpg", "*.pnm", "*.tiff", "*.bmp"]
+
 class WindowSettings():
     def __init__(self):
         super().__init__()
@@ -254,9 +261,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if gesture.get_current_button() == 1:
             dist, direction = self.get_camera_to_focal_distance()
             y = -(self.drag_prev_offset[1] - y_offset)
-            if dist > 5 or (dist < 5 and direction == 1 and y < 0) or (dist < 5 and direction == -1 and y > 0):
+            if (dist > self.get_gimble_limit() or (dist < self.get_gimble_limit()) and
+                    (direction == 1 and y < 0) or (dist < self.get_gimble_limit() and direction == -1 and y > 0)):
                 self.camera.elevation(y)
-            self.camera.azimuth((self.drag_prev_offset[0] - x_offset) * (0.1 if dist < 20 else 1))
+            self.camera.azimuth((self.drag_prev_offset[0] - x_offset) * (0.1 if (dist < self.distance / 3) else 1))
         elif gesture.get_current_button() == 2:
             self.camera.pan(
                 (self.drag_prev_offset[0] - x_offset) * (0.0000001*self.width + 0.001*self.distance),
@@ -301,12 +309,12 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 self.camera.focal_point = focal_point
             case 111:
                 dist, direction = self.get_camera_to_focal_distance()
-                if dist > 5 or (dist < 5 and direction == -1):
+                if dist > self.get_gimble_limit() or (dist < self.get_gimble_limit() and direction == -1):
                     self.camera.pan(0, val, 0)
                     self.camera.focal_point = focal_point
             case 116:
                 dist, direction = self.get_camera_to_focal_distance()
-                if dist > 5 or (dist < 5 and direction == 1):
+                if dist > self.get_gimble_limit() or (dist < self.get_gimble_limit() and direction == 1):
                     self.camera.pan(0, -val, 0)
                     self.camera.focal_point = focal_point
 
@@ -315,6 +323,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.camera.setViewUp(up)
 
         self.gl_area.queue_render()
+
+    def get_gimble_limit(self):
+        return self.distance / 6
 
     def get_camera_to_focal_distance(self):
         up = up_dirs_vector[self.window_settings.get_setting("up-direction")]
@@ -338,11 +349,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     def open_file_chooser(self, *args):
         file_filter = Gtk.FileFilter(name="All supported formats")
-
-        file_patterns = ["*.vtk", "*.vt[p|u|r|i|s|m]", "*.ply", "*.stl", "*.dcm", "*.drc", "*.nrrd",
-            "*.nhrd", "*.mhd", "*.mha", "*.ex2", "*.e", "*.exo", "*.g", "*.gml", "*.pts",
-            "*.ply", "*.step", "*.stp", "*.iges", "*.igs", "*.brep", "*.abc", "*.vdb", "*.obj", "*.gltf",
-            "*.glb", "*.3ds", "*.wrl", "*.fbx", "*.dae", "*.off", "*.dxf", "*.x", "*.3mf", "*.usd"]
 
         for patt in file_patterns:
             file_filter.add_pattern(patt)
@@ -402,6 +408,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.save_as_action.set_enabled(False)
         self.toolbar_view.set_top_bar_style(Adw.ToolbarStyle.FLAT)
 
+        self.send_toast(_("Can't open") + " " + os.path.basename(self.filepath))
+        options = {"scene.up-direction": self.window_settings.get_setting("up-direction")}
+        self.engine.options.update(options)
+
     def _load(self):
         scene_loaded = False
         geometry_loaded = False
@@ -413,20 +423,20 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 self.engine.loader.load_geometry(self.filepath, True)
                 geometry_loaded = True
             except:
-                self.send_toast(_("Can't open") + " " + os.path.basename(self.filepath))
-                options = {"scene.up-direction": self.window_settings.get_setting("up-direction")}
-                self.engine.options.update(options)
+                print("can't open shit")
 
         if scene_loaded or geometry_loaded:
             self.get_distance()
             self.update_options()
             GLib.idle_add(self.on_file_opened)
+            print("opened")
             return
-
+        print(scene_loaded, geometry_loaded)
         if not scene_loaded and not geometry_loaded:
             GLib.idle_add(self.on_file_not_opened)
 
     def send_toast(self, message):
+        print(message)
         toast = Adw.Toast(title=message, timeout=2)
         self.toast_overlay.add_toast(toast)
 
@@ -528,8 +538,13 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback("on_drop_received")
     def on_drop_received(self, drop, value, x, y):
-        self.filepath = value.get_files()[0].get_path()
-        self.load_file()
+        filepath = value.get_files()[0].get_path()
+        extension = os.path.splitext(filepath)[1][1:]
+        if "*." + extension in file_patterns:
+            self.filepath = filepath
+            self.load_file()
+        elif "*." + extension in image_patterns:
+            self.load_hdri(filepath)
 
     @Gtk.Template.Callback("on_drop_enter")
     def on_drop_enter(self, *args):
@@ -643,9 +658,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def on_open_skybox_clicked(self, *args):
         file_filter = Gtk.FileFilter(name="All supported formats")
 
-        file_patterns = ["*.hdr", "*.exr", "*.png", "*.jpg", "*.pnm", "*.tiff", "*.bmp"]
-
-        for patt in file_patterns:
+        for patt in image_patterns:
             file_filter.add_pattern(patt)
 
         filter_list = Gio.ListStore.new(Gtk.FileFilter())
@@ -664,12 +677,18 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if file:
             filepath = file.get_path()
 
-            self.window_settings.set_setting("skybox-path", filepath)
-            options = {"render.hdri.file": filepath}
-            self.engine.options.update(options)
-            self.preference_window.skybox_row.set_text(filepath)
+            self.load_hdri(filepath)
 
-            self.gl_area.queue_render()
+    def load_hdri(self, filepath):
+        self.window_settings.set_setting("skybox-path", filepath)
+        self.window_settings.set_setting("use-skybox", True)
+        options = {"render.hdri.file": filepath,
+                         "render.background.skybox": True}
+        self.engine.options.update(options)
+        self.gl_area.queue_render()
+
+        if self.preference_window:
+            self.preference_window.skybox_row.set_text(filepath)
 
     def on_preferences_close(self, *args):
         self.preference_window = None
