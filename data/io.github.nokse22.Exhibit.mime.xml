@@ -9,14 +9,13 @@
   </mime-type>
 
   <mime-type type="model/step">
+    <comment>STEP 3D model</comment>
+    <glob pattern="*.stp"/>
+    <glob pattern="*.step"/>
     <generic-icon name="io.github.nokse22.Exhibit.mime"/>
   </mime-type>
 
   <mime-type type="image/x-3ds">
-    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
-  </mime-type>
-
-  <mime-type type="image/tiff">
     <generic-icon name="io.github.nokse22.Exhibit.mime"/>
   </mime-type>
 
@@ -36,11 +35,15 @@
     <generic-icon name="io.github.nokse22.Exhibit.mime"/>
   </mime-type>
 
-  <mime-type type="application/dicom">
+  <mime-type type="text/vnd.abc">
     <generic-icon name="io.github.nokse22.Exhibit.mime"/>
   </mime-type>
 
-  <mime-type type="text/vnd.abc">
+  <mime-type type="application/gml+xml">
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+
+  <mime-type type="text/x-eiffel">
     <generic-icon name="io.github.nokse22.Exhibit.mime"/>
   </mime-type>
 
