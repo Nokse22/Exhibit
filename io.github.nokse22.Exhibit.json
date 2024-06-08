@@ -363,6 +363,48 @@
             ]
         },
         {
+            "name": "Boost",
+            "buildsystem": "simple",
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://archives.boost.io/release/1.85.0/source/boost_1_85_0.tar.gz",
+                    "sha256": "be0d91732d5b0cc6fbb275c7939974457e79b54d6f07ce2e3dfdd68bef883b0b"
+                }
+            ],
+			"build-commands": [
+				"./bootstrap.sh --prefix=/app --with-libraries=iostreams,filesystem,system,date_time,regex,program_options,python",
+				"./b2 headers",
+				"./b2 -j$FLATPAK_BUILDER_N_JOBS install variant=release cxxstd=17 --layout=system"
+			]
+        },
+        {
+            "name": "OpenSubdiv",
+            "buildsystem": "cmake-ninja",
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/PixarAnimationStudios/OpenSubdiv/archive/refs/tags/v3_6_0.tar.gz",
+                    "sha256": "bebfd61ab6657a4f4ff27845fb66a167d00395783bfbd253254d87447ed1d879"
+                }
+            ]
+        },
+        {
+            "name": "openUSD",
+            "config-opts": [
+                "-DPXR_BUILD_USD_IMAGING=FALSE",
+                "-DPXR_BUILD_USDVIEW=FALSE"
+            ],
+            "buildsystem": "cmake-ninja",
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/PixarAnimationStudios/OpenUSD/archive/refs/tags/v24.05.tar.gz",
+                    "sha256": "0352619895588efc8f9d4aa7004c92be4e4fa70e1ccce77e474ce23941c05828"
+                }
+            ]
+        },
+        {
             "name": "F3D",
             "buildsystem": "cmake-ninja",
             "builddir": true,
@@ -385,7 +427,8 @@
                 "-DF3D_PLUGIN_BUILD_ASSIMP:BOOL=ON",
                 "-DF3D_PLUGIN_BUILD_DRACO:BOOL=ON",
                 "-DF3D_PLUGIN_BUILD_EXODUS:BOOL=ON",
-                "-DF3D_PLUGIN_BUILD_OCCT:BOOL=ON"
+                "-DF3D_PLUGIN_BUILD_OCCT:BOOL=ON",
+                "-DF3D_PLUGIN_BUILD_USD:BOOL=ON"
             ],
             "sources": [
                 {
