@@ -7,5 +7,5 @@ MimeType=text/plain;model/3mf;model/step;model/obj;model/stl;application/octet-s
 Terminal=false
 Type=Application
 Categories=GTK;Graphics;Science;3DGraphics;Viewer;GNOME;
-Keywords=fbx;step;stl;dcm;ex2;gml;obj;3ds;gltf;pbr;rendering,3d-model
+Keywords=fbx;step;stl;dcm;ex2;gml;obj;3ds;gltf;pbr;rendering;3d-model;
 StartupNotify=true
