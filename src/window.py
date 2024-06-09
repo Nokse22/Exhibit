@@ -28,10 +28,6 @@ import math
 import os
 import threading
 
-# from OpenGL.GL import *
-
-from .preferences import Preferences
-
 up_dir_n_to_string = {
     0: "-X",
     1: "+X",
@@ -135,6 +131,8 @@ class WindowSettings():
 class Viewer3dWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'Viewer3dWindow'
 
+    split_view = Gtk.Template.Child()
+
     gl_area = Gtk.Template.Child()
 
     title_widget = Gtk.Template.Child()
@@ -148,6 +146,38 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     drop_target = Gtk.Template.Child()
 
     toast_overlay = Gtk.Template.Child()
+
+    grid_switch = Gtk.Template.Child()
+    absolute_grid_switch = Gtk.Template.Child()
+
+    translucency_switch = Gtk.Template.Child()
+    tone_mapping_switch = Gtk.Template.Child()
+    ambient_occlusion_switch = Gtk.Template.Child()
+    anti_aliasing_switch = Gtk.Template.Child()
+    hdri_ambient_switch = Gtk.Template.Child()
+    light_intensity_spin = Gtk.Template.Child()
+
+    edges_switch = Gtk.Template.Child()
+    edges_width_spin = Gtk.Template.Child()
+
+    use_skybox_switch = Gtk.Template.Child()
+
+    open_skybox_button = Gtk.Template.Child()
+    skybox_row = Gtk.Template.Child()
+    blur_switch = Gtk.Template.Child()
+    blur_coc_spin = Gtk.Template.Child()
+
+    use_color_switch = Gtk.Template.Child()
+    background_color_button = Gtk.Template.Child()
+
+    point_up_switch = Gtk.Template.Child()
+    up_direction_combo = Gtk.Template.Child()
+
+    reset_button = Gtk.Template.Child()
+    save_button = Gtk.Template.Child()
+    restore_button = Gtk.Template.Child()
+
+    automatic_up_direction_switch = Gtk.Template.Child()
 
     keys = {
         "grid": "render.grid.enable",
@@ -192,6 +222,45 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.drop_target.set_gtypes([Gdk.FileList])
 
         self.window_settings = WindowSettings()
+
+        self.set_preference_values()
+
+        self.grid_switch.connect("notify::active", self.on_switch_toggled, "grid")
+        self.absolute_grid_switch.connect("notify::active", self.on_switch_toggled, "absolute-grid")
+
+        self.translucency_switch.connect("notify::active", self.on_switch_toggled, "translucency")
+        self.tone_mapping_switch.connect("notify::active", self.on_switch_toggled, "tone-mapping")
+        self.ambient_occlusion_switch.connect("notify::active", self.on_switch_toggled, "ambient-occlusion")
+        self.anti_aliasing_switch.connect("notify::active", self.on_switch_toggled, "anti-aliasing")
+        self.hdri_ambient_switch.connect("notify::active", self.on_switch_toggled, "hdri-ambient")
+
+        self.edges_switch.connect("notify::active", self.on_switch_toggled, "show-edges")
+        self.edges_width_spin.connect("notify::value", self.on_spin_changed, "edges-width")
+
+        self.light_intensity_spin.connect("notify::value", self.on_spin_changed, "light-intensity")
+
+        self.use_skybox_switch.connect("notify::active", self.on_switch_toggled, "use-skybox")
+        self.open_skybox_button.connect("clicked", self.on_open_skybox_clicked)
+        self.blur_switch.connect("notify::active", self.on_switch_toggled, "blur-background")
+        self.blur_coc_spin.connect("notify::value", self.on_spin_changed, "blur-coc")
+
+        self.use_color_switch.connect("notify::active",
+                lambda switch, *args: self.window_settings.set_setting("use-color", switch.get_active())
+        )
+        self.use_color_switch.connect("notify::active", self.update_background_color)
+
+        self.background_color_button.connect("notify::rgba", self.on_color_changed)
+
+        self.point_up_switch.connect("notify::active", self.set_point_up, "point-up")
+        self.up_direction_combo.connect("notify::selected", self.set_up_direction)
+
+        self.reset_button.connect("clicked", self.on_reset_settings_clicked)
+        self.restore_button.connect("clicked", self.on_restore_settings_clicked)
+        self.save_button.connect("clicked", self.on_save_settings_clicked)
+
+        self.automatic_up_direction_switch.connect("notify::active",
+                lambda switch, *args: self.window_settings.set_setting("auto-up-dir", switch.get_active())
+        )
 
         self.engine = Engine(Window.EXTERNAL)
         self.loader = self.engine.getLoader()
@@ -299,8 +368,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 self.camera.pan(0, 0, -val)
             case 40:
                 self.camera.pan(val, 0, 0)
-            case 50:
-                self.camera.pan(0, val, 0)
             case 113:
                 self.camera.pan(-val, 0, 0)
                 self.camera.focal_point = focal_point
@@ -385,13 +452,13 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.file_name = os.path.basename(self.filepath)
 
         self.set_title(f"View {self.file_name}")
-        self.title_widget.set_title("Exhibit")
-        self.title_widget.set_subtitle(self.file_name)
+        self.title_widget.set_title(self.file_name)
         self.stack.set_visible_child_name("3d_page")
         self.preferences_action.set_enabled(True)
         self.open_new_action.set_enabled(True)
         self.save_as_action.set_enabled(True)
-        self.toolbar_view.set_top_bar_style(Adw.ToolbarStyle.RAISED)
+        # self.toolbar_view.set_top_bar_style(Adw.ToolbarStyle.RAISED)
+        self.split_view.set_show_sidebar(True)
 
         self.drop_revealer.set_reveal_child(False)
         self.stack.remove_css_class("blurred")
@@ -401,12 +468,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def on_file_not_opened(self):
         self.set_title(_("Exhibit"))
         self.title_widget.set_title(_("Exhibit"))
-        self.title_widget.set_subtitle("")
         self.stack.set_visible_child_name("startup_page")
         self.preferences_action.set_enabled(False)
         self.open_new_action.set_enabled(False)
         self.save_as_action.set_enabled(False)
-        self.toolbar_view.set_top_bar_style(Adw.ToolbarStyle.FLAT)
+        # self.toolbar_view.set_top_bar_style(Adw.ToolbarStyle.FLAT)
 
         self.send_toast(_("Can't open") + " " + os.path.basename(self.filepath))
         options = {"scene.up-direction": self.window_settings.get_setting("up-direction")}
@@ -583,52 +649,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.preference_window.present()
             return
 
-        preferences = Preferences()
-        preferences.set_title(f"Preferences {self.file_name}")
-        preferences.connect("close-request", self.on_preferences_close)
-
-        self.preference_window = preferences
-        self.set_preference_values()
-
-        preferences.grid_switch.connect("notify::active", self.on_switch_toggled, "grid")
-        preferences.absolute_grid_switch.connect("notify::active", self.on_switch_toggled, "absolute-grid")
-
-        preferences.translucency_switch.connect("notify::active", self.on_switch_toggled, "translucency")
-        preferences.tone_mapping_switch.connect("notify::active", self.on_switch_toggled, "tone-mapping")
-        preferences.ambient_occlusion_switch.connect("notify::active", self.on_switch_toggled, "ambient-occlusion")
-        preferences.anti_aliasing_switch.connect("notify::active", self.on_switch_toggled, "anti-aliasing")
-        preferences.hdri_ambient_switch.connect("notify::active", self.on_switch_toggled, "hdri-ambient")
-
-        preferences.edges_switch.connect("notify::active", self.on_switch_toggled, "show-edges")
-        preferences.edges_width_spin.connect("notify::value", self.on_spin_changed, "edges-width")
-
-        preferences.light_intensity_spin.connect("notify::value", self.on_spin_changed, "light-intensity")
-
-        preferences.use_skybox_switch.connect("notify::active", self.on_switch_toggled, "use-skybox")
-        preferences.open_skybox_button.connect("clicked", self.on_open_skybox_clicked)
-        preferences.blur_switch.connect("notify::active", self.on_switch_toggled, "blur-background")
-        preferences.blur_coc_spin.connect("notify::value", self.on_spin_changed, "blur-coc")
-
-        preferences.use_color_switch.connect("notify::active",
-                lambda switch, *args: self.window_settings.set_setting("use-color", switch.get_active())
-        )
-        preferences.use_color_switch.connect("notify::active", self.update_background_color)
-
-        preferences.background_color_button.connect("notify::rgba", self.on_color_changed)
-
-        preferences.point_up_switch.connect("notify::active", self.set_point_up, "point-up")
-        preferences.up_direction_combo.connect("notify::selected", self.set_up_direction)
-
-        preferences.reset_button.connect("clicked", self.on_reset_settings_clicked)
-        preferences.restore_button.connect("clicked", self.on_restore_settings_clicked)
-        preferences.save_button.connect("clicked", self.on_save_settings_clicked)
-
-        preferences.automatic_up_direction_switch.connect("notify::active",
-                lambda switch, *args: self.window_settings.set_setting("auto-up-dir", switch.get_active())
-        )
-
-        preferences.present()
-
     def on_color_changed(self, btn, *args):
         self.window_settings.set_setting("background-color", rgb_to_list(btn.get_rgba().to_string()))
         self.update_background_color()
@@ -682,6 +702,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def load_hdri(self, filepath):
         self.window_settings.set_setting("skybox-path", filepath)
         self.window_settings.set_setting("use-skybox", True)
+        self.use_skybox_switch.set_active(True)
         options = {"render.hdri.file": filepath,
                          "render.background.skybox": True}
         self.engine.options.update(options)
@@ -694,34 +715,31 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.preference_window = None
 
     def set_preference_values(self):
-        if not self.preference_window:
-            return
+        self.grid_switch.set_active(self.window_settings.get_setting("grid"))
+        self.absolute_grid_switch.set_active(self.window_settings.get_setting("absolute-grid"))
 
-        self.preference_window.grid_switch.set_active(self.window_settings.get_setting("grid"))
-        self.preference_window.absolute_grid_switch.set_active(self.window_settings.get_setting("absolute-grid"))
+        self.translucency_switch.set_active(self.window_settings.get_setting("translucency"))
+        self.tone_mapping_switch.set_active(self.window_settings.get_setting("tone-mapping"))
+        self.ambient_occlusion_switch.set_active(self.window_settings.get_setting("ambient-occlusion"))
+        self.anti_aliasing_switch.set_active(self.window_settings.get_setting("anti-aliasing"))
+        self.hdri_ambient_switch.set_active(self.window_settings.get_setting("hdri-ambient"))
+        self.light_intensity_spin.set_value(self.window_settings.get_setting("light-intensity"))
+        self.skybox_row.set_text(self.window_settings.get_setting("skybox-path"))
+        self.blur_switch.set_active(self.window_settings.get_setting("blur-background"))
+        self.blur_coc_spin.set_value(self.window_settings.get_setting("blur-coc"))
+        self.use_skybox_switch.set_active(self.window_settings.get_setting("use-skybox"))
 
-        self.preference_window.translucency_switch.set_active(self.window_settings.get_setting("translucency"))
-        self.preference_window.tone_mapping_switch.set_active(self.window_settings.get_setting("tone-mapping"))
-        self.preference_window.ambient_occlusion_switch.set_active(self.window_settings.get_setting("ambient-occlusion"))
-        self.preference_window.anti_aliasing_switch.set_active(self.window_settings.get_setting("anti-aliasing"))
-        self.preference_window.hdri_ambient_switch.set_active(self.window_settings.get_setting("hdri-ambient"))
-        self.preference_window.light_intensity_spin.set_value(self.window_settings.get_setting("light-intensity"))
-        self.preference_window.skybox_row.set_text(self.window_settings.get_setting("skybox-path"))
-        self.preference_window.blur_switch.set_active(self.window_settings.get_setting("blur-background"))
-        self.preference_window.blur_coc_spin.set_value(self.window_settings.get_setting("blur-coc"))
-        self.preference_window.use_skybox_switch.set_active(self.window_settings.get_setting("use-skybox"))
+        self.edges_switch.set_active(self.window_settings.get_setting("show-edges"))
+        self.edges_width_spin.set_value(self.window_settings.get_setting("edges-width"))
 
-        self.preference_window.edges_switch.set_active(self.window_settings.get_setting("show-edges"))
-        self.preference_window.edges_width_spin.set_value(self.window_settings.get_setting("edges-width"))
+        self.point_up_switch.set_active(self.window_settings.get_setting("point-up"))
+        self.up_direction_combo.set_selected(up_dir_string_to_n[self.window_settings.get_setting("up-direction")])
+        self.automatic_up_direction_switch.set_active(self.window_settings.get_setting("auto-up-dir"))
 
-        self.preference_window.point_up_switch.set_active(self.window_settings.get_setting("point-up"))
-        self.preference_window.up_direction_combo.set_selected(up_dir_string_to_n[self.window_settings.get_setting("up-direction")])
-        self.preference_window.automatic_up_direction_switch.set_active(self.window_settings.get_setting("auto-up-dir"))
-
-        self.preference_window.use_color_switch.set_active(self.window_settings.get_setting("use-color"))
+        self.use_color_switch.set_active(self.window_settings.get_setting("use-color"))
         rgba = Gdk.RGBA()
         rgba.parse(list_to_rgb(self.window_settings.get_setting("background-color")))
-        self.preference_window.background_color_button.set_rgba(rgba)
+        self.background_color_button.set_rgba(rgba)
 
     def on_restore_settings_clicked(self, btn):
          self.window_settings.load_settings()

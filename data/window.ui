@@ -8,16 +8,417 @@
         <signal name="key-pressed" handler="on_key_pressed"/>
       </object>
     </child>
-
-    <property name="default-width">600</property>
+    <child>
+    <object class="AdwBreakpoint">
+      <condition>max-width: 500sp</condition>
+      <setter object="split_view" property="collapsed">True</setter>
+    </object>
+  </child>
+    <property name="default-width">800</property>
     <property name="default-height">600</property>
     <property name="width-request">360</property>
     <property name="height-request">360</property>
     <property name="content">
-      <object class="AdwToolbarView" id="toolbar_view">
-        <property name="top-bar-style">flat</property>
-        <property name="bottom-bar-style">raised</property>
-        <property name="reveal-bottom-bars">false</property>
+      <object class="AdwOverlaySplitView" id="split_view">
+        <property name="sidebar-width-fraction">0.40</property>
+        <!-- <property name="sidebar-position">end</property> -->
+        <property name="sidebar-width-unit">px</property>
+        <property name="max-sidebar-width">400</property>
+        <property name="min-sidebar-width">200</property>
+        <property name="show-sidebar" bind-source="reveal_sidebar" bind-property="active" bind-flags="sync-create | bidirectional">False</property>
+        <property name="sidebar">
+          <object class="AdwToolbarView">
+            <property name="top-bar-style">flat</property>
+            <property name="bottom-bar-style">flat</property>
+            <!-- <property name="reveal-bottom-bars">true</property> -->
+            <child type="top">
+              <object class="AdwHeaderBar">
+                <property name="title-widget">
+                  <object class="AdwWindowTitle">
+                    <property name="title" translatable="yes">Exhibit</property>
+                  </object>
+                </property>
+                <child type="end">
+                  <object class="GtkMenuButton">
+                    <property name="primary">True</property>
+                    <property name="icon-name">open-menu-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Menu</property>
+                    <property name="menu-model">primary_menu</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child type="bottom">
+              <object class="AdwViewSwitcherBar">
+                <property name="stack">sidebar_stack</property>
+                <property name="reveal">True</property>
+              </object>
+            </child>
+            <property name="content">
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="AdwViewStack" id="sidebar_stack">
+                    <property name="vexpand">true</property>
+                    <child>
+                      <object class="AdwViewStackPage">
+                        <property name="name">render</property>
+                        <property name="icon-name">photo-camera-symbolic</property>
+                        <property name="title" translatable="yes">Render</property>
+                        <property name="child">
+                          <object class="GtkScrolledWindow">
+                            <child>
+                              <object class="GtkBox">
+                                <property name="orientation">vertical</property>
+                                <property name="margin-start">12</property>
+                                <property name="margin-end">12</property>
+                                <property name="margin-bottom">24</property>
+                                <property name="spacing">24</property>
+                                  <child>
+                                  <object class="AdwPreferencesGroup">
+                                    <property name="hexpand">True</property>
+                                    <property name="hexpand-set">True</property>
+                                    <property name="title" translatable="yes">Render</property>
+                                    <child>
+                                      <object class="AdwSwitchRow" id="translucency_switch">
+                                        <property name="hexpand">True</property>
+                                        <property name="hexpand-set">True</property>
+                                        <property name="title" translatable="yes">Translucency</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="AdwSwitchRow" id="tone_mapping_switch">
+                                        <property name="hexpand">True</property>
+                                        <property name="hexpand-set">True</property>
+                                        <property name="title" translatable="yes">Tone Mapping</property>
+                                        <property name="subtitle" translatable="yes">Map colors properly to the monitor colors</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="AdwSwitchRow" id="ambient_occlusion_switch">
+                                        <property name="hexpand">True</property>
+                                        <property name="hexpand-set">True</property>
+                                        <property name="title" translatable="yes">Ambient Occlusion</property>
+                                        <property name="subtitle" translatable="yes">Provides approximate shadows</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="AdwSwitchRow" id="anti_aliasing_switch">
+                                        <property name="hexpand">True</property>
+                                        <property name="hexpand-set">True</property>
+                                        <property name="title" translatable="yes">Anti Aliasing</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="AdwSwitchRow" id="hdri_ambient_switch">
+                                        <property name="hexpand">True</property>
+                                        <property name="hexpand-set">True</property>
+                                        <property name="title" translatable="yes">Light with HDRI</property>
+                                        <property name="subtitle" translatable="yes">Light the scene using a the loaded HDRI or the default</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="AdwSpinRow" id="light_intensity_spin">
+                                        <property name="adjustment">
+                                          <object class="GtkAdjustment">
+                                            <property name="upper">50.0</property>
+                                            <property name="value">1.0</property>
+                                            <property name="step-increment">0.1</property>
+                                          </object>
+                                        </property>
+                                        <property name="hexpand">True</property>
+                                        <property name="digits">1</property>
+                                        <property name="hexpand-set">True</property>
+                                        <property name="title" translatable="yes">Light Intensity</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="AdwPreferencesGroup">
+                                    <property name="hexpand">True</property>
+                                    <property name="hexpand-set">True</property>
+                                    <property name="title" translatable="yes">Edges</property>
+                                    <child>
+                                      <object class="AdwSwitchRow" id="edges_switch">
+                                        <property name="hexpand">True</property>
+                                        <property name="hexpand-set">True</property>
+                                        <property name="title" translatable="yes">Show Edges</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="AdwSpinRow" id="edges_width_spin">
+                                        <property name="hexpand">True</property>
+                                        <property name="hexpand-set">True</property>
+                                        <property name="title" translatable="yes">Edges Width</property>
+                                        <property name="digits">1</property>
+                                        <property name="adjustment">
+                                          <object class="GtkAdjustment">
+                                            <property name="lower">0.1</property>
+                                            <property name="upper">10</property>
+                                            <property name="value">1</property>
+                                            <property name="page-increment">1</property>
+                                            <property name="step-increment">0.1</property>
+                                          </object>
+                                        </property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="AdwViewStackPage">
+                        <property name="name">scene</property>
+                        <property name="icon-name">image-alt-symbolic</property>
+                        <property name="title" translatable="yes">Scene</property>
+                        <property name="child">
+                          <object class="GtkScrolledWindow">
+                            <child>
+                              <object class="GtkBox">
+                                <property name="orientation">vertical</property>
+                                <property name="margin-start">12</property>
+                                <property name="margin-end">12</property>
+                                <property name="margin-bottom">24</property>
+                                <property name="spacing">24</property>
+                                <child>
+                                  <object class="AdwPreferencesGroup">
+                                    <property name="hexpand">True</property>
+                                    <property name="hexpand-set">True</property>
+                                    <property name="title" translatable="yes">Grid</property>
+                                    <child>
+                                      <object class="AdwSwitchRow" id="grid_switch">
+                                        <property name="hexpand">True</property>
+                                        <property name="hexpand-set">True</property>
+                                        <property name="title" translatable="yes">View Grid</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="AdwSwitchRow" id="absolute_grid_switch">
+                                        <property name="hexpand">True</property>
+                                        <property name="hexpand-set">True</property>
+                                        <property name="title" translatable="yes">Grid Absolute</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="AdwPreferencesGroup">
+                                    <property name="hexpand">True</property>
+                                    <property name="hexpand-set">True</property>
+                                    <property name="title" translatable="yes">Background</property>
+                                    <child>
+                                      <object class="AdwSwitchRow" id="use_skybox_switch">
+                                        <property name="hexpand">True</property>
+                                        <property name="hexpand-set">True</property>
+                                        <property name="title" translatable="yes">HDRI as Backgound</property>
+                                        <property name="subtitle" translatable="yes">Use the loaded HDRI or the default one as a background</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="AdwEntryRow" id="skybox_row">
+                                        <property name="hexpand">True</property>
+                                        <property name="hexpand-set">True</property>
+                                        <property name="title" translatable="yes">HDRI Image</property>
+                                        <child>
+                                          <object class="GtkButton" id="open_skybox_button">
+                                            <property name="valign">center</property>
+                                            <property name="icon-name">document-open-symbolic</property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="AdwSwitchRow" id="blur_switch">
+                                        <property name="hexpand">True</property>
+                                        <property name="hexpand-set">True</property>
+                                        <property name="title" translatable="yes">Blur Background</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="AdwSpinRow" id="blur_coc_spin">
+                                        <property name="hexpand">True</property>
+                                        <property name="hexpand-set">True</property>
+                                        <property name="title" translatable="yes">Blur Circle Of Confusion</property>
+                                        <property name="adjustment">
+                                          <object class="GtkAdjustment">
+                                            <property name="lower">5</property>
+                                            <property name="upper">120</property>
+                                            <property name="value">20</property>
+                                            <property name="page-increment">10</property>
+                                            <property name="step-increment">1</property>
+                                          </object>
+                                        </property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="AdwPreferencesGroup">
+                                    <property name="hexpand">True</property>
+                                    <property name="hexpand-set">True</property>
+                                    <child>
+                                      <object class="AdwSwitchRow" id="use_color_switch">
+                                        <property name="hexpand">True</property>
+                                        <property name="hexpand-set">True</property>
+                                        <property name="title" translatable="yes">Use Custom Color</property>
+                                        <property name="subtitle" translatable="yes">HDRI background takes priority over this</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="AdwActionRow">
+                                        <property name="hexpand">True</property>
+                                        <property name="hexpand-set">True</property>
+                                        <property name="title" translatable="yes">Background Color</property>
+                                        <property name="subtitle" translatable="yes">Transparent colors not supported</property>
+                                        <child>
+                                          <object class="GtkColorDialogButton" id="background_color_button">
+                                            <property name="valign">center</property>
+                                            <property name="rgba">rgb(246,97,81)</property>
+                                            <property name="dialog">
+                                              <object class="GtkColorDialog"/>
+                                            </property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="AdwViewStackPage">
+                        <property name="name">more</property>
+                        <property name="icon-name">applications-system-symbolic</property>
+                        <property name="title" translatable="yes">More</property>
+                        <property name="child">
+                          <object class="GtkScrolledWindow">
+                            <child>
+                              <object class="GtkBox">
+                                <property name="orientation">vertical</property>
+                                <property name="margin-start">12</property>
+                                <property name="margin-end">12</property>
+                                <property name="margin-bottom">24</property>
+                                <property name="spacing">24</property>
+                                <child>
+                                  <object class="AdwPreferencesGroup">
+                                    <property name="hexpand">True</property>
+                                    <property name="hexpand-set">True</property>
+                                    <property name="title" translatable="yes">Navigation</property>
+                                    <child>
+                                      <object class="AdwSwitchRow" id="point_up_switch">
+                                        <property name="hexpand">True</property>
+                                        <property name="hexpand-set">True</property>
+                                        <property name="title" translatable="yes">Alwayas Point Up</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="AdwComboRow" id="up_direction_combo">
+                                        <property name="hexpand">True</property>
+                                        <property name="hexpand-set">True</property>
+                                        <property name="title" translatable="yes">Up Direction</property>
+                                        <!-- <property name="sensitive" bind-source="automatic_up_direction_switch" bind-property="active" bind-flags="invert-boolean | sync-create">True</property> -->
+                                        <property name="model">
+                                          <object class="GtkStringList">
+                                            <items>
+                                              <item translatable="yes">- X</item>
+                                              <item translatable="yes">+ X</item>
+                                              <item translatable="yes">- Y</item>
+                                              <item translatable="yes">+ Y</item>
+                                              <item translatable="yes">- Z</item>
+                                              <item translatable="yes">+ Z</item>
+                                            </items>
+                                          </object>
+                                        </property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child>
+                                <object class="AdwPreferencesGroup">
+                                  <property name="hexpand">True</property>
+                                  <property name="hexpand-set">True</property>
+                                  <property name="title" translatable="yes">Other Settings</property>
+                                  <child>
+                                      <object class="AdwSwitchRow" id="automatic_up_direction_switch">
+                                        <property name="hexpand">True</property>
+                                        <property name="hexpand-set">True</property>
+                                        <property name="title" translatable="yes">Automatic Up Direction</property>
+                                        <property name="subtitle" translatable="yes">When loading choose the best up direction</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton" id="save_button">
+                                        <property name="hexpand">True</property>
+                                        <property name="hexpand-set">True</property>
+                                        <property name="label" translatable="yes">Save Settings</property>
+                                        <property name="css-classes">card</property>
+                                        <property name="height-request">50</property>
+                                        <property name="margin-top">24</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton" id="restore_button">
+                                        <property name="hexpand">True</property>
+                                        <property name="hexpand-set">True</property>
+                                        <property name="label" translatable="yes">Restore Settings</property>
+                                        <property name="css-classes">card</property>
+                                        <property name="height-request">50</property>
+                                        <property name="margin-top">24</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton" id="reset_button">
+                                        <property name="hexpand">True</property>
+                                        <property name="hexpand-set">True</property>
+                                        <property name="css-classes">card</property>
+                                        <property name="height-request">50</property>
+                                        <property name="margin-top">24</property>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="css-classes">error</property>
+                                            <property name="label" translatable="yes">Reset Settings</property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="hexpand">True</property>
+                                        <property name="hexpand-set">True</property>
+                                        <property name="label" translatable="yes">Preferences are per window basis, if you save them next time you will open the app it will start with these preferences</property>
+                                        <property name="margin-top">24</property>
+                                        <property name="css-classes">dim-label</property>
+                                        <property name="wrap">True</property>
+                                        <property name="xalign">0</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </property>
+          </object>
+        </property>
+        <property name="content">
+          <object class="AdwToolbarView" id="toolbar_view">
+        <property name="top-bar-style">raised</property>
+        <property name="extend-content-to-top-edge">true</property>
         <child type="top">
           <object class="AdwHeaderBar" id="header_bar">
             <property name="title-widget">
@@ -25,6 +426,13 @@
                 <property name="title" translatable="yes">Exhibit</property>
               </object>
             </property>
+            <child type="start">
+              <object class="GtkToggleButton" id="reveal_sidebar">
+                <property name="css-classes">flat</property>
+                <property name="icon-name">dock-left-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Reveal Sidebar</property>
+              </object>
+            </child>
             <child type="start">
               <object class="GtkButton" id="home_button_headerbar">
                 <property name="css-classes">flat</property>
@@ -39,14 +447,6 @@
                 <property name="icon-name">perspective-symbolic</property>
                 <property name="tooltip-text" translatable="yes">Toggle Orthographic</property>
                 <signal name="clicked" handler="on_view_clicked"/>
-              </object>
-            </child>
-            <child type="end">
-              <object class="GtkMenuButton">
-                <property name="primary">True</property>
-                <property name="icon-name">open-menu-symbolic</property>
-                <property name="tooltip-text" translatable="yes">Menu</property>
-                <property name="menu-model">primary_menu</property>
               </object>
             </child>
           </object>
@@ -82,7 +482,7 @@ suggested-action</property>
                                     <signal name="clicked" handler="on_open_button_clicked"/>
                                   </object>
                                 </property>
-                                <property name="description" translatable="yes">Load any file to view it in 3D</property>
+                                <property name="description" translatable="yes">Preview your 3D models</property>
                                 <property name="hexpand">True</property>
                                 <property name="hexpand-set">True</property>
                                 <property name="icon-name">io.github.nokse22.Exhibit</property>
@@ -96,11 +496,17 @@ suggested-action</property>
                         <child>
                           <object class="GtkStackPage">
                             <property name="child">
+                              <object class="AdwBin">
+                                <property name="css-classes">fix-borders</property>
+                                <property name="overflow">hidden</property>
+                                <child>
                               <object class="GtkGLArea" id="gl_area">
                                 <property name="has-depth-buffer">true</property>
                                 <property name="has-stencil-buffer">true</property>
                                 <property name="vexpand">true</property>
-                                <property name="css-classes">bg</property>
+                                <property name="css-classes">fix-render</property>
+                                </object>
+                                </child>
                                 <child>
                                   <object class="GtkGestureDrag">
                                     <signal name="drag-update" handler="on_drag_update"/>
@@ -114,7 +520,6 @@ suggested-action</property>
                                     <property name="flags">both-axes | horizontal | vertical | kinetic</property>
                                   </object>
                                 </child>
-
                               </object>
                             </property>
                             <property name="name">3d_page</property>
@@ -142,7 +547,8 @@ suggested-action</property>
             </child>
           </object>
         </property>
-      </object>
+      </object>    </property>
+  </object>
     </property>
   </template>
   <menu id="primary_menu">
@@ -165,10 +571,10 @@ suggested-action</property>
       </item>
     </section>
     <section>
-      <item>
-        <attribute name="label" translatable="yes">_Preferences</attribute>
-        <attribute name="action">win.preferences</attribute>
-      </item>
+      <!-- <item> -->
+      <!--   <attribute name="label" translatable="yes">_Preferences</attribute> -->
+      <!--   <attribute name="action">win.preferences</attribute> -->
+      <!-- </item> -->
       <item>
         <attribute name="label" translatable="yes">_Keyboard Shortcuts</attribute>
         <attribute name="action">win.show-help-overlay</attribute>
