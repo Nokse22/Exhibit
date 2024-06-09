@@ -63,5 +63,13 @@
 	  <key name="auto-up-dir" type="b">
       <default>true</default>
     </key>
+	  <key name="theme" type="s">
+      <choices>
+        <choice value="follow"/>
+        <choice value="light"/>
+        <choice value="dark"/>
+      </choices>
+      <default>'follow'</default>
+    </key>
 	</schema>
 </schemalist>

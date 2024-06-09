@@ -3,7 +3,7 @@
   <requires lib="gtk" version="4.0"/>
   <requires lib="Adw" version="1.0"/>
   <template class="Viewer3dWindow" parent="AdwApplicationWindow">
-    <property name="default-width">800</property>
+    <property name="default-width">840</property>
     <property name="default-height">600</property>
     <property name="width-request">360</property>
     <property name="height-request">360</property>
@@ -15,7 +15,7 @@
     </child>
     <child>
     <object class="AdwBreakpoint">
-      <condition>max-width: 500sp</condition>
+      <condition>max-width: 600sp</condition>
       <setter object="split_view" property="collapsed">True</setter>
     </object>
   </child>
@@ -40,22 +40,55 @@
                   </object>
                 </child>
                 <property name="content">
-                  <object class="AdwStatusPage">
-                    <property name="child">
-                      <object class="GtkButton" id="open_button">
-                        <property name="css-classes">pill
-suggested-action</property>
-                        <property name="halign">center</property>
-                        <property name="label" translatable="yes">Load</property>
-                        <signal name="clicked" handler="on_open_button_clicked"/>
+                  <object class="AdwBin">
+                    <child>
+                      <object class="GtkDropTarget">
+                        <property name="actions">copy</property>
+                        <signal name="drop" handler="on_drop_received"/>
+                        <signal name="enter" handler="on_drop_enter"/>
+                        <signal name="leave" handler="on_drop_leave"/>
                       </object>
-                    </property>
-                    <property name="description" translatable="yes">Preview your 3D models</property>
-                    <property name="hexpand">True</property>
-                    <property name="hexpand-set">True</property>
-                    <property name="icon-name">io.github.nokse22.Exhibit</property>
-                    <property name="title" translatable="yes">Exhibit</property>
-                    <property name="vexpand">True</property>
+                    </child>
+                    <child>
+                      <object class="GtkOverlay">
+                        <property name="child">
+                          <object class="AdwStatusPage">
+                            <property name="css-classes" bind-source="toast_overlay" bind-property="css-classes" bind-flags="sync-create | bidirectional"></property>
+                            <property name="child">
+                              <object class="GtkButton" id="open_button">
+                                <property name="css-classes">pill
+suggested-action</property>
+                                <property name="halign">center</property>
+                                <property name="label" translatable="yes">Load</property>
+                                <signal name="clicked" handler="on_open_button_clicked"/>
+                              </object>
+                            </property>
+                            <property name="description" translatable="yes">Preview your 3D models</property>
+                            <property name="hexpand">True</property>
+                            <property name="hexpand-set">True</property>
+                            <property name="icon-name">io.github.nokse22.Exhibit</property>
+                            <property name="title" translatable="yes">Exhibit</property>
+                            <property name="vexpand">True</property>
+                          </object>
+                        </property>
+                        <child type="overlay">
+                          <object class="GtkRevealer">
+                            <property name="can-target">False</property>
+                            <property name="transition-duration">200</property>
+                            <property name="transition-type">crossfade</property>
+                            <property name="reveal-child" bind-source="drop_revealer" bind-property="reveal-child" bind-flags="sync-create | bidirectional">False</property>
+                            <property name="child">
+                              <object class="AdwStatusPage">
+                                <property name="hexpand">True</property>
+                                <property name="icon-name">document-save-symbolic</property>
+                                <property name="title">Drop a model or HDRI</property>
+                                <property name="css-classes">drag-overlay-status-page</property>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
                   </object>
                 </property>
               </object>
@@ -68,16 +101,14 @@ suggested-action</property>
             <property name="child">
       <object class="AdwOverlaySplitView" id="split_view">
         <property name="sidebar-width-fraction">0.40</property>
-        <!-- <property name="sidebar-position">end</property> -->
         <property name="sidebar-width-unit">px</property>
         <property name="max-sidebar-width">400</property>
-        <property name="min-sidebar-width">200</property>
+        <property name="min-sidebar-width">300</property>
         <property name="show-sidebar" bind-source="reveal_sidebar" bind-property="active" bind-flags="sync-create | bidirectional">False</property>
         <property name="sidebar">
           <object class="AdwToolbarView">
             <property name="top-bar-style">flat</property>
             <property name="bottom-bar-style">flat</property>
-            <!-- <property name="reveal-bottom-bars">true</property> -->
             <child type="top">
               <object class="AdwHeaderBar">
                 <property name="title-widget">
@@ -181,37 +212,189 @@ suggested-action</property>
                                     </child>
                                   </object>
                                 </child>
+                              </object>
+                            </child>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="AdwViewStackPage">
+                        <property name="name">model</property>
+                        <property name="icon-name">photo-camera-symbolic</property>
+                        <property name="title" translatable="yes">Model</property>
+                        <property name="child">
+                          <object class="GtkScrolledWindow">
+                            <child>
+                              <object class="GtkBox">
+                                <property name="orientation">vertical</property>
+                                <property name="margin-start">12</property>
+                                <property name="margin-end">12</property>
+                                <property name="margin-bottom">24</property>
+                                <property name="spacing">24</property>
                                 <child>
                                   <object class="AdwPreferencesGroup">
                                     <property name="hexpand">True</property>
                                     <property name="hexpand-set">True</property>
-                                    <property name="title" translatable="yes">Edges</property>
+                                    <property name="title" translatable="yes">Model</property>
                                     <child>
-                                      <object class="AdwSwitchRow" id="edges_switch">
+                                      <object class="AdwComboRow" id="load_combo">
                                         <property name="hexpand">True</property>
                                         <property name="hexpand-set">True</property>
-                                        <property name="title" translatable="yes">Show Edges</property>
-                                      </object>
-                                    </child>
-                                    <child>
-                                      <object class="AdwSpinRow" id="edges_width_spin">
-                                        <property name="hexpand">True</property>
-                                        <property name="hexpand-set">True</property>
-                                        <property name="title" translatable="yes">Edges Width</property>
-                                        <property name="digits">1</property>
-                                        <property name="adjustment">
-                                          <object class="GtkAdjustment">
-                                            <property name="lower">1</property>
-                                            <property name="upper">10</property>
-                                            <property name="value">1</property>
-                                            <property name="page-increment">1</property>
-                                            <property name="step-increment">0.1</property>
+                                        <property name="title" translatable="yes">Load type</property>
+                                        <property name="model">
+                                          <object class="GtkStringList">
+                                            <items>
+                                              <item translatable="yes">Geometry</item>
+                                              <item translatable="yes">Scene</item>
+                                            </items>
                                           </object>
                                         </property>
                                       </object>
                                     </child>
                                   </object>
                                 </child>
+                                <child>
+                                  <object class="AdwPreferencesGroup">
+                                    <property name="hexpand">True</property>
+                                    <property name="hexpand-set">True</property>
+                                    <property name="title" translatable="yes">Rendering</property>
+                                    <child>
+                                      <object class="AdwExpanderRow" id="points_expander">
+                                        <property name="show-enable-switch">True</property>
+                                        <property name="enable-expansion">False</property>
+                                        <property name="hexpand">True</property>
+                                        <property name="hexpand-set">True</property>
+                                        <property name="title" translatable="yes">Show Points</property>
+                                        <property name="sensitive" bind-source="edges_expander" bind-property="enable-expansion" bind-flags="invert-boolean | sync-create">False</property>
+                                        <child>
+                                          <object class="AdwSpinRow" id="points_radius_spin">
+                                            <property name="hexpand">True</property>
+                                            <property name="hexpand-set">True</property>
+                                            <property name="title" translatable="yes">Points Radius</property>
+                                            <property name="digits">1</property>
+                                            <property name="adjustment">
+                                              <object class="GtkAdjustment">
+                                                <property name="lower">1</property>
+                                                <property name="upper">10</property>
+                                                <property name="value">1</property>
+                                                <property name="page-increment">1</property>
+                                                <property name="step-increment">1</property>
+                                              </object>
+                                            </property>
+                                          </object>
+                                        </child>
+
+                                      </object>
+                                    </child>
+
+
+                                    <child>
+                                      <object class="AdwExpanderRow" id="edges_expander">
+                                        <property name="show-enable-switch">True</property>
+                                        <property name="enable-expansion">False</property>
+                                        <property name="hexpand">True</property>
+                                        <property name="hexpand-set">True</property>
+                                        <property name="title" translatable="yes">Show Edges</property>
+                                        <property name="sensitive" bind-source="points_expander" bind-property="enable-expansion" bind-flags="invert-boolean | sync-create">True</property>
+                                         <child>
+                                          <object class="AdwSpinRow" id="edges_width_spin">
+                                            <property name="hexpand">True</property>
+                                            <property name="hexpand-set">True</property>
+                                            <property name="title" translatable="yes">Edges Width</property>
+                                            <property name="digits">1</property>
+                                            <property name="adjustment">
+                                              <object class="GtkAdjustment">
+                                                <property name="lower">1</property>
+                                                <property name="upper">10</property>
+                                                <property name="value">1</property>
+                                                <property name="page-increment">1</property>
+                                                <property name="step-increment">0.1</property>
+                                              </object>
+                                            </property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+
+                                  </object>
+                                </child>
+                                <child>
+                              <object class="AdwPreferencesGroup">
+                                <property name="hexpand">True</property>
+                                <property name="hexpand-set">True</property>
+                                <property name="title" translatable="yes">Material</property>
+                                <!-- <property name="sensitive" bind-source="edges_expander" bind-property="active" bind-flags="invert-boolean | sync-create">True</property> -->
+                                <child>
+                                  <object class="AdwSpinRow" id="model_metallic_spin">
+                                    <property name="hexpand">True</property>
+                                    <property name="hexpand-set">True</property>
+                                    <property name="title" translatable="yes">Model Metallic</property>
+                                    <property name="digits">1</property>
+                                    <property name="adjustment">
+                                      <object class="GtkAdjustment">
+                                        <property name="lower">0</property>
+                                        <property name="upper">1</property>
+                                        <property name="value">0</property>
+                                        <property name="step-increment">0.1</property>
+                                      </object>
+                                    </property>
+                                  </object>
+                                </child>
+
+                                <child>
+                                  <object class="AdwSpinRow" id="model_roughness_spin">
+                                    <property name="hexpand">True</property>
+                                    <property name="hexpand-set">True</property>
+                                    <property name="title" translatable="yes">Model Roughness</property>
+                                    <property name="digits">1</property>
+                                    <property name="adjustment">
+                                      <object class="GtkAdjustment">
+                                        <property name="lower">0</property>
+                                        <property name="upper">1</property>
+                                        <property name="value">0.3</property>
+                                        <property name="step-increment">0.1</property>
+                                      </object>
+                                    </property>
+                                  </object>
+                                </child>
+
+                                <child>
+                                  <object class="AdwActionRow">
+                                    <property name="hexpand">True</property>
+                                    <property name="hexpand-set">True</property>
+                                    <property name="title" translatable="yes">Model Color</property>
+                                    <child>
+                                      <object class="GtkColorDialogButton" id="model_color_button">
+                                        <property name="valign">center</property>
+                                        <property name="rgba">rgb(119,118,123)</property>
+                                        <property name="dialog">
+                                          <object class="GtkColorDialog"/>
+                                        </property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="AdwSpinRow" id="model_opacity_spin">
+                                    <property name="hexpand">True</property>
+                                    <property name="hexpand-set">True</property>
+                                    <property name="title" translatable="yes">Model Opacity</property>
+                                    <property name="digits">2</property>
+                                    <property name="adjustment">
+                                      <object class="GtkAdjustment">
+                                        <property name="lower">0</property>
+                                        <property name="upper">1</property>
+                                        <property name="value">1</property>
+                                        <property name="step-increment">0.05</property>
+                                      </object>
+                                    </property>
+                                  </object>
+                                </child>
+
+                                </object>
+                                </child>
+
                               </object>
                             </child>
                           </object>
@@ -464,8 +647,8 @@ suggested-action</property>
         </property>
         <property name="content">
           <object class="AdwToolbarView" id="toolbar_view">
-        <property name="top-bar-style">raised</property>
-        <property name="extend-content-to-top-edge">false</property>
+        <property name="top-bar-style">flat</property>
+        <property name="extend-content-to-top-edge">true</property>
         <child type="top">
           <object class="AdwHeaderBar" id="header_bar">
             <property name="title-widget">
@@ -488,7 +671,7 @@ suggested-action</property>
                 <signal name="clicked" handler="on_home_clicked"/>
               </object>
             </child>
-            <child type="start">
+            <child type="end">
               <object class="GtkButton" id="view_button_headerbar">
                 <property name="css-classes">flat</property>
                 <property name="icon-name">perspective-symbolic</property>
@@ -500,6 +683,8 @@ suggested-action</property>
         </child>
         <property name="content">
           <object class="AdwBin">
+            <property name="css-classes">fix-borders</property>
+            <property name="overflow">hidden</property>
             <child>
               <object class="GtkDropTarget" id="drop_target">
                 <property name="actions">copy</property>
@@ -514,7 +699,7 @@ suggested-action</property>
                   <object class="AdwToastOverlay" id="toast_overlay">
                     <property name="child">
                       <object class="AdwBin" id="view_bin">
-                        <property name="css-classes">fix-borders</property>
+
                         <property name="overflow">hidden</property>
                         <property name="can-focus">true</property>
                         <child>
@@ -523,6 +708,7 @@ suggested-action</property>
                         <property name="has-stencil-buffer">true</property>
                         <property name="vexpand">true</property>
                         <property name="css-classes">fix-render</property>
+                        <property name="overflow">hidden</property>
                         </object>
                         </child>
                         <child>
@@ -580,13 +766,30 @@ suggested-action</property>
   <menu id="primary_menu">
     <section>
       <item>
+        <attribute name="action">app.theme</attribute>
+        <attribute name="target">follow</attribute>
+        <attribute name="label" translatable="yes">Follow System</attribute>
+      </item>
+      <item>
+        <attribute name="action">app.theme</attribute>
+        <attribute name="target">light</attribute>
+        <attribute name="label" translatable="yes">Light Theme</attribute>
+      </item>
+      <item>
+        <attribute name="action">app.theme</attribute>
+        <attribute name="target">dark</attribute>
+        <attribute name="label" translatable="yes">Dark Theme</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
         <attribute name="label" translatable="yes">_Open New Window</attribute>
         <attribute name="action">app.open-new-window</attribute>
       </item>
     </section>
     <section>
       <item>
-        <attribute name="label" translatable="yes">_Load New Model</attribute>
+        <attribute name="label" translatable="yes">_Load</attribute>
         <attribute name="action">win.open-new</attribute>
       </item>
     </section>

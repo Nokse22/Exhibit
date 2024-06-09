@@ -76,7 +76,7 @@
             <property name="hexpand-set">True</property>
             <property name="title" translatable="yes">Edges</property>
             <child>
-              <object class="AdwSwitchRow" id="edges_switch">
+              <object class="AdwSwitchRow" id="">
                 <property name="hexpand">True</property>
                 <property name="hexpand-set">True</property>
                 <property name="title" translatable="yes">Show Edges</property>

@@ -24,7 +24,7 @@ import os
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 
-from gi.repository import Gtk, Gio, Adw
+from gi.repository import Gtk, Gio, Adw, GLib
 from .window import Viewer3dWindow
 
 class Viewer3dApplication(Adw.Application):
@@ -44,6 +44,26 @@ class Viewer3dApplication(Adw.Application):
         self.create_action('right-view', self.right_view, ['3'])
         self.create_action('top-view', self.top_view, ['7'])
         self.create_action('isometric-view', self.isometric_view, ['9'])
+
+        theme_action = Gio.SimpleAction.new_stateful(
+            "theme",
+            GLib.VariantType.new("s"),
+            GLib.Variant("s", "follow"),
+        )
+        theme_action.connect("activate", self.on_theme_setting_changed)
+
+        self.saved_settings = Gio.Settings.new('io.github.nokse22.Exhibit')
+
+        manager  = Adw.StyleManager().get_default()
+        match self.saved_settings.get_string("theme"):
+            case "follow":
+                manager.set_color_scheme(Adw.ColorScheme.DEFAULT)
+            case "light":
+                manager.set_color_scheme(Adw.ColorScheme.FORCE_LIGHT)
+            case "dark":
+                manager.set_color_scheme(Adw.ColorScheme.FORCE_DARK)
+
+        self.add_action(theme_action)
 
     def do_open(self, files, n_files, hint):
         for file in files:
@@ -65,6 +85,18 @@ class Viewer3dApplication(Adw.Application):
                                 artists=["Jakub Steiner https://jimmac.eu"])
         about.add_link(_("Checkout F3D"), "https://f3d.app")
         about.present(self.props.active_window)
+
+    def on_theme_setting_changed(self, action: Gio.SimpleAction, state: GLib.Variant):
+        action.set_state(state)
+        self.saved_settings.set_string("theme", state.get_string())
+        manager  = Adw.StyleManager().get_default()
+        match state.get_string():
+            case "follow":
+                manager.set_color_scheme(Adw.ColorScheme.DEFAULT)
+            case "light":
+                manager.set_color_scheme(Adw.ColorScheme.FORCE_LIGHT)
+            case "dark":
+                manager.set_color_scheme(Adw.ColorScheme.FORCE_DARK)
 
     def toggle_orthographic(self, *args):
         self.props.active_window.toggle_orthographic()

@@ -1,11 +1,6 @@
 .fix-render{
   background-color:black;
-  border-radius: 14px;
-}
-
-.fix-borders{
-	border-top-left-radius: 14px;
-  border-bottom-left-radius: 14px;
+  border-radius: 12px;
 }
 
 .drag-overlay-status-page {

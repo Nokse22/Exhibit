@@ -94,6 +94,11 @@ class WindowSettings():
             "edges-width": self.saved_settings.get_double("edges-width"),
             "up-direction": self.saved_settings.get_string("up-direction"),
             "auto-up-dir" : self.saved_settings.get_boolean("auto-up-dir"),
+            "show-points": False,
+            "point-size": 1.0,
+            "model-color": [1.0, 1.0, 1.0],
+            "model-metallic": 0.0,
+            "model-roughness": 0.3
         }
 
     def set_setting(self, key, val):
@@ -157,7 +162,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     hdri_ambient_switch = Gtk.Template.Child()
     light_intensity_spin = Gtk.Template.Child()
 
-    edges_switch = Gtk.Template.Child()
+    edges_expander = Gtk.Template.Child()
     edges_width_spin = Gtk.Template.Child()
 
     use_skybox_switch = Gtk.Template.Child()
@@ -179,6 +184,14 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     automatic_up_direction_switch = Gtk.Template.Child()
 
+    points_expander = Gtk.Template.Child()
+    points_radius_spin = Gtk.Template.Child()
+
+    model_roughness_spin = Gtk.Template.Child()
+    model_metallic_spin = Gtk.Template.Child()
+    model_color_button = Gtk.Template.Child()
+    model_opacity_spin = Gtk.Template.Child()
+
     keys = {
         "grid": "render.grid.enable",
         "absolute-grid": "render.grid.absolute",
@@ -198,6 +211,12 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         "show-edges": "render.show-edges",
         "edges-width": "render.line-width",
         "up-direction": "scene.up-direction",
+        "show-points": "model.point-sprites.enable",
+        "point-size": "render.point-size",
+        "model-color": "model.color.rgb",
+        "model-metallic": "model.material.metallic",
+        "model-roughness": "model.material.roughness",
+        "model-opacity": "model.color.opacity"
     }
 
     preference_window = None
@@ -210,14 +229,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def __init__(self, application=None, filepath=None):
         super().__init__(application=application)
 
-        self.preferences_action = self.create_action('preferences', self.on_preferences_action)
-        self.preferences_action.set_enabled(False)
-
         self.save_as_action = self.create_action('save-as-image', self.open_save_file_chooser)
-        self.save_as_action.set_enabled(False)
 
         self.open_new_action = self.create_action('open-new', self.open_file_chooser)
-        self.open_new_action.set_enabled(False)
 
         self.drop_target.set_gtypes([Gdk.FileList])
 
@@ -234,8 +248,16 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.anti_aliasing_switch.connect("notify::active", self.on_switch_toggled, "anti-aliasing")
         self.hdri_ambient_switch.connect("notify::active", self.on_switch_toggled, "hdri-ambient")
 
-        self.edges_switch.connect("notify::active", self.on_switch_toggled, "show-edges")
+        self.edges_expander.connect("notify::enable-expansion", self.on_expander_toggled, "show-edges")
         self.edges_width_spin.connect("notify::value", self.on_spin_changed, "edges-width")
+
+        self.points_expander.connect("notify::enable-expansion", self.on_expander_toggled, "show-points")
+        self.points_radius_spin.connect("notify::value", self.on_spin_changed, "point-size")
+
+        self.model_roughness_spin.connect("notify::value", self.on_spin_changed, "model-roughness")
+        self.model_metallic_spin.connect("notify::value", self.on_spin_changed, "model-metallic")
+        self.model_color_button.connect("notify::rgba", self.on_color_changed, "model-color")
+        self.model_opacity_spin.connect("notify::value", self.on_spin_changed, "model-opacity")
 
         self.light_intensity_spin.connect("notify::value", self.on_spin_changed, "light-intensity")
 
@@ -249,7 +271,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         )
         self.use_color_switch.connect("notify::active", self.update_background_color)
 
-        self.background_color_button.connect("notify::rgba", self.on_color_changed)
+        self.background_color_button.connect("notify::rgba", self.on_color_changed, "background-color")
+        self.background_color_button.connect("notify::rgba",
+                lambda *args: self.update_background_color()
+        )
 
         self.point_up_switch.connect("notify::active", self.set_point_up, "point-up")
         self.up_direction_combo.connect("notify::selected", self.set_up_direction)
@@ -273,11 +298,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if self.window_settings.get_setting("orthographic"):
             self.toggle_orthographic()
 
-        inital_options = {
-            "scene.up-direction": self.window_settings.get_setting("up-direction")
+        initial_options = {
+            "scene.up-direction": self.window_settings.get_setting("up-direction"),
         }
 
-        self.engine.options.update(inital_options)
+        self.engine.options.update(initial_options)
 
         self.gl_area.set_auto_render(True)
         self.gl_area.connect("realize", self.on_realize)
@@ -291,7 +316,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.drag_prev_offset = (0, 0)
         self.drag_start_angle = 0
 
-        self.style_manager = Adw.StyleManager()
+        self.style_manager = Adw.StyleManager().get_default()
         self.style_manager.connect("notify::dark", self.update_background_color)
 
         self.update_background_color()
@@ -451,6 +476,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         options = {"scene.up-direction": self.window_settings.get_setting("up-direction")}
         self.engine.options.update(options)
 
+        self.stack.set_visible_child_name("3d_page")
+
         threading.Thread(target=self._load, daemon=True).start()
 
         self.present()
@@ -460,11 +487,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.set_title(f"View {self.file_name}")
         self.title_widget.set_title(self.file_name)
-        self.stack.set_visible_child_name("3d_page")
-        self.preferences_action.set_enabled(True)
-        self.open_new_action.set_enabled(True)
-        self.save_as_action.set_enabled(True)
-        # self.toolbar_view.set_top_bar_style(Adw.ToolbarStyle.RAISED)
         self.split_view.set_show_sidebar(True)
 
         self.drop_revealer.set_reveal_child(False)
@@ -476,10 +498,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.set_title(_("Exhibit"))
         self.title_widget.set_title(_("Exhibit"))
         self.stack.set_visible_child_name("startup_page")
-        self.preferences_action.set_enabled(False)
-        self.open_new_action.set_enabled(False)
-        self.save_as_action.set_enabled(False)
-        # self.toolbar_view.set_top_bar_style(Adw.ToolbarStyle.FLAT)
 
         self.send_toast(_("Can't open") + " " + os.path.basename(self.filepath))
         options = {"scene.up-direction": self.window_settings.get_setting("up-direction")}
@@ -620,7 +638,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.send_toast(_("Can't open") + " " + os.path.basename(filepath))
 
     @Gtk.Template.Callback("on_drop_enter")
-    def on_drop_enter(self, *args):
+    def on_drop_enter(self, drop_target, *args):
         self.drop_revealer.set_reveal_child(True)
         self.toast_overlay.add_css_class("blurred")
 
@@ -632,6 +650,12 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def on_switch_toggled(self, switch, active, name):
         self.window_settings.set_setting(name, switch.get_active())
         options = {self.keys[name]: switch.get_active()}
+        self.engine.options.update(options)
+        self.gl_area.queue_render()
+
+    def on_expander_toggled(self, expander, enabled, name):
+        self.window_settings.set_setting(name, expander.get_enable_expansion())
+        options = {self.keys[name]: expander.get_enable_expansion()}
         self.engine.options.update(options)
         self.gl_area.queue_render()
 
@@ -656,9 +680,14 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.preference_window.present()
             return
 
-    def on_color_changed(self, btn, *args):
-        self.window_settings.set_setting("background-color", rgb_to_list(btn.get_rgba().to_string()))
-        self.update_background_color()
+    def on_color_changed(self, btn, color, setting):
+        color_list = rgb_to_list(btn.get_rgba().to_string())
+        print(color_list)
+        self.window_settings.set_setting(setting, color_list)
+        if setting in self.keys:
+            options = {self.keys[setting]: color_list}
+            self.engine.options.update(options)
+            self.gl_area.queue_render()
 
     def set_up_direction(self, combo, *args):
         direction = up_dir_n_to_string[combo.get_selected()]
@@ -736,7 +765,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.blur_coc_spin.set_value(self.window_settings.get_setting("blur-coc"))
         self.use_skybox_switch.set_active(self.window_settings.get_setting("use-skybox"))
 
-        self.edges_switch.set_active(self.window_settings.get_setting("show-edges"))
+        self.edges_expander.set_enable_expansion(self.window_settings.get_setting("show-edges"))
         self.edges_width_spin.set_value(self.window_settings.get_setting("edges-width"))
 
         self.point_up_switch.set_active(self.window_settings.get_setting("point-up"))
