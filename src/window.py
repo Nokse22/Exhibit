@@ -391,6 +391,13 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.gl_area.queue_render()
 
+        return True
+
+    @Gtk.Template.Callback("on_click_pressed")
+    def on_click_pressed(self, widget, *args):
+        print("pressed")
+        widget.get_widget().grab_focus()
+
     def get_gimble_limit(self):
         return self.distance / 6
 
@@ -461,7 +468,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.split_view.set_show_sidebar(True)
 
         self.drop_revealer.set_reveal_child(False)
-        self.stack.remove_css_class("blurred")
+        self.toast_overlay.remove_css_class("blurred")
 
         self.set_preference_values()
 
@@ -615,12 +622,12 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     @Gtk.Template.Callback("on_drop_enter")
     def on_drop_enter(self, *args):
         self.drop_revealer.set_reveal_child(True)
-        self.stack.add_css_class("blurred")
+        self.toast_overlay.add_css_class("blurred")
 
     @Gtk.Template.Callback("on_drop_leave")
     def on_drop_leave(self, *args):
         self.drop_revealer.set_reveal_child(False)
-        self.stack.remove_css_class("blurred")
+        self.toast_overlay.remove_css_class("blurred")
 
     def on_switch_toggled(self, switch, active, name):
         self.window_settings.set_setting(name, switch.get_active())
