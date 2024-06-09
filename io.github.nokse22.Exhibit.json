@@ -74,18 +74,19 @@
             ]
         },
         {
-            "name": "TBB",
+            "name": "oneTBB",
             "buildsystem": "cmake",
             "builddir": true,
             "config-opts": [
                 "-DTBB_TEST=OFF",
-                "-DTBB_EXAMPLES=OFF"
+                "-DTBB_EXAMPLES=OFF",
+                "-DCMAKE_INSTALL_PREFIX:PATH=/app"
             ],
             "sources": [
                 {
                     "type": "archive",
-                    "url": "https://github.com/oneapi-src/oneTBB/archive/v2021.9.0.tar.gz",
-                    "sha256": "1ce48f34dada7837f510735ff1172f6e2c261b09460e3bf773b49791d247d24e"
+                    "url": "https://github.com/oneapi-src/oneTBB/archive/v2021.12.0.tar.gz",
+                    "sha256": "c7bb7aa69c254d91b8f0041a71c5bcc3936acb64408a1719aec0b2b7639dd84f"
                 }
             ]
         },
@@ -390,20 +391,32 @@
             ]
         },
         {
-            "name": "openUSD",
-            "config-opts": [
-                "-DPXR_BUILD_USD_IMAGING=FALSE",
-                "-DPXR_BUILD_USDVIEW=FALSE"
-            ],
-            "buildsystem": "cmake-ninja",
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://github.com/PixarAnimationStudios/OpenUSD/archive/refs/tags/v24.05.tar.gz",
-                    "sha256": "0352619895588efc8f9d4aa7004c92be4e4fa70e1ccce77e474ce23941c05828"
-                }
-            ]
-        },
+			"name": "openUSD",
+			"buildsystem": "cmake-ninja",
+			"config-opts": [
+				"-DPXR_BUILD_ALEMBIC_PLUGIN:BOOL=OFF",
+				"-DPXR_BUILD_EMBREE_PLUGIN:BOOL=OFF",
+				"-DPXR_BUILD_IMAGING:BOOL=OFF",
+				"-DPXR_BUILD_MONOLITHIC:BOOL=ON",
+				"-DPXR_BUILD_TESTS:BOOL=OFF",
+				"-DPXR_BUILD_USD_IMAGING:BOOL=OFF",
+				"-DPXR_ENABLE_PYTHON_SUPPORT:BOOL=OFF",
+				"-DPXR_BUILD_EXAMPLES:BOOL=OFF",
+				"-DPXR_BUILD_TUTORIALS:BOOL=OFF",
+				"-DPXR_BUILD_USD_TOOLS:BOOL=OFF",
+				"-DPXR_INSTALL_LOCATION:PATH=../lib/usd",
+				"-DCMAKE_BUILD_TYPE=Release",
+				"-DTBB_INCLUDE_DIRS=/app/include",
+                "-DTBB_LIBRARIES=/app/lib/libtbb.so"
+			],
+			"sources": [
+				{
+				    "type": "archive",
+				    "url": "https://github.com/PixarAnimationStudios/OpenUSD/archive/refs/tags/v23.05.tar.gz",
+				    "sha256": "f5c3e72cd584bab383a8054628b6ed98aa17b1cbbe896eb98257ac19641d10c7"
+				}
+			]
+		},
         {
             "name": "F3D",
             "buildsystem": "cmake-ninja",
