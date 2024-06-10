@@ -116,8 +116,11 @@ class Viewer3dApplication(Adw.Application):
     def on_theme_setting_changed(self, action: Gio.SimpleAction, state: GLib.Variant):
         action.set_state(state)
         self.saved_settings.set_string("theme", state.get_string())
+        self.update_theme()
+
+    def update_theme(self):
         manager  = Adw.StyleManager().get_default()
-        match state.get_string():
+        match self.saved_settings.get_string("theme"):
             case "follow":
                 manager.set_color_scheme(Adw.ColorScheme.DEFAULT)
             case "light":
@@ -153,6 +156,7 @@ class Viewer3dApplication(Adw.Application):
             else:
                 win = Viewer3dWindow(application=self)
         win.present()
+        self.update_theme()
 
     def open_new_window_action(self, *args):
         self.win = Viewer3dWindow(application=self)
