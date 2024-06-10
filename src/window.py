@@ -21,6 +21,8 @@ import gi
 from gi.repository import Adw
 from gi.repository import Gtk, Gdk, Gio, GLib, GObject
 
+from .widgets import *
+
 import f3d
 from f3d import *
 
@@ -136,7 +138,7 @@ class WindowSettings():
         self.load_settings()
         self.save_all_settings()
 
-@Gtk.Template(resource_path='/io/github/nokse22/Exhibit/window.ui')
+@Gtk.Template(resource_path='/io/github/nokse22/Exhibit/ui/window.ui')
 class Viewer3dWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'Viewer3dWindow'
 
@@ -171,8 +173,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     use_skybox_switch = Gtk.Template.Child()
 
-    skybox_button = Gtk.Template.Child()
-    delete_skybox_button = Gtk.Template.Child()
     skybox_row = Gtk.Template.Child()
     blur_switch = Gtk.Template.Child()
     blur_coc_spin = Gtk.Template.Child()
@@ -270,8 +270,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.light_intensity_spin.connect("notify::value", self.on_spin_changed, "light-intensity")
 
         self.use_skybox_switch.connect("notify::active", self.on_switch_toggled, "use-skybox")
-        self.skybox_button.connect("clicked", self.on_open_skybox_clicked)
-        self.delete_skybox_button.connect("clicked", self.on_delete_skybox_clicked)
+        self.skybox_row.connect("open-file", self.on_open_skybox)
+        self.skybox_row.connect("delete-file", self.on_delete_skybox)
         self.blur_switch.connect("notify::active", self.on_switch_toggled, "blur-background")
         self.blur_coc_spin.connect("notify::value", self.on_spin_changed, "blur-coc")
 
@@ -309,6 +309,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         initial_options = {
             "scene.up-direction": self.window_settings.get_setting("up-direction"),
+            "model.scivis.colormap": [0.1, 0.3, 0.4, 0.5, 0.1, 0.3, 0.4, 0.5],
+            "model.scivis.cells": True,
+            "model.scivis.array-name": "",
+            "model.scivis.range": [0.0, 0.1, 0.6]
         }
 
         self.engine.options.update(initial_options)
@@ -776,7 +780,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.engine.options.update(options)
         self.gl_area.queue_render()
 
-    def on_delete_skybox_clicked(self, *args):
+    def on_delete_skybox(self, *args):
         self.window_settings.set_setting("skybox-path", "")
         self.window_settings.set_setting("use-skybox", False)
         self.use_skybox_switch.set_active(False)
@@ -785,10 +789,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.engine.options.update(options)
         self.gl_area.queue_render()
 
-        self.skybox_button.get_child().get_first_child().set_visible(False)
-        self.delete_skybox_button.set_visible(False)
-
-    def on_open_skybox_clicked(self, *args):
+    def on_open_skybox(self, *args):
         file_filter = Gtk.FileFilter(name="All supported formats")
 
         for patt in image_patterns:
@@ -816,14 +817,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.window_settings.set_setting("skybox-path", filepath)
         self.window_settings.set_setting("use-skybox", True)
         self.use_skybox_switch.set_active(True)
+        self.skybox_row.set_filename(filepath)
         options = {"render.hdri.file": filepath,
                          "render.background.skybox": True}
         self.engine.options.update(options)
         self.gl_area.queue_render()
-
-        self.skybox_button.get_child().get_first_child().set_label(os.path.basename(filepath))
-        self.skybox_button.get_child().get_first_child().set_visible(True)
-        self.delete_skybox_button.set_visible(True)
 
     def set_preference_values(self):
         self.grid_switch.set_active(self.window_settings.get_setting("grid"))
@@ -835,7 +833,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.anti_aliasing_switch.set_active(self.window_settings.get_setting("anti-aliasing"))
         self.hdri_ambient_switch.set_active(self.window_settings.get_setting("hdri-ambient"))
         self.light_intensity_spin.set_value(self.window_settings.get_setting("light-intensity"))
-        # self.skybox_row.set_text(self.window_settings.get_setting("skybox-path"))
+        self.skybox_row.set_filename(self.window_settings.get_setting("skybox-path"))
         self.blur_switch.set_active(self.window_settings.get_setting("blur-background"))
         self.blur_coc_spin.set_value(self.window_settings.get_setting("blur-coc"))
         self.use_skybox_switch.set_active(self.window_settings.get_setting("use-skybox"))
