@@ -221,7 +221,7 @@ suggested-action</property>
                     <child>
                       <object class="AdwViewStackPage">
                         <property name="name">model</property>
-                        <property name="icon-name">photo-camera-symbolic</property>
+                        <property name="icon-name">globe-symbolic</property>
                         <property name="title" translatable="yes">Model</property>
                         <property name="child">
                           <object class="GtkScrolledWindow">
