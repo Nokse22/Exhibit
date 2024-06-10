@@ -688,7 +688,7 @@ suggested-action</property>
             <child type="start">
               <object class="GtkToggleButton" id="reveal_sidebar">
                 <property name="css-classes">flat</property>
-                <property name="icon-name">dock-left-symbolic</property>
+                <property name="icon-name">sidebar-show-symbolic</property>
                 <property name="tooltip-text" translatable="yes">Reveal Sidebar</property>
               </object>
             </child>
