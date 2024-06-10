@@ -15,7 +15,7 @@
     </child>
     <child>
     <object class="AdwBreakpoint">
-      <condition>max-width: 600sp</condition>
+      <condition>max-width: 650px</condition>
       <setter object="split_view" property="collapsed">True</setter>
     </object>
   </child>
@@ -275,7 +275,7 @@ suggested-action</property>
                                             <property name="digits">1</property>
                                             <property name="adjustment">
                                               <object class="GtkAdjustment">
-                                                <property name="lower">1</property>
+                                                <property name="lower">0</property>
                                                 <property name="upper">10</property>
                                                 <property name="value">1</property>
                                                 <property name="page-increment">1</property>
@@ -449,45 +449,10 @@ suggested-action</property>
                                       </object>
                                     </child>
                                     <child>
-                                      <object class="AdwActionRow" id="skybox_row">
+                                      <object class="FileRow" id="skybox_row">
                                         <property name="hexpand">True</property>
                                         <property name="hexpand-set">True</property>
                                         <property name="title" translatable="yes">HDRI Image</property>
-                                        <child>
-                                          <object class="GtkBox">
-                                            <property name="css-classes">linked</property>
-                                            <child>
-                                              <object class="GtkButton" id="skybox_button">
-                                                <property name="valign">center</property>
-                                                <child>
-                                                  <object class="GtkBox">
-                                                    <property name="spacing">6</property>
-                                                    <child>
-                                                      <object class="GtkLabel">
-                                                        <property name="max-width-chars">14</property>
-                                                        <property name="ellipsize">end</property>
-                                                        <property name="visible">false</property>
-                                                      </object>
-                                                    </child>
-                                                    <child>
-                                                      <object class="GtkImage">
-                                                        <property name="icon-name">document-open-symbolic</property>
-                                                      </object>
-                                                    </child>
-                                                  </object>
-                                                </child>
-                                              </object>
-                                            </child>
-                                            <child>
-                                              <object class="GtkButton" id="delete_skybox_button">
-                                                <property name="valign">center</property>
-                                                <property name="visible">false</property>
-                                                <property name="css-classes">destructive</property>
-                                                <property name="icon-name">edit-delete-symbolic</property>
-                                              </object>
-                                            </child>
-                                          </object>
-                                        </child>
                                       </object>
                                     </child>
                                     <child>
