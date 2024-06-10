@@ -683,7 +683,6 @@ suggested-action</property>
         </child>
         <property name="content">
           <object class="AdwBin">
-            <property name="css-classes">fix-borders</property>
             <property name="overflow">hidden</property>
             <child>
               <object class="GtkDropTarget" id="drop_target">
@@ -699,7 +698,7 @@ suggested-action</property>
                   <object class="AdwToastOverlay" id="toast_overlay">
                     <property name="child">
                       <object class="AdwBin" id="view_bin">
-
+                        <property name="css-classes">fix-render</property>
                         <property name="overflow">hidden</property>
                         <property name="can-focus">true</property>
                         <child>
@@ -707,7 +706,6 @@ suggested-action</property>
                         <property name="has-depth-buffer">true</property>
                         <property name="has-stencil-buffer">true</property>
                         <property name="vexpand">true</property>
-                        <property name="css-classes">fix-render</property>
                         <property name="overflow">hidden</property>
                         </object>
                         </child>
