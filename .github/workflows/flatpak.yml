@@ -12,7 +12,7 @@ permissions:
   id-token: write
   contents: read
 jobs:
-  flatpak:
+  flatpak-x11:
     name: "Flatpak X11"
     runs-on: ubuntu-latest
     container:
@@ -26,8 +26,7 @@ jobs:
         manifest-path: io.github.nokse22.Exhibit.json
         cache-key: flatpak-builder-${{ github.sha }}
 
-jobs:
-  flatpak:
+  flatpak-wayland:
     name: "Flatpak Wayland"
     runs-on: ubuntu-latest
     container:
