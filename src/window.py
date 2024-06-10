@@ -171,7 +171,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     use_skybox_switch = Gtk.Template.Child()
 
-    open_skybox_button = Gtk.Template.Child()
+    skybox_button = Gtk.Template.Child()
+    delete_skybox_button = Gtk.Template.Child()
     skybox_row = Gtk.Template.Child()
     blur_switch = Gtk.Template.Child()
     blur_coc_spin = Gtk.Template.Child()
@@ -269,7 +270,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.light_intensity_spin.connect("notify::value", self.on_spin_changed, "light-intensity")
 
         self.use_skybox_switch.connect("notify::active", self.on_switch_toggled, "use-skybox")
-        self.open_skybox_button.connect("clicked", self.on_open_skybox_clicked)
+        self.skybox_button.connect("clicked", self.on_open_skybox_clicked)
+        self.delete_skybox_button.connect("clicked", self.on_delete_skybox_clicked)
         self.blur_switch.connect("notify::active", self.on_switch_toggled, "blur-background")
         self.blur_coc_spin.connect("notify::value", self.on_spin_changed, "blur-coc")
 
@@ -774,6 +776,18 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.engine.options.update(options)
         self.gl_area.queue_render()
 
+    def on_delete_skybox_clicked(self, *args):
+        self.window_settings.set_setting("skybox-path", "")
+        self.window_settings.set_setting("use-skybox", False)
+        self.use_skybox_switch.set_active(False)
+        options = {"render.hdri.file": "",
+                         "render.background.skybox": False}
+        self.engine.options.update(options)
+        self.gl_area.queue_render()
+
+        self.skybox_button.get_child().get_first_child().set_visible(False)
+        self.delete_skybox_button.set_visible(False)
+
     def on_open_skybox_clicked(self, *args):
         file_filter = Gtk.FileFilter(name="All supported formats")
 
@@ -807,11 +821,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.engine.options.update(options)
         self.gl_area.queue_render()
 
-        if self.preference_window:
-            self.preference_window.skybox_row.set_text(filepath)
-
-    def on_preferences_close(self, *args):
-        self.preference_window = None
+        self.skybox_button.get_child().get_first_child().set_label(os.path.basename(filepath))
+        self.skybox_button.get_child().get_first_child().set_visible(True)
+        self.delete_skybox_button.set_visible(True)
 
     def set_preference_values(self):
         self.grid_switch.set_active(self.window_settings.get_setting("grid"))
@@ -823,7 +835,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.anti_aliasing_switch.set_active(self.window_settings.get_setting("anti-aliasing"))
         self.hdri_ambient_switch.set_active(self.window_settings.get_setting("hdri-ambient"))
         self.light_intensity_spin.set_value(self.window_settings.get_setting("light-intensity"))
-        self.skybox_row.set_text(self.window_settings.get_setting("skybox-path"))
+        # self.skybox_row.set_text(self.window_settings.get_setting("skybox-path"))
         self.blur_switch.set_active(self.window_settings.get_setting("blur-background"))
         self.blur_coc_spin.set_value(self.window_settings.get_setting("blur-coc"))
         self.use_skybox_switch.set_active(self.window_settings.get_setting("use-skybox"))

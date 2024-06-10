@@ -449,14 +449,43 @@ suggested-action</property>
                                       </object>
                                     </child>
                                     <child>
-                                      <object class="AdwEntryRow" id="skybox_row">
+                                      <object class="AdwActionRow" id="skybox_row">
                                         <property name="hexpand">True</property>
                                         <property name="hexpand-set">True</property>
                                         <property name="title" translatable="yes">HDRI Image</property>
                                         <child>
-                                          <object class="GtkButton" id="open_skybox_button">
-                                            <property name="valign">center</property>
-                                            <property name="icon-name">document-open-symbolic</property>
+                                          <object class="GtkBox">
+                                            <property name="css-classes">linked</property>
+                                            <child>
+                                              <object class="GtkButton" id="skybox_button">
+                                                <property name="valign">center</property>
+                                                <child>
+                                                  <object class="GtkBox">
+                                                    <property name="spacing">6</property>
+                                                    <child>
+                                                      <object class="GtkLabel">
+                                                        <property name="max-width-chars">14</property>
+                                                        <property name="ellipsize">end</property>
+                                                        <property name="visible">false</property>
+                                                      </object>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkImage">
+                                                        <property name="icon-name">document-open-symbolic</property>
+                                                      </object>
+                                                    </child>
+                                                  </object>
+                                                </child>
+                                              </object>
+                                            </child>
+                                            <child>
+                                              <object class="GtkButton" id="delete_skybox_button">
+                                                <property name="valign">center</property>
+                                                <property name="visible">false</property>
+                                                <property name="css-classes">destructive</property>
+                                                <property name="icon-name">edit-delete-symbolic</property>
+                                              </object>
+                                            </child>
                                           </object>
                                         </child>
                                       </object>
