@@ -13,3 +13,7 @@
   filter: blur(6px);
 }
 
+/* .preview-headerbar { */
+/*   background: linear-gradient(alpha(@headerbar_bg_color, 1) 10%, alpha(@headerbar_bg_color, 0) 100%); */
+/* } */
+

@@ -98,7 +98,8 @@ class WindowSettings():
             "point-size": self.saved_settings.get_double("point-size"),
             "model-color": rgb_to_list(self.saved_settings.get_string("model-color")),
             "model-metallic": self.saved_settings.get_double("model-metallic"),
-            "model-roughness": self.saved_settings.get_double("model-roughness")
+            "model-roughness": self.saved_settings.get_double("model-roughness"),
+            "load-type": None # 0 for geometry and 1 for scene
         }
 
     def set_setting(self, key, val):
@@ -190,6 +191,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     points_expander = Gtk.Template.Child()
     points_radius_spin = Gtk.Template.Child()
 
+    model_load_combo = Gtk.Template.Child()
+
     model_roughness_spin = Gtk.Template.Child()
     model_metallic_spin = Gtk.Template.Child()
     model_color_button = Gtk.Template.Child()
@@ -257,6 +260,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.points_expander.connect("notify::enable-expansion", self.on_expander_toggled, "show-points")
         self.points_radius_spin.connect("notify::value", self.on_spin_changed, "point-size")
 
+        self.load_type_combo_action = self.model_load_combo.connect("notify::selected", self.set_load_type)
         self.model_roughness_spin.connect("notify::value", self.on_spin_changed, "model-roughness")
         self.model_metallic_spin.connect("notify::value", self.on_spin_changed, "model-metallic")
         self.model_color_button.connect("notify::rgba", self.on_color_changed, "model-color")
@@ -360,6 +364,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             y = -(self.drag_prev_offset[1] - y_offset)
             if (dist > self.get_gimble_limit() or (dist < self.get_gimble_limit()) and
                     (direction == 1 and y < 0) or (dist < self.get_gimble_limit() and direction == -1 and y > 0)):
+                self.camera.elevation(y)
+            elif not self.window_settings.get_setting("point-up"):
                 self.camera.elevation(y)
             self.camera.azimuth((self.drag_prev_offset[0] - x_offset) * (0.1 if (dist < self.distance / 3) else 1))
         elif gesture.get_current_button() == 2:
@@ -470,9 +476,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         if file:
             self.filepath = file.get_path()
+            self.window_settings.set_setting("load-type", None)
             self.load_file()
 
     def load_file(self, override=False):
+        self.model_load_combo.disconnect(self.load_type_combo_action)
         if self.window_settings.get_setting("auto-up-dir") and not override:
             up = get_up_from_path(self.filepath)
             self.window_settings.set_setting("up-direction", up)
@@ -486,6 +494,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.present()
 
     def on_file_opened(self):
+        print("on file opened")
         self.file_name = os.path.basename(self.filepath)
 
         self.set_title(f"View {self.file_name}")
@@ -497,7 +506,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.set_preference_values()
 
+        self.load_type_combo_action = self.model_load_combo.connect("notify::selected", self.set_load_type)
+
     def on_file_not_opened(self):
+        print("on file not opened")
         self.set_title(_("Exhibit"))
         self.title_widget.set_title(_("Exhibit"))
         self.stack.set_visible_child_name("startup_page")
@@ -506,20 +518,53 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         options = {"scene.up-direction": self.window_settings.get_setting("up-direction")}
         self.engine.options.update(options)
 
+        self.load_type_combo_action = self.model_load_combo.connect("notify::selected", self.set_load_type)
+
     def _load(self):
+        print("load")
         scene_loaded = False
         geometry_loaded = False
-        try:
-            self.engine.loader.load_scene(self.filepath)
-            scene_loaded = True
-        except:
+
+        if self.window_settings.get_setting("load-type") is None:
+            try:
+                self.engine.loader.load_scene(self.filepath)
+                scene_loaded = True
+                self.model_load_combo.set_sensitive(True)
+                print("scene loaded")
+            except:
+                print("can't load as scene")
+                try:
+                    self.engine.loader.load_geometry(self.filepath, True)
+                    geometry_loaded = True
+                    self.model_load_combo.set_sensitive(False)
+                    print("geometry loaded")
+                except:
+                    pass
+        elif self.window_settings.get_setting("load-type") == 0:
             try:
                 self.engine.loader.load_geometry(self.filepath, True)
                 geometry_loaded = True
+                print("geometry loaded")
             except:
-                pass
+                print("can't load geometry")
+        elif self.window_settings.get_setting("load-type") == 1:
+            try:
+                self.engine.loader.load_scene(self.filepath)
+                scene_loaded = True
+                print("scene loaded")
+            except:
+                print("can't load as scene")
 
-        if scene_loaded or geometry_loaded:
+        if scene_loaded:
+            self.window_settings.set_setting("load-type", 1)
+            self.model_load_combo.set_selected(1)
+            self.get_distance()
+            self.update_options()
+            GLib.idle_add(self.on_file_opened)
+            return
+        if geometry_loaded:
+            self.window_settings.set_setting("load-type", 0)
+            self.model_load_combo.set_selected(0)
             self.get_distance()
             self.update_options()
             GLib.idle_add(self.on_file_opened)
@@ -642,6 +687,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         extension = os.path.splitext(filepath)[1][1:]
         if "*." + extension in file_patterns:
             self.filepath = filepath
+            self.window_settings.set_setting("load-type", None)
             self.load_file()
         elif "*." + extension in image_patterns:
             self.load_hdri(filepath)
@@ -706,6 +752,12 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.engine.options.update(options)
         self.window_settings.set_setting("up-direction", direction)
         self.load_file(True)
+
+    def set_load_type(self, combo, *args):
+        load_type = combo.get_selected()
+        self.window_settings.set_setting("load-type", load_type)
+        self.model_load_combo.set_selected(load_type)
+        self.load_file()
 
     def update_background_color(self, *args):
         if self.window_settings.get_setting("use-color"):

@@ -238,12 +238,12 @@ suggested-action</property>
                                     <property name="hexpand-set">True</property>
                                     <property name="title" translatable="yes">Model</property>
                                     <child>
-                                      <object class="AdwComboRow" id="load_combo">
+                                      <object class="AdwComboRow" id="model_load_combo">
                                         <property name="hexpand">True</property>
                                         <property name="hexpand-set">True</property>
                                         <property name="title" translatable="yes">Load type</property>
                                         <property name="model">
-                                          <object class="GtkStringList">
+                                          <object class="GtkStringList" id="load_type_list">
                                             <items>
                                               <item translatable="yes">Geometry</item>
                                               <item translatable="yes">Scene</item>
@@ -324,7 +324,7 @@ suggested-action</property>
                                 <property name="hexpand">True</property>
                                 <property name="hexpand-set">True</property>
                                 <property name="title" translatable="yes">Material</property>
-                                <!-- <property name="sensitive" bind-source="edges_expander" bind-property="active" bind-flags="invert-boolean | sync-create">True</property> -->
+                                <!-- <property name="sensitive" bind-source="model_load_combo" bind-property="selected" bind-flags="sync-create">True</property> -->
                                 <child>
                                   <object class="AdwSpinRow" id="model_metallic_spin">
                                     <property name="hexpand">True</property>
@@ -651,6 +651,7 @@ suggested-action</property>
         <property name="extend-content-to-top-edge">true</property>
         <child type="top">
           <object class="AdwHeaderBar" id="header_bar">
+            <property name="css-classes">preview-headerbar</property>
             <property name="title-widget">
               <object class="AdwWindowTitle" id="title_widget">
                 <property name="title" translatable="yes">Exhibit</property>
