@@ -95,10 +95,10 @@ class WindowSettings():
             "up-direction": self.saved_settings.get_string("up-direction"),
             "auto-up-dir" : self.saved_settings.get_boolean("auto-up-dir"),
             "show-points": False,
-            "point-size": 1.0,
-            "model-color": [1.0, 1.0, 1.0],
-            "model-metallic": 0.0,
-            "model-roughness": 0.3
+            "point-size": self.saved_settings.get_double("point-size"),
+            "model-color": rgb_to_list(self.saved_settings.get_string("model-color")),
+            "model-metallic": self.saved_settings.get_double("model-metallic"),
+            "model-roughness": self.saved_settings.get_double("model-roughness")
         }
 
     def set_setting(self, key, val):
@@ -125,6 +125,9 @@ class WindowSettings():
         self.saved_settings.set_double("edges-width", self.settings["edges-width"])
         self.saved_settings.set_string("up-direction", self.settings["up-direction"])
         self.saved_settings.set_boolean("auto-up-dir", self.settings["auto-up-dir"])
+        self.saved_settings.set_string("model-color", list_to_rgb(self.settings["model-color"]))
+        self.saved_settings.set_double("model-metallic", self.settings["model-metallic"])
+        self.saved_settings.set_double("model-roughness", self.settings["model-roughness"])
 
     def reset_all(self):
         for key in self.settings:

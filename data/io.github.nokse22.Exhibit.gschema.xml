@@ -71,5 +71,17 @@
       </choices>
       <default>'follow'</default>
     </key>
+	  <key name="model-color" type="s">
+      <default>'rgb(255,255,255)'</default>
+    </key>
+	  <key name="model-metallic" type="d">
+      <default>0.0</default>
+    </key>
+	  <key name="model-roughness" type="d">
+      <default>0.3</default>
+    </key>
+	  <key name="point-size" type="d">
+      <default>1.0</default>
+    </key>
 	</schema>
 </schemalist>
