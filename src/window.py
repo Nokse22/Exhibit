@@ -419,7 +419,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.gl_area.queue_render()
 
-        return True
+        # return True
 
     @Gtk.Template.Callback("on_click_pressed")
     def on_click_pressed(self, widget, *args):
@@ -553,7 +553,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def open_save_file_chooser(self, *args):
         dialog = Gtk.FileDialog(
             title=_("Save File"),
-            initial_name=_("image") + ".png",
+            initial_name=self.file_name.split(".")[0] + ".png",
         )
         dialog.save(self, None, self.on_save_file_response)
 
@@ -566,6 +566,14 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if file:
             file_path = file.get_path()
             self.save_as_image(file_path)
+            toast = Adw.Toast(
+                title="Image Saved",
+                timeout=2,
+                button_label="Open",
+                action_name="app.show-image-externally",
+                action_target=GLib.Variant("s", file_path)
+            )
+            self.toast_overlay.add_toast(toast)
 
     def front_view(self, *args):
         up_v = up_dirs_vector[self.window_settings.get_setting("up-direction")]

@@ -45,6 +45,14 @@ class Viewer3dApplication(Adw.Application):
         self.create_action('top-view', self.top_view, ['7'])
         self.create_action('isometric-view', self.isometric_view, ['9'])
 
+        user_home_dir = os.environ.get("XDG_CONFIG_HOME", os.environ["HOME"])
+        show_image_external_action = Gio.SimpleAction.new_stateful(
+                'show-image-externally',
+                GLib.VariantType.new("s"),
+                GLib.Variant("s", user_home_dir))
+        show_image_external_action.connect('activate', self.show_image_external)
+        self.add_action(show_image_external_action)
+
         theme_action = Gio.SimpleAction.new_stateful(
             "theme",
             GLib.VariantType.new("s"),
@@ -70,6 +78,25 @@ class Viewer3dApplication(Adw.Application):
             file_path = file.get_path()
             win = Viewer3dWindow(application=self, filepath=file_path)
             win.present()
+
+    def show_image_external(self, _action, image_path: GLib.Variant, *args):
+        try:
+            image_file = Gio.File.new_for_path(image_path.get_string())
+        except GLib.GError as e:
+            logging.traceback_error("Failed to construct a new Gio.File object from path.",
+                                    exc=e, show_exception=True)
+        else:
+            launcher = Gtk.FileLauncher.new(image_file)
+
+            def open_image_finish(_, result, *args):
+                try:
+                    launcher.launch_finish(result)
+                except GLib.GError as e:
+                    if e.code != 2: # 'The portal dialog was dismissed by the user' error
+                        logging.traceback_error("Failed to finish Gtk.FileLauncher procedure.",
+                                                exc=e, show_exception=True)
+
+            launcher.launch(self.props.active_window, None, open_image_finish)
 
     def on_about_action(self, *args):
         about = Adw.AboutDialog(
