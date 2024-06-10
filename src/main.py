@@ -62,14 +62,7 @@ class Viewer3dApplication(Adw.Application):
 
         self.saved_settings = Gio.Settings.new('io.github.nokse22.Exhibit')
 
-        manager  = Adw.StyleManager().get_default()
-        match self.saved_settings.get_string("theme"):
-            case "follow":
-                manager.set_color_scheme(Adw.ColorScheme.DEFAULT)
-            case "light":
-                manager.set_color_scheme(Adw.ColorScheme.FORCE_LIGHT)
-            case "dark":
-                manager.set_color_scheme(Adw.ColorScheme.FORCE_DARK)
+        self.update_theme()
 
         self.add_action(theme_action)
 

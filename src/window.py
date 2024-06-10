@@ -226,7 +226,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         "model-opacity": "model.color.opacity"
     }
 
-    preference_window = None
     width = 600
     height = 600
     distance = 0
@@ -733,11 +732,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     def get_distance(self):
         self.distance = p_dist(self.camera.position, (0,0,0))
-
-    def on_preferences_action(self, *args):
-        if self.preference_window:
-            self.preference_window.present()
-            return
 
     def on_color_changed(self, btn, color, setting):
         color_list = rgb_to_list(btn.get_rgba().to_string())
