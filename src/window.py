@@ -309,10 +309,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         initial_options = {
             "scene.up-direction": self.window_settings.get_setting("up-direction"),
-            "model.scivis.colormap": [0.1, 0.3, 0.4, 0.5, 0.1, 0.3, 0.4, 0.5],
-            "model.scivis.cells": True,
-            "model.scivis.array-name": "",
-            "model.scivis.range": [0.0, 0.1, 0.6]
         }
 
         self.engine.options.update(initial_options)
