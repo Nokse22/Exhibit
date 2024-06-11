@@ -134,11 +134,11 @@ suggested-action</property>
           <object class="GtkStackPage">
             <property name="child">
       <object class="AdwOverlaySplitView" id="split_view">
-        <property name="sidebar-width-fraction">0.40</property>
+        <property name="sidebar-width-fraction">0.35</property>
         <property name="sidebar-width-unit">px</property>
         <property name="max-sidebar-width">400</property>
         <property name="min-sidebar-width">300</property>
-        <property name="show-sidebar" bind-source="reveal_sidebar" bind-property="active" bind-flags="sync-create | bidirectional">False</property>
+        <property name="show-sidebar" bind-source="reveal_sidebar" bind-property="active" bind-flags="sync-create | bidirectional">True</property>
         <property name="sidebar">
           <object class="AdwToolbarView">
             <property name="top-bar-style">flat</property>
@@ -686,6 +686,7 @@ suggested-action</property>
             <child type="start">
               <object class="GtkToggleButton" id="reveal_sidebar">
                 <property name="css-classes">flat</property>
+                <property name="active">True</property>
                 <property name="icon-name">sidebar-show-symbolic</property>
                 <property name="tooltip-text" translatable="yes">Reveal Sidebar</property>
               </object>
