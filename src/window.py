@@ -549,9 +549,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 print("geometry loaded")
 
             if self.engine.loader.hasGeometryReader(self.filepath) and self.engine.loader.hasSceneReader(self.filepath):
-                self.model_load_combo.set_sensitive(True)
+                GLib.idle_add(self.model_load_combo.set_sensitive, True)
             else:
-                self.model_load_combo.set_sensitive(False)
+                GLib.idle_add(self.model_load_combo.set_sensitive, False)
 
         elif self.window_settings.get_setting("load-type") == 0:
             if self.engine.loader.hasGeometryReader(self.filepath):
@@ -564,20 +564,18 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 scene_loaded = True
                 print("scene loaded")
 
-        if scene_loaded:
-            self.window_settings.set_setting("load-type", 1)
-            self.update_options()
-            GLib.idle_add(self.on_file_opened)
-            return
-        if geometry_loaded:
-            self.window_settings.set_setting("load-type", 0)
-            self.get_distance()
-            self.update_options()
-            GLib.idle_add(self.on_file_opened)
-            return
-
         if not scene_loaded and not geometry_loaded:
             GLib.idle_add(self.on_file_not_opened)
+            return
+
+        if scene_loaded:
+            self.window_settings.set_setting("load-type", 1)
+        elif geometry_loaded:
+            self.window_settings.set_setting("load-type", 0)
+
+        self.get_distance()
+        self.update_options()
+        GLib.idle_add(self.on_file_opened)
 
     def send_toast(self, message):
         toast = Adw.Toast(title=message, timeout=2)
