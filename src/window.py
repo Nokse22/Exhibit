@@ -148,7 +148,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     gl_area = Gtk.Template.Child()
 
     title_widget = Gtk.Template.Child()
-    open_button = Gtk.Template.Child()
     stack = Gtk.Template.Child()
     toolbar_view = Gtk.Template.Child()
 
@@ -202,6 +201,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     model_metallic_spin = Gtk.Template.Child()
     model_color_button = Gtk.Template.Child()
     model_opacity_spin = Gtk.Template.Child()
+
+    startup_stack = Gtk.Template.Child()
 
     keys = {
         "grid": "render.grid.enable",
@@ -520,9 +521,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         print("on file not opened")
         self.set_title(_("Exhibit"))
         self.title_widget.set_title(_("Exhibit"))
-        self.stack.set_visible_child_name("startup_page")
-
-        self.send_toast(_("Can't open") + " " + os.path.basename(self.filepath))
+        if self.file_name == "":
+            self.stack.set_visible_child_name("startup_page")
+            self.startup_stack.set_visible_child_name("error_page")
+        else:
+            self.send_toast(_("Can't open") + " " + os.path.basename(self.filepath))
         options = {"scene.up-direction": self.window_settings.get_setting("up-direction")}
         self.engine.options.update(options)
 

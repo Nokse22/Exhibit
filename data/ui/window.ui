@@ -53,23 +53,56 @@
                     <child>
                       <object class="GtkOverlay">
                         <property name="child">
-                          <object class="AdwStatusPage">
-                            <property name="css-classes" bind-source="toast_overlay" bind-property="css-classes" bind-flags="sync-create | bidirectional"></property>
-                            <property name="child">
-                              <object class="GtkButton" id="open_button">
-                                <property name="css-classes">pill
+                          <object class="GtkStack" id="startup_stack">
+                            <child>
+                              <object class="GtkStackPage">
+                                <property name="child">
+                                  <object class="AdwStatusPage">
+                                    <property name="css-classes" bind-source="toast_overlay" bind-property="css-classes" bind-flags="sync-create | bidirectional"></property>
+                                    <property name="child">
+                                      <object class="GtkButton">
+                                        <property name="css-classes">pill
 suggested-action</property>
-                                <property name="halign">center</property>
-                                <property name="label" translatable="yes">Load</property>
-                                <signal name="clicked" handler="on_open_button_clicked"/>
+                                        <property name="halign">center</property>
+                                        <property name="label" translatable="yes">Load</property>
+                                        <signal name="clicked" handler="on_open_button_clicked"/>
+                                      </object>
+                                    </property>
+                                    <property name="description" translatable="yes">Preview your 3D models</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="hexpand-set">True</property>
+                                    <property name="icon-name">io.github.nokse22.Exhibit</property>
+                                    <property name="title" translatable="yes">Exhibit</property>
+                                    <property name="vexpand">True</property>
+                                  </object>
+                                </property>
                               </object>
-                            </property>
-                            <property name="description" translatable="yes">Preview your 3D models</property>
-                            <property name="hexpand">True</property>
-                            <property name="hexpand-set">True</property>
-                            <property name="icon-name">io.github.nokse22.Exhibit</property>
-                            <property name="title" translatable="yes">Exhibit</property>
-                            <property name="vexpand">True</property>
+                            </child>
+                            <child>
+                              <object class="GtkStackPage">
+                                <property name="child">
+                                  <object class="AdwStatusPage">
+                                    <property name="css-classes" bind-source="toast_overlay" bind-property="css-classes" bind-flags="sync-create | bidirectional"></property>
+                                    <property name="child">
+                                      <object class="GtkButton">
+                                        <property name="css-classes">pill
+suggested-action</property>
+                                        <property name="halign">center</property>
+                                        <property name="label" translatable="yes">Try Another</property>
+                                        <signal name="clicked" handler="on_open_button_clicked"/>
+                                      </object>
+                                    </property>
+                                    <property name="description" translatable="yes">Couldn't load the file</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="hexpand-set">True</property>
+                                    <property name="icon-name">dialog-warning-symbolic</property>
+                                    <property name="title" translatable="yes">Error Loading File</property>
+                                    <property name="vexpand">True</property>
+                                  </object>
+                                </property>
+                                <property name="name">error_page</property>
+                              </object>
+                            </child>
                           </object>
                         </property>
                         <child type="overlay">
@@ -787,10 +820,6 @@ suggested-action</property>
       </item>
     </section>
     <section>
-      <!-- <item> -->
-      <!--   <attribute name="label" translatable="yes">_Preferences</attribute> -->
-      <!--   <attribute name="action">win.preferences</attribute> -->
-      <!-- </item> -->
       <item>
         <attribute name="label" translatable="yes">_Keyboard Shortcuts</attribute>
         <attribute name="action">win.show-help-overlay</attribute>
