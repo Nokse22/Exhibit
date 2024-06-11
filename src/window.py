@@ -574,8 +574,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.window_settings.set_setting("load-type", 0)
 
         self.get_distance()
-        self.update_options()
         GLib.idle_add(self.on_file_opened)
+        self.update_options()
 
     def send_toast(self, message):
         toast = Adw.Toast(title=message, timeout=2)
