@@ -498,6 +498,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     def on_file_opened(self):
         print("on file opened")
+        self.update_options()
+
         self.file_name = os.path.basename(self.filepath)
 
         self.set_title(f"View {self.file_name}")
@@ -532,7 +534,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.load_type_combo_action = self.model_load_combo.connect("notify::selected", self.set_load_type)
 
     def _load(self):
-        print("load")
         scene_loaded = False
         geometry_loaded = False
 
@@ -541,12 +542,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 self.engine.loader.load_scene(self.filepath)
                 scene_loaded = True
                 self.model_load_combo.set_sensitive(True)
-                print("scene loaded")
             elif self.engine.loader.hasGeometryReader(self.filepath):
                 self.engine.loader.load_geometry(self.filepath, True)
                 geometry_loaded = True
                 self.model_load_combo.set_sensitive(False)
-                print("geometry loaded")
 
             if self.engine.loader.hasGeometryReader(self.filepath) and self.engine.loader.hasSceneReader(self.filepath):
                 GLib.idle_add(self.model_load_combo.set_sensitive, True)
@@ -557,12 +556,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             if self.engine.loader.hasGeometryReader(self.filepath):
                 self.engine.loader.load_geometry(self.filepath, True)
                 geometry_loaded = True
-                print("geometry loaded")
         elif self.window_settings.get_setting("load-type") == 1:
             if self.engine.loader.hasSceneReader(self.filepath):
                 self.engine.loader.load_scene(self.filepath)
                 scene_loaded = True
-                print("scene loaded")
 
         if not scene_loaded and not geometry_loaded:
             GLib.idle_add(self.on_file_not_opened)
@@ -575,7 +572,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.get_distance()
         GLib.idle_add(self.on_file_opened)
-        self.update_options()
 
     def send_toast(self, message):
         toast = Adw.Toast(title=message, timeout=2)
