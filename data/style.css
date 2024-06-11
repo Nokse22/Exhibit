@@ -12,3 +12,8 @@
   filter: blur(6px);
 }
 
+.view-borders {
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
