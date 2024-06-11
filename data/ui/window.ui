@@ -2,6 +2,7 @@
 <interface>
   <requires lib="gtk" version="4.0"/>
   <requires lib="Adw" version="1.0"/>
+  <requires lib="Gdk" version="1.0"/>
   <template class="Viewer3dWindow" parent="AdwApplicationWindow">
     <property name="default-width">840</property>
     <property name="default-height">600</property>
@@ -42,7 +43,7 @@
                 <property name="content">
                   <object class="AdwBin">
                     <child>
-                      <object class="GtkDropTarget">
+                      <object class="GtkDropTarget" id="loading_drop_target">
                         <property name="actions">copy</property>
                         <signal name="drop" handler="on_drop_received"/>
                         <signal name="enter" handler="on_drop_enter"/>
@@ -448,7 +449,7 @@ suggested-action</property>
                                       </object>
                                     </child>
                                     <child>
-                                      <object class="FileRow" id="skybox_row">
+                                      <object class="FileRow" id="hdri_file_row">
                                         <property name="hexpand">True</property>
                                         <property name="hexpand-set">True</property>
                                         <property name="title" translatable="yes">HDRI Image</property>
@@ -678,7 +679,7 @@ suggested-action</property>
           <object class="AdwBin">
             <property name="overflow">hidden</property>
             <child>
-              <object class="GtkDropTarget" id="drop_target">
+              <object class="GtkDropTarget" id="view_drop_target">
                 <property name="actions">copy</property>
                 <signal name="drop" handler="on_drop_received"/>
                 <signal name="enter" handler="on_drop_enter"/>
@@ -710,12 +711,6 @@ suggested-action</property>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkGestureClick">
-                            <signal name="pressed" handler="on_click_pressed"/>
-                            <property name="button">0</property>
-                          </object>
-                        </child>
-                        <child>
                           <object class="GtkEventControllerScroll">
                             <signal name="scroll" handler="on_scroll"/>
                             <property name="flags">both-axes | horizontal | vertical | kinetic</property>
@@ -730,6 +725,7 @@ suggested-action</property>
                     <property name="can-target">False</property>
                     <property name="transition-duration">200</property>
                     <property name="transition-type">crossfade</property>
+                    <property name="css-classes">view-borders</property>
                     <property name="child">
                       <object class="AdwStatusPage">
                         <property name="hexpand">True</property>

@@ -83,5 +83,8 @@
 	  <key name="point-size" type="d">
       <default>1.0</default>
     </key>
+	  <key name="show-points" type="b">
+      <default>false</default>
+    </key>
 	</schema>
 </schemalist>

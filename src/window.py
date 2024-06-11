@@ -96,7 +96,7 @@ class WindowSettings():
             "edges-width": self.saved_settings.get_double("edges-width"),
             "up-direction": self.saved_settings.get_string("up-direction"),
             "auto-up-dir" : self.saved_settings.get_boolean("auto-up-dir"),
-            "show-points": False,
+            "show-points": self.saved_settings.get_boolean("show-points"),
             "point-size": self.saved_settings.get_double("point-size"),
             "model-color": rgb_to_list(self.saved_settings.get_string("model-color")),
             "model-metallic": self.saved_settings.get_double("model-metallic"),
@@ -131,6 +131,7 @@ class WindowSettings():
         self.saved_settings.set_string("model-color", list_to_rgb(self.settings["model-color"]))
         self.saved_settings.set_double("model-metallic", self.settings["model-metallic"])
         self.saved_settings.set_double("model-roughness", self.settings["model-roughness"])
+        self.saved_settings.set_boolean("show-points", self.settings["show-points"])
 
     def reset_all(self):
         for key in self.settings:
@@ -154,7 +155,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     view_button_headerbar = Gtk.Template.Child()
 
     drop_revealer = Gtk.Template.Child()
-    drop_target = Gtk.Template.Child()
+    view_drop_target = Gtk.Template.Child()
+    loading_drop_target = Gtk.Template.Child()
 
     toast_overlay = Gtk.Template.Child()
 
@@ -173,7 +175,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     use_skybox_switch = Gtk.Template.Child()
 
-    skybox_row = Gtk.Template.Child()
+    hdri_file_row = Gtk.Template.Child()
     blur_switch = Gtk.Template.Child()
     blur_coc_spin = Gtk.Template.Child()
 
@@ -241,7 +243,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.open_new_action = self.create_action('open-new', self.open_file_chooser)
 
-        self.drop_target.set_gtypes([Gdk.FileList])
+        self.view_drop_target.set_gtypes([Gdk.FileList])
+        self.loading_drop_target.set_gtypes([Gdk.FileList])
 
         self.window_settings = WindowSettings()
 
@@ -271,8 +274,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.light_intensity_spin.connect("notify::value", self.on_spin_changed, "light-intensity")
 
         self.use_skybox_switch.connect("notify::active", self.on_switch_toggled, "use-skybox")
-        self.skybox_row.connect("open-file", self.on_open_skybox)
-        self.skybox_row.connect("delete-file", self.on_delete_skybox)
+        self.hdri_file_row.connect("open-file", self.on_open_skybox)
+        self.hdri_file_row.connect("delete-file", self.on_delete_skybox)
+        self.hdri_file_row.connect("file-added", lambda row, filepath: self.load_hdri(filepath))
         self.blur_switch.connect("notify::active", self.on_switch_toggled, "blur-background")
         self.blur_coc_spin.connect("notify::value", self.on_spin_changed, "blur-coc")
 
@@ -429,11 +433,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.gl_area.queue_render()
 
         # return True
-
-    @Gtk.Template.Callback("on_click_pressed")
-    def on_click_pressed(self, widget, *args):
-        print("pressed")
-        widget.get_widget().grab_focus()
 
     def get_gimble_limit(self):
         return self.distance / 6
@@ -810,7 +809,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.window_settings.set_setting("skybox-path", filepath)
         self.window_settings.set_setting("use-skybox", True)
         self.use_skybox_switch.set_active(True)
-        self.skybox_row.set_filename(filepath)
+        self.hdri_file_row.set_filename(filepath)
         options = {"render.hdri.file": filepath,
                          "render.background.skybox": True}
         self.engine.options.update(options)
@@ -826,7 +825,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.anti_aliasing_switch.set_active(self.window_settings.get_setting("anti-aliasing"))
         self.hdri_ambient_switch.set_active(self.window_settings.get_setting("hdri-ambient"))
         self.light_intensity_spin.set_value(self.window_settings.get_setting("light-intensity"))
-        self.skybox_row.set_filename(self.window_settings.get_setting("skybox-path"))
+        self.hdri_file_row.set_filename(self.window_settings.get_setting("skybox-path"))
         self.blur_switch.set_active(self.window_settings.get_setting("blur-background"))
         self.blur_coc_spin.set_value(self.window_settings.get_setting("blur-coc"))
         self.use_skybox_switch.set_active(self.window_settings.get_setting("use-skybox"))
@@ -912,7 +911,8 @@ def get_up_from_path(path):
     extension = os.path.splitext(path)[1][1:]
     up_ext = {
         "stl" : "+Z",
-        "3ds" : "+Z"
+        "3ds" : "+Z",
+        "obj" : "+Z"
     }
     if extension in up_ext:
         return up_ext[extension]
