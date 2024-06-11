@@ -266,7 +266,7 @@ suggested-action</property>
                                         <property name="hexpand">True</property>
                                         <property name="hexpand-set">True</property>
                                         <property name="title" translatable="yes">Show Points</property>
-                                        <property name="sensitive" bind-source="edges_expander" bind-property="enable-expansion" bind-flags="invert-boolean | sync-create">False</property>
+                                        <property name="sensitive" bind-source="edges_expander" bind-property="enable-expansion" bind-flags="invert-boolean">True</property>
                                         <child>
                                           <object class="AdwSpinRow" id="points_radius_spin">
                                             <property name="hexpand">True</property>
@@ -296,7 +296,7 @@ suggested-action</property>
                                         <property name="hexpand">True</property>
                                         <property name="hexpand-set">True</property>
                                         <property name="title" translatable="yes">Show Edges</property>
-                                        <property name="sensitive" bind-source="points_expander" bind-property="enable-expansion" bind-flags="invert-boolean | sync-create">True</property>
+                                        <property name="sensitive" bind-source="points_expander" bind-property="enable-expansion" bind-flags="invert-boolean">True</property>
                                          <child>
                                           <object class="AdwSpinRow" id="edges_width_spin">
                                             <property name="hexpand">True</property>
@@ -319,11 +319,10 @@ suggested-action</property>
                                   </object>
                                 </child>
                                 <child>
-                              <object class="AdwPreferencesGroup">
+                              <object class="AdwPreferencesGroup" id="material_group">
                                 <property name="hexpand">True</property>
                                 <property name="hexpand-set">True</property>
                                 <property name="title" translatable="yes">Material</property>
-                                <!-- <property name="sensitive" bind-source="model_load_combo" bind-property="selected" bind-flags="sync-create">True</property> -->
                                 <child>
                                   <object class="AdwSpinRow" id="model_metallic_spin">
                                     <property name="hexpand">True</property>

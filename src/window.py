@@ -194,6 +194,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     model_load_combo = Gtk.Template.Child()
 
+    material_group = Gtk.Template.Child()
+
     model_roughness_spin = Gtk.Template.Child()
     model_metallic_spin = Gtk.Template.Child()
     model_color_button = Gtk.Template.Child()
@@ -507,6 +509,12 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.set_preference_values()
 
+        if self.window_settings.get_setting("load-type") == 0:
+            self.material_group.set_sensitive(True)
+        elif self.window_settings.get_setting("load-type") == 1:
+            self.material_group.set_sensitive(False)
+
+        self.model_load_combo.set_selected(self.window_settings.get_setting("load-type"))
         self.load_type_combo_action = self.model_load_combo.connect("notify::selected", self.set_load_type)
 
     def on_file_not_opened(self):
@@ -527,45 +535,40 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         geometry_loaded = False
 
         if self.window_settings.get_setting("load-type") is None:
-            try:
+            if self.engine.loader.hasSceneReader(self.filepath):
                 self.engine.loader.load_scene(self.filepath)
                 scene_loaded = True
                 self.model_load_combo.set_sensitive(True)
                 print("scene loaded")
-            except:
-                print("can't load as scene")
-                try:
-                    self.engine.loader.load_geometry(self.filepath, True)
-                    geometry_loaded = True
-                    self.model_load_combo.set_sensitive(False)
-                    print("geometry loaded")
-                except:
-                    pass
+            elif self.engine.loader.hasGeometryReader(self.filepath):
+                self.engine.loader.load_geometry(self.filepath, True)
+                geometry_loaded = True
+                self.model_load_combo.set_sensitive(False)
+                print("geometry loaded")
+
+            if self.engine.loader.hasGeometryReader(self.filepath) and self.engine.loader.hasSceneReader(self.filepath):
+                self.model_load_combo.set_sensitive(True)
+            else:
+                self.model_load_combo.set_sensitive(False)
+
         elif self.window_settings.get_setting("load-type") == 0:
-            try:
+            if self.engine.loader.hasGeometryReader(self.filepath):
                 self.engine.loader.load_geometry(self.filepath, True)
                 geometry_loaded = True
                 print("geometry loaded")
-            except:
-                print("can't load geometry")
         elif self.window_settings.get_setting("load-type") == 1:
-            try:
+            if self.engine.loader.hasSceneReader(self.filepath):
                 self.engine.loader.load_scene(self.filepath)
                 scene_loaded = True
                 print("scene loaded")
-            except:
-                print("can't load as scene")
 
         if scene_loaded:
             self.window_settings.set_setting("load-type", 1)
-            self.model_load_combo.set_selected(1)
-            self.get_distance()
             self.update_options()
             GLib.idle_add(self.on_file_opened)
             return
         if geometry_loaded:
             self.window_settings.set_setting("load-type", 0)
-            self.model_load_combo.set_selected(0)
             self.get_distance()
             self.update_options()
             GLib.idle_add(self.on_file_opened)
