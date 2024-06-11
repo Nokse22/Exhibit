@@ -246,7 +246,7 @@ msgid "Navigation"
 msgstr ""
 
 #: data/preferences.ui:230
-msgid "Alwayas Point Up"
+msgid "Always Point Up"
 msgstr ""
 
 #: data/preferences.ui:237
