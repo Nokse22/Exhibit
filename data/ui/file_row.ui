@@ -6,11 +6,17 @@
   <requires lib="libadwaita" version="1.0"/>
   <template class="FileRow" parent="AdwActionRow">
     <child>
+      <object class="GtkDropTarget" id="drop_target">
+        <property name="actions">copy</property>
+      </object>
+    </child>
+    <child>
       <object class="GtkBox">
         <property name="css-classes">linked</property>
         <property name="valign">center</property>
         <child>
           <object class="GtkButton" id="file_button">
+
             <child>
               <object class="GtkBox">
                 <child>
