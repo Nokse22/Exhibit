@@ -101,6 +101,7 @@ class WindowSettings():
             "model-color": rgb_to_list(self.saved_settings.get_string("model-color")),
             "model-metallic": self.saved_settings.get_double("model-metallic"),
             "model-roughness": self.saved_settings.get_double("model-roughness"),
+            "model-opacity": self.saved_settings.get_double("model-opacity"),
             "load-type": None # 0 for geometry and 1 for scene
         }
 
@@ -132,6 +133,7 @@ class WindowSettings():
         self.saved_settings.set_double("model-metallic", self.settings["model-metallic"])
         self.saved_settings.set_double("model-roughness", self.settings["model-roughness"])
         self.saved_settings.set_boolean("show-points", self.settings["show-points"])
+        self.saved_settings.set_double("model-opacity", self.settings["model-opacity"])
 
     def reset_all(self):
         for key in self.settings:
@@ -250,7 +252,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.window_settings = WindowSettings()
 
-        self.set_preference_values()
+        self.set_preference_values(False)
 
         self.grid_switch.connect("notify::active", self.on_switch_toggled, "grid")
         self.absolute_grid_switch.connect("notify::active", self.on_switch_toggled, "absolute-grid")
@@ -267,7 +269,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.points_expander.connect("notify::enable-expansion", self.on_expander_toggled, "show-points")
         self.points_radius_spin.connect("notify::value", self.on_spin_changed, "point-size")
 
-        self.load_type_combo_action = self.model_load_combo.connect("notify::selected", self.set_load_type)
+        self.load_type_combo_handler_id = self.model_load_combo.connect("notify::selected", self.set_load_type)
         self.model_roughness_spin.connect("notify::value", self.on_spin_changed, "model-roughness")
         self.model_metallic_spin.connect("notify::value", self.on_spin_changed, "model-metallic")
         self.model_color_button.connect("notify::rgba", self.on_color_changed, "model-color")
@@ -293,7 +295,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         )
 
         self.point_up_switch.connect("notify::active", self.set_point_up, "point-up")
-        self.up_direction_combo.connect("notify::selected", self.set_up_direction)
+        self.up_direction_combo_handler_id = self.up_direction_combo.connect("notify::selected", self.set_up_direction)
 
         self.reset_button.connect("clicked", self.on_reset_settings_clicked)
         self.restore_button.connect("clicked", self.on_restore_settings_clicked)
@@ -339,6 +341,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         if filepath:
             self.filepath = filepath
+            print("start file")
             self.load_file()
 
     def on_resize(self, gl_area, width, heigh):
@@ -371,12 +374,14 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if gesture.get_current_button() == 1:
             dist, direction = self.get_camera_to_focal_distance()
             y = -(self.drag_prev_offset[1] - y_offset)
-            if (dist > self.get_gimble_limit() or (dist < self.get_gimble_limit()) and
-                    (direction == 1 and y < 0) or (dist < self.get_gimble_limit() and direction == -1 and y > 0)):
+            if not self.window_settings.get_setting("point-up"):
                 self.camera.elevation(y)
-            elif not self.window_settings.get_setting("point-up"):
-                self.camera.elevation(y)
-            self.camera.azimuth((self.drag_prev_offset[0] - x_offset) * (0.1 if (dist < self.distance / 3) else 1))
+                self.camera.azimuth(self.drag_prev_offset[0] - x_offset)
+            else:
+                if (dist > self.get_gimble_limit() or (dist < self.get_gimble_limit()) and
+                        (direction == 1 and y < 0) or (dist < self.get_gimble_limit() and direction == -1 and y > 0)):
+                    self.camera.elevation(y)
+                self.camera.azimuth((self.drag_prev_offset[0] - x_offset) * (0.1 if (dist < self.distance / 3) else 1))
         elif gesture.get_current_button() == 2:
             self.camera.pan(
                 (self.drag_prev_offset[0] - x_offset) * (0.0000001*self.width + 0.001*self.distance),
@@ -434,8 +439,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.gl_area.queue_render()
 
-        # return True
-
     def get_gimble_limit(self):
         return self.distance / 6
 
@@ -481,19 +484,16 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if file:
             self.filepath = file.get_path()
             self.window_settings.set_setting("load-type", None)
+            print("open file")
             self.load_file()
 
     def load_file(self, override=False):
-        self.model_load_combo.disconnect(self.load_type_combo_action)
-
         if self.window_settings.get_setting("auto-up-dir") and not override:
             up = get_up_from_path(self.filepath)
             self.window_settings.set_setting("up-direction", up)
 
         options = {"scene.up-direction": self.window_settings.get_setting("up-direction")}
         self.engine.options.update(options)
-
-        # self.stack.set_visible_child_name("3d_page")
 
         def _load():
             scene_loaded = False
@@ -503,11 +503,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 if self.engine.loader.hasSceneReader(self.filepath):
                     self.engine.loader.load_scene(self.filepath)
                     scene_loaded = True
-                    self.model_load_combo.set_sensitive(True)
+                    GLib.idle_add(self.model_load_combo.set_sensitive, True)
                 elif self.engine.loader.hasGeometryReader(self.filepath):
                     self.engine.loader.load_geometry(self.filepath, True)
                     geometry_loaded = True
-                    self.model_load_combo.set_sensitive(False)
+                    GLib.idle_add(self.model_load_combo.set_sensitive, False)
 
                 if self.engine.loader.hasGeometryReader(self.filepath) and self.engine.loader.hasSceneReader(self.filepath):
                     GLib.idle_add(self.model_load_combo.set_sensitive, True)
@@ -553,17 +553,15 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.drop_revealer.set_reveal_child(False)
         self.toast_overlay.remove_css_class("blurred")
 
-        self.set_preference_values()
-
         if self.window_settings.get_setting("load-type") == 0:
             self.material_group.set_sensitive(True)
             self.points_group.set_sensitive(True)
         elif self.window_settings.get_setting("load-type") == 1:
             self.material_group.set_sensitive(False)
             self.points_group.set_sensitive(False)
+            self.window_settings.set_setting("show-points", False)
 
-        self.model_load_combo.set_selected(self.window_settings.get_setting("load-type"))
-        self.load_type_combo_action = self.model_load_combo.connect("notify::selected", self.set_load_type)
+        self.set_preference_values()
 
     def on_file_not_opened(self):
         print("on file not opened")
@@ -576,8 +574,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.send_toast(_("Can't open") + " " + os.path.basename(self.filepath))
         options = {"scene.up-direction": self.window_settings.get_setting("up-direction")}
         self.engine.options.update(options)
-
-        self.load_type_combo_action = self.model_load_combo.connect("notify::selected", self.set_load_type)
 
     def send_toast(self, message):
         toast = Adw.Toast(title=message, timeout=2)
@@ -593,7 +589,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         def _update_options():
             self.engine.options.update(options)
             self.update_background_color()
-            self.gl_area.queue_render()
 
         GLib.timeout_add(100, _update_options)
         # threading.Thread(target=_update_options, daemon=True).start()
@@ -758,12 +753,13 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         options = {"scene.up-direction": direction}
         self.engine.options.update(options)
         self.window_settings.set_setting("up-direction", direction)
+        print("set up")
         self.load_file(True)
 
     def set_load_type(self, combo, *args):
+        print("set load type")
         load_type = combo.get_selected()
         self.window_settings.set_setting("load-type", load_type)
-        self.model_load_combo.set_selected(load_type)
         self.load_file()
 
     def update_background_color(self, *args):
@@ -772,14 +768,14 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 "render.background.color": self.window_settings.get_setting("background-color"),
             }
             self.engine.options.update(options)
-            self.gl_area.queue_render()
+            GLib.idle_add(self.gl_area.queue_render)
             return
         if self.style_manager.get_dark():
             options = {"render.background.color": [0.2, 0.2, 0.2]}
         else:
             options = {"render.background.color": [1.0, 1.0, 1.0]}
         self.engine.options.update(options)
-        self.gl_area.queue_render()
+        GLib.idle_add(self.gl_area.queue_render)
 
     def on_delete_skybox(self, *args):
         self.window_settings.set_setting("skybox-path", "")
@@ -824,7 +820,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.engine.options.update(options)
         self.gl_area.queue_render()
 
-    def set_preference_values(self):
+    def set_preference_values(self, block=True):
+        if block:
+            self.up_direction_combo.handler_block(self.up_direction_combo_handler_id)
+            self.model_load_combo.handler_block(self.load_type_combo_handler_id)
+
         self.grid_switch.set_active(self.window_settings.get_setting("grid"))
         self.absolute_grid_switch.set_active(self.window_settings.get_setting("absolute-grid"))
 
@@ -842,23 +842,39 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.edges_expander.set_enable_expansion(self.window_settings.get_setting("show-edges"))
         self.edges_width_spin.set_value(self.window_settings.get_setting("edges-width"))
 
+        self.points_expander.set_enable_expansion(self.window_settings.get_setting("show-points"))
+        self.points_radius_spin.set_value(self.window_settings.get_setting("point-size"))
+
         self.point_up_switch.set_active(self.window_settings.get_setting("point-up"))
         self.up_direction_combo.set_selected(up_dir_string_to_n[self.window_settings.get_setting("up-direction")])
         self.automatic_up_direction_switch.set_active(self.window_settings.get_setting("auto-up-dir"))
+
+        load_type = self.window_settings.get_setting("load-type")
+        self.model_load_combo.set_selected(load_type if load_type else 0)
+
+        self.model_roughness_spin.set_value(self.window_settings.get_setting("model-roughness"))
+        self.model_metallic_spin.set_value(self.window_settings.get_setting("model-metallic"))
+        rgba = Gdk.RGBA()
+        rgba.parse(list_to_rgb(self.window_settings.get_setting("model-color")))
+        self.model_color_button.set_rgba(rgba)
+        self.model_opacity_spin.set_value(self.window_settings.get_setting("model-opacity"))
 
         self.use_color_switch.set_active(self.window_settings.get_setting("use-color"))
         rgba = Gdk.RGBA()
         rgba.parse(list_to_rgb(self.window_settings.get_setting("background-color")))
         self.background_color_button.set_rgba(rgba)
 
+        if block:
+            self.up_direction_combo.handler_unblock(self.up_direction_combo_handler_id)
+            self.model_load_combo.handler_unblock(self.load_type_combo_handler_id)
+
     def on_restore_settings_clicked(self, btn):
          self.window_settings.load_settings()
-         self.set_preference_values()
+         self.set_preference_values(False)
 
     def on_reset_settings_clicked(self, btn):
         self.window_settings.reset_all()
-        self.update_options()
-        self.set_preference_values()
+        self.set_preference_values(False)
         self.gl_area.queue_render()
 
     def on_save_settings_clicked(self, btn):
