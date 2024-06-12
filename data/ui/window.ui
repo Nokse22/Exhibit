@@ -166,7 +166,7 @@ suggested-action</property>
                     <signal name="clicked" handler="on_close_sidebar_clicked"/>
                   </object>
                 </child>
-                <child type="end">
+                <child type="start">
                   <object class="GtkMenuButton">
                     <property name="primary">True</property>
                     <property name="icon-name">open-menu-symbolic</property>
@@ -290,6 +290,7 @@ suggested-action</property>
                                     <child>
                                       <object class="AdwComboRow" id="model_load_combo">
                                         <property name="hexpand">True</property>
+                                        <property name="selected">0</property>
                                         <property name="hexpand-set">True</property>
                                         <property name="title" translatable="yes">Load type</property>
                                         <property name="model">
@@ -596,7 +597,7 @@ suggested-action</property>
                                         <property name="hexpand">True</property>
                                         <property name="hexpand-set">True</property>
                                         <property name="title" translatable="yes">Up Direction</property>
-                                        <!-- <property name="sensitive" bind-source="automatic_up_direction_switch" bind-property="active" bind-flags="invert-boolean | sync-create">True</property> -->
+                                        <property name="subtitle" translatable="yes">Changing it will reload the file</property>
                                         <property name="model">
                                           <object class="GtkStringList">
                                             <items>
