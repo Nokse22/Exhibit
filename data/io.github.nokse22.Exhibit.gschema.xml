@@ -86,5 +86,8 @@
 	  <key name="show-points" type="b">
       <default>false</default>
     </key>
+	  <key name="model-opacity" type="d">
+      <default>1.0</default>
+    </key>
 	</schema>
 </schemalist>
