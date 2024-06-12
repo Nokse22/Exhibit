@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-12 16:43+0200\n"
+"POT-Creation-Date: 2024-06-12 17:11+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,9 +18,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: data/io.github.nokse22.Exhibit.desktop.in:3
-#: data/io.github.nokse22.Exhibit.metainfo.xml.in:7 src/window.py:574
-#: src/window.py:575 data/ui/window.ui:11 data/ui/window.ui:75
-#: data/ui/window.ui:150 data/ui/window.ui:682
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:7 src/window.py:570
+#: src/window.py:571 data/ui/window.ui:11 data/ui/window.ui:82
+#: data/ui/window.ui:157 data/ui/window.ui:698
 msgid "Exhibit"
 msgstr ""
 
@@ -32,7 +32,7 @@ msgstr ""
 msgid "fbx;step;stl;dcm;ex2;gml;obj;3ds;gltf;pbr;rendering;3d-model;"
 msgstr ""
 
-#: data/io.github.nokse22.Exhibit.metainfo.xml.in:8 data/ui/window.ui:71
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:8 data/ui/window.ui:78
 msgid "Preview your 3D models"
 msgstr ""
 
@@ -66,300 +66,304 @@ msgstr ""
 msgid "Checkout F3D"
 msgstr ""
 
-#: src/window.py:474
+#: src/window.py:472
 msgid "Open File"
 msgstr ""
 
-#: src/window.py:580 src/window.py:709
+#: src/window.py:576 src/window.py:703
 msgid "Can't open"
 msgstr ""
 
-#: src/window.py:614
+#: src/window.py:608
 msgid "Save File"
 msgstr ""
 
-#: src/window.py:805
+#: src/window.py:803
 msgid "Open Skybox File"
 msgstr ""
 
-#: data/ui/window.ui:37 data/ui/window.ui:157
+#: data/ui/window.ui:44 data/ui/window.ui:173 data/ui/window.ui:713
 msgid "Menu"
 msgstr ""
 
-#: data/ui/window.ui:67
+#: data/ui/window.ui:74
 msgid "Load"
 msgstr ""
 
-#: data/ui/window.ui:91
+#: data/ui/window.ui:98
 msgid "Try Another"
 msgstr ""
 
-#: data/ui/window.ui:95
+#: data/ui/window.ui:102
 msgid "Couldn't load the file"
 msgstr ""
 
-#: data/ui/window.ui:99
+#: data/ui/window.ui:106
 msgid "Error Loading File"
 msgstr ""
 
-#: data/ui/window.ui:179 data/ui/window.ui:193
+#: data/ui/window.ui:165
+msgid "Close Sidebar"
+msgstr ""
+
+#: data/ui/window.ui:195 data/ui/window.ui:209
 msgid "Render"
 msgstr ""
 
-#: data/ui/window.ui:198
+#: data/ui/window.ui:214
 msgid "Translucency"
 msgstr ""
 
-#: data/ui/window.ui:205
+#: data/ui/window.ui:221
 msgid "Tone Mapping"
 msgstr ""
 
-#: data/ui/window.ui:206
+#: data/ui/window.ui:222
 msgid "Map colors properly to the monitor colors"
 msgstr ""
 
-#: data/ui/window.ui:213
+#: data/ui/window.ui:229
 msgid "Ambient Occlusion"
 msgstr ""
 
-#: data/ui/window.ui:214
+#: data/ui/window.ui:230
 msgid "Provides approximate shadows"
 msgstr ""
 
-#: data/ui/window.ui:221
+#: data/ui/window.ui:237
 msgid "Anti Aliasing"
 msgstr ""
 
-#: data/ui/window.ui:228
+#: data/ui/window.ui:244
 msgid "Light with HDRI"
 msgstr ""
 
-#: data/ui/window.ui:229
+#: data/ui/window.ui:245
 msgid "Light the scene using a the loaded HDRI or the default"
 msgstr ""
 
-#: data/ui/window.ui:244
+#: data/ui/window.ui:260
 msgid "Light Intensity"
 msgstr ""
 
-#: data/ui/window.ui:259 data/ui/window.ui:273
+#: data/ui/window.ui:275 data/ui/window.ui:289
 msgid "Model"
 msgstr ""
 
-#: data/ui/window.ui:278
+#: data/ui/window.ui:294
 msgid "Load type"
 msgstr ""
 
-#: data/ui/window.ui:282
+#: data/ui/window.ui:298
 msgid "Geometry"
 msgstr ""
 
-#: data/ui/window.ui:283 data/ui/window.ui:439
+#: data/ui/window.ui:299 data/ui/window.ui:455
 msgid "Scene"
 msgstr ""
 
-#: data/ui/window.ui:295
+#: data/ui/window.ui:311
 msgid "Rendering"
 msgstr ""
 
-#: data/ui/window.ui:302
+#: data/ui/window.ui:318
 msgid "Show Edges"
 msgstr ""
 
-#: data/ui/window.ui:308
+#: data/ui/window.ui:324
 msgid "Edges Width"
 msgstr ""
 
-#: data/ui/window.ui:333
+#: data/ui/window.ui:349
 msgid "Show Points"
 msgstr ""
 
-#: data/ui/window.ui:339
+#: data/ui/window.ui:355
 msgid "Points Radius"
 msgstr ""
 
-#: data/ui/window.ui:358
+#: data/ui/window.ui:374
 msgid "Material"
 msgstr ""
 
-#: data/ui/window.ui:363
+#: data/ui/window.ui:379
 msgid "Model Metallic"
 msgstr ""
 
-#: data/ui/window.ui:380
+#: data/ui/window.ui:396
 msgid "Model Roughness"
 msgstr ""
 
-#: data/ui/window.ui:397
+#: data/ui/window.ui:413
 msgid "Model Color"
 msgstr ""
 
-#: data/ui/window.ui:413
+#: data/ui/window.ui:429
 msgid "Model Opacity"
 msgstr ""
 
-#: data/ui/window.ui:453
+#: data/ui/window.ui:469
 msgid "Grid"
 msgstr ""
 
-#: data/ui/window.ui:458
+#: data/ui/window.ui:474
 msgid "View Grid"
 msgstr ""
 
-#: data/ui/window.ui:465
+#: data/ui/window.ui:481
 msgid "Grid Absolute"
 msgstr ""
 
-#: data/ui/window.ui:474
+#: data/ui/window.ui:490
 msgid "Background"
 msgstr ""
 
-#: data/ui/window.ui:479
+#: data/ui/window.ui:495
 msgid "HDRI as Backgound"
 msgstr ""
 
-#: data/ui/window.ui:480
+#: data/ui/window.ui:496
 msgid "Use the loaded HDRI or the default one as a background"
 msgstr ""
 
-#: data/ui/window.ui:487
+#: data/ui/window.ui:503
 msgid "HDRI Image"
 msgstr ""
 
-#: data/ui/window.ui:494
+#: data/ui/window.ui:510
 msgid "Blur Background"
 msgstr ""
 
-#: data/ui/window.ui:501
+#: data/ui/window.ui:517
 msgid "Blur Circle Of Confusion"
 msgstr ""
 
-#: data/ui/window.ui:523
+#: data/ui/window.ui:539
 msgid "Use Custom Color"
 msgstr ""
 
-#: data/ui/window.ui:524
+#: data/ui/window.ui:540
 msgid "HDRI background takes priority over this"
 msgstr ""
 
-#: data/ui/window.ui:531
+#: data/ui/window.ui:547
 msgid "Background Color"
 msgstr ""
 
-#: data/ui/window.ui:532
+#: data/ui/window.ui:548
 msgid "Transparent colors not supported"
 msgstr ""
 
-#: data/ui/window.ui:556
+#: data/ui/window.ui:572
 msgid "More"
 msgstr ""
 
-#: data/ui/window.ui:570
+#: data/ui/window.ui:586
 msgid "Navigation"
 msgstr ""
 
-#: data/preferences.ui:230
+#: data/ui/window.ui:591
 msgid "Always Point Up"
 msgstr ""
 
-#: data/ui/window.ui:582
+#: data/ui/window.ui:598
 msgid "Up Direction"
 msgstr ""
 
-#: data/ui/window.ui:587
+#: data/ui/window.ui:603
 msgid "- X"
 msgstr ""
 
-#: data/ui/window.ui:588
+#: data/ui/window.ui:604
 msgid "+ X"
 msgstr ""
 
-#: data/ui/window.ui:589
+#: data/ui/window.ui:605
 msgid "- Y"
 msgstr ""
 
-#: data/ui/window.ui:590
+#: data/ui/window.ui:606
 msgid "+ Y"
 msgstr ""
 
-#: data/ui/window.ui:591
+#: data/ui/window.ui:607
 msgid "- Z"
 msgstr ""
 
-#: data/ui/window.ui:592
+#: data/ui/window.ui:608
 msgid "+ Z"
 msgstr ""
 
-#: data/ui/window.ui:604
+#: data/ui/window.ui:620
 msgid "Other Settings"
 msgstr ""
 
-#: data/ui/window.ui:609
+#: data/ui/window.ui:625
 msgid "Automatic Up Direction"
 msgstr ""
 
-#: data/ui/window.ui:610
+#: data/ui/window.ui:626
 msgid "When loading choose the best up direction"
 msgstr ""
 
-#: data/ui/window.ui:617
+#: data/ui/window.ui:633
 msgid "Save Settings"
 msgstr ""
 
-#: data/ui/window.ui:627
+#: data/ui/window.ui:643
 msgid "Restore Settings"
 msgstr ""
 
-#: data/ui/window.ui:643
+#: data/ui/window.ui:659
 msgid "Reset Settings"
 msgstr ""
 
-#: data/ui/window.ui:652
+#: data/ui/window.ui:668
 msgid ""
 "Preferences are per window basis, if you save them next time you will open "
 "the app it will start with these preferences"
 msgstr ""
 
-#: data/ui/window.ui:690
+#: data/ui/window.ui:706
 msgid "Reveal Sidebar"
 msgstr ""
 
-#: data/ui/window.ui:697
+#: data/ui/window.ui:722
 msgid "Reset to Bounds"
 msgstr ""
 
-#: data/ui/window.ui:705
+#: data/ui/window.ui:730
 msgid "Toggle Orthographic"
 msgstr ""
 
-#: data/ui/window.ui:797
+#: data/ui/window.ui:816
 msgid "Follow System"
 msgstr ""
 
-#: data/ui/window.ui:802
+#: data/ui/window.ui:821
 msgid "Light Theme"
 msgstr ""
 
-#: data/ui/window.ui:807
+#: data/ui/window.ui:826
 msgid "Dark Theme"
 msgstr ""
 
-#: data/ui/window.ui:812 data/ui/window.ui:842
+#: data/ui/window.ui:831 data/ui/window.ui:861
 msgid "_Open New Window"
 msgstr ""
 
-#: data/ui/window.ui:818
+#: data/ui/window.ui:837
 msgid "_Load"
 msgstr ""
 
-#: data/ui/window.ui:824
+#: data/ui/window.ui:843
 msgid "_Save As Image"
 msgstr ""
 
-#: data/ui/window.ui:830 data/ui/window.ui:848
+#: data/ui/window.ui:849 data/ui/window.ui:867
 msgid "_Keyboard Shortcuts"
 msgstr ""
 
-#: data/ui/window.ui:834 data/ui/window.ui:852
+#: data/ui/window.ui:853 data/ui/window.ui:871
 msgid "_About Exhibit"
 msgstr ""
