@@ -3,5 +3,5 @@ data/io.github.nokse22.Exhibit.metainfo.xml.in
 data/io.github.nokse22.Exhibit.gschema.xml
 src/main.py
 src/window.py
-data/window.ui
-data/preferences.ui
+data/ui/window.ui
+data/ui/file_row.ui
