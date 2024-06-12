@@ -56,7 +56,15 @@ You can use an HDRI image or a custom color as a background.</p>
   </screenshots>
 
   <releases>
-    <release version="1.0.0" date="2024-06-06">
+    <release version="1.2.0" date="2024-06-14">
+      <description translate="no">
+         <ul>
+            <li>Changed app design</li>
+            <li>Added more options</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.0.1" date="2024-06-06">
       <description translate="no">
         <p>First Release</p>
       </description>
