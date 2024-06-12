@@ -190,6 +190,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     automatic_up_direction_switch = Gtk.Template.Child()
 
+    points_group = Gtk.Template.Child()
     points_expander = Gtk.Template.Child()
     points_radius_spin = Gtk.Template.Child()
 
@@ -484,27 +485,70 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     def load_file(self, override=False):
         self.model_load_combo.disconnect(self.load_type_combo_action)
+
         if self.window_settings.get_setting("auto-up-dir") and not override:
             up = get_up_from_path(self.filepath)
             self.window_settings.set_setting("up-direction", up)
+
         options = {"scene.up-direction": self.window_settings.get_setting("up-direction")}
         self.engine.options.update(options)
 
-        self.stack.set_visible_child_name("3d_page")
+        # self.stack.set_visible_child_name("3d_page")
 
-        threading.Thread(target=self._load, daemon=True).start()
+        def _load():
+            scene_loaded = False
+            geometry_loaded = False
 
-        self.present()
+            if self.window_settings.get_setting("load-type") is None:
+                if self.engine.loader.hasSceneReader(self.filepath):
+                    self.engine.loader.load_scene(self.filepath)
+                    scene_loaded = True
+                    self.model_load_combo.set_sensitive(True)
+                elif self.engine.loader.hasGeometryReader(self.filepath):
+                    self.engine.loader.load_geometry(self.filepath, True)
+                    geometry_loaded = True
+                    self.model_load_combo.set_sensitive(False)
+
+                if self.engine.loader.hasGeometryReader(self.filepath) and self.engine.loader.hasSceneReader(self.filepath):
+                    GLib.idle_add(self.model_load_combo.set_sensitive, True)
+                else:
+                    GLib.idle_add(self.model_load_combo.set_sensitive, False)
+
+            elif self.window_settings.get_setting("load-type") == 0:
+                if self.engine.loader.hasGeometryReader(self.filepath):
+                    self.engine.loader.load_geometry(self.filepath, True)
+                    geometry_loaded = True
+            elif self.window_settings.get_setting("load-type") == 1:
+                if self.engine.loader.hasSceneReader(self.filepath):
+                    self.engine.loader.load_scene(self.filepath)
+                    scene_loaded = True
+
+            if not scene_loaded and not geometry_loaded:
+                GLib.idle_add(self.on_file_not_opened)
+                return
+
+            if scene_loaded:
+                self.window_settings.set_setting("load-type", 1)
+            elif geometry_loaded:
+                self.window_settings.set_setting("load-type", 0)
+
+            self.camera.resetToBounds()
+            self.get_distance()
+            self.update_options()
+
+            GLib.idle_add(self.on_file_opened)
+
+        threading.Thread(target=_load, daemon=True).start()
 
     def on_file_opened(self):
         print("on file opened")
-        self.update_options()
 
         self.file_name = os.path.basename(self.filepath)
 
         self.set_title(f"View {self.file_name}")
         self.title_widget.set_title(self.file_name)
         self.split_view.set_show_sidebar(True)
+        self.stack.set_visible_child_name("3d_page")
 
         self.drop_revealer.set_reveal_child(False)
         self.toast_overlay.remove_css_class("blurred")
@@ -513,8 +557,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         if self.window_settings.get_setting("load-type") == 0:
             self.material_group.set_sensitive(True)
+            self.points_group.set_sensitive(True)
         elif self.window_settings.get_setting("load-type") == 1:
             self.material_group.set_sensitive(False)
+            self.points_group.set_sensitive(False)
 
         self.model_load_combo.set_selected(self.window_settings.get_setting("load-type"))
         self.load_type_combo_action = self.model_load_combo.connect("notify::selected", self.set_load_type)
@@ -533,46 +579,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.load_type_combo_action = self.model_load_combo.connect("notify::selected", self.set_load_type)
 
-    def _load(self):
-        scene_loaded = False
-        geometry_loaded = False
-
-        if self.window_settings.get_setting("load-type") is None:
-            if self.engine.loader.hasSceneReader(self.filepath):
-                self.engine.loader.load_scene(self.filepath)
-                scene_loaded = True
-                self.model_load_combo.set_sensitive(True)
-            elif self.engine.loader.hasGeometryReader(self.filepath):
-                self.engine.loader.load_geometry(self.filepath, True)
-                geometry_loaded = True
-                self.model_load_combo.set_sensitive(False)
-
-            if self.engine.loader.hasGeometryReader(self.filepath) and self.engine.loader.hasSceneReader(self.filepath):
-                GLib.idle_add(self.model_load_combo.set_sensitive, True)
-            else:
-                GLib.idle_add(self.model_load_combo.set_sensitive, False)
-
-        elif self.window_settings.get_setting("load-type") == 0:
-            if self.engine.loader.hasGeometryReader(self.filepath):
-                self.engine.loader.load_geometry(self.filepath, True)
-                geometry_loaded = True
-        elif self.window_settings.get_setting("load-type") == 1:
-            if self.engine.loader.hasSceneReader(self.filepath):
-                self.engine.loader.load_scene(self.filepath)
-                scene_loaded = True
-
-        if not scene_loaded and not geometry_loaded:
-            GLib.idle_add(self.on_file_not_opened)
-            return
-
-        if scene_loaded:
-            self.window_settings.set_setting("load-type", 1)
-        elif geometry_loaded:
-            self.window_settings.set_setting("load-type", 0)
-
-        self.get_distance()
-        GLib.idle_add(self.on_file_opened)
-
     def send_toast(self, message):
         toast = Adw.Toast(title=message, timeout=2)
         self.toast_overlay.add_toast(toast)
@@ -584,11 +590,13 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 f3d_key = self.keys[key]
             options.setdefault(f3d_key, value)
 
-        self.engine.options.update(options)
-        self.update_background_color()
-        self.gl_area.queue_render()
+        def _update_options():
+            self.engine.options.update(options)
+            self.update_background_color()
+            self.gl_area.queue_render()
 
-        return False
+        GLib.timeout_add(100, _update_options)
+        # threading.Thread(target=_update_options, daemon=True).start()
 
     def save_as_image(self, filepath):
         self.gl_area.get_context().make_current()
@@ -703,6 +711,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def on_drop_leave(self, *args):
         self.drop_revealer.set_reveal_child(False)
         self.toast_overlay.remove_css_class("blurred")
+
+    @Gtk.Template.Callback("on_close_sidebar_clicked")
+    def on_close_sidebar_clicked(self, *args):
+        self.split_view.set_show_sidebar(False)
 
     def on_switch_toggled(self, switch, active, name):
         self.window_settings.set_setting(name, switch.get_active())
