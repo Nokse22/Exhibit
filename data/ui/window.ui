@@ -15,11 +15,18 @@
       </object>
     </child>
     <child>
-    <object class="AdwBreakpoint">
-      <condition>max-width: 650px</condition>
-      <setter object="split_view" property="collapsed">True</setter>
-    </object>
-  </child>
+      <object class="AdwBreakpoint">
+        <condition>max-width: 650px</condition>
+        <setter object="split_view" property="collapsed">True</setter>
+      </object>
+    </child>
+    <child>
+      <object class="AdwBreakpoint">
+        <condition>max-width: 450px</condition>
+        <setter object="close_sidebar_button" property="visible">True</setter>
+        <setter object="split_view" property="collapsed">True</setter>
+      </object>
+    </child>
     <property name="content">
       <object class="GtkStack" id="stack">
         <property name="hexpand">True</property>
@@ -150,6 +157,15 @@ suggested-action</property>
                     <property name="title" translatable="yes">Exhibit</property>
                   </object>
                 </property>
+                <child type="end">
+                  <object class="GtkButton" id="close_sidebar_button">
+                    <property name="visible">False</property>
+                    <property name="css-classes">flat</property>
+                    <property name="icon-name">left-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Close Sidebar</property>
+                    <signal name="clicked" handler="on_close_sidebar_clicked"/>
+                  </object>
+                </child>
                 <child type="end">
                   <object class="GtkMenuButton">
                     <property name="primary">True</property>
@@ -294,36 +310,6 @@ suggested-action</property>
                                     <property name="hexpand-set">True</property>
                                     <property name="title" translatable="yes">Rendering</property>
                                     <child>
-                                      <object class="AdwExpanderRow" id="points_expander">
-                                        <property name="show-enable-switch">True</property>
-                                        <property name="enable-expansion">False</property>
-                                        <property name="hexpand">True</property>
-                                        <property name="hexpand-set">True</property>
-                                        <property name="title" translatable="yes">Show Points</property>
-                                        <property name="sensitive" bind-source="edges_expander" bind-property="enable-expansion" bind-flags="invert-boolean">True</property>
-                                        <child>
-                                          <object class="AdwSpinRow" id="points_radius_spin">
-                                            <property name="hexpand">True</property>
-                                            <property name="hexpand-set">True</property>
-                                            <property name="title" translatable="yes">Points Radius</property>
-                                            <property name="digits">1</property>
-                                            <property name="adjustment">
-                                              <object class="GtkAdjustment">
-                                                <property name="lower">0</property>
-                                                <property name="upper">10</property>
-                                                <property name="value">1</property>
-                                                <property name="page-increment">1</property>
-                                                <property name="step-increment">1</property>
-                                              </object>
-                                            </property>
-                                          </object>
-                                        </child>
-
-                                      </object>
-                                    </child>
-
-
-                                    <child>
                                       <object class="AdwExpanderRow" id="edges_expander">
                                         <property name="show-enable-switch">True</property>
                                         <property name="enable-expansion">False</property>
@@ -336,7 +322,6 @@ suggested-action</property>
                                             <property name="hexpand">True</property>
                                             <property name="hexpand-set">True</property>
                                             <property name="title" translatable="yes">Edges Width</property>
-                                            <property name="digits">1</property>
                                             <property name="adjustment">
                                               <object class="GtkAdjustment">
                                                 <property name="lower">1</property>
@@ -349,30 +334,60 @@ suggested-action</property>
                                         </child>
                                       </object>
                                     </child>
-
                                   </object>
                                 </child>
                                 <child>
-                              <object class="AdwPreferencesGroup" id="material_group">
-                                <property name="hexpand">True</property>
-                                <property name="hexpand-set">True</property>
-                                <property name="title" translatable="yes">Material</property>
-                                <child>
-                                  <object class="AdwSpinRow" id="model_metallic_spin">
+                                  <object class="AdwPreferencesGroup" id="points_group">
                                     <property name="hexpand">True</property>
                                     <property name="hexpand-set">True</property>
-                                    <property name="title" translatable="yes">Model Metallic</property>
-                                    <property name="digits">1</property>
-                                    <property name="adjustment">
-                                      <object class="GtkAdjustment">
-                                        <property name="lower">0</property>
-                                        <property name="upper">1</property>
-                                        <property name="value">0</property>
-                                        <property name="step-increment">0.1</property>
+                                    <child>
+                                      <object class="AdwExpanderRow" id="points_expander">
+                                        <property name="show-enable-switch">True</property>
+                                        <property name="enable-expansion">False</property>
+                                        <property name="hexpand">True</property>
+                                        <property name="hexpand-set">True</property>
+                                        <property name="title" translatable="yes">Show Points</property>
+                                        <property name="sensitive" bind-source="edges_expander" bind-property="enable-expansion" bind-flags="invert-boolean">True</property>
+                                        <child>
+                                          <object class="AdwSpinRow" id="points_radius_spin">
+                                            <property name="hexpand">True</property>
+                                            <property name="hexpand-set">True</property>
+                                            <property name="title" translatable="yes">Points Radius</property>
+                                            <property name="adjustment">
+                                              <object class="GtkAdjustment">
+                                                <property name="lower">0</property>
+                                                <property name="upper">10</property>
+                                                <property name="value">1</property>
+                                                <property name="step-increment">1</property>
+                                              </object>
+                                            </property>
+                                          </object>
+                                        </child>
                                       </object>
-                                    </property>
+                                    </child>
                                   </object>
                                 </child>
+                                <child>
+                                  <object class="AdwPreferencesGroup" id="material_group">
+                                    <property name="hexpand">True</property>
+                                    <property name="hexpand-set">True</property>
+                                    <property name="title" translatable="yes">Material</property>
+                                    <child>
+                                      <object class="AdwSpinRow" id="model_metallic_spin">
+                                        <property name="hexpand">True</property>
+                                        <property name="hexpand-set">True</property>
+                                        <property name="title" translatable="yes">Model Metallic</property>
+                                        <property name="digits">1</property>
+                                        <property name="adjustment">
+                                          <object class="GtkAdjustment">
+                                            <property name="lower">0</property>
+                                            <property name="upper">1</property>
+                                            <property name="value">0</property>
+                                            <property name="step-increment">0.1</property>
+                                          </object>
+                                        </property>
+                                      </object>
+                                    </child>
 
                                 <child>
                                   <object class="AdwSpinRow" id="model_roughness_spin">
@@ -573,7 +588,7 @@ suggested-action</property>
                                       <object class="AdwSwitchRow" id="point_up_switch">
                                         <property name="hexpand">True</property>
                                         <property name="hexpand-set">True</property>
-                                        <property name="title" translatable="yes">Alwayas Point Up</property>
+                                        <property name="title" translatable="yes">Always Point Up</property>
                                       </object>
                                     </child>
                                     <child>
@@ -689,6 +704,15 @@ suggested-action</property>
                 <property name="active">True</property>
                 <property name="icon-name">sidebar-show-symbolic</property>
                 <property name="tooltip-text" translatable="yes">Reveal Sidebar</property>
+              </object>
+            </child>
+            <child type="start">
+              <object class="GtkMenuButton">
+                <property name="primary">True</property>
+                <property name="icon-name">open-menu-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Menu</property>
+                <property name="menu-model">primary_menu</property>
+                <property name="visible" bind-source="reveal_sidebar" bind-property="active" bind-flags="invert-boolean">False</property>
               </object>
             </child>
             <child type="start">
