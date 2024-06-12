@@ -1,0 +1,316 @@
+# Brazilian Portuguese translation for Exhibit
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Tiago Lucas Flach <tiagolucas9830@gmail.com>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-08 12:09+0200\n"
+"PO-Revision-Date: 2024-06-11 18:09-0300\n"
+"Last-Translator: Tiago Lucas Flach <tiagolucas9830@gmail.com>\n"
+"Language-Team: \n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.4.4\n"
+
+#: data/io.github.nokse22.Exhibit.desktop.in:3
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:7 src/window.py:333
+#: src/window.py:334 data/window.ui:20 data/window.ui:84
+msgid "Exhibit"
+msgstr "Exhibit"
+
+#: data/io.github.nokse22.Exhibit.desktop.in:4
+msgid "3D Model Viewer"
+msgstr "Visualizador de Modelos 3D"
+
+#: data/io.github.nokse22.Exhibit.desktop.in:11
+msgid "fbx;step;stl;dcm;ex2;gml;obj;3ds;gltf;pbr;rendering,3d-model"
+msgstr "fbx;step;stl;dcm;ex2;gml;obj;3ds;gltf;pbr;renderização,modelo-3d"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:8
+msgid "Preview your 3D models"
+msgstr "Visualize seus modelos 3D"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:10
+msgid ""
+"Based on the F3D library that supports many file formats, from digital "
+"content to scientific datasets including glTF, USD, STL, STEP, PLY, OBJ, "
+"FBX, Alembic and many more. Drag and drop 3d models into the app and export "
+"an image of the 3d model. It supports tone mapping, ambient occlusion, anti "
+"aliasing and more. You can use an HDRI image or a custom color as a "
+"background."
+msgstr ""
+"Baseado na biblioteca F3D que suporta muitos formatos de arquivo, desde "
+"conteúdo digital até conjuntos de dados científicos, incluindo glTF, USD, "
+"STL, STEP, PLY, OBJ, FBX, Alembic e muitos mais. Arraste e solte modelos 3D "
+"no aplicativo e exporte uma imagem do modelo 3D. Suporta mapeamento de "
+"tons, oclusão de ambiente, anti-aliasing e muito mais. Você pode usar uma "
+"imagem HDRI ou uma cor personalizada como plano de fundo."
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:42
+msgid "Planetary Reducer"
+msgstr "Redutor Planetário"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:46
+msgid "Nissan Fairlady"
+msgstr "Nissan Fairlady"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:50
+msgid "Retro Computer Setup with a HDRI background"
+msgstr "Configuração de Computador Retrô com fundo HDRI"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:54
+msgid "Benchy with dark theme"
+msgstr "Banco com tema escuro"
+
+#: src/main.py:66
+msgid "Checkout F3D"
+msgstr "Checkout F3DCheckout F3D"
+
+#: src/window.py:291
+msgid "Open File"
+msgstr "Abrir arquivo"
+
+#: src/window.py:353
+msgid "Can't open"
+msgstr "Não foi possível abrir"
+
+#: src/window.py:390
+msgid "Save File"
+msgstr "Salvar Arquivo"
+
+#: src/window.py:391
+msgid "image"
+msgstr "imagem"
+
+#: src/window.py:592
+msgid "Open Skybox File"
+msgstr "Abrir Arquivo Skybox"
+
+#: data/window.ui:27
+msgid "Reset to Bounds"
+msgstr "Redefinir para Limites"
+
+#: data/window.ui:35
+msgid "Toggle Orthographic"
+msgstr "Alternar Ortográfica"
+
+#: data/window.ui:43
+msgid "Menu"
+msgstr "Menu"
+
+#: data/window.ui:76
+msgid "Load"
+msgstr "Carregar"
+
+#: data/window.ui:80
+msgid "Load any file to view it in 3D"
+msgstr "Carregue qualquer arquivo para visualizá-lo em 3D"
+
+#: data/window.ui:145
+msgid "_Open New Window"
+msgstr "_Abrir Nova Janela"
+
+#: data/window.ui:151
+msgid "_Load New Model"
+msgstr "_Carregar Novo Modelo"
+
+#: data/window.ui:157
+msgid "_Save As Image"
+msgstr "_Salvar Como Imagem"
+
+#: data/window.ui:163
+msgid "_Preferences"
+msgstr "_Preferências"
+
+#: data/window.ui:167
+msgid "_Keyboard Shortcuts"
+msgstr "_Atalhos do Teclado"
+
+#: data/window.ui:171
+msgid "_About Exhibit"
+msgstr "_Sobre o Exhibit"
+
+#: data/preferences.ui:12 data/preferences.ui:17
+msgid "Render"
+msgstr "Renderizar"
+
+#: data/preferences.ui:22
+msgid "Translucency"
+msgstr "Translucidez"
+
+#: data/preferences.ui:29
+msgid "Tone Mapping"
+msgstr "Mapeamento de Tons"
+
+#: data/preferences.ui:30
+msgid "Map colors properly to the monitor colors"
+msgstr "Mapeie as cores corretamente para as cores do monitor"
+
+#: data/preferences.ui:37
+msgid "Ambient Occlusion"
+msgstr "Oclusão de Ambiente"
+
+#: data/preferences.ui:38
+msgid "Provides approximate shadows"
+msgstr "Fornece Sombras Aproximadas"
+
+#: data/preferences.ui:45
+msgid "Anti Aliasing"
+msgstr "Anti-aliasing"
+
+#: data/preferences.ui:52
+msgid "Light with HDRI"
+msgstr "Iluminação com HDRI"
+
+#: data/preferences.ui:53
+msgid "Light the scene using a the loaded HDRI or the default"
+msgstr "Ilumine a cena usando o HDRI carregado ou o padrão"
+
+#: data/preferences.ui:68
+msgid "Light Intensity"
+msgstr "Intensidade da luz"
+
+#: data/preferences.ui:77
+msgid "Edges"
+msgstr "Arestas"
+
+#: data/preferences.ui:82
+msgid "Show Edges"
+msgstr "Mostrar Arestas"
+
+#: data/preferences.ui:89
+msgid "Edges Width"
+msgstr "Largura das Arestas"
+
+#: data/preferences.ui:109
+msgid "Scene"
+msgstr "Cena"
+
+#: data/preferences.ui:114
+msgid "Grid"
+msgstr "Grade"
+
+#: data/preferences.ui:119
+msgid "View Grid"
+msgstr "Ver Grade"
+
+#: data/preferences.ui:126
+msgid "Grid Absolute"
+msgstr "Grade Absoluta"
+
+#: data/preferences.ui:135
+msgid "Background"
+msgstr "Plano de fundo"
+
+#: data/preferences.ui:140
+msgid "HDRI as Backgound"
+msgstr "HDRI como plano de fundo"
+
+#: data/preferences.ui:141
+msgid "Use the loaded HDRI or the default one as a background"
+msgstr "Use o HDRI carregado ou o padrão como plano de fundo"
+
+#: data/preferences.ui:148
+msgid "HDRI Image"
+msgstr "Imagem HDRI"
+
+#: data/preferences.ui:161
+msgid "Blur Background"
+msgstr "Desfocar Fundo"
+
+#: data/preferences.ui:168
+msgid "Blur Circle Of Confusion"
+msgstr "Desfocar Círculo de Confusão"
+
+#: data/preferences.ui:190
+msgid "Use Custom Color"
+msgstr "Usar Cor Personalizada"
+
+#: data/preferences.ui:191
+msgid "HDRI background takes priority over this"
+msgstr "O plano de fundo HDRI tem prioridade sobre isso"
+
+#: data/preferences.ui:198
+msgid "Background Color"
+msgstr "Cor de Fundo"
+
+#: data/preferences.ui:199
+msgid "Transparent colors not supported"
+msgstr "Cores transparentes não suportadas"
+
+#: data/preferences.ui:219
+msgid "More"
+msgstr "Mais"
+
+#: data/preferences.ui:225
+msgid "Navigation"
+msgstr "Navegação"
+
+#: data/preferences.ui:230
+msgid "Alwayas Point Up"
+msgstr "Sempre Aponte Para Cima"
+
+#: data/preferences.ui:237
+msgid "Up Direction"
+msgstr "Direção Para Cima"
+
+#: data/preferences.ui:242
+msgid "- X"
+msgstr "- X"
+
+#: data/preferences.ui:243
+msgid "+ X"
+msgstr "- X"
+
+#: data/preferences.ui:244
+msgid "- Y"
+msgstr "- Y"
+
+#: data/preferences.ui:245
+msgid "+ Y"
+msgstr "+ Y"
+
+#: data/preferences.ui:246
+msgid "- Z"
+msgstr "- Z"
+
+#: data/preferences.ui:247
+msgid "+ Z"
+msgstr "+ Z"
+
+#: data/preferences.ui:259
+msgid "Other Settings"
+msgstr "Outros Ajustes"
+
+#: data/preferences.ui:264
+msgid "Automatic Up Direction"
+msgstr "Direção Automática Para Cima"
+
+#: data/preferences.ui:265
+msgid "When loading choose the best up direction"
+msgstr "Ao carregar, escolha a melhor direção para cima"
+
+#: data/preferences.ui:272
+msgid "Save Settings"
+msgstr "Salvar Configurações"
+
+#: data/preferences.ui:282
+msgid "Restore Settings"
+msgstr "Restaurar Configurações"
+
+#: data/preferences.ui:298
+msgid "Reset Settings"
+msgstr "Redefinir as Configurações"
+
+#: data/preferences.ui:307
+msgid ""
+"Preferences are per window basis, if you save them next time you will open "
+"the app it will start with these preferences"
+msgstr ""
+"As preferências são por janela. Se você salvá-las na próxima vez que abrir "
+"o aplicativo, ele começará com essas preferências"
