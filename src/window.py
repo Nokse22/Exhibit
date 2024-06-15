@@ -554,7 +554,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.set_title(f"View {self.file_name}")
         self.title_widget.set_subtitle(self.file_name)
-        self.split_view.set_show_sidebar(True)
         self.stack.set_visible_child_name("3d_page")
 
         self.no_file_loaded = False
