@@ -195,7 +195,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     points_group = Gtk.Template.Child()
     points_expander = Gtk.Template.Child()
-    points_radius_spin = Gtk.Template.Child()
+    points_size_spin = Gtk.Template.Child()
 
     model_load_combo = Gtk.Template.Child()
 
@@ -268,7 +268,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.edges_width_spin.connect("notify::value", self.on_spin_changed, "edges-width")
 
         self.points_expander.connect("notify::enable-expansion", self.on_expander_toggled, "show-points")
-        self.points_radius_spin.connect("notify::value", self.on_spin_changed, "point-size")
+        self.points_size_spin.connect("notify::value", self.on_spin_changed, "point-size")
 
         self.load_type_combo_handler_id = self.model_load_combo.connect("notify::selected", self.set_load_type)
         self.model_roughness_spin.connect("notify::value", self.on_spin_changed, "model-roughness")
@@ -725,8 +725,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.gl_area.queue_render()
 
     def on_spin_changed(self, spin, value, name):
-        options = {self.keys[name]: spin.get_value()}
-        self.window_settings.set_setting(name, spin.get_value())
+        val = float(round(spin.get_value(), 2))
+        options = {self.keys[name]: val}
+        self.window_settings.set_setting(name, val)
         self.engine.options.update(options)
         self.gl_area.queue_render()
 
@@ -844,7 +845,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.edges_width_spin.set_value(self.window_settings.get_setting("edges-width"))
 
         self.points_expander.set_enable_expansion(self.window_settings.get_setting("show-points"))
-        self.points_radius_spin.set_value(self.window_settings.get_setting("point-size"))
+        self.points_size_spin.set_value(self.window_settings.get_setting("point-size"))
 
         self.point_up_switch.set_active(self.window_settings.get_setting("point-up"))
         self.up_direction_combo.set_selected(up_dir_string_to_n[self.window_settings.get_setting("up-direction")])
