@@ -53,14 +53,14 @@ class Viewer3dApplication(Adw.Application):
         show_image_external_action.connect('activate', self.show_image_external)
         self.add_action(show_image_external_action)
 
+        self.saved_settings = Gio.Settings.new('io.github.nokse22.Exhibit')
+
         theme_action = Gio.SimpleAction.new_stateful(
             "theme",
             GLib.VariantType.new("s"),
-            GLib.Variant("s", "follow"),
+            GLib.Variant("s", self.saved_settings.get_string("theme")),
         )
         theme_action.connect("activate", self.on_theme_setting_changed)
-
-        self.saved_settings = Gio.Settings.new('io.github.nokse22.Exhibit')
 
         self.update_theme()
 
