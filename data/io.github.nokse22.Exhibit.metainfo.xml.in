@@ -62,13 +62,17 @@ You can use an HDRI image or a custom color as a background.</p>
   <releases>
     <release version="1.2.0" date="2024-06-16">
       <description translate="no">
-         <ul>
-            <li>Changed app design</li>
-            <li>Added more options</li>
-            <li>Added Italian translation (Albano Battistella)</li>
-            <li>Added Spanish translation (haggen88)</li>
-           <li>Added Bulgarian translation (twlvnn)</li>
-           <li>Added Hindi translation (Scrambled777)</li>
+        <ul>
+          <li>Changed app design</li>
+          <li>Added rendering as points</li>
+          <li>Added material roughness, metallic, color and opacity</li>
+          <li>Added loading as scene or geometry</li>
+          <li>Added movements with keys</li>
+          <li>Improved HDRI row</li>
+          <li>Added Italian translation (Albano Battistella)</li>
+          <li>Added Spanish translation (haggen88)</li>
+          <li>Added Bulgarian translation (twlvnn)</li>
+          <li>Added Hindi translation (Scrambled777)</li>
         </ul>
       </description>
     </release>
