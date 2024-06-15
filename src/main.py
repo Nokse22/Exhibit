@@ -76,8 +76,7 @@ class Viewer3dApplication(Adw.Application):
         try:
             image_file = Gio.File.new_for_path(image_path.get_string())
         except GLib.GError as e:
-            logging.traceback_error("Failed to construct a new Gio.File object from path.",
-                                    exc=e, show_exception=True)
+            print("Failed to construct a new Gio.File object from path.")
         else:
             launcher = Gtk.FileLauncher.new(image_file)
 
@@ -86,8 +85,7 @@ class Viewer3dApplication(Adw.Application):
                     launcher.launch_finish(result)
                 except GLib.GError as e:
                     if e.code != 2: # 'The portal dialog was dismissed by the user' error
-                        logging.traceback_error("Failed to finish Gtk.FileLauncher procedure.",
-                                                exc=e, show_exception=True)
+                        print("Failed to finish Gtk.FileLauncher procedure.")
 
             launcher.launch(self.props.active_window, None, open_image_finish)
 
