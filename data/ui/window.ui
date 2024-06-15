@@ -155,7 +155,7 @@ suggested-action</property>
             <child type="top">
               <object class="AdwHeaderBar">
                 <property name="title-widget">
-                  <object class="AdwWindowTitle">
+                  <object class="AdwWindowTitle" id="title_widget">
                     <property name="title" translatable="yes">Exhibit</property>
                   </object>
                 </property>
@@ -163,7 +163,7 @@ suggested-action</property>
                   <object class="GtkButton" id="close_sidebar_button">
                     <property name="visible">False</property>
                     <property name="css-classes">flat</property>
-                    <property name="icon-name">left-symbolic</property>
+                    <property name="icon-name">left-large-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Close Sidebar</property>
                     <signal name="clicked" handler="on_close_sidebar_clicked"/>
                   </object>
@@ -698,11 +698,7 @@ suggested-action</property>
           <object class="AdwHeaderBar" id="header_bar">
             <property name="css-classes">preview-headerbar</property>
             <property name="title-widget">
-              <object class="GtkLabel" id="title_label">
-                <style>
-                  <class name="dim-label"/>
-                </style>
-              </object>
+              <object class="AdwBin"/>
             </property>
             <child type="start">
               <object class="GtkToggleButton" id="reveal_sidebar">

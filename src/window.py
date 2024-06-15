@@ -83,7 +83,7 @@ class WindowSettings():
             "tone-mapping": self.saved_settings.get_boolean("tone-mapping"),
             "ambient-occlusion": self.saved_settings.get_boolean("ambient-occlusion"),
             "anti-aliasing": self.saved_settings.get_boolean("anti-aliasing"),
-            "hdri-ambient": self.saved_settings.get_boolean("hdri-ambient"),
+            "hdri-ambient": False, # self.saved_settings.get_boolean("hdri-ambient"),
             "light-intensity": self.saved_settings.get_double("light-intensity"),
             "orthographic": self.saved_settings.get_boolean("orthographic"),
             "point-up": self.saved_settings.get_boolean("point-up"),
@@ -119,7 +119,7 @@ class WindowSettings():
         self.saved_settings.set_boolean("tone-mapping", self.settings["tone-mapping"])
         self.saved_settings.set_boolean("ambient-occlusion", self.settings["ambient-occlusion"])
         self.saved_settings.set_boolean("anti-aliasing", self.settings["anti-aliasing"])
-        self.saved_settings.set_boolean("hdri-ambient", self.settings["hdri-ambient"])
+        # self.saved_settings.set_boolean("hdri-ambient", self.settings["hdri-ambient"])
         self.saved_settings.set_double("light-intensity", self.settings["light-intensity"])
         self.saved_settings.set_boolean("orthographic", self.settings["orthographic"])
         self.saved_settings.set_boolean("point-up", self.settings["point-up"])
@@ -150,7 +150,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     gl_area = Gtk.Template.Child()
 
-    title_label = Gtk.Template.Child()
+    title_widget = Gtk.Template.Child()
     stack = Gtk.Template.Child()
     toolbar_view = Gtk.Template.Child()
 
@@ -376,14 +376,15 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if gesture.get_current_button() == 1:
             dist, direction = self.get_camera_to_focal_distance()
             y = -(self.drag_prev_offset[1] - y_offset) * 0.5
+            x = (self.drag_prev_offset[0] - x_offset) * 0.5
             if not self.window_settings.get_setting("point-up"):
                 self.camera.elevation(y)
-                self.camera.azimuth((self.drag_prev_offset[0] - x_offset) * 0.5)
+                self.camera.azimuth(x)
             else:
                 if (dist > self.get_gimble_limit() or (dist < self.get_gimble_limit()) and
                         (direction == 1 and y < 0) or (dist < self.get_gimble_limit() and direction == -1 and y > 0)):
                     self.camera.elevation(y)
-                self.camera.azimuth(((self.drag_prev_offset[0] - x_offset) * (0.2 if (dist < self.distance / 3) else 1)) * 0.5)
+                self.camera.azimuth(x)
         elif gesture.get_current_button() == 2:
             self.camera.pan(
                 (self.drag_prev_offset[0] - x_offset) * (0.0000001*self.width + 0.001*self.distance),
@@ -442,7 +443,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.gl_area.queue_render()
 
     def get_gimble_limit(self):
-        return self.distance / 6
+        return self.distance / 10
 
     def get_camera_to_focal_distance(self):
         up = up_dirs_vector[self.window_settings.get_setting("up-direction")]
@@ -500,8 +501,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         options = {"scene.up-direction": self.window_settings.get_setting("up-direction")}
         self.engine.options.update(options)
 
-        print(datetime.datetime.now())
-
         def _load():
             scene_loaded = False
             geometry_loaded = False
@@ -545,9 +544,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
             self.filepath = filepath
             GLib.idle_add(self.on_file_opened)
-        print(datetime.datetime.now())
+
         threading.Thread(target=_load, daemon=True).start()
-        print(datetime.datetime.now())
 
     def on_file_opened(self):
         print("on file opened")
@@ -555,7 +553,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.file_name = os.path.basename(self.filepath)
 
         self.set_title(f"View {self.file_name}")
-        self.title_label.set_label(self.file_name)
+        self.title_widget.set_subtitle(self.file_name)
         self.split_view.set_show_sidebar(True)
         self.stack.set_visible_child_name("3d_page")
 
@@ -596,12 +594,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 f3d_key = self.keys[key]
             options.setdefault(f3d_key, value)
 
-        def _update_options():
-            self.engine.options.update(options)
-            self.update_background_color()
-
-        GLib.timeout_add(100, _update_options)
-        # threading.Thread(target=_update_options, daemon=True).start()
+        self.engine.options.update(options)
+        self.update_background_color()
 
     def save_as_image(self, filepath):
         self.gl_area.get_context().make_current()
@@ -945,7 +939,8 @@ def get_up_from_path(path):
     up_ext = {
         "stl" : "+Z",
         "3ds" : "+Z",
-        "obj" : "+Z"
+        "obj" : "+Z",
+        "ply" : "+Z"
     }
     if extension in up_ext:
         return up_ext[extension]
