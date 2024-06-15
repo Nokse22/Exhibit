@@ -346,9 +346,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             print("start file")
             self.load_file(filepath)
 
-    def on_resize(self, gl_area, width, heigh):
+    def on_resize(self, gl_area, width, height):
         self.width = width
-        self.height = heigh
+        self.height = height
 
     def on_realize(self, area):
         self.gl_area.get_context().make_current()

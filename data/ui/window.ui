@@ -496,7 +496,7 @@ suggested-action</property>
                                       <object class="AdwSwitchRow" id="use_skybox_switch">
                                         <property name="hexpand">True</property>
                                         <property name="hexpand-set">True</property>
-                                        <property name="title" translatable="yes">HDRI as Backgound</property>
+                                        <property name="title" translatable="yes">HDRI as Background</property>
                                         <property name="subtitle" translatable="yes">Use the loaded HDRI or the default one as a background</property>
                                       </object>
                                     </child>
