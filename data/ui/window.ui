@@ -168,7 +168,7 @@ suggested-action</property>
                     <signal name="clicked" handler="on_close_sidebar_clicked"/>
                   </object>
                 </child>
-                <child type="start">
+                <child type="end">
                   <object class="GtkMenuButton" id="sidebar_menu">
                     <property name="primary">True</property>
                     <property name="visible">True</property>
