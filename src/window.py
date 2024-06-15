@@ -29,6 +29,7 @@ from f3d import *
 import math
 import os
 import threading
+import datetime
 
 up_dir_n_to_string = {
     0: "-X",
@@ -149,7 +150,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     gl_area = Gtk.Template.Child()
 
-    title_widget = Gtk.Template.Child()
+    title_label = Gtk.Template.Child()
     stack = Gtk.Template.Child()
     toolbar_view = Gtk.Template.Child()
 
@@ -334,15 +335,16 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.drag_prev_offset = (0, 0)
         self.drag_start_angle = 0
 
+        self.no_file_loaded = True
+
         self.style_manager = Adw.StyleManager().get_default()
         self.style_manager.connect("notify::dark", self.update_background_color)
 
         self.update_background_color()
 
         if filepath:
-            self.filepath = filepath
             print("start file")
-            self.load_file()
+            self.load_file(filepath)
 
     def on_resize(self, gl_area, width, heigh):
         self.width = width
@@ -482,50 +484,55 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         file = dialog.open_finish(response)
 
         if file:
-            self.filepath = file.get_path()
+            filepath = file.get_path()
             self.window_settings.set_setting("load-type", None)
             print("open file")
-            self.load_file()
+            self.load_file(filepath)
 
-    def load_file(self, override=False):
+    def load_file(self, filepath=None, override=False):
+        if filepath is None:
+            filepath = self.filepath
+
         if self.window_settings.get_setting("auto-up-dir") and not override:
-            up = get_up_from_path(self.filepath)
+            up = get_up_from_path(filepath)
             self.window_settings.set_setting("up-direction", up)
 
         options = {"scene.up-direction": self.window_settings.get_setting("up-direction")}
         self.engine.options.update(options)
+
+        print(datetime.datetime.now())
 
         def _load():
             scene_loaded = False
             geometry_loaded = False
 
             if self.window_settings.get_setting("load-type") is None:
-                if self.engine.loader.hasSceneReader(self.filepath):
-                    self.engine.loader.load_scene(self.filepath)
+                if self.engine.loader.hasSceneReader(filepath):
+                    self.engine.loader.load_scene(filepath)
                     scene_loaded = True
                     GLib.idle_add(self.model_load_combo.set_sensitive, True)
-                elif self.engine.loader.hasGeometryReader(self.filepath):
-                    self.engine.loader.load_geometry(self.filepath, True)
+                elif self.engine.loader.hasGeometryReader(filepath):
+                    self.engine.loader.load_geometry(filepath, True)
                     geometry_loaded = True
-                    GLib.idle_add(self.model_load_combo.set_sensitive, False)
-
-                if self.engine.loader.hasGeometryReader(self.filepath) and self.engine.loader.hasSceneReader(self.filepath):
-                    GLib.idle_add(self.model_load_combo.set_sensitive, True)
-                else:
                     GLib.idle_add(self.model_load_combo.set_sensitive, False)
 
             elif self.window_settings.get_setting("load-type") == 0:
-                if self.engine.loader.hasGeometryReader(self.filepath):
-                    self.engine.loader.load_geometry(self.filepath, True)
+                if self.engine.loader.hasGeometryReader(filepath):
+                    self.engine.loader.load_geometry(filepath, True)
                     geometry_loaded = True
             elif self.window_settings.get_setting("load-type") == 1:
-                if self.engine.loader.hasSceneReader(self.filepath):
-                    self.engine.loader.load_scene(self.filepath)
+                if self.engine.loader.hasSceneReader(filepath):
+                    self.engine.loader.load_scene(filepath)
                     scene_loaded = True
 
             if not scene_loaded and not geometry_loaded:
-                GLib.idle_add(self.on_file_not_opened)
+                GLib.idle_add(self.on_file_not_opened, filepath)
                 return
+
+            if self.engine.loader.hasGeometryReader(filepath) and self.engine.loader.hasSceneReader(filepath):
+                GLib.idle_add(self.model_load_combo.set_sensitive, True)
+            else:
+                GLib.idle_add(self.model_load_combo.set_sensitive, False)
 
             if scene_loaded:
                 self.window_settings.set_setting("load-type", 1)
@@ -536,9 +543,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.get_distance()
             self.update_options()
 
+            self.filepath = filepath
             GLib.idle_add(self.on_file_opened)
-
+        print(datetime.datetime.now())
         threading.Thread(target=_load, daemon=True).start()
+        print(datetime.datetime.now())
 
     def on_file_opened(self):
         print("on file opened")
@@ -546,9 +555,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.file_name = os.path.basename(self.filepath)
 
         self.set_title(f"View {self.file_name}")
-        self.title_widget.set_title(self.file_name)
+        self.title_label.set_label(self.file_name)
         self.split_view.set_show_sidebar(True)
         self.stack.set_visible_child_name("3d_page")
+
+        self.no_file_loaded = False
 
         self.drop_revealer.set_reveal_child(False)
         self.toast_overlay.remove_css_class("blurred")
@@ -563,15 +574,14 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.set_preference_values()
 
-    def on_file_not_opened(self):
+    def on_file_not_opened(self, filepath):
         print("on file not opened")
         self.set_title(_("Exhibit"))
-        self.title_widget.set_title(_("Exhibit"))
-        if self.file_name == "":
+        if self.no_file_loaded:
             self.stack.set_visible_child_name("startup_page")
             self.startup_stack.set_visible_child_name("error_page")
         else:
-            self.send_toast(_("Can't open") + " " + os.path.basename(self.filepath))
+            self.send_toast(_("Can't open") + " " + os.path.basename(filepath))
         options = {"scene.up-direction": self.window_settings.get_setting("up-direction")}
         self.engine.options.update(options)
 
@@ -688,14 +698,12 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def on_drop_received(self, drop, value, x, y):
         filepath = value.get_files()[0].get_path()
         extension = os.path.splitext(filepath)[1][1:]
-        if "*." + extension in file_patterns:
-            self.filepath = filepath
-            self.window_settings.set_setting("load-type", None)
-            self.load_file()
-        elif "*." + extension in image_patterns:
+
+        if "*." + extension in image_patterns:
             self.load_hdri(filepath)
         else:
-            self.send_toast(_("Can't open") + " " + os.path.basename(filepath))
+            self.window_settings.set_setting("load-type", None)
+            self.load_file(filepath)
 
     @Gtk.Template.Callback("on_drop_enter")
     def on_drop_enter(self, drop_target, *args):
@@ -754,7 +762,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.engine.options.update(options)
         self.window_settings.set_setting("up-direction", direction)
         print("set up")
-        self.load_file(True)
+        self.load_file(self.filepath, True)
 
     def set_load_type(self, combo, *args):
         print("set load type")
