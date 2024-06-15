@@ -10,11 +10,18 @@ View 3D models, powered by the [F3D](https://github.com/f3d-app/f3d) library tha
 
 > The app only runs on X11/XWayland because the library that it uses to render can only be compiled to work with X11 or Wayland. For now I have decided to ship it this way so it can run using either compositors.
 
-  <div align="center">
-  <img src="data/resources/screenshot 1.png" height="400"/>
-  <img src="data/resources/screenshot 2.png" height="400"/>
-  <img src="data/resources/screenshot 3.png" height="400"/>
-  </div>
+<div align="center">
+    <img src="data/resources/screenshot 1.png" height="500"/>
+</div>
+<details>
+<summary>Click for more screenshots</summary>
+    <div align="center">
+    <img src="data/resources/screenshot 2.png" height="500"/>
+    <img src="data/resources/screenshot 3.png" height="500"/>
+    <img src="data/resources/screenshot 4.png" height="500"/>
+    <img src="data/resources/screenshot 5.png" height="500"/>
+    </div>
+</details>
 
 ### Screenshots Credits
 - [Planetary reducer](https://sketchfab.com/3d-models/planet-reducer-animation-273823b0b7014a31a1ef2e1148ca8205)
@@ -23,6 +30,9 @@ View 3D models, powered by the [F3D](https://github.com/f3d-app/f3d) library tha
 - [Nissan Fairlady](https://sketchfab.com/3d-models/nissan-fairlady-z-s30240z-1978-0d9286ebb8cc426e993e1d398b874a34)
 
 ## Installation
+
+### Flathub
+<a href='https://flathub.org/apps/io.github.nokse22.Exhibit'><img height='80' alt='Download on Flathub' src='https://dl.flathub.org/assets/badges/flathub-badge-en.png'/></a>
 
 ### From latest build
 
