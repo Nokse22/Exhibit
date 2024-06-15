@@ -375,15 +375,15 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def on_drag_update(self, gesture, x_offset, y_offset):
         if gesture.get_current_button() == 1:
             dist, direction = self.get_camera_to_focal_distance()
-            y = -(self.drag_prev_offset[1] - y_offset)
+            y = -(self.drag_prev_offset[1] - y_offset) * 0.5
             if not self.window_settings.get_setting("point-up"):
                 self.camera.elevation(y)
-                self.camera.azimuth(self.drag_prev_offset[0] - x_offset)
+                self.camera.azimuth((self.drag_prev_offset[0] - x_offset) * 0.5)
             else:
                 if (dist > self.get_gimble_limit() or (dist < self.get_gimble_limit()) and
                         (direction == 1 and y < 0) or (dist < self.get_gimble_limit() and direction == -1 and y > 0)):
                     self.camera.elevation(y)
-                self.camera.azimuth((self.drag_prev_offset[0] - x_offset) * (0.1 if (dist < self.distance / 3) else 1))
+                self.camera.azimuth(((self.drag_prev_offset[0] - x_offset) * (0.2 if (dist < self.distance / 3) else 1)) * 0.5)
         elif gesture.get_current_button() == 2:
             self.camera.pan(
                 (self.drag_prev_offset[0] - x_offset) * (0.0000001*self.width + 0.001*self.distance),
