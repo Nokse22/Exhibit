@@ -7,7 +7,7 @@
   <name>Exhibit</name>
   <summary>Preview your 3D models</summary>
   <description>
-    <p>Based on the F3D library that supports many file formats, from digital content to scientific datasets including glTF, USD, STL, STEP, PLY, OBJ, FBX, Alembic and many more.
+    <p>Based on the F3D library that supports many file formats, from digital content to scientific datasets including glTF, STL, STEP, PLY, OBJ, FBX, Alembic and many more.
 Drag and drop 3d models into the app and export an image of the 3d model.
 It supports tone mapping, ambient occlusion, anti aliasing and more.
 You can use an HDRI image or a custom color as a background.</p>
@@ -60,11 +60,15 @@ You can use an HDRI image or a custom color as a background.</p>
   </screenshots>
 
   <releases>
-    <release version="1.2.0" date="2024-06-14">
+    <release version="1.2.0" date="2024-06-16">
       <description translate="no">
          <ul>
             <li>Changed app design</li>
             <li>Added more options</li>
+            <li>Added Italian translation (Albano Battistella)</li>
+            <li>Added Spanish translation (haggen88)</li>
+           <li>Added Bulgarian translation (twlvnn)</li>
+           <li>Added Hindi translation (Scrambled777)</li>
         </ul>
       </description>
     </release>
