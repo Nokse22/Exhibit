@@ -351,7 +351,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.height = height
 
     def on_realize(self, area):
-        self.gl_area.get_context().make_current()
+        if self.gl_area.get_context() is None:
+            print("Could not create GL context")
 
     def on_render(self, area, ctx):
         self.gl_area.get_context().make_current()
@@ -743,7 +744,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     def on_color_changed(self, btn, color, setting):
         color_list = rgb_to_list(btn.get_rgba().to_string())
-        print(color_list)
         self.window_settings.set_setting(setting, color_list)
         if setting in self.keys:
             options = {self.keys[setting]: color_list}

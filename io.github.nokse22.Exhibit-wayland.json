@@ -7,8 +7,7 @@
     "finish-args" : [
         "--share=ipc",
         "--socket=wayland",
-        "--device=dri",
-        "--env=GSK_RENDERER=gl"
+        "--device=dri"
     ],
     "cleanup" : [
         "/include",

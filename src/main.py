@@ -35,6 +35,10 @@ class Viewer3dApplication(Adw.Application):
     def __init__(self):
         super().__init__(application_id='io.github.nokse22.Exhibit',
                          flags=Gio.ApplicationFlags.HANDLES_OPEN)
+
+        GLib.setenv("GDK_DEBUG", "gl-prefer-gl", True)
+        GLib.setenv("GSK_RENDERER", "gl", True)
+
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action)
 
