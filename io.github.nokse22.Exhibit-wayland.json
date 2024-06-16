@@ -431,8 +431,8 @@
 		                "patch -p1 < 0002-install-bin.patch"
 		            ]
 		        }
-		]
-	},
+			]
+		},
         {
             "name": "F3D",
             "buildsystem": "cmake-ninja",
