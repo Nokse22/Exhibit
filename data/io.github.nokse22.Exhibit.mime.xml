@@ -77,7 +77,9 @@
     <glob pattern="*.dae"/>
     <glob pattern="*.off"/>
     <glob pattern="*.usd"/>
+    <glob pattern="*.usda"/>
     <glob pattern="*.usdc"/>
+    <glob pattern="*.usdz"/>
     <generic-icon name="io.github.nokse22.Exhibit.mime"/>
   </mime-type>
 </mime-info>
