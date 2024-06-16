@@ -20,6 +20,8 @@ View 3D models, powered by the [F3D](https://github.com/f3d-app/f3d) library tha
     <img src="data/resources/screenshot 3.png" max-height="500"/>
     <img src="data/resources/screenshot 4.png" max-height="500"/>
     <img src="data/resources/screenshot 5.png" max-height="500"/>
+    <img src="data/resources/screenshot 6.png" max-height="500"/>
+    <img src="data/resources/screenshot 8.png" max-height="500"/>
     </div>
 </details>
 
@@ -28,6 +30,8 @@ View 3D models, powered by the [F3D](https://github.com/f3d-app/f3d) library tha
 - [Retro computer setup](https://sketchfab.com/3d-models/retro-computer-setup-free-82eaf2047e0447a1bfea22482f1d1404)
 - [Benchy](https://www.printables.com/model/3161-3d-benchy#preview:file-3QVl)
 - [Nissan Fairlady](https://sketchfab.com/3d-models/nissan-fairlady-z-s30240z-1978-0d9286ebb8cc426e993e1d398b874a34)
+- [Vase](https://sketchfab.com/3d-models/vase-rawscan-98a29620a45e47ccb80a75d5416c8255)
+- [Sailing Ship](https://sketchfab.com/3d-models/sailing-ship-model-ac65e0168e8c423db9c9fdc71397c84e)
 
 ## Installation
 
