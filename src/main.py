@@ -38,6 +38,7 @@ class Viewer3dApplication(Adw.Application):
 
         GLib.setenv("GDK_DEBUG", "gl-prefer-gl", True)
         GLib.setenv("GSK_RENDERER", "gl", True)
+        GLib.setenv("GDK_DEBUG", "gl-egl", True)
 
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action)

@@ -7,6 +7,7 @@
     "finish-args" : [
         "--share=ipc",
         "--socket=wayland",
+        "--socket=fallback-x11",
         "--device=dri"
     ],
     "cleanup" : [
@@ -416,19 +417,12 @@
 					"sha256": "f5c3e72cd584bab383a8054628b6ed98aa17b1cbbe896eb98257ac19641d10c7"
 				},
 		        {
-		            "type": "file",
+		            "type": "patch",
 		            "path": "0001-usd-onetbb.patch"
 		        },
 		        {
-		            "type": "file",
+		            "type": "patch",
 		            "path": "0002-install-bin.patch"
-		        },
-		        {
-		            "type": "shell",
-		            "commands": [
-		                "patch -p1 < 0001-usd-onetbb.patch",
-		                "patch -p1 < 0002-install-bin.patch"
-		            ]
 		        }
 			]
 		},

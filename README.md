@@ -8,8 +8,6 @@
 
 View 3D models, powered by the [F3D](https://github.com/f3d-app/f3d) library that supports many file formats, from digital content to scientific datasets (including glTF, USD, STL, STEP, PLY, OBJ, FBX, Alembic)
 
-> The app only runs on X11 or Wayland because the library that it uses to render can only be compiled to work with one compositor. In the actions page there are builds for X11 and Wayland. 
-
 <div align="center">
     <img src="data/resources/screenshot 1.png" max-height="500"/>
 </div>
