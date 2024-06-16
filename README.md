@@ -11,15 +11,15 @@ View 3D models, powered by the [F3D](https://github.com/f3d-app/f3d) library tha
 > The app only runs on X11/XWayland because the library that it uses to render can only be compiled to work with X11 or Wayland. For now I have decided to ship it this way so it can run using either compositors.
 
 <div align="center">
-    <img src="data/resources/screenshot 1.png" height="500"/>
+    <img src="data/resources/screenshot 1.png" max-height="500"/>
 </div>
 <details>
 <summary>Click for more screenshots</summary>
     <div align="center">
-    <img src="data/resources/screenshot 2.png" height="500"/>
-    <img src="data/resources/screenshot 3.png" height="500"/>
-    <img src="data/resources/screenshot 4.png" height="500"/>
-    <img src="data/resources/screenshot 5.png" height="500"/>
+    <img src="data/resources/screenshot 2.png" max-height="500"/>
+    <img src="data/resources/screenshot 3.png" max-height="500"/>
+    <img src="data/resources/screenshot 4.png" max-height="500"/>
+    <img src="data/resources/screenshot 5.png" max-height="500"/>
     </div>
 </details>
 
