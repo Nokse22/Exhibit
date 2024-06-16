@@ -75,12 +75,15 @@
         },
         {
             "name": "oneTBB",
-            "buildsystem": "cmake",
+            "buildsystem": "cmake-ninja",
             "builddir": true,
             "config-opts": [
+                "-DBUILD_SHARED_LIBS=ON",
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DCMAKE_INSTALL_PREFIX:PATH=/app",
+                "-DTBB_STRICT=OFF",
                 "-DTBB_TEST=OFF",
-                "-DTBB_EXAMPLES=OFF",
-                "-DCMAKE_INSTALL_PREFIX:PATH=/app"
+                "-DTBB4PY_BUILD=OFF"
             ],
             "sources": [
                 {
@@ -369,8 +372,8 @@
             "sources": [
                 {
                     "type": "archive",
-                    "url": "https://archives.boost.io/release/1.85.0/source/boost_1_85_0.tar.gz",
-                    "sha256": "be0d91732d5b0cc6fbb275c7939974457e79b54d6f07ce2e3dfdd68bef883b0b"
+                    "url": "https://archives.boost.io/release/1.83.0/source/boost_1_83_0.tar.gz",
+                    "sha256": "c0685b68dd44cc46574cce86c4e17c0f611b15e195be9848dfd0769a0a207628"
                 }
             ],
 			"build-commands": [
@@ -409,12 +412,27 @@
 				"-DTBB_INCLUDE_DIRS=/app/include",
                 "-DTBB_LIBRARIES=/app/lib/libtbb.so"
 			],
-			"sources": [
+				"sources": [
 				{
-				    "type": "archive",
-				    "url": "https://github.com/PixarAnimationStudios/OpenUSD/archive/refs/tags/v23.05.tar.gz",
-				    "sha256": "f5c3e72cd584bab383a8054628b6ed98aa17b1cbbe896eb98257ac19641d10c7"
-				}
+					"type": "archive",
+					"url": "https://github.com/PixarAnimationStudios/OpenUSD/archive/refs/tags/v23.05.tar.gz",
+					"sha256": "f5c3e72cd584bab383a8054628b6ed98aa17b1cbbe896eb98257ac19641d10c7"
+				},
+		        {
+		            "type": "file",
+		            "path": "0001-usd-onetbb.patch"
+		        },
+		        {
+		            "type": "file",
+		            "path": "0002-install-bin.patch"
+		        },
+		        {
+		            "type": "shell",
+		            "commands": [
+		                "patch -p1 < 0001-usd-onetbb.patch",
+		                "patch -p1 < 0002-install-bin.patch"
+		            ]
+		        }
 			]
 		},
         {
