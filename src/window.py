@@ -61,7 +61,7 @@ up_dirs_vector = {
 file_patterns = ["*.vtk", "*.vtp", "*.vtu", "*.vtr", "*.vti", "*.vts", "*.vtm", "*.ply", "*.stl", "*.dcm", "*.drc", "*.nrrd",
     "*.nhrd", "*.mhd", "*.mha", "*.ex2", "*.e", "*.exo", "*.g", "*.gml", "*.pts",
     "*.ply", "*.step", "*.stp", "*.iges", "*.igs", "*.brep", "*.abc", "*.vdb", "*.obj", "*.gltf",
-    "*.glb", "*.3ds", "*.wrl", "*.fbx", "*.dae", "*.off", "*.dxf", "*.x", "*.3mf", "*.usd", "*.usdc"]
+    "*.glb", "*.3ds", "*.wrl", "*.fbx", "*.dae", "*.off", "*.dxf", "*.x", "*.3mf", "*.usd", "*.usda", "*.usdc", "*.usdz"]
 
 image_patterns = ["*.hdr", "*.exr", "*.png", "*.jpg", "*.pnm", "*.tiff", "*.bmp"]
 
@@ -172,7 +172,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     hdri_ambient_switch = Gtk.Template.Child()
     light_intensity_spin = Gtk.Template.Child()
 
-    edges_expander = Gtk.Template.Child()
+    edges_switch = Gtk.Template.Child()
     edges_width_spin = Gtk.Template.Child()
 
     use_skybox_switch = Gtk.Template.Child()
@@ -264,7 +264,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.anti_aliasing_switch.connect("notify::active", self.on_switch_toggled, "anti-aliasing")
         self.hdri_ambient_switch.connect("notify::active", self.on_switch_toggled, "hdri-ambient")
 
-        self.edges_expander.connect("notify::enable-expansion", self.on_expander_toggled, "show-edges")
+        self.edges_switch.connect("notify::active", self.on_switch_toggled, "show-edges")
         self.edges_width_spin.connect("notify::value", self.on_spin_changed, "edges-width")
 
         self.points_expander.connect("notify::enable-expansion", self.on_expander_toggled, "show-points")
@@ -841,7 +841,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.blur_coc_spin.set_value(self.window_settings.get_setting("blur-coc"))
         self.use_skybox_switch.set_active(self.window_settings.get_setting("use-skybox"))
 
-        self.edges_expander.set_enable_expansion(self.window_settings.get_setting("show-edges"))
+        self.edges_switch.set_active(self.window_settings.get_setting("show-edges"))
         self.edges_width_spin.set_value(self.window_settings.get_setting("edges-width"))
 
         self.points_expander.set_enable_expansion(self.window_settings.get_setting("show-points"))

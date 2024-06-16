@@ -324,29 +324,27 @@
                                             <property name="hexpand-set">True</property>
                                             <property name="title" translatable="yes">Rendering</property>
                                             <child>
-                                              <object class="AdwExpanderRow" id="edges_expander">
-                                                <property name="show-enable-switch">True</property>
-                                                <property name="enable-expansion">False</property>
+                                              <object class="AdwSwitchRow" id="edges_switch">
                                                 <property name="hexpand">True</property>
                                                 <property name="hexpand-set">True</property>
-                                                <property name="title" translatable="yes">Show Edges</property>
+                                                <property name="title" translatable="yes">Show All Edges</property>
                                                 <property name="sensitive" bind-source="points_expander" bind-property="enable-expansion" bind-flags="invert-boolean">True</property>
-                                                 <child>
-                                                  <object class="AdwSpinRow" id="edges_width_spin">
-                                                    <property name="hexpand">True</property>
-                                                    <property name="hexpand-set">True</property>
-                                                    <property name="title" translatable="yes">Edges Width</property>
-                                                    <property name="digits">1</property>
-                                                    <property name="adjustment">
-                                                      <object class="GtkAdjustment">
-                                                        <property name="lower">1</property>
-                                                        <property name="upper">10</property>
-                                                        <property name="value">1</property>
-                                                        <property name="step-increment">0.1</property>
-                                                      </object>
-                                                    </property>
+                                              </object>
+                                            </child>
+                                            <child>
+                                              <object class="AdwSpinRow" id="edges_width_spin">
+                                                <property name="hexpand">True</property>
+                                                <property name="hexpand-set">True</property>
+                                                <property name="title" translatable="yes">Edges Width</property>
+                                                <property name="digits">1</property>
+                                                <property name="adjustment">
+                                                  <object class="GtkAdjustment">
+                                                    <property name="lower">1</property>
+                                                    <property name="upper">10</property>
+                                                    <property name="value">1</property>
+                                                    <property name="step-increment">0.5</property>
                                                   </object>
-                                                </child>
+                                                </property>
                                               </object>
                                             </child>
                                           </object>
@@ -362,7 +360,7 @@
                                                 <property name="hexpand">True</property>
                                                 <property name="hexpand-set">True</property>
                                                 <property name="title" translatable="yes">Show Points</property>
-                                                <property name="sensitive" bind-source="edges_expander" bind-property="enable-expansion" bind-flags="invert-boolean">True</property>
+                                                <property name="sensitive" bind-source="edges_switch" bind-property="active" bind-flags="invert-boolean">True</property>
                                                 <child>
                                                   <object class="AdwSpinRow" id="points_size_spin">
                                                     <property name="hexpand">True</property>
