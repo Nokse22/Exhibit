@@ -32,7 +32,7 @@ You can use an HDRI image or a custom color as a background.</p>
 
   <!-- Applications should set a brand color in both light and dark variants like so -->
   <branding>
-    <color type="primary" scheme_preference="light">#DF8E0F</color>
+    <color type="primary" scheme_preference="light">#E5A50A</color>
     <color type="primary" scheme_preference="dark">#1a5fb4</color>
   </branding>
 
