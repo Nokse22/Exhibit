@@ -75,18 +75,22 @@
             ]
         },
         {
-            "name": "TBB",
-            "buildsystem": "cmake",
+            "name": "oneTBB",
+            "buildsystem": "cmake-ninja",
             "builddir": true,
             "config-opts": [
+                "-DBUILD_SHARED_LIBS=ON",
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DCMAKE_INSTALL_PREFIX:PATH=/app",
+                "-DTBB_STRICT=OFF",
                 "-DTBB_TEST=OFF",
-                "-DTBB_EXAMPLES=OFF"
+                "-DTBB4PY_BUILD=OFF"
             ],
             "sources": [
                 {
                     "type": "archive",
-                    "url": "https://github.com/oneapi-src/oneTBB/archive/v2021.9.0.tar.gz",
-                    "sha256": "1ce48f34dada7837f510735ff1172f6e2c261b09460e3bf773b49791d247d24e"
+                    "url": "https://github.com/oneapi-src/oneTBB/archive/v2021.12.0.tar.gz",
+                    "sha256": "c7bb7aa69c254d91b8f0041a71c5bcc3936acb64408a1719aec0b2b7639dd84f"
                 }
             ]
         },
@@ -364,6 +368,75 @@
             ]
         },
         {
+            "name": "Boost",
+            "buildsystem": "simple",
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://archives.boost.io/release/1.83.0/source/boost_1_83_0.tar.gz",
+                    "sha256": "c0685b68dd44cc46574cce86c4e17c0f611b15e195be9848dfd0769a0a207628"
+                }
+            ],
+			"build-commands": [
+				"./bootstrap.sh --prefix=/app --with-libraries=iostreams,filesystem,system,date_time,regex,program_options,python",
+				"./b2 headers",
+				"./b2 -j$FLATPAK_BUILDER_N_JOBS install variant=release cxxstd=17 --layout=system"
+			]
+        },
+        {
+            "name": "OpenSubdiv",
+            "buildsystem": "cmake-ninja",
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/PixarAnimationStudios/OpenSubdiv/archive/refs/tags/v3_6_0.tar.gz",
+                    "sha256": "bebfd61ab6657a4f4ff27845fb66a167d00395783bfbd253254d87447ed1d879"
+                }
+            ]
+        },
+        {
+			"name": "openUSD",
+			"buildsystem": "cmake-ninja",
+			"config-opts": [
+				"-DPXR_BUILD_ALEMBIC_PLUGIN:BOOL=OFF",
+				"-DPXR_BUILD_EMBREE_PLUGIN:BOOL=OFF",
+				"-DPXR_BUILD_IMAGING:BOOL=OFF",
+				"-DPXR_BUILD_MONOLITHIC:BOOL=ON",
+				"-DPXR_BUILD_TESTS:BOOL=OFF",
+				"-DPXR_BUILD_USD_IMAGING:BOOL=OFF",
+				"-DPXR_ENABLE_PYTHON_SUPPORT:BOOL=OFF",
+				"-DPXR_BUILD_EXAMPLES:BOOL=OFF",
+				"-DPXR_BUILD_TUTORIALS:BOOL=OFF",
+				"-DPXR_BUILD_USD_TOOLS:BOOL=OFF",
+				"-DPXR_INSTALL_LOCATION:PATH=../lib/usd",
+				"-DCMAKE_BUILD_TYPE=Release",
+				"-DTBB_INCLUDE_DIRS=/app/include",
+                "-DTBB_LIBRARIES=/app/lib/libtbb.so"
+			],
+				"sources": [
+				{
+					"type": "archive",
+					"url": "https://github.com/PixarAnimationStudios/OpenUSD/archive/refs/tags/v23.05.tar.gz",
+					"sha256": "f5c3e72cd584bab383a8054628b6ed98aa17b1cbbe896eb98257ac19641d10c7"
+				},
+		        {
+		            "type": "file",
+		            "path": "0001-usd-onetbb.patch"
+		        },
+		        {
+		            "type": "file",
+		            "path": "0002-install-bin.patch"
+		        },
+		        {
+		            "type": "shell",
+		            "commands": [
+		                "patch -p1 < 0001-usd-onetbb.patch",
+		                "patch -p1 < 0002-install-bin.patch"
+		            ]
+		        }
+			]
+		},
+        {
             "name": "F3D",
             "buildsystem": "cmake-ninja",
             "builddir": true,
@@ -386,7 +459,8 @@
                 "-DF3D_PLUGIN_BUILD_ASSIMP:BOOL=ON",
                 "-DF3D_PLUGIN_BUILD_DRACO:BOOL=ON",
                 "-DF3D_PLUGIN_BUILD_EXODUS:BOOL=ON",
-                "-DF3D_PLUGIN_BUILD_OCCT:BOOL=ON"
+                "-DF3D_PLUGIN_BUILD_OCCT:BOOL=ON",
+                "-DF3D_PLUGIN_BUILD_USD:BOOL=ON"
             ],
             "sources": [
                 {
