@@ -456,7 +456,8 @@
                 "-DF3D_PLUGIN_BUILD_ASSIMP:BOOL=ON",
                 "-DF3D_PLUGIN_BUILD_DRACO:BOOL=ON",
                 "-DF3D_PLUGIN_BUILD_EXODUS:BOOL=ON",
-                "-DF3D_PLUGIN_BUILD_OCCT:BOOL=ON"
+                "-DF3D_PLUGIN_BUILD_OCCT:BOOL=ON",
+                "-DF3D_PLUGIN_BUILD_USD:BOOL=ON"
             ],
             "sources": [
                 {
