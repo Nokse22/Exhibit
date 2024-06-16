@@ -23,4 +23,4 @@ jobs:
       with:
         bundle: io.github.nokse22.Exhibit-wayland.flatpak
         manifest-path: io.github.nokse22.Exhibit-wayland.json
-        cache-key: flatpak-builder-wayland${{ github.sha }}
+        cache-key: flatpak-builder-wayland

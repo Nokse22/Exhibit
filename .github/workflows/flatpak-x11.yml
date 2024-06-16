@@ -23,4 +23,4 @@ jobs:
       with:
         bundle: io.github.nokse22.Exhibit.flatpak
         manifest-path: io.github.nokse22.Exhibit.json
-        cache-key: flatpak-builder-${{ github.sha }}
+        cache-key: flatpak-builder-x11
