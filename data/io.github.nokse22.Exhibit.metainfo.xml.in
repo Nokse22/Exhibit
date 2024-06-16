@@ -7,9 +7,9 @@
   <name>Exhibit</name>
   <summary>Preview your 3D models</summary>
   <description>
-    <p>Based on the F3D library that supports many file formats, from digital content to scientific datasets including glTF, STL, STEP, PLY, OBJ, FBX, Alembic and many more.
-Drag and drop 3d models into the app and export an image of the 3d model.
-It supports tone mapping, ambient occlusion, anti aliasing and more.
+    <p>Based on the F3D library that supports many file formats, from digital content to scientific datasets including glTF, STL, STEP, PLY, OBJ, FBX, USD, Alembic and many more.
+You can drag and drop 3d models into the app and export an image of the rendered model.
+Change many settings like tone mapping, ambient occlusion, anti aliasing, material roughness, metallic, color and opacity to achieve the perfect render.
 You can use an HDRI image or a custom color as a background.</p>
   </description>
 
@@ -68,7 +68,7 @@ You can use an HDRI image or a custom color as a background.</p>
   </screenshots>
 
   <releases>
-    <release version="1.2.0" date="2024-06-16">
+    <release version="1.2.0" date="2024-06-17">
       <description translate="no">
         <ul>
           <li>Changed app design</li>
