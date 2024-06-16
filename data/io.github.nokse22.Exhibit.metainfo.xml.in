@@ -57,6 +57,14 @@ You can use an HDRI image or a custom color as a background.</p>
 	    <image>https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%205.png</image>
 	    <caption>Nissan Fairlady in dark theme</caption>
 	  </screenshot>
+    <screenshot>
+	    <image>https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%206.png</image>
+	    <caption>Vase 3d scan with HDRI</caption>
+	  </screenshot>
+    <screenshot>
+	    <image>https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%208.png</image>
+	    <caption>Sailing Ship 3d scan rendered as points</caption>
+	  </screenshot>
   </screenshots>
 
   <releases>
@@ -68,7 +76,9 @@ You can use an HDRI image or a custom color as a background.</p>
           <li>Added material roughness, metallic, color and opacity</li>
           <li>Added loading as scene or geometry</li>
           <li>Added movements with keys</li>
-          <li>Improved HDRI row</li>
+          <li>Improved HDRI loading UI</li>
+          <li>Added USD support</li>
+          <li>Added dark/light/follow theme selection</li>
           <li>Added Italian translation (Albano Battistella)</li>
           <li>Added Spanish translation (haggen88)</li>
           <li>Added Bulgarian translation (twlvnn)</li>
