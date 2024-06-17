@@ -129,7 +129,7 @@
                             <property name="child">
                               <object class="AdwStatusPage">
                                 <property name="hexpand">True</property>
-                                <property name="icon-name">document-save-symbolic</property>
+                                <property name="icon-name">arrow-into-box-symbolic</property>
                                 <property name="title">Drop a model or HDRI</property>
                                 <property name="css-classes">drag-overlay-status-page</property>
                               </object>
@@ -797,7 +797,7 @@
                             <property name="child">
                               <object class="AdwStatusPage">
                                 <property name="hexpand">True</property>
-                                <property name="icon-name">document-save-symbolic</property>
+                                <property name="icon-name">arrow-into-box-symbolic</property>
                                 <property name="title">Drop a model or HDRI</property>
                                 <property name="css-classes">drag-overlay-status-page</property>
                               </object>
