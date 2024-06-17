@@ -21,6 +21,6 @@ jobs:
     - uses: actions/checkout@v4
     - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
       with:
-        bundle: io.github.nokse22.Exhibit-wayland.flatpak
-        manifest-path: io.github.nokse22.Exhibit-wayland.json
-        cache-key: flatpak-builder-wayland
+        bundle: io.github.nokse22.Exhibit.flatpak
+        manifest-path: io.github.nokse22.Exhibit.json
+        cache-key: flatpak-builder-${{ github.sha }}
