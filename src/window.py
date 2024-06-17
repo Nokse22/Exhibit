@@ -252,6 +252,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.loading_drop_target.set_gtypes([Gdk.FileList])
 
         self.window_settings = WindowSettings()
+        settings = Gio.Settings.new('io.github.nokse22.Exhibit')
+
+        self.set_default_size(settings.get_int("startup-width"), settings.get_int("startup-height"))
+        self.split_view.set_show_sidebar(settings.get_boolean("startup-sidebar-show"))
 
         self.set_preference_values(False)
 

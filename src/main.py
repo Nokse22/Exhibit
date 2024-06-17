@@ -124,6 +124,11 @@ class Viewer3dApplication(Adw.Application):
             case "dark":
                 manager.set_color_scheme(Adw.ColorScheme.FORCE_DARK)
 
+    def on_window_close(self, window, app_win):
+        self.saved_settings.set_int("startup-width", window.get_width())
+        self.saved_settings.set_int("startup-height", window.get_height())
+        self.saved_settings.set_boolean("startup-sidebar-show", app_win.split_view.get_show_sidebar())
+
     def toggle_orthographic(self, *args):
         self.props.active_window.toggle_orthographic()
 
@@ -152,11 +157,12 @@ class Viewer3dApplication(Adw.Application):
             else:
                 win = Viewer3dWindow(application=self)
         win.present()
-        self.update_theme()
+        win.connect("close-request", self.on_window_close, win)
 
     def open_new_window_action(self, *args):
-        self.win = Viewer3dWindow(application=self)
-        self.win.present()
+        win = Viewer3dWindow(application=self)
+        win.present()
+        win.connect("close-request", self.on_window_close, win)
 
     def create_action(self, name, callback, shortcuts=None):
         """Add an application action.

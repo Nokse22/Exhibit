@@ -89,5 +89,14 @@
 	  <key name="model-opacity" type="d">
       <default>1.0</default>
     </key>
+	  <key name="startup-width" type="i">
+      <default>840</default>
+    </key>
+	  <key name="startup-height" type="i">
+      <default>600</default>
+    </key>
+	  <key name="startup-sidebar-show" type="b">
+      <default>true</default>
+    </key>
 	</schema>
 </schemalist>
