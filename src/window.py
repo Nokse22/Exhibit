@@ -288,6 +288,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.hdri_file_row.connect("delete-file", self.on_delete_skybox)
         self.hdri_file_row.connect("file-added", lambda row, filepath: self.load_hdri(filepath))
         hdri_path = os.environ["XDG_DATA_HOME"] + "/HDRIs"
+        if not os.path.isdir(hdri_path):
+            os.makedirs(hdri_path)
         for filepath in os.listdir(hdri_path):
             self.hdri_file_row.add_suggested_file(hdri_path + "/" + filepath)
 
