@@ -23,6 +23,25 @@ from gi.repository import Gtk, Gdk, Gio, GLib, GObject
 
 import os
 
+class ImageThumbnail(Gtk.FlowBoxChild):
+    __gtype_name__ = 'ImageThumbnail'
+
+    def __init__(self, file_thumbnail, hdri_file):
+        super().__init__()
+
+        self.hdri_file = hdri_file
+
+        file = Gio.File.new_for_path(file_thumbnail)
+        image = Gtk.Picture(
+            file=file,
+            css_classes=["suggested-picture"],
+            hexpand=True,
+            vexpand=True,
+            content_fit=Gtk.ContentFit.COVER
+        )
+        self.set_child(image)
+
+
 @Gtk.Template(resource_path='/io/github/nokse22/Exhibit/ui/file_row.ui')
 class FileRow(Adw.PreferencesRow):
     __gtype_name__ = 'FileRow'
@@ -77,25 +96,19 @@ class FileRow(Adw.PreferencesRow):
         self.emit("file-added", filepath)
         self.set_filename(filepath)
 
-    def add_suggested_file(self, filepath):
+    def add_suggested_file(self, file_thumbnail, filepath):
         print("adding", filepath)
         if os.path.isfile(filepath):
             self.suggestions_box.set_visible(True)
-            file = Gio.File.new_for_path(filepath)
-            image = Gtk.Picture(
-                file=file,
-                css_classes=["suggested-picture"],
-                hexpand=True,
-                vexpand=True,
-                content_fit=Gtk.ContentFit.COVER
-            )
-            self.suggestions_box.append(image)
+
+            hdri_thumbnail = ImageThumbnail(file_thumbnail, filepath)
+            self.suggestions_box.append(hdri_thumbnail)
 
             self.suggested_files_n += 1
             height = ((self.suggested_files_n + 3) // 4) * 70
             self.suggestions_box.set_size_request(-1, height)
 
     def on_image_activated(self, flow_box, child):
-        filepath = child.get_child().get_file().get_path()
+        filepath = child.hdri_file
         self.set_filename(filepath)
         self.emit("file-added", filepath)

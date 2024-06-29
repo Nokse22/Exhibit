@@ -31,6 +31,8 @@ import os
 import threading
 import datetime
 
+from wand.image import Image
+
 up_dir_n_to_string = {
     0: "-X",
     1: "+X",
@@ -287,11 +289,20 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.hdri_file_row.connect("open-file", self.on_open_skybox)
         self.hdri_file_row.connect("delete-file", self.on_delete_skybox)
         self.hdri_file_row.connect("file-added", lambda row, filepath: self.load_hdri(filepath))
-        hdri_path = os.environ["XDG_DATA_HOME"] + "/HDRIs"
-        if not os.path.isdir(hdri_path):
-            os.makedirs(hdri_path)
-        for filepath in os.listdir(hdri_path):
-            self.hdri_file_row.add_suggested_file(hdri_path + "/" + filepath)
+        self.hdri_path = os.environ["XDG_DATA_HOME"] + "/HDRIs"
+        if not os.path.isdir(self.hdri_path):
+            os.makedirs(self.hdri_path)
+        for filename in os.listdir(self.hdri_path):
+            name, _ = os.path.splitext(filename)
+            if "thumbnail-" in filename:
+                continue
+
+            thumbnail = self.hdri_path + "/thumbnail-" + name + ".jpg"
+            filepath = self.hdri_path + "/" + filename
+            if not os.path.isfile(thumbnail):
+                thumbnail = generate_thumbnail(filepath)
+
+            self.hdri_file_row.add_suggested_file(thumbnail, filepath)
 
         self.blur_switch.connect("notify::active", self.on_switch_toggled, "blur-background")
         self.blur_coc_spin.connect("notify::value", self.on_spin_changed, "blur-coc")
@@ -983,3 +994,25 @@ def get_up_from_path(path):
     if extension in up_ext:
         return up_ext[extension]
     return "+Y"
+
+def generate_thumbnail(hdri_file_path, width=300, height=200):
+    # Get the base name of the file (without directory and extension)
+    base_name = os.path.basename(hdri_file_path)
+    name, _ = os.path.splitext(base_name)
+
+    # Create the new file name with 'thumbnail-' prefix and .jpg extension
+    thumbnail_name = f"thumbnail-{name}.jpg"
+
+    # Determine the directory of the original file
+    directory = os.path.dirname(hdri_file_path)
+
+    # Full path for the thumbnail
+    thumbnail_path = os.path.join(directory, thumbnail_name)
+
+    # Process the image
+    with Image(filename=hdri_file_path) as img:
+        img.thumbnail(width, height)
+        img.format = 'jpeg'
+        img.save(filename=thumbnail_path)
+
+    return thumbnail_path

@@ -461,6 +461,33 @@
             ]
         },
         {
+            "name": "imagemagick",
+            "config-opts": [
+                "--disable-static"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://imagemagick.org/archive/releases/ImageMagick-6.9.12-96.tar.xz",
+                    "sha256": "570419d87cc8f22d36a038b4a91de349b181d3c23cfbedc241f89789564402b0"
+                }
+            ]
+        },
+        {
+	    "name": "python3-wand",
+	    "buildsystem": "simple",
+	    "build-commands": [
+		"pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"wand\" --no-build-isolation"
+	    ],
+	    "sources": [
+		{
+		    "type": "file",
+		    "url": "https://files.pythonhosted.org/packages/59/d5/1bdd7c9662d5e9078e25ba0eb69bdb122859295746d40ab8dfef3a7b4d42/Wand-0.6.13-py2.py3-none-any.whl",
+		    "sha256": "e5dda0ac2204a40c29ef5c4cb310770c95d3d05c37b1379e69c94ea79d7d19c0"
+		}
+	    ]
+	},
+        {
             "name" : "exhibit",
             "builddir" : true,
             "buildsystem" : "meson",
