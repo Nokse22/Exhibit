@@ -85,6 +85,7 @@
   <mime-type type="application/vnd.pts">
     <comment>Point Cloud file</comment>
     <glob pattern="*.pts"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
   </mime-type>
   <mime-type type="application/vnd.ply">
     <comment>Polygon File Format</comment>
@@ -115,6 +116,7 @@
   <mime-type type="application/vnd.vtr">
     <comment>VTK rectilinear grid file</comment>
     <glob pattern="*.vtr"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
   </mime-type>
   <mime-type type="application/vnd.vti">
     <comment>VTK image data file</comment>
@@ -185,6 +187,7 @@
   <mime-type type="application/vnd.brep">
     <comment>Open CASCADE BRep</comment>
     <glob pattern="*.brep"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
   </mime-type>
 
   <mime-type type="application/vnd.usd">
