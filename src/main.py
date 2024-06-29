@@ -20,6 +20,7 @@
 import sys
 import gi
 import os
+import webbrowser
 
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
@@ -42,6 +43,8 @@ class Viewer3dApplication(Adw.Application):
 
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action)
+
+        self.create_action('open-hdri-folder', self.on_open_hdri_folder)
 
         self.create_action('open-new-window', self.open_new_window_action, ['<primary><shift>n'])
         self.create_action('toggle-orthographic', self.toggle_orthographic, ['5'])
@@ -108,6 +111,9 @@ class Viewer3dApplication(Adw.Application):
                                 artists=["Jakub Steiner https://jimmac.eu"])
         about.add_link(_("Checkout F3D"), "https://f3d.app")
         about.present(self.props.active_window)
+
+    def on_open_hdri_folder(self, *args):
+        webbrowser.open(self.props.active_window.hdri_path)
 
     def on_theme_setting_changed(self, action: Gio.SimpleAction, state: GLib.Variant):
         action.set_state(state)
