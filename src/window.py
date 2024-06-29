@@ -717,6 +717,24 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def on_close_sidebar_clicked(self, *args):
         self.split_view.set_show_sidebar(False)
 
+    @Gtk.Template.Callback("on_open_with_external_app_clicked")
+    def on_open_with_external_app_clicked(self, *args):
+        try:
+            file = Gio.File.new_for_path(self.filepath)
+        except GLib.GError as e:
+            print("Failed to construct a new Gio.File object from path.")
+        else:
+            launcher = Gtk.FileLauncher.new(file)
+
+            def open_file_finish(_, result, *args):
+                try:
+                    launcher.launch_finish(result)
+                except GLib.GError as e:
+                    if e.code != 2: # 'The portal dialog was dismissed by the user' error
+                        print("Failed to finish Gtk.FileLauncher procedure.")
+
+            launcher.launch(self, None, open_file_finish)
+
     def on_switch_toggled(self, switch, active, name):
         self.window_settings.set_setting(name, switch.get_active())
         options = {self.keys[name]: switch.get_active()}

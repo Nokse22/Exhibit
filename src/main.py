@@ -183,3 +183,4 @@ def main(version):
     """The application's entry point."""
     app = Viewer3dApplication()
     return app.run(sys.argv)
+

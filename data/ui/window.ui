@@ -169,6 +169,13 @@
                             <property name="title" translatable="yes">Exhibit</property>
                           </object>
                         </property>
+                        <child type="start">
+                          <object class="GtkButton">
+                            <property name="icon-name">share-symbolic</property>
+                            <property name="tooltip-text" translatable="yes">Open With External App</property>
+                            <signal name="clicked" handler="on_open_with_external_app_clicked"/>
+                          </object>
+                        </child>
                         <child type="end">
                           <object class="GtkButton" id="close_sidebar_button">
                             <property name="visible">False</property>
@@ -705,9 +712,7 @@
                 <child type="top">
                   <object class="AdwHeaderBar" id="header_bar">
                     <property name="css-classes">preview-headerbar</property>
-                    <property name="title-widget">
-                      <object class="AdwBin"/>
-                    </property>
+                    <property name="show-title">False</property>
                     <child type="start">
                       <object class="GtkToggleButton" id="reveal_sidebar">
                         <property name="css-classes">flat</property>
@@ -726,11 +731,11 @@
                       </object>
                     </child>
                     <child type="start">
-                      <object class="GtkButton" id="home_button_headerbar">
-                        <property name="css-classes">flat</property>
-                        <property name="icon-name">go-home-symbolic</property>
-                        <property name="tooltip-text" translatable="yes">Reset to Bounds</property>
-                        <signal name="clicked" handler="on_home_clicked"/>
+                      <object class="GtkButton">
+                        <property name="icon-name">share-symbolic</property>
+                        <property name="tooltip-text" translatable="yes">Open With External App</property>
+                        <signal name="clicked" handler="on_open_with_external_app_clicked"/>
+                        <property name="visible" bind-source="reveal_sidebar" bind-property="active" bind-flags="invert-boolean">False</property>
                       </object>
                     </child>
                     <child type="end">
@@ -739,6 +744,14 @@
                         <property name="icon-name">perspective-symbolic</property>
                         <property name="tooltip-text" translatable="yes">Toggle Orthographic</property>
                         <signal name="clicked" handler="on_view_clicked"/>
+                      </object>
+                    </child>
+                    <child type="end">
+                      <object class="GtkButton" id="home_button_headerbar">
+                        <property name="css-classes">flat</property>
+                        <property name="icon-name">go-home-symbolic</property>
+                        <property name="tooltip-text" translatable="yes">Reset to Bounds</property>
+                        <signal name="clicked" handler="on_home_clicked"/>
                       </object>
                     </child>
                   </object>
