@@ -50,36 +50,167 @@
   <mime-type type="model/x-other">
     <comment>3D model</comment>
     <comment xml:lang="it">Modello 3D</comment>
-    <glob pattern="*.vtk"/>
-    <glob pattern="*.vtp"/>
-    <glob pattern="*.vtu"/>
-    <glob pattern="*.vtr"/>
-    <glob pattern="*.vti"/>
-    <glob pattern="*.vts"/>
-    <glob pattern="*.vtm"/>
-    <glob pattern="*.drc"/>
     <glob pattern="*.dcm"/>
     <glob pattern="*.nrrd"/>
     <glob pattern="*.nhrd"/>
     <glob pattern="*.mha"/>
+    <glob pattern="*.g"/>
+    <glob pattern="*.wrl"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+
+  <mime-type type="model/obj">
+    <comment>Wavefront OBJ File Format</comment>
+    <glob pattern="*.obj"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+  <mime-type type="model/gltf+json">
+    <comment>GL Transmission file JSON</comment>
+    <glob pattern="*.gltf"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+  <mime-type type="model/gltf-binary">
+    <comment>GL Transmission file Binary</comment>
+    <glob pattern="*.glb"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+  <mime-type type="application/vnd.3ds">
+    <comment>Autodesk 3D Studio file</comment>
+    <magic priority="50">
+      <match offset="0" type="big16" value="0x4d4d"/>
+    </magic>
+    <glob pattern="*.3ds"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+  <mime-type type="application/vnd.pts">
+    <comment>Point Cloud file</comment>
+    <glob pattern="*.pts"/>
+  </mime-type>
+  <mime-type type="application/vnd.ply">
+    <comment>Polygon File Format</comment>
+    <glob pattern="*.ply"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+  <mime-type type="application/vnd.splat">
+    <comment>3D Gaussians Splat File Format</comment>
+    <glob pattern="*.splat"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+
+  <mime-type type="application/vnd.vtk">
+    <comment>VTK legacy file</comment>
+    <glob pattern="*.vtk"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+  <mime-type type="application/vnd.vtp">
+    <comment>VTK polydata file</comment>
+    <glob pattern="*.vtp"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+  <mime-type type="application/vnd.vtu">
+    <comment>VTK unstructured grid file</comment>
+    <glob pattern="*.vtu"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+  <mime-type type="application/vnd.vtr">
+    <comment>VTK rectilinear grid file</comment>
+    <glob pattern="*.vtr"/>
+  </mime-type>
+  <mime-type type="application/vnd.vti">
+    <comment>VTK image data file</comment>
+    <glob pattern="*.vti"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+  <mime-type type="application/vnd.vts">
+    <comment>VTK structured grid file</comment>
+    <glob pattern="*.vts"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+  <mime-type type="application/vnd.vtm">
+    <comment>VTK multiblock dataset file</comment>
+    <glob pattern="*.vtm"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+
+  <mime-type type="application/vnd.abc">
+    <comment>Alembic</comment>
+    <glob pattern="*.abc"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+
+  <mime-type type="application/vnd.fbx">
+    <comment>Filmbox</comment>
+    <glob pattern="*.fbx"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+  <mime-type type="application/vnd.dae">
+    <comment>COLLADA</comment>
+    <glob pattern="*.dae"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+  <mime-type type="application/vnd.off">
+    <comment>Object File Format</comment>
+    <glob pattern="*.off"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+  <mime-type type="application/vnd.x">
+    <comment>DirectX File Format</comment>
+    <glob pattern="*.x"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+
+  <mime-type type="application/vnd.drc">
+    <comment>Draco</comment>
+    <glob pattern="*.drc"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+
+  <mime-type type="application/vnd.exodus">
+    <comment>Exodus 2 file</comment>
     <glob pattern="*.ex2"/>
     <glob pattern="*.exo"/>
-    <glob pattern="*.g"/>
-    <glob pattern="*.gml"/>
-    <glob pattern="*.vtp"/>
-    <glob pattern="*.dae"/>
-    <glob pattern="*.pts"/>
-    <glob pattern="*.ply"/>
+    <glob pattern="*.e"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+
+  <mime-type type="application/vnd.step">
+    <comment>CAD STEP exchange ISO file</comment>
+    <glob pattern="*.step"/>
+    <glob pattern="*.stp"/>
+    <glob pattern="*.stpnc"/>
+    <glob pattern="*.p21"/>
+    <glob pattern="*.210"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+  <mime-type type="application/vnd.brep">
+    <comment>Open CASCADE BRep</comment>
     <glob pattern="*.brep"/>
-    <glob pattern="*.vdb"/>
-    <glob pattern="*.wrl"/>
-    <glob pattern="*.fbx"/>
-    <glob pattern="*.dae"/>
-    <glob pattern="*.off"/>
+  </mime-type>
+
+  <mime-type type="application/vnd.usd">
+    <comment>USD</comment>
     <glob pattern="*.usd"/>
-    <glob pattern="*.usda"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+  <mime-type type="application/vnd.usdc">
+    <comment>USD Binary</comment>
     <glob pattern="*.usdc"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+  <mime-type type="model/vnd.usda">
+    <comment>USD ASCII</comment>
+    <glob pattern="*.usda"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+  <mime-type type="model/vnd.usdz+zip">
+    <comment>Compressed USD</comment>
     <glob pattern="*.usdz"/>
+    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
+  </mime-type>
+
+  <mime-type type="application/vnd.vdb">
+    <comment>VDB file</comment>
+    <glob pattern="*.vdb"/>
     <generic-icon name="io.github.nokse22.Exhibit.mime"/>
   </mime-type>
 </mime-info>
