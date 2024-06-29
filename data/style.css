@@ -17,3 +17,10 @@
   border-bottom-right-radius: 12px;
 }
 
+.suggested-picture {
+  border-radius: 6px;
+}
+
+flowbox flowboxchild {
+  padding: 0px;
+}

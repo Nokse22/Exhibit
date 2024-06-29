@@ -4,45 +4,117 @@
   <!-- interface-name t.ui -->
   <requires lib="gtk" version="4.12"/>
   <requires lib="libadwaita" version="1.0"/>
-  <template class="FileRow" parent="AdwActionRow">
+  <template class="FileRow" parent="AdwPreferencesRow">
     <child>
       <object class="GtkDropTarget" id="drop_target">
         <property name="actions">copy</property>
       </object>
     </child>
-    <child>
+    <property name="activatable">False</property>
+    <property name="child">
       <object class="GtkBox">
-        <property name="css-classes">linked</property>
+        <property name="orientation">vertical</property>
         <property name="valign">center</property>
+        <property name="hexpand">True</property>
+        <property name="margin-top">6</property>
+        <property name="margin-bottom">6</property>
+        <property name="margin-start">12</property>
+        <property name="margin-end">12</property>
+        <property name="spacing">12</property>
         <child>
-          <object class="GtkButton" id="file_button">
-
+          <object class="GtkFlowBox" id="suggestions_box">
+            <property name="hexpand">False</property>
+            <property name="visible">False</property>
+            <property name="height-request">60</property>
+            <property name="homogeneous">True</property>
+            <property name="column-spacing">6</property>
+            <property name="row-spacing">6</property>
+            <property name="max-children-per-line">4</property>
+            <property name="min-children-per-line">4</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox" id="header">
+            <property name="valign">center</property>
+            <property name="hexpand">False</property>
+            <property name="spacing">6</property>
+            <style>
+              <class name="header"/>
+            </style>
             <child>
-              <object class="GtkBox">
+              <object class="GtkBox" id="title_box">
+                <property name="orientation">vertical</property>
+                <property name="valign">center</property>
+                <property name="hexpand">True</property>
+                <style>
+                  <class name="title"/>
+                </style>
                 <child>
-                  <object class="GtkLabel" id="filename_label">
-                    <property name="max-width-chars">14</property>
-                    <property name="ellipsize">end</property>
-                    <property name="visible">false</property>
-                    <property name="margin-end">6</property>
+                  <object class="GtkLabel" id="title">
+                    <binding name="visible">
+                      <closure function="string_is_not_empty" type="gboolean">
+                        <lookup name="label">title</lookup>
+                      </closure>
+                    </binding>
+                    <property name="ellipsize">none</property>
+                    <property name="label" bind-source="FileRow" bind-property="title" bind-flags="sync-create"/>
+                    <property name="lines">0</property>
+                    <property name="mnemonic-widget">FileRow</property>
+                    <property name="wrap">True</property>
+                    <property name="wrap-mode">word-char</property>
+                    <property name="xalign">0</property>
+                    <style>
+                      <class name="title"/>
+                    </style>
                   </object>
                 </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox" id="suffixes">
+                <property name="visible">True</property>
+                <style>
+                  <class name="suffixes"/>
+                </style>
                 <child>
-                  <object class="GtkImage">
-                    <property name="icon-name">document-open-symbolic</property>
+                  <object class="GtkBox">
+                    <property name="css-classes">linked</property>
+                    <property name="valign">center</property>
+                    <child>
+                      <object class="GtkButton" id="file_button">
+                        <child>
+                          <object class="GtkBox">
+                            <child>
+                              <object class="GtkLabel" id="filename_label">
+                                <property name="max-width-chars">14</property>
+                                <property name="ellipsize">end</property>
+                                <property name="visible">false</property>
+                                <property name="margin-end">6</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="icon-name">document-open-symbolic</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="delete_button">
+                        <property name="icon-name">edit-delete-symbolic</property>
+                        <property name="visible">false</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
             </child>
           </object>
         </child>
-        <child>
-          <object class="GtkButton" id="delete_button">
-            <property name="icon-name">edit-delete-symbolic</property>
-            <property name="visible">false</property>
-          </object>
-        </child>
       </object>
-    </child>
+    </property>
   </template>
 </interface>
+

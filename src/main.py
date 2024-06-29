@@ -74,7 +74,7 @@ class Viewer3dApplication(Adw.Application):
     def do_open(self, files, n_files, hint):
         for file in files:
             file_path = file.get_path()
-            win = Viewer3dWindow(application=self, filepath=file_path)
+            win = Viewer3dWindow(application=self, startup_filepath=file_path)
             win.present()
 
     def show_image_external(self, _action, image_path: GLib.Variant, *args):
@@ -153,7 +153,7 @@ class Viewer3dApplication(Adw.Application):
         win = self.props.active_window
         if not win:
             if self.open_filepath:
-                win = Viewer3dWindow(application=self, filepath=self.open_filepath)
+                win = Viewer3dWindow(application=self, startup_filepath=self.open_filepath)
             else:
                 win = Viewer3dWindow(application=self)
         win.present()

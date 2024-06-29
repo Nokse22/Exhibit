@@ -118,32 +118,26 @@
                             </child>
                           </object>
                         </property>
-                                          </object>
-                </property>
-                        <child type="overlay">
-                          <object class="GtkRevealer">
-                            <property name="can-target">False</property>
-                            <property name="transition-duration">200</property>
-                            <property name="transition-type">crossfade</property>
-                            <property name="reveal-child" bind-source="drop_revealer" bind-property="reveal-child" bind-flags="sync-create | bidirectional">False</property>
-                            <property name="child">
-                              <object class="AdwStatusPage">
-                                <property name="hexpand">True</property>
-                                <property name="icon-name">arrow-into-box-symbolic</property>
-                                <property name="title">Drop a model or HDRI</property>
-                                <property name="css-classes">drag-overlay-status-page</property>
-                              </object>
-                            </property>
-
-                          </object>
-
-                        </child>
-
-
                       </object>
-
+                    </property>
+                    <child type="overlay">
+                      <object class="GtkRevealer">
+                        <property name="can-target">False</property>
+                        <property name="transition-duration">200</property>
+                        <property name="transition-type">crossfade</property>
+                        <property name="reveal-child" bind-source="drop_revealer" bind-property="reveal-child" bind-flags="sync-create | bidirectional">False</property>
+                        <property name="child">
+                          <object class="AdwStatusPage">
+                            <property name="hexpand">True</property>
+                            <property name="icon-name">arrow-into-box-symbolic</property>
+                            <property name="title">Drop a model or HDRI</property>
+                            <property name="css-classes">drag-overlay-status-page</property>
+                          </object>
+                        </property>
+                      </object>
                     </child>
-
+                  </object>
+                </child>
               </object>
             </property>
             <property name="name">startup_page</property>
@@ -409,7 +403,6 @@
                                                 </property>
                                               </object>
                                             </child>
-
                                             <child>
                                               <object class="AdwSpinRow" id="model_roughness_spin">
                                                 <property name="hexpand">True</property>
@@ -426,7 +419,6 @@
                                                 </property>
                                               </object>
                                             </child>
-
                                             <child>
                                               <object class="AdwActionRow">
                                                 <property name="hexpand">True</property>

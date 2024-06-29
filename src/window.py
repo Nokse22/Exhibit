@@ -241,7 +241,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     file_name = ""
 
-    def __init__(self, application=None, filepath=None):
+    def __init__(self, application=None, startup_filepath=None):
         super().__init__(application=application)
 
         self.save_as_action = self.create_action('save-as-image', self.open_save_file_chooser)
@@ -283,9 +283,15 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.light_intensity_spin.connect("notify::value", self.on_spin_changed, "light-intensity")
 
         self.use_skybox_switch.connect("notify::active", self.on_switch_toggled, "use-skybox")
+
         self.hdri_file_row.connect("open-file", self.on_open_skybox)
         self.hdri_file_row.connect("delete-file", self.on_delete_skybox)
         self.hdri_file_row.connect("file-added", lambda row, filepath: self.load_hdri(filepath))
+        hdri_path = os.environ["XDG_DATA_HOME"] + "/HDRIs"
+        for filepath in os.listdir(hdri_path):
+            print(filepath)
+            self.hdri_file_row.add_suggested_file(hdri_path + "/" + filepath)
+
         self.blur_switch.connect("notify::active", self.on_switch_toggled, "blur-background")
         self.blur_coc_spin.connect("notify::value", self.on_spin_changed, "blur-coc")
 
@@ -346,9 +352,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.update_background_color()
 
-        if filepath:
+        if startup_filepath:
             print("start file")
-            self.load_file(filepath)
+            self.load_file(startup_filepath)
 
     def on_resize(self, gl_area, width, height):
         self.width = width

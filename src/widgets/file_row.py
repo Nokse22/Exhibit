@@ -24,7 +24,7 @@ from gi.repository import Gtk, Gdk, Gio, GLib, GObject
 import os
 
 @Gtk.Template(resource_path='/io/github/nokse22/Exhibit/ui/file_row.ui')
-class FileRow(Adw.ActionRow):
+class FileRow(Adw.PreferencesRow):
     __gtype_name__ = 'FileRow'
 
     __gsignals__ = {
@@ -37,14 +37,20 @@ class FileRow(Adw.ActionRow):
     filename_label = Gtk.Template.Child()
     delete_button = Gtk.Template.Child()
     drop_target = Gtk.Template.Child()
+    suggestions_box = Gtk.Template.Child()
 
     filepath = ""
 
     def __init__(self):
         super().__init__()
 
+        self.title = ""
+
+        self.suggested_files_n = 0
+
         self.file_button.connect("clicked", self.on_open_clicked)
         self.delete_button.connect("clicked", self.on_delete_clicked)
+        self.suggestions_box.connect("child-activated", self.on_image_activated)
         self.drop_target.connect("drop", self.on_drop_received)
 
         self.drop_target.set_gtypes([Gdk.FileList])
@@ -70,3 +76,26 @@ class FileRow(Adw.ActionRow):
         filepath = value.get_files()[0].get_path()
         self.emit("file-added", filepath)
         self.set_filename(filepath)
+
+    def add_suggested_file(self, filepath):
+        print("adding", filepath)
+        if os.path.isfile(filepath):
+            self.suggestions_box.set_visible(True)
+            file = Gio.File.new_for_path(filepath)
+            image = Gtk.Picture(
+                file=file,
+                css_classes=["suggested-picture"],
+                hexpand=True,
+                vexpand=True,
+                content_fit=Gtk.ContentFit.COVER
+            )
+            self.suggestions_box.append(image)
+
+            self.suggested_files_n += 1
+            height = ((self.suggested_files_n + 3) // 4) * 70
+            self.suggestions_box.set_size_request(-1, height)
+
+    def on_image_activated(self, flow_box, child):
+        filepath = child.get_child().get_file().get_path()
+        self.set_filename(filepath)
+        self.emit("file-added", filepath)
