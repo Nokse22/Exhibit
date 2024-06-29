@@ -4,10 +4,6 @@
     <generic-icon name="io.github.nokse22.Exhibit.mime"/>
   </mime-type>
 
-  <mime-type type="model/obj">
-    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
-  </mime-type>
-
   <mime-type type="model/step">
     <comment>STEP 3D model</comment>
     <glob pattern="*.stp"/>
