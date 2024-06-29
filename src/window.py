@@ -289,7 +289,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.hdri_file_row.connect("file-added", lambda row, filepath: self.load_hdri(filepath))
         hdri_path = os.environ["XDG_DATA_HOME"] + "/HDRIs"
         for filepath in os.listdir(hdri_path):
-            print(filepath)
             self.hdri_file_row.add_suggested_file(hdri_path + "/" + filepath)
 
         self.blur_switch.connect("notify::active", self.on_switch_toggled, "blur-background")
@@ -345,6 +344,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.drag_prev_offset = (0, 0)
         self.drag_start_angle = 0
 
+        self.prev_scale = 1
+
         self.no_file_loaded = True
 
         self.style_manager = Adw.StyleManager().get_default()
@@ -379,6 +380,13 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.engine.options.update({"scene.camera.orthographic": self.window_settings.settings["orthographic"]})
         else:
             self.camera.dolly(1 - 0.1*dy)
+        self.get_distance()
+        self.gl_area.queue_render()
+
+    @Gtk.Template.Callback("on_zoom_scale_changed")
+    def on_zoom_scale_changed(self, zoom_gesture, scale):
+        self.camera.dolly(1 - self.prev_scale + scale)
+        self.prev_scale = scale
         self.get_distance()
         self.gl_area.queue_render()
 

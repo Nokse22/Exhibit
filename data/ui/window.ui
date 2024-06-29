@@ -784,6 +784,11 @@
                                   </object>
                                 </child>
                                 <child>
+                                  <object class="GtkGestureZoom">
+                                    <signal name="scale-changed" handler="on_zoom_scale_changed"/>
+                                  </object>
+                                </child>
+                                <child>
                                   <object class="GtkEventControllerScroll">
                                     <signal name="scroll" handler="on_scroll"/>
                                     <property name="flags">both-axes | horizontal | vertical | kinetic</property>
