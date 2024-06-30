@@ -289,20 +289,24 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.hdri_file_row.connect("open-file", self.on_open_skybox)
         self.hdri_file_row.connect("delete-file", self.on_delete_skybox)
         self.hdri_file_row.connect("file-added", lambda row, filepath: self.load_hdri(filepath))
-        self.hdri_path = os.environ["XDG_DATA_HOME"] + "/HDRIs"
-        if not os.path.isdir(self.hdri_path):
-            os.makedirs(self.hdri_path)
-        for filename in os.listdir(self.hdri_path):
+
+        self.hdri_path = os.environ["XDG_DATA_HOME"] + "/HDRIs/"
+        self.hdri_thumbnails_path = self.hdri_path + "/thumbnails/"
+
+        os.makedirs(self.hdri_path, exist_ok=True)
+        os.makedirs(self.hdri_thumbnails_path, exist_ok=True)
+
+        for filename in list_files(self.hdri_path):
             name, _ = os.path.splitext(filename)
-            if "thumbnail-" in filename:
-                continue
 
-            thumbnail = self.hdri_path + "/thumbnail-" + name + ".jpg"
-            filepath = self.hdri_path + "/" + filename
-            if not os.path.isfile(thumbnail):
-                thumbnail = generate_thumbnail(filepath)
-
-            self.hdri_file_row.add_suggested_file(thumbnail, filepath)
+            thumbnail = self.hdri_thumbnails_path + name + ".jpeg"
+            filepath = self.hdri_path + filename
+            try:
+                if not os.path.isfile(thumbnail):
+                    thumbnail = self.generate_thumbnail(filepath)
+                self.hdri_file_row.add_suggested_file(thumbnail, filepath)
+            except Exception as e:
+                print("Couldn't open HDRI file, skipping")
 
         self.blur_switch.connect("notify::active", self.on_switch_toggled, "blur-background")
         self.blur_coc_spin.connect("notify::value", self.on_spin_changed, "blur-coc")
@@ -937,6 +941,22 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.add_action(action)
         return action
 
+    def generate_thumbnail(self, hdri_file_path, width=300, height=200):
+        base_name = os.path.basename(hdri_file_path)
+        name, _ = os.path.splitext(base_name)
+
+        thumbnail_name = f"{name}.jpeg"
+        thumbnail_filepath = os.path.join(self.hdri_thumbnails_path, thumbnail_name)
+
+        with Image(filename=hdri_file_path) as img:
+            img.thumbnail(width, height)
+            img.gamma(1.7)
+            img.brightness_contrast(0, -5)
+            img.format = 'jpeg'
+            img.save(filename=thumbnail_filepath)
+
+        return thumbnail_filepath
+
 def p_dist(point1, point2):
     if len(point1) != len(point2):
         raise ValueError("Points must have the same dimension")
@@ -995,24 +1015,7 @@ def get_up_from_path(path):
         return up_ext[extension]
     return "+Y"
 
-def generate_thumbnail(hdri_file_path, width=300, height=200):
-    # Get the base name of the file (without directory and extension)
-    base_name = os.path.basename(hdri_file_path)
-    name, _ = os.path.splitext(base_name)
-
-    # Create the new file name with 'thumbnail-' prefix and .jpg extension
-    thumbnail_name = f"thumbnail-{name}.jpg"
-
-    # Determine the directory of the original file
-    directory = os.path.dirname(hdri_file_path)
-
-    # Full path for the thumbnail
-    thumbnail_path = os.path.join(directory, thumbnail_name)
-
-    # Process the image
-    with Image(filename=hdri_file_path) as img:
-        img.thumbnail(width, height)
-        img.format = 'jpeg'
-        img.save(filename=thumbnail_path)
-
-    return thumbnail_path
+def list_files(directory):
+    items = os.listdir(directory)
+    files = [item for item in items if os.path.isfile(os.path.join(directory, item))]
+    return files
