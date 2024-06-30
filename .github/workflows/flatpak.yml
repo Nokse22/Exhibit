@@ -6,16 +6,16 @@ on:
   pull_request:
     branches: [ "master" ]
   workflow_dispatch:
-name: "Flatpak Wayland"
+name: Flatpak
 permissions:
   id-token: write
   contents: read
 jobs:
-  flatpak-wayland:
-    name: "Flatpak Wayland"
+  flatpak:
+    name: Flatpak
     runs-on: ubuntu-latest
     container:
-      image: bilelmoussaoui/flatpak-github-actions:gnome-44
+      image: bilelmoussaoui/flatpak-github-actions:gnome-46
       options: --privileged
     steps:
     - uses: actions/checkout@v4
