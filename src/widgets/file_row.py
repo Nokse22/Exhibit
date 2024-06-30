@@ -41,6 +41,9 @@ class ImageThumbnail(Gtk.FlowBoxChild):
         )
         self.set_child(image)
 
+        base_name = os.path.basename(hdri_file)
+        self.set_tooltip_text(base_name)
+
 
 @Gtk.Template(resource_path='/io/github/nokse22/Exhibit/ui/file_row.ui')
 class FileRow(Adw.PreferencesRow):
