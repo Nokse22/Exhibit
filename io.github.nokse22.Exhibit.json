@@ -1,16 +1,16 @@
 {
-    "id" : "io.github.nokse22.Exhibit",
-    "runtime" : "org.gnome.Platform",
-    "runtime-version" : "46",
-    "sdk" : "org.gnome.Sdk",
-    "command" : "exhibit",
-    "finish-args" : [
+    "id": "io.github.nokse22.Exhibit",
+    "runtime": "org.gnome.Platform",
+    "runtime-version": "46",
+    "sdk": "org.gnome.Sdk",
+    "command": "exhibit",
+    "finish-args": [
         "--share=ipc",
         "--socket=wayland",
         "--socket=fallback-x11",
         "--device=dri"
     ],
-    "cleanup" : [
+    "cleanup": [
         "/include",
         "/lib/pkgconfig",
         "/man",
@@ -25,8 +25,8 @@
         "/cmake",
         "/CMakeFiles"
     ],
-    "modules" : [
-         "shared-modules/glew/glew.json",
+    "modules": [
+        "shared-modules/glew/glew.json",
         {
             "name": "Eigen3",
             "buildsystem": "cmake-ninja",
@@ -374,11 +374,11 @@
                     "sha256": "c0685b68dd44cc46574cce86c4e17c0f611b15e195be9848dfd0769a0a207628"
                 }
             ],
-			"build-commands": [
-				"./bootstrap.sh --prefix=/app --with-libraries=iostreams,filesystem,system,date_time,regex,program_options,python",
-				"./b2 headers",
-				"./b2 -j$FLATPAK_BUILDER_N_JOBS install variant=release cxxstd=17 --layout=system"
-			]
+            "build-commands": [
+                "./bootstrap.sh --prefix=/app --with-libraries=iostreams,filesystem,system,date_time,regex,program_options,python",
+                "./b2 headers",
+                "./b2 -j$FLATPAK_BUILDER_N_JOBS install variant=release cxxstd=17 --layout=system"
+            ]
         },
         {
             "name": "OpenSubdiv",
@@ -392,40 +392,40 @@
             ]
         },
         {
-			"name": "openUSD",
-			"buildsystem": "cmake-ninja",
-			"config-opts": [
-				"-DPXR_BUILD_ALEMBIC_PLUGIN:BOOL=OFF",
-				"-DPXR_BUILD_EMBREE_PLUGIN:BOOL=OFF",
-				"-DPXR_BUILD_IMAGING:BOOL=OFF",
-				"-DPXR_BUILD_MONOLITHIC:BOOL=ON",
-				"-DPXR_BUILD_TESTS:BOOL=OFF",
-				"-DPXR_BUILD_USD_IMAGING:BOOL=OFF",
-				"-DPXR_ENABLE_PYTHON_SUPPORT:BOOL=OFF",
-				"-DPXR_BUILD_EXAMPLES:BOOL=OFF",
-				"-DPXR_BUILD_TUTORIALS:BOOL=OFF",
-				"-DPXR_BUILD_USD_TOOLS:BOOL=OFF",
-				"-DPXR_INSTALL_LOCATION:PATH=../lib/usd",
-				"-DCMAKE_BUILD_TYPE=Release",
-				"-DTBB_INCLUDE_DIRS=/app/include",
-		        "-DTBB_LIBRARIES=/app/lib/libtbb.so"
-				],
-				"sources": [
-				{
-					"type": "archive",
-					"url": "https://github.com/PixarAnimationStudios/OpenUSD/archive/refs/tags/v23.05.tar.gz",
-					"sha256": "f5c3e72cd584bab383a8054628b6ed98aa17b1cbbe896eb98257ac19641d10c7"
-				},
-		        {
-		            "type": "patch",
-		            "path": "0001-usd-onetbb.patch"
-		        },
-		        {
-		            "type": "patch",
-		            "path": "0002-install-bin.patch"
-		        }
-			]
-		},
+            "name": "openUSD",
+            "buildsystem": "cmake-ninja",
+            "config-opts": [
+                "-DPXR_BUILD_ALEMBIC_PLUGIN:BOOL=OFF",
+                "-DPXR_BUILD_EMBREE_PLUGIN:BOOL=OFF",
+                "-DPXR_BUILD_IMAGING:BOOL=OFF",
+                "-DPXR_BUILD_MONOLITHIC:BOOL=ON",
+                "-DPXR_BUILD_TESTS:BOOL=OFF",
+                "-DPXR_BUILD_USD_IMAGING:BOOL=OFF",
+                "-DPXR_ENABLE_PYTHON_SUPPORT:BOOL=OFF",
+                "-DPXR_BUILD_EXAMPLES:BOOL=OFF",
+                "-DPXR_BUILD_TUTORIALS:BOOL=OFF",
+                "-DPXR_BUILD_USD_TOOLS:BOOL=OFF",
+                "-DPXR_INSTALL_LOCATION:PATH=../lib/usd",
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DTBB_INCLUDE_DIRS=/app/include",
+                "-DTBB_LIBRARIES=/app/lib/libtbb.so"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/PixarAnimationStudios/OpenUSD/archive/refs/tags/v23.05.tar.gz",
+                    "sha256": "f5c3e72cd584bab383a8054628b6ed98aa17b1cbbe896eb98257ac19641d10c7"
+                },
+                {
+                    "type": "patch",
+                    "path": "0001-usd-onetbb.patch"
+                },
+                {
+                    "type": "patch",
+                    "path": "0002-install-bin.patch"
+                }
+            ]
+        },
         {
             "name": "F3D",
             "buildsystem": "cmake-ninja",
@@ -437,10 +437,10 @@
                 }
             },
             "config-opts": [
-            	"-DF3D_BUILD_APPLICATION:BOOL=OFF",
-            	"-DF3D_MODULE_EXTERNAL_RENDERING:BOOL=ON",
-            	"-DF3D_MODULE_EXR:BOOL=ON",
-            	"-DF3D_BINDINGS_PYTHON:BOOL=ON",
+                "-DF3D_BUILD_APPLICATION:BOOL=OFF",
+                "-DF3D_MODULE_EXTERNAL_RENDERING:BOOL=ON",
+                "-DF3D_MODULE_EXR:BOOL=ON",
+                "-DF3D_BINDINGS_PYTHON:BOOL=ON",
                 "-DCMAKE_INSTALL_PREFIX:PATH=/app",
                 "-DBUILD_TESTING:BOOL=OFF",
                 "-DF3D_LINUX_INSTALL_DEFAULT_CONFIGURATION_FILE_IN_PREFIX:BOOL=ON",
@@ -456,7 +456,7 @@
                 {
                     "type": "git",
                     "url": "https://github.com/f3d-app/f3d",
-                    "commit" : "7040c4f0addd708552e3964d39705d0b2714a581"
+                    "commit": "7040c4f0addd708552e3964d39705d0b2714a581"
                 }
             ]
         },
@@ -474,28 +474,28 @@
             ]
         },
         {
-	    "name": "python3-wand",
-	    "buildsystem": "simple",
-	    "build-commands": [
-		"pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"wand\" --no-build-isolation"
-	    ],
-	    "sources": [
-		{
-		    "type": "file",
-		    "url": "https://files.pythonhosted.org/packages/59/d5/1bdd7c9662d5e9078e25ba0eb69bdb122859295746d40ab8dfef3a7b4d42/Wand-0.6.13-py2.py3-none-any.whl",
-		    "sha256": "e5dda0ac2204a40c29ef5c4cb310770c95d3d05c37b1379e69c94ea79d7d19c0"
-		}
-	    ]
-	},
-        {
-            "name" : "exhibit",
-            "builddir" : true,
-            "buildsystem" : "meson",
-            "sources" : [
+            "name": "python3-wand",
+            "buildsystem": "simple",
+            "build-commands": [
+                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"wand\" --no-build-isolation"
+            ],
+            "sources": [
                 {
-                    "type" : "git",
-                    "url" : "https://github.com/nokse22/Exhibit",
-                    "branch" : "master"
+                    "type": "file",
+                    "url": "https://files.pythonhosted.org/packages/59/d5/1bdd7c9662d5e9078e25ba0eb69bdb122859295746d40ab8dfef3a7b4d42/Wand-0.6.13-py2.py3-none-any.whl",
+                    "sha256": "e5dda0ac2204a40c29ef5c4cb310770c95d3d05c37b1379e69c94ea79d7d19c0"
+                }
+            ]
+        },
+        {
+            "name": "exhibit",
+            "builddir": true,
+            "buildsystem": "meson",
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://github.com/nokse22/Exhibit",
+                    "branch": "master"
                 }
             ]
         }
