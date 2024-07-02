@@ -399,11 +399,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     @Gtk.Template.Callback("on_scroll")
     def on_scroll(self, gesture, dx, dy):
         if self.window_settings.get_setting("orthographic"):
-            self.engine.options.update({"scene.camera.orthographic": False})
-            self.gl_area.get_context().make_current()
-            self.engine.window.render_to_image()
-            self.camera.dolly(1 - 0.1*dy)
-            self.engine.options.update({"scene.camera.orthographic": self.window_settings.settings["orthographic"]})
+            self.camera.zoom(1 - 0.1*dy)
         else:
             self.camera.dolly(1 - 0.1*dy)
         self.get_distance()
