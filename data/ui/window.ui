@@ -23,7 +23,7 @@
     </child>
     <child>
       <object class="AdwBreakpoint">
-        <condition>max-width: 450px</condition>
+        <condition>max-width: 500px</condition>
         <setter object="close_sidebar_button" property="visible">True</setter>
         <setter object="split_view" property="collapsed">True</setter>
         <setter object="sidebar_menu" property="visible">False</setter>
@@ -168,7 +168,7 @@
                             <property name="icon-name">share-symbolic</property>
                             <property name="tooltip-text" translatable="yes">Open With External App</property>
                             <signal name="clicked" handler="on_open_with_external_app_clicked"/>
-                            <property name="visible" bind-source="preview_open_with_button" bind-property="visible" bind-flags="invert-boolean | sync-create">True</property>
+                            <property name="visible" bind-source="split_view" bind-property="collapsed" bind-flags="invert-boolean | sync-create">True</property>
                           </object>
                         </child>
                         <child type="end">
@@ -221,7 +221,7 @@
                                           <object class="AdwPreferencesGroup">
                                             <property name="hexpand">True</property>
                                             <property name="hexpand-set">True</property>
-                                            <property name="title" translatable="yes">Render</property>
+                                            <property name="title" translatable="yes">Rendering</property>
                                             <child>
                                               <object class="AdwSwitchRow" id="translucency_switch">
                                                 <property name="hexpand">True</property>
@@ -277,54 +277,11 @@
                                             </child>
                                           </object>
                                         </child>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="AdwViewStackPage">
-                                <property name="name">model</property>
-                                <property name="icon-name">globe-symbolic</property>
-                                <property name="title" translatable="yes">Model</property>
-                                <property name="child">
-                                  <object class="GtkScrolledWindow">
-                                    <child>
-                                      <object class="GtkBox">
-                                        <property name="orientation">vertical</property>
-                                        <property name="margin-start">12</property>
-                                        <property name="margin-end">12</property>
-                                        <property name="margin-bottom">24</property>
-                                        <property name="spacing">24</property>
                                         <child>
                                           <object class="AdwPreferencesGroup">
                                             <property name="hexpand">True</property>
                                             <property name="hexpand-set">True</property>
-                                            <property name="title" translatable="yes">Model</property>
-                                            <child>
-                                              <object class="AdwComboRow" id="model_load_combo">
-                                                <property name="hexpand">True</property>
-                                                <property name="selected">0</property>
-                                                <property name="hexpand-set">True</property>
-                                                <property name="title" translatable="yes">Load type</property>
-                                                <property name="model">
-                                                  <object class="GtkStringList" id="load_type_list">
-                                                    <items>
-                                                      <item translatable="yes">Geometry</item>
-                                                      <item translatable="yes">Scene</item>
-                                                    </items>
-                                                  </object>
-                                                </property>
-                                              </object>
-                                            </child>
-                                          </object>
-                                        </child>
-                                        <child>
-                                          <object class="AdwPreferencesGroup">
-                                            <property name="hexpand">True</property>
-                                            <property name="hexpand-set">True</property>
-                                            <property name="title" translatable="yes">Rendering</property>
+                                            <property name="title" translatable="yes">Model Rendering</property>
                                             <child>
                                               <object class="AdwSwitchRow" id="edges_switch">
                                                 <property name="hexpand">True</property>
@@ -383,6 +340,50 @@
                                             </child>
                                           </object>
                                         </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="AdwViewStackPage">
+                                <property name="name">model</property>
+                                <property name="icon-name">globe-symbolic</property>
+                                <property name="title" translatable="yes">Model</property>
+                                <property name="child">
+                                  <object class="GtkScrolledWindow">
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="orientation">vertical</property>
+                                        <property name="margin-start">12</property>
+                                        <property name="margin-end">12</property>
+                                        <property name="margin-bottom">24</property>
+                                        <property name="spacing">24</property>
+                                        <child>
+                                          <object class="AdwPreferencesGroup">
+                                            <property name="hexpand">True</property>
+                                            <property name="hexpand-set">True</property>
+                                            <property name="title" translatable="yes">Model</property>
+                                            <child>
+                                              <object class="AdwComboRow" id="model_load_combo">
+                                                <property name="hexpand">True</property>
+                                                <property name="selected">0</property>
+                                                <property name="hexpand-set">True</property>
+                                                <property name="title" translatable="yes">Load type</property>
+                                                <property name="model">
+                                                  <object class="GtkStringList" id="load_type_list">
+                                                    <items>
+                                                      <item translatable="yes">Geometry</item>
+                                                      <item translatable="yes">Scene</item>
+                                                    </items>
+                                                  </object>
+                                                </property>
+                                              </object>
+                                            </child>
+                                          </object>
+                                        </child>
+
                                         <child>
                                           <object class="AdwPreferencesGroup" id="material_group">
                                             <property name="hexpand">True</property>
@@ -454,7 +455,7 @@
                                                   <object class="GtkStringList" id="coloration_list">
                                                     <items>
                                                       <item translatable="yes">Custom</item>
-                                                      <item translatable="yes">Bho</item>
+                                                      <item translatable="yes">Normal</item>
                                                       <item translatable="yes">Magnitude</item>
                                                       <item translatable="yes">Direct</item>
                                                     </items>
@@ -746,7 +747,7 @@
                         <property name="icon-name">open-menu-symbolic</property>
                         <property name="tooltip-text" translatable="yes">Menu</property>
                         <property name="menu-model">primary_menu</property>
-                        <property name="visible" bind-source="split_view" bind-property="collapsed" bind-flags="sync-create">False</property>
+                        <property name="visible" bind-source="split_view" bind-property="show-sidebar" bind-flags="sync-create | invert-boolean">False</property>
                       </object>
                     </child>
                     <child type="start">
@@ -754,7 +755,7 @@
                         <property name="icon-name">share-symbolic</property>
                         <property name="tooltip-text" translatable="yes">Open With External App</property>
                         <signal name="clicked" handler="on_open_with_external_app_clicked"/>
-                        <property name="visible" bind-source="split_view" bind-property="collapsed" bind-flags="sync-create">False</property>
+                        <property name="visible" bind-source="split_view" bind-property="show-sidebar" bind-flags="sync-create | invert-boolean">False</property>
                       </object>
                     </child>
                     <child type="end">
