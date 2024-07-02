@@ -47,7 +47,7 @@ msgstr ""
 "FBX, Alembic et bien d'autres. Glissez-déposez les modèles 3D dans l'application et exportez "
 "une image du modèle 3D. Exhibit prend en charge la correspondance tonale, l'occlusion ambiante, l' "
 "anti-crénelage et bien plus encore. Vous pouvez utiliser une image HDRI ou une couleur personnalisée comme "
-"arrière-plan".
+"arrière-plan."
 
 #: data/io.github.nokse22.Exhibit.metainfo.xml.in:42
 msgid "Planetary Reducer"
@@ -276,10 +276,6 @@ msgstr "Orientation du haut"
 #: data/ui/window.ui:603
 msgid "Changing it will reload the file"
 msgstr "Le modifier rechargera le fichier"
-
-#: data/ui/window.ui:607
-msgid "- X"
-msgstr ""
 
 #: data/ui/window.ui:607
 msgid "- X"
