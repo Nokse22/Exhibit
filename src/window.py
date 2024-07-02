@@ -105,7 +105,8 @@ class WindowSettings():
             "model-metallic": self.saved_settings.get_double("model-metallic"),
             "model-roughness": self.saved_settings.get_double("model-roughness"),
             "model-opacity": self.saved_settings.get_double("model-opacity"),
-            "load-type": None # 0 for geometry and 1 for scene
+            "load-type": None, # 0 for geometry and 1 for scene
+            "scivis-component": 0,
         }
 
     def set_setting(self, key, val):
@@ -208,6 +209,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     model_color_button = Gtk.Template.Child()
     model_opacity_spin = Gtk.Template.Child()
 
+    model_color_row = Gtk.Template.Child()
+    model_scivis_component_combo = Gtk.Template.Child()
+    color_group = Gtk.Template.Child()
+
     startup_stack = Gtk.Template.Child()
 
     keys = {
@@ -234,7 +239,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         "model-color": "model.color.rgb",
         "model-metallic": "model.material.metallic",
         "model-roughness": "model.material.roughness",
-        "model-opacity": "model.color.opacity"
+        "model-opacity": "model.color.opacity",
+        "scivis-component": "model.scivis.component"
     }
 
     width = 600
@@ -281,6 +287,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.model_metallic_spin.connect("notify::value", self.on_spin_changed, "model-metallic")
         self.model_color_button.connect("notify::rgba", self.on_color_changed, "model-color")
         self.model_opacity_spin.connect("notify::value", self.on_spin_changed, "model-opacity")
+        self.model_scivis_component_combo.connect("notify::selected", self.on_scivis_component_combo_changed)
 
         self.light_intensity_spin.connect("notify::value", self.on_spin_changed, "light-intensity")
 
@@ -345,6 +352,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         initial_options = {
             "scene.up-direction": self.window_settings.get_setting("up-direction"),
+            "model.scivis.cells": True,
+            "model.scivis.array-name": "",
         }
 
         self.engine.options.update(initial_options)
@@ -600,9 +609,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if self.window_settings.get_setting("load-type") == 0:
             self.material_group.set_sensitive(True)
             self.points_group.set_sensitive(True)
+            self.color_group.set_sensitive(True)
         elif self.window_settings.get_setting("load-type") == 1:
             self.material_group.set_sensitive(False)
             self.points_group.set_sensitive(False)
+            self.color_group.set_sensitive(False)
             self.window_settings.set_setting("show-points", False)
 
         self.set_preference_values()
@@ -756,6 +767,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             print("Failed to construct a new Gio.File object from path.")
         else:
             launcher = Gtk.FileLauncher.new(file)
+            launcher.set_always_ask(True)
 
             def open_file_finish(_, result, *args):
                 try:
@@ -831,6 +843,21 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             options = {"render.background.color": [1.0, 1.0, 1.0]}
         self.engine.options.update(options)
         GLib.idle_add(self.gl_area.queue_render)
+
+    def on_scivis_component_combo_changed(self, combo, *args):
+        selected = combo.get_selected()
+        self.model_color_row.set_sensitive(True if selected == 0 else False)
+
+        self.window_settings.set_setting("scivis-component", -selected)
+        if selected == 0:
+            options = {"model.scivis.cells": True}
+        else:
+            options = {
+                "model.scivis.component": - (selected - 1),
+                "model.scivis.cells": False
+            }
+        self.engine.options.update(options)
+        self.gl_area.queue_render()
 
     def on_delete_skybox(self, *args):
         self.window_settings.set_setting("skybox-path", "")

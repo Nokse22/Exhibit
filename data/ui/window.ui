@@ -168,6 +168,7 @@
                             <property name="icon-name">share-symbolic</property>
                             <property name="tooltip-text" translatable="yes">Open With External App</property>
                             <signal name="clicked" handler="on_open_with_external_app_clicked"/>
+                            <property name="visible" bind-source="preview_open_with_button" bind-property="visible" bind-flags="invert-boolean | sync-create">True</property>
                           </object>
                         </child>
                         <child type="end">
@@ -419,22 +420,7 @@
                                                 </property>
                                               </object>
                                             </child>
-                                            <child>
-                                              <object class="AdwActionRow">
-                                                <property name="hexpand">True</property>
-                                                <property name="hexpand-set">True</property>
-                                                <property name="title" translatable="yes">Model Color</property>
-                                                <child>
-                                                  <object class="GtkColorDialogButton" id="model_color_button">
-                                                    <property name="valign">center</property>
-                                                    <property name="rgba">rgb(119,118,123)</property>
-                                                    <property name="dialog">
-                                                      <object class="GtkColorDialog"/>
-                                                    </property>
-                                                  </object>
-                                                </child>
-                                              </object>
-                                            </child>
+
                                             <child>
                                               <object class="AdwSpinRow" id="model_opacity_spin">
                                                 <property name="hexpand">True</property>
@@ -453,6 +439,47 @@
                                             </child>
                                       </object>
                                     </child>
+                                        <child>
+                                          <object class="AdwPreferencesGroup" id="color_group">
+                                            <property name="hexpand">True</property>
+                                            <property name="hexpand-set">True</property>
+                                            <property name="title" translatable="yes">Color</property>
+                                            <child>
+                                              <object class="AdwComboRow" id="model_scivis_component_combo">
+                                                <property name="hexpand">True</property>
+                                                <property name="selected">0</property>
+                                                <property name="hexpand-set">True</property>
+                                                <property name="title" translatable="yes">Coloration</property>
+                                                <property name="model">
+                                                  <object class="GtkStringList" id="coloration_list">
+                                                    <items>
+                                                      <item translatable="yes">Custom</item>
+                                                      <item translatable="yes">Bho</item>
+                                                      <item translatable="yes">Magnitude</item>
+                                                      <item translatable="yes">Direct</item>
+                                                    </items>
+                                                  </object>
+                                                </property>
+                                              </object>
+                                            </child>
+                                            <child>
+                                              <object class="AdwActionRow" id="model_color_row">
+                                                <property name="hexpand">True</property>
+                                                <property name="hexpand-set">True</property>
+                                                <property name="title" translatable="yes">Model Color</property>
+                                                <child>
+                                                  <object class="GtkColorDialogButton" id="model_color_button">
+                                                    <property name="valign">center</property>
+                                                    <property name="rgba">rgb(119,118,123)</property>
+                                                    <property name="dialog">
+                                                      <object class="GtkColorDialog"/>
+                                                    </property>
+                                                  </object>
+                                                </child>
+                                              </object>
+                                            </child>
+                                          </object>
+                                        </child>
                                   </object>
                                 </child>
                               </object>
@@ -719,15 +746,15 @@
                         <property name="icon-name">open-menu-symbolic</property>
                         <property name="tooltip-text" translatable="yes">Menu</property>
                         <property name="menu-model">primary_menu</property>
-                        <property name="visible" bind-source="reveal_sidebar" bind-property="active" bind-flags="invert-boolean">False</property>
+                        <property name="visible" bind-source="split_view" bind-property="collapsed" bind-flags="sync-create">False</property>
                       </object>
                     </child>
                     <child type="start">
-                      <object class="GtkButton">
+                      <object class="GtkButton" id="preview_open_with_button">
                         <property name="icon-name">share-symbolic</property>
                         <property name="tooltip-text" translatable="yes">Open With External App</property>
                         <signal name="clicked" handler="on_open_with_external_app_clicked"/>
-                        <property name="visible" bind-source="reveal_sidebar" bind-property="active" bind-flags="invert-boolean">False</property>
+                        <property name="visible" bind-source="split_view" bind-property="collapsed" bind-flags="sync-create">False</property>
                       </object>
                     </child>
                     <child type="end">
