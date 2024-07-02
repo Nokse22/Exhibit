@@ -454,10 +454,16 @@
             ],
             "sources": [
                 {
-                    "type": "git",
-                    "url": "https://github.com/f3d-app/f3d",
-                    "commit": "7040c4f0addd708552e3964d39705d0b2714a581"
-                }
+		    "type": "archive",
+		    "url": "https://github.com/f3d-app/f3d/archive/refs/tags/v2.5.0.tar.gz",
+		    "sha256": "d7f6dd7d9e4465c1f44d168c3a38aad24569a25907673180c8791a783e73f02f",
+		    "x-checker-data": {
+		        "type": "anitya",
+		        "project-id": 224911,
+		        "stable-only": true,
+		        "url-template": "https://github.com/f3d-app/f3d/archive/refs/tags/v$version.tar.gz"
+		    }
+		}
             ]
         },
         {
