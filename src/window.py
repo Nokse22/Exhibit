@@ -846,7 +846,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.window_settings.set_setting("scivis-component", -selected)
         if selected == 0:
-            options = {"model.scivis.cells": True}
+            options = {
+                "model.scivis.component": -1,
+                "model.scivis.cells": True
+            }
         else:
             options = {
                 "model.scivis.component": - (selected - 1),
