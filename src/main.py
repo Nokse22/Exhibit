@@ -47,11 +47,21 @@ class Viewer3dApplication(Adw.Application):
         self.create_action('open-hdri-folder', self.on_open_hdri_folder)
 
         self.create_action('open-new-window', self.open_new_window_action, ['<primary><shift>n'])
-        self.create_action('toggle-orthographic', self.toggle_orthographic, ['5'])
-        self.create_action('front-view', self.front_view, ['1'])
-        self.create_action('right-view', self.right_view, ['3'])
-        self.create_action('top-view', self.top_view, ['7'])
-        self.create_action('isometric-view', self.isometric_view, ['9'])
+        self.create_action('toggle-orthographic', self.toggle_orthographic, ['<primary>5'])
+        self.create_action('front-view', self.front_view, ['<primary>1'])
+        self.create_action('right-view', self.right_view, ['<primary>3'])
+        self.create_action('top-view', self.top_view, ['<primary>7'])
+        self.create_action('isometric-view', self.isometric_view, ['<primary>9'])
+
+        self.create_action('move-camera-w', self.on_move_camera, ['<primary>w'], "w")
+        self.create_action('move-camera-a', self.on_move_camera, ['<primary>a'], "a")
+        self.create_action('move-camera-s', self.on_move_camera, ['<primary>s'], "s")
+        self.create_action('move-camera-d', self.on_move_camera, ['<primary>d'], "d")
+
+        self.create_action('rotate-camera-left', self.on_rotate_camera, ['<primary>Left'], "left")
+        self.create_action('rotate-camera-right', self.on_rotate_camera, ['<primary>Right'], "right")
+        self.create_action('rotate-camera-up', self.on_rotate_camera, ['<primary>Up'], "up")
+        self.create_action('rotate-camera-down', self.on_rotate_camera, ['<primary>Down'], "down")
 
         user_home_dir = os.environ.get("XDG_CONFIG_HOME", os.environ["HOME"])
         show_image_external_action = Gio.SimpleAction.new_stateful(
@@ -120,6 +130,20 @@ class Viewer3dApplication(Adw.Application):
         self.saved_settings.set_string("theme", state.get_string())
         self.update_theme()
 
+    def on_move_camera(self, action, _, direction):
+        match direction:
+            case "w":
+                self.props.active_window.f3d_viewer.pan(0, 0, 1)
+            case "a":
+                self.props.active_window.f3d_viewer.pan(-1, 0, 0)
+            case "s":
+                self.props.active_window.f3d_viewer.pan(0, 0, -1)
+            case "d":
+                self.props.active_window.f3d_viewer.pan(1, 0, 0)
+
+    def on_rotate_camera(self, action, _, direction):
+        self.props.active_window.f3d_viewer.rotate_camera(direction)
+
     def update_theme(self):
         manager  = Adw.StyleManager().get_default()
         match self.saved_settings.get_string("theme"):
@@ -139,16 +163,16 @@ class Viewer3dApplication(Adw.Application):
         self.props.active_window.toggle_orthographic()
 
     def front_view(self, *args):
-        self.props.active_window.front_view()
+        self.props.active_window.f3d_viewer.front_view()
 
     def right_view(self, *args):
-        self.props.active_window.right_view()
+        self.props.active_window.f3d_viewer.right_view()
 
     def top_view(self, *args):
-        self.props.active_window.top_view()
+        self.props.active_window.f3d_viewer.top_view()
 
     def isometric_view(self, *args):
-        self.props.active_window.isometric_view()
+        self.props.active_window.f3d_viewer.isometric_view()
 
     def do_activate(self):
         """Called when the application is activated.
@@ -170,7 +194,7 @@ class Viewer3dApplication(Adw.Application):
         win.present()
         win.connect("close-request", self.on_window_close, win)
 
-    def create_action(self, name, callback, shortcuts=None):
+    def create_action(self, name, callback, shortcuts=None, argument=None):
         """Add an application action.
 
         Args:
@@ -180,7 +204,10 @@ class Viewer3dApplication(Adw.Application):
             shortcuts: an optional list of accelerators
         """
         action = Gio.SimpleAction.new(name, None)
-        action.connect("activate", callback)
+        if argument:
+            action.connect("activate", callback, argument)
+        else:
+            action.connect("activate", callback)
         self.add_action(action)
         if shortcuts:
             self.set_accels_for_action(f"app.{name}", shortcuts)

@@ -10,11 +10,6 @@
     <property name="height-request">360</property>
     <property name="title" translatable="yes">Exhibit</property>
     <child>
-      <object class="GtkEventControllerKey">
-        <signal name="key-pressed" handler="on_key_pressed"/>
-      </object>
-    </child>
-    <child>
       <object class="AdwBreakpoint">
         <condition>max-width: 650px</condition>
         <setter object="split_view" property="collapsed">True</setter>
@@ -287,7 +282,7 @@
                                                 <property name="hexpand">True</property>
                                                 <property name="hexpand-set">True</property>
                                                 <property name="title" translatable="yes">Show All Edges</property>
-                                                <property name="sensitive" bind-source="points_expander" bind-property="enable-expansion" bind-flags="invert-boolean">True</property>
+                                                <property name="sensitive" bind-source="spheres_switch" bind-property="active" bind-flags="invert-boolean">True</property>
                                               </object>
                                             </child>
                                             <child>
@@ -313,29 +308,27 @@
                                             <property name="hexpand">True</property>
                                             <property name="hexpand-set">True</property>
                                             <child>
-                                              <object class="AdwExpanderRow" id="points_expander">
-                                                <property name="show-enable-switch">True</property>
-                                                <property name="enable-expansion">False</property>
+                                              <object class="AdwSwitchRow" id="spheres_switch">
                                                 <property name="hexpand">True</property>
                                                 <property name="hexpand-set">True</property>
-                                                <property name="title" translatable="yes">Show Points</property>
+                                                <property name="title" translatable="yes">Show Spheres</property>
                                                 <property name="sensitive" bind-source="edges_switch" bind-property="active" bind-flags="invert-boolean">True</property>
-                                                <child>
-                                                  <object class="AdwSpinRow" id="points_size_spin">
-                                                    <property name="hexpand">True</property>
-                                                    <property name="hexpand-set">True</property>
-                                                    <property name="title" translatable="yes">Points Size</property>
-                                                    <!-- <property name="digits">1</property> -->
-                                                    <property name="adjustment">
-                                                      <object class="GtkAdjustment">
-                                                        <property name="lower">0</property>
-                                                        <property name="upper">10</property>
-                                                        <property name="value">1</property>
-                                                        <property name="step-increment">1</property>
-                                                      </object>
-                                                    </property>
+                                              </object>
+                                            </child>
+                                            <child>
+                                              <object class="AdwSpinRow" id="points_size_spin">
+                                                <property name="hexpand">True</property>
+                                                <property name="hexpand-set">True</property>
+                                                <property name="title" translatable="yes">Points Size</property>
+                                                <!-- <property name="digits">1</property> -->
+                                                <property name="adjustment">
+                                                  <object class="GtkAdjustment">
+                                                    <property name="lower">0</property>
+                                                    <property name="upper">10</property>
+                                                    <property name="value">1</property>
+                                                    <property name="step-increment">1</property>
                                                   </object>
-                                                </child>
+                                                </property>
                                               </object>
                                             </child>
                                           </object>
@@ -792,36 +785,7 @@
                         <property name="child">
                           <object class="AdwToastOverlay" id="toast_overlay">
                             <property name="child">
-                              <object class="AdwBin" id="view_bin">
-                                <property name="css-classes">fix-render</property>
-                                <property name="overflow">hidden</property>
-                                <property name="can-focus">true</property>
-                                <child>
-                              <object class="GtkGLArea" id="gl_area">
-                                <property name="has-depth-buffer">true</property>
-                                <property name="has-stencil-buffer">true</property>
-                                <property name="vexpand">true</property>
-                                <property name="overflow">hidden</property>
-                                </object>
-                                </child>
-                                <child>
-                                  <object class="GtkGestureDrag">
-                                    <signal name="drag-update" handler="on_drag_update"/>
-                                    <signal name="drag-end" handler="on_drag_end"/>
-                                    <property name="button">0</property>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkGestureZoom">
-                                    <signal name="scale-changed" handler="on_zoom_scale_changed"/>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkEventControllerScroll">
-                                    <signal name="scroll" handler="on_scroll"/>
-                                    <property name="flags">both-axes | horizontal | vertical | kinetic</property>
-                                  </object>
-                                </child>
+                              <object class="F3DViewer" id="f3d_viewer">
                               </object>
                             </property>
                           </object>

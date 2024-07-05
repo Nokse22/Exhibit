@@ -22,6 +22,7 @@ from gi.repository import Adw
 from gi.repository import Gtk, Gdk, Gio, GLib, GObject
 
 from .widgets import *
+from .vector_math import *
 
 import f3d
 from f3d import *
@@ -151,7 +152,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     split_view = Gtk.Template.Child()
 
-    gl_area = Gtk.Template.Child()
+    f3d_viewer = Gtk.Template.Child()
 
     title_widget = Gtk.Template.Child()
     stack = Gtk.Template.Child()
@@ -197,7 +198,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     automatic_up_direction_switch = Gtk.Template.Child()
 
     points_group = Gtk.Template.Child()
-    points_expander = Gtk.Template.Child()
+    spheres_switch = Gtk.Template.Child()
     points_size_spin = Gtk.Template.Child()
 
     model_load_combo = Gtk.Template.Child()
@@ -253,7 +254,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         super().__init__(application=application)
 
         self.save_as_action = self.create_action('save-as-image', self.open_save_file_chooser)
-
         self.open_new_action = self.create_action('open-new', self.open_file_chooser)
 
         self.view_drop_target.set_gtypes([Gdk.FileList])
@@ -279,7 +279,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.edges_switch.connect("notify::active", self.on_switch_toggled, "show-edges")
         self.edges_width_spin.connect("notify::value", self.on_spin_changed, "edges-width")
 
-        self.points_expander.connect("notify::enable-expansion", self.on_expander_toggled, "show-points")
+        self.spheres_switch.connect("notify::active", self.on_switch_toggled, "show-points")
         self.points_size_spin.connect("notify::value", self.on_spin_changed, "point-size")
 
         self.load_type_combo_handler_id = self.model_load_combo.connect("notify::selected", self.set_load_type)
@@ -339,38 +339,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 lambda switch, *args: self.window_settings.set_setting("auto-up-dir", switch.get_active())
         )
 
-        self.engine = Engine(Window.EXTERNAL)
-        self.loader = self.engine.getLoader()
-        self.camera = self.engine.window.getCamera()
-
-        self.engine.autoload_plugins()
-
-        self.camera.setFocalPoint((0,0,0))
-
         if self.window_settings.get_setting("orthographic"):
             self.toggle_orthographic()
-
-        initial_options = {
-            "scene.up-direction": self.window_settings.get_setting("up-direction"),
-            "model.scivis.cells": True,
-            "model.scivis.array-name": "",
-        }
-
-        self.engine.options.update(initial_options)
-
-        self.gl_area.set_auto_render(True)
-        self.gl_area.connect("realize", self.on_realize)
-        self.gl_area.connect("render", self.on_render)
-        self.gl_area.connect("resize", self.on_resize)
-
-        self.gl_area.set_allowed_apis(Gdk.GLAPI.GL)
-        # self.gl_area.set_required_version(1, 0)
-
-        self.prev_pan_offset = 0
-        self.drag_prev_offset = (0, 0)
-        self.drag_start_angle = 0
-
-        self.prev_scale = 1
 
         self.no_file_loaded = True
 
@@ -383,128 +353,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             print("start file")
             self.load_file(startup_filepath)
 
-    def on_resize(self, gl_area, width, height):
-        self.width = width
-        self.height = height
-
-    def on_realize(self, area):
-        if self.gl_area.get_context() is None:
-            print("Could not create GL context")
-
-    def on_render(self, area, ctx):
-        self.gl_area.get_context().make_current()
-        self.engine.window.render()
-        return True
-
-    @Gtk.Template.Callback("on_scroll")
-    def on_scroll(self, gesture, dx, dy):
-        if self.window_settings.get_setting("orthographic"):
-            self.camera.zoom(1 - 0.1*dy)
-        else:
-            self.camera.dolly(1 - 0.1*dy)
-        self.get_distance()
-        self.gl_area.queue_render()
-
-    @Gtk.Template.Callback("on_zoom_scale_changed")
-    def on_zoom_scale_changed(self, zoom_gesture, scale):
-        self.camera.dolly(1 - self.prev_scale + scale)
-        self.prev_scale = scale
-        self.get_distance()
-        self.gl_area.queue_render()
-
-    @Gtk.Template.Callback("on_drag_update")
-    def on_drag_update(self, gesture, x_offset, y_offset):
-        if gesture.get_current_button() == 1:
-            dist, direction = self.get_camera_to_focal_distance()
-            y = -(self.drag_prev_offset[1] - y_offset) * 0.5
-            x = (self.drag_prev_offset[0] - x_offset) * 0.5
-            if not self.window_settings.get_setting("point-up"):
-                self.camera.elevation(y)
-                self.camera.azimuth(x)
-            else:
-                if (dist > self.get_gimble_limit() or (dist < self.get_gimble_limit()) and
-                        (direction == 1 and y < 0) or (dist < self.get_gimble_limit() and direction == -1 and y > 0)):
-                    self.camera.elevation(y)
-                self.camera.azimuth(x)
-        elif gesture.get_current_button() == 2:
-            self.camera.pan(
-                (self.drag_prev_offset[0] - x_offset) * (0.0000001*self.width + 0.001*self.distance),
-                -(self.drag_prev_offset[1] - y_offset) * (0.0000001*self.height + 0.001*self.distance),
-                0
-            )
-
-        if self.window_settings.get_setting("point-up"):
-            up = up_dirs_vector[self.window_settings.get_setting("up-direction")]
-            self.camera.setViewUp(up)
-
-        self.gl_area.queue_render()
-
-        self.drag_prev_offset = (x_offset, y_offset)
-
-    @Gtk.Template.Callback("on_drag_end")
-    def on_drag_end(self, gesture, *args):
-        self.drag_prev_offset = (0, 0)
-
-    @Gtk.Template.Callback("on_key_pressed")
-    def on_key_pressed(self, controller, keyval, keycode, state):
-        val = self.distance / 40
-
-        focal_point = self.camera.focal_point
-
-        match keycode:
-            case 25:
-                self.camera.pan(0, 0, val)
-            case 38:
-                self.camera.pan(-val, 0, 0)
-            case 39:
-                self.camera.pan(0, 0, -val)
-            case 40:
-                self.camera.pan(val, 0, 0)
-            case 113:
-                self.camera.pan(-val, 0, 0)
-                self.camera.focal_point = focal_point
-            case 114:
-                self.camera.pan(val, 0, 0)
-                self.camera.focal_point = focal_point
-            case 111:
-                dist, direction = self.get_camera_to_focal_distance()
-                if dist > self.get_gimble_limit() or (dist < self.get_gimble_limit() and direction == -1):
-                    self.camera.pan(0, val, 0)
-                    self.camera.focal_point = focal_point
-            case 116:
-                dist, direction = self.get_camera_to_focal_distance()
-                if dist > self.get_gimble_limit() or (dist < self.get_gimble_limit() and direction == 1):
-                    self.camera.pan(0, -val, 0)
-                    self.camera.focal_point = focal_point
-
-        if self.window_settings.get_setting("point-up"):
-            up = up_dirs_vector[self.window_settings.get_setting("up-direction")]
-            self.camera.setViewUp(up)
-
-        self.gl_area.queue_render()
-
     def get_gimble_limit(self):
         return self.distance / 10
-
-    def get_camera_to_focal_distance(self):
-        up = up_dirs_vector[self.window_settings.get_setting("up-direction")]
-        pos = self.camera.position
-        foc = self.camera.focal_point
-
-        pos_proj = v_sub(v_dot_p(pos, v_abs(up)), pos)
-        foc_proj = v_sub(v_dot_p(foc, v_abs(up)), foc)
-
-        dist = p_dist(pos_proj, foc_proj)
-
-        pos_height = v_dot_p(pos, v_abs(up))
-        foc_height = v_dot_p(foc, v_abs(up))
-
-        diff = v_sub(pos_height, foc_height)
-
-        for number in diff:
-            if number != 0:
-                return dist, (1 if number > 0 else -1)
-        return dist, 1
 
     def open_file_chooser(self, *args):
         file_filter = Gtk.FileFilter(name="All supported formats")
@@ -540,36 +390,36 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.window_settings.set_setting("up-direction", up)
 
         options = {"scene.up-direction": self.window_settings.get_setting("up-direction")}
-        self.engine.options.update(options)
+        self.f3d_viewer.update_options(options)
 
         def _load():
             scene_loaded = False
             geometry_loaded = False
 
             if self.window_settings.get_setting("load-type") is None:
-                if self.engine.loader.hasSceneReader(filepath):
-                    self.engine.loader.load_scene(filepath)
+                if self.f3d_viewer.has_scene_loader(filepath):
+                    self.f3d_viewer.load_scene(filepath)
                     scene_loaded = True
                     GLib.idle_add(self.model_load_combo.set_sensitive, True)
-                elif self.engine.loader.hasGeometryReader(filepath):
-                    self.engine.loader.load_geometry(filepath, True)
+                elif self.f3d_viewer.has_geometry_loader(filepath):
+                    self.f3d_viewer.load_geometry(filepath)
                     geometry_loaded = True
                     GLib.idle_add(self.model_load_combo.set_sensitive, False)
 
             elif self.window_settings.get_setting("load-type") == 0:
-                if self.engine.loader.hasGeometryReader(filepath):
-                    self.engine.loader.load_geometry(filepath, True)
+                if self.f3d_viewer.has_geometry_loader(filepath):
+                    self.f3d_viewer.load_geometry(filepath)
                     geometry_loaded = True
             elif self.window_settings.get_setting("load-type") == 1:
-                if self.engine.loader.hasSceneReader(filepath):
-                    self.engine.loader.load_scene(filepath)
+                if self.f3d_viewer.has_scene_loader(filepath):
+                    self.f3d_viewer.load_scene(filepath)
                     scene_loaded = True
 
             if not scene_loaded and not geometry_loaded:
                 GLib.idle_add(self.on_file_not_opened, filepath)
                 return
 
-            if self.engine.loader.hasGeometryReader(filepath) and self.engine.loader.hasSceneReader(filepath):
+            if self.f3d_viewer.has_geometry_loader(filepath) and self.f3d_viewer.has_scene_loader(filepath):
                 GLib.idle_add(self.model_load_combo.set_sensitive, True)
             else:
                 GLib.idle_add(self.model_load_combo.set_sensitive, False)
@@ -579,8 +429,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             elif geometry_loaded:
                 self.window_settings.set_setting("load-type", 0)
 
-            self.camera.resetToBounds()
-            self.get_distance()
             self.update_options()
 
             self.filepath = filepath
@@ -623,7 +471,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         else:
             self.send_toast(_("Can't open") + " " + os.path.basename(filepath))
         options = {"scene.up-direction": self.window_settings.get_setting("up-direction")}
-        self.engine.options.update(options)
+        self.f3d_viewer.update_options(options)
 
     def send_toast(self, message):
         toast = Adw.Toast(title=message, timeout=2)
@@ -636,12 +484,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 f3d_key = self.keys[key]
             options.setdefault(f3d_key, value)
 
-        self.engine.options.update(options)
+        self.f3d_viewer.update_options(options)
         self.update_background_color()
 
     def save_as_image(self, filepath):
-        self.gl_area.get_context().make_current()
-        img = self.engine.window.render_to_image()
+        img = self.f3d_viewer.render_image()
         img.save(filepath)
 
     def open_save_file_chooser(self, *args):
@@ -669,48 +516,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             )
             self.toast_overlay.add_toast(toast)
 
-    def front_view(self, *args):
-        up_v = up_dirs_vector[self.window_settings.get_setting("up-direction")]
-        vector = v_mul(tuple([up_v[2], up_v[0], up_v[1]]), 1000)
-        self.camera.position = v_add(self.camera.focal_point, vector)
-        self.camera.setViewUp(up_dirs_vector[self.window_settings.get_setting("up-direction")])
-        self.camera.resetToBounds()
-        self.get_distance()
-        self.gl_area.queue_render()
-
-    def right_view(self, *args):
-        up_v = up_dirs_vector[self.window_settings.get_setting("up-direction")]
-        vector = v_mul(tuple([up_v[1], up_v[2], up_v[0]]), 1000)
-        self.camera.position = v_add(self.camera.focal_point, vector)
-        self.camera.setViewUp(up_dirs_vector[self.window_settings.get_setting("up-direction")])
-        self.camera.resetToBounds()
-        self.get_distance()
-        self.gl_area.queue_render()
-
-    def top_view(self, *args):
-        up_v = up_dirs_vector[self.window_settings.get_setting("up-direction")]
-        vector = v_mul(up_v, 1000)
-        self.camera.position = v_add(self.camera.focal_point, vector)
-        vector = v_mul(tuple([up_v[1], up_v[2], up_v[0]]), 1000)
-        self.camera.setViewUp(vector)
-        self.camera.resetToBounds()
-        self.get_distance()
-        self.gl_area.queue_render()
-
-    def isometric_view(self, *args):
-        up_v = up_dirs_vector[self.window_settings.get_setting("up-direction")]
-        vector = v_add(tuple([up_v[2], up_v[0], up_v[1]]), tuple([up_v[1], up_v[2], up_v[0]]))
-        self.camera.position = v_mul(v_norm(v_add(vector, up_v)), 1000)
-        self.camera.setViewUp(up_dirs_vector[self.window_settings.get_setting("up-direction")])
-        self.camera.resetToBounds()
-        self.get_distance()
-        self.gl_area.queue_render()
-
     @Gtk.Template.Callback("on_home_clicked")
     def on_home_clicked(self, btn):
-        self.camera.resetToBounds()
-        self.get_distance()
-        self.gl_area.queue_render()
+        self.f3d_viewer.reset_to_bounds()
 
     @Gtk.Template.Callback("on_open_button_clicked")
     def on_open_button_clicked(self, btn):
@@ -727,8 +535,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             btn.set_icon_name("perspective-symbolic")
             camera_options = {"scene.camera.orthographic": False}
             self.window_settings.set_setting("orthographic", False)
-        self.engine.options.update(camera_options)
-        self.gl_area.queue_render()
+        self.f3d_viewer.update_options(camera_options)
 
     @Gtk.Template.Callback("on_drop_received")
     def on_drop_received(self, drop, value, x, y):
@@ -777,44 +584,39 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def on_switch_toggled(self, switch, active, name):
         self.window_settings.set_setting(name, switch.get_active())
         options = {self.keys[name]: switch.get_active()}
-        self.engine.options.update(options)
-        self.gl_area.queue_render()
+        self.f3d_viewer.update_options(options)
 
     def on_expander_toggled(self, expander, enabled, name):
         self.window_settings.set_setting(name, expander.get_enable_expansion())
         options = {self.keys[name]: expander.get_enable_expansion()}
-        self.engine.options.update(options)
-        self.gl_area.queue_render()
+        self.f3d_viewer.update_options(options)
 
     def on_spin_changed(self, spin, value, name):
         val = float(round(spin.get_value(), 2))
         options = {self.keys[name]: val}
         self.window_settings.set_setting(name, val)
-        self.engine.options.update(options)
-        self.gl_area.queue_render()
+        self.f3d_viewer.update_options(options)
 
     def set_point_up(self, switch, active, name):
         val = switch.get_active()
         self.window_settings.set_setting(name, val)
         if val:
-            self.camera.setViewUp(up_dirs_vector[self.window_settings.get_setting("up-direction")])
-            self.gl_area.queue_render()
-
-    def get_distance(self):
-        self.distance = p_dist(self.camera.position, (0,0,0))
+            self.f3d_viewer.set_view_up(up_dirs_vector[self.window_settings.get_setting("up-direction")])
+            self.f3d_viewer.always_point_up = True
+        else:
+            self.f3d_viewer.always_point_up = False
 
     def on_color_changed(self, btn, color, setting):
         color_list = rgb_to_list(btn.get_rgba().to_string())
         self.window_settings.set_setting(setting, color_list)
         if setting in self.keys:
             options = {self.keys[setting]: color_list}
-            self.engine.options.update(options)
-            self.gl_area.queue_render()
+            self.f3d_viewer.update_options(options)
 
     def set_up_direction(self, combo, *args):
         direction = up_dir_n_to_string[combo.get_selected()]
         options = {"scene.up-direction": direction}
-        self.engine.options.update(options)
+        self.f3d_viewer.update_options(options)
         self.window_settings.set_setting("up-direction", direction)
         print("set up")
         self.load_file(self.filepath, True)
@@ -830,15 +632,15 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             options = {
                 "render.background.color": self.window_settings.get_setting("background-color"),
             }
-            self.engine.options.update(options)
-            GLib.idle_add(self.gl_area.queue_render)
+            self.f3d_viewer.update_options(options)
+            GLib.idle_add(self.f3d_viewer.queue_render)
             return
         if self.style_manager.get_dark():
             options = {"render.background.color": [0.2, 0.2, 0.2]}
         else:
             options = {"render.background.color": [1.0, 1.0, 1.0]}
-        self.engine.options.update(options)
-        GLib.idle_add(self.gl_area.queue_render)
+        self.f3d_viewer.update_options(options)
+        GLib.idle_add(self.f3d_viewer.queue_render)
 
     def on_scivis_component_combo_changed(self, combo, *args):
         selected = combo.get_selected()
@@ -855,8 +657,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 "model.scivis.component": - (selected - 1),
                 "model.scivis.cells": False
             }
-        self.engine.options.update(options)
-        self.gl_area.queue_render()
+        self.f3d_viewer.update_options(options)
 
     def on_delete_skybox(self, *args):
         self.window_settings.set_setting("skybox-path", "")
@@ -864,8 +665,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.use_skybox_switch.set_active(False)
         options = {"render.hdri.file": "",
                          "render.background.skybox": False}
-        self.engine.options.update(options)
-        self.gl_area.queue_render()
+        self.f3d_viewer.update_options(options)
 
     def on_open_skybox(self, *args):
         file_filter = Gtk.FileFilter(name="All supported formats")
@@ -898,8 +698,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.hdri_file_row.set_filename(filepath)
         options = {"render.hdri.file": filepath,
                          "render.background.skybox": True}
-        self.engine.options.update(options)
-        self.gl_area.queue_render()
+        self.f3d_viewer.update_options(options)
 
     def set_preference_values(self, block=True):
         if block:
@@ -923,7 +722,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.edges_switch.set_active(self.window_settings.get_setting("show-edges"))
         self.edges_width_spin.set_value(self.window_settings.get_setting("edges-width"))
 
-        self.points_expander.set_enable_expansion(self.window_settings.get_setting("show-points"))
+        self.spheres_switch.set_active(self.window_settings.get_setting("show-points"))
         self.points_size_spin.set_value(self.window_settings.get_setting("point-size"))
 
         self.point_up_switch.set_active(self.window_settings.get_setting("point-up"))
@@ -956,7 +755,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def on_reset_settings_clicked(self, btn):
         self.window_settings.reset_all()
         self.set_preference_values(False)
-        self.gl_area.queue_render()
+        self.f3d_viewer.queue_render()
 
     def on_save_settings_clicked(self, btn):
         self.window_settings.save_all_settings()
@@ -982,45 +781,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             img.save(filename=thumbnail_filepath)
 
         return thumbnail_filepath
-
-def p_dist(point1, point2):
-    if len(point1) != len(point2):
-        raise ValueError("Points must have the same dimension")
-
-    squared_diffs = [(x - y) ** 2 for x, y in zip(point1, point2)]
-    return math.sqrt(sum(squared_diffs))
-
-def v_mod(vector):
-    return math.sqrt(sum([(x) ** 2 for x in vector]))
-
-def v_abs(vector):
-    return tuple(abs(x) for x in vector)
-
-def v_norm(vector):
-    norm = math.sqrt(sum(x**2 for x in vector))
-    return tuple(x / norm for x in vector)
-
-def v_add(vector1, vector2):
-    return tuple(v1 + v2 for v1, v2 in zip(vector1, vector2))
-
-def v_sub(vector1, vector2):
-    return tuple(v1 - v2 for v1, v2 in zip(vector1, vector2))
-
-def v_mul(vector, scalar):
-    return tuple(v * scalar for v in vector)
-
-def v_dot_p(vector1, vector2):
-    return tuple(v1 * v2 for v1, v2 in zip(vector1, vector2))
-
-def v_cross(vector1, vector2):
-    if len(vector1) != 3 or len(vector2) != 3:
-        raise ValueError("Cross product is defined only for 3-dimensional vectors.")
-
-    x = vector1[1] * vector2[2] - vector1[2] * vector2[1]
-    y = vector1[2] * vector2[0] - vector1[0] * vector2[2]
-    z = vector1[0] * vector2[1] - vector1[1] * vector2[0]
-
-    return (x, y, z)
 
 def rgb_to_list(rgb):
     values = [int(x) / 255 for x in rgb[4:-1].split(',')]
