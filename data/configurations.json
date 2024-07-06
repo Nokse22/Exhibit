@@ -1,0 +1,68 @@
+{
+	"general":
+	{
+		"name": "General",
+		"formats": "*",
+		"settings":
+		{
+		}
+	},
+	"3d_printing":
+	{
+		"name": "3D Printing",
+		"formats": ".*(3ds|stl|off|3mf)",
+		"settings":
+		{
+			"up": "+Z",
+			"grid": true,
+			"translucency-support": true,
+			"comp": 0
+		}
+	},
+	"mechanical":
+	{
+		"name": "Mechanical",
+		"formats": ".*(step|stp|iges|igs)",
+		"settings":
+		{
+			"load-plugins": "occt",
+			"up": "+Z",
+			"ambient-occlusion": true,
+			"comp": -2,
+			"cells": true,
+			"camera-direction": "-1,1,-0.5"
+		}
+	},
+	"splat":
+	{
+		"name": "Splat",
+		"formats": ".*(splat)",
+		"settings":
+		{
+			"point-sprites": true,
+			"point-size": 1.0,
+			"point-type": "gaussian",
+			"scalars": "color",
+			"comp": -2,
+			"bg-color": "0, 0, 0",
+			"up": "-Y",
+			"trackball": true,
+			"camera-position": "0,1,-5.2",
+			"camera-focal-point": "0,1,0",
+			"tone-mapping": false,
+			"grid": false,
+			"anti-aliasing": false,
+			"translucency-support": false
+		}
+	},
+	"point_cloud":
+	{
+		"name": "Point Cloud",
+		"formats": ".*(ply)",
+		"settings":
+		{
+			"comp": -2,
+    		"translucency-support": true
+		}
+	}
+}

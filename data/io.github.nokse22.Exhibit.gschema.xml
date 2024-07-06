@@ -7,7 +7,7 @@
 	  <key name="grid" type="b">
       <default>true</default>
     </key>
-	  <key name="translucency" type="b">
+	  <key name="translucency-support" type="b">
       <default>true</default>
     </key>
 	  <key name="tone-mapping" type="b">
@@ -49,7 +49,7 @@
 	  <key name="edges-width" type="d">
       <default>1.0</default>
     </key>
-	  <key name="up-direction" type="s">
+	  <key name="up" type="s">
       <choices>
         <choice value="-X"/>
         <choice value="+X"/>

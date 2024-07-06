@@ -41,6 +41,35 @@ up_dirs_vector = {
 class F3DViewer(Gtk.GLArea):
     __gtype_name__ = 'F3DViewer'
 
+    keys = {
+        "grid": "render.grid.enable",
+        "absolute-grid": "render.grid.absolute",
+        "translucency-support": "render.effect.translucency-support",
+        "tone-mapping":"render.effect.tone-mapping",
+        "ambient-occlusion": "render.effect.ambient-occlusion",
+        "anti-aliasing" :"render.effect.anti-aliasing",
+        "hdri-ambient" :"render.hdri.ambient",
+        "hdri-skybox": "render.background.skybox",
+        "background-blur": "background.blur",
+        "light-intensity": "render.light.intensity",
+        "orthographic": "scene.camera.orthographic",
+        "blur-background": "render.background.blur",
+        "blur-coc": "render.background.blur.coc",
+        "background-color": "render.background.color",
+        "show-edges": "render.show-edges",
+        "edges-width": "render.line-width",
+        "up": "scene.up-direction",
+        "show-points": "model.point-sprites.enable",
+        "point-size": "render.point-size",
+        "model-color": "model.color.rgb",
+        "model-metallic": "model.material.metallic",
+        "model-roughness": "model.material.roughness",
+        "model-opacity": "model.color.opacity",
+        "comp": "model.scivis.component",
+        "hdri-file": "render.hdri.file",
+        "cells": "model.scivis.cells",
+    }
+
     def __init__(self, *args):
         self.set_auto_render(True)
         self.connect("realize", self.on_realize)
@@ -67,6 +96,7 @@ class F3DViewer(Gtk.GLArea):
         self.engine.autoload_plugins()
 
         self.settings = {
+            "scene.up-direction": "+Y",
             "model.scivis.cells": True,
             "model.scivis.array-name": "",
         }
@@ -116,9 +146,14 @@ class F3DViewer(Gtk.GLArea):
         self.queue_render()
 
     def update_options(self, options):
-        self.engine.options.update(options)
+        f3d_options = {}
         for key, value in options.items():
-            self.settings[key] = value
+            if key in self.keys:
+                f3d_key = self.keys[key]
+                f3d_options[f3d_key] = value
+                self.settings[f3d_key] = value
+        print(options, f3d_options)
+        self.engine.options.update(f3d_options)
         self.queue_render()
 
     def render_image(self):
@@ -134,9 +169,11 @@ class F3DViewer(Gtk.GLArea):
 
     def load_geometry(self, filepath):
         self.engine.loader.load_geometry(filepath, True)
+        self.get_distance()
 
     def load_scene(self, filepath):
         self.engine.loader.load_scene(filepath)
+        self.get_distance()
 
     def on_resize(self, gl_area, width, height):
         self.width = width

@@ -31,6 +31,7 @@ import math
 import os
 import threading
 import datetime
+import json
 
 from wand.image import Image
 
@@ -82,7 +83,7 @@ class WindowSettings():
         self.settings = {
             "grid": self.saved_settings.get_boolean("grid"),
             "absolute-grid": self.saved_settings.get_boolean("absolute-grid"),
-            "translucency": self.saved_settings.get_boolean("translucency"),
+            "translucency-support": self.saved_settings.get_boolean("translucency-support"),
             "tone-mapping": self.saved_settings.get_boolean("tone-mapping"),
             "ambient-occlusion": self.saved_settings.get_boolean("ambient-occlusion"),
             "anti-aliasing": self.saved_settings.get_boolean("anti-aliasing"),
@@ -90,7 +91,7 @@ class WindowSettings():
             "light-intensity": self.saved_settings.get_double("light-intensity"),
             "orthographic": self.saved_settings.get_boolean("orthographic"),
             "point-up": self.saved_settings.get_boolean("point-up"),
-            "skybox-path": "",
+            "hdri-file": "",
             "blur-background": self.saved_settings.get_boolean("blur-background"),
             "blur-coc": self.saved_settings.get_double("blur-coc"),
             "use-skybox": False,
@@ -98,7 +99,7 @@ class WindowSettings():
             "use-color": self.saved_settings.get_boolean("use-color"),
             "show-edges": self.saved_settings.get_boolean("show-edges"),
             "edges-width": self.saved_settings.get_double("edges-width"),
-            "up-direction": self.saved_settings.get_string("up-direction"),
+            "up": self.saved_settings.get_string("up"),
             "auto-up-dir" : self.saved_settings.get_boolean("auto-up-dir"),
             "show-points": self.saved_settings.get_boolean("show-points"),
             "point-size": self.saved_settings.get_double("point-size"),
@@ -107,7 +108,7 @@ class WindowSettings():
             "model-roughness": self.saved_settings.get_double("model-roughness"),
             "model-opacity": self.saved_settings.get_double("model-opacity"),
             "load-type": None, # 0 for geometry and 1 for scene
-            "scivis-component": 0,
+            "comp": 0,
         }
 
     def set_setting(self, key, val):
@@ -119,7 +120,7 @@ class WindowSettings():
     def save_all_settings(self):
         self.saved_settings.set_boolean("grid", self.settings["grid"])
         self.saved_settings.set_boolean("absolute-grid", self.settings["absolute-grid"])
-        self.saved_settings.set_boolean("translucency", self.settings["translucency"])
+        self.saved_settings.set_boolean("translucency-support", self.settings["translucency-support"])
         self.saved_settings.set_boolean("tone-mapping", self.settings["tone-mapping"])
         self.saved_settings.set_boolean("ambient-occlusion", self.settings["ambient-occlusion"])
         self.saved_settings.set_boolean("anti-aliasing", self.settings["anti-aliasing"])
@@ -132,7 +133,7 @@ class WindowSettings():
         self.saved_settings.set_boolean("use-color", self.settings["use-color"])
         self.saved_settings.set_string("background-color", list_to_rgb(self.settings["background-color"]))
         self.saved_settings.set_double("edges-width", self.settings["edges-width"])
-        self.saved_settings.set_string("up-direction", self.settings["up-direction"])
+        self.saved_settings.set_string("up", self.settings["up"])
         self.saved_settings.set_boolean("auto-up-dir", self.settings["auto-up-dir"])
         self.saved_settings.set_string("model-color", list_to_rgb(self.settings["model-color"]))
         self.saved_settings.set_double("model-metallic", self.settings["model-metallic"])
@@ -216,33 +217,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     startup_stack = Gtk.Template.Child()
 
-    keys = {
-        "grid": "render.grid.enable",
-        "absolute-grid": "render.grid.absolute",
-        "translucency": "render.effect.translucency-support",
-        "tone-mapping":"render.effect.tone-mapping",
-        "ambient-occlusion": "render.effect.ambient-occlusion",
-        "anti-aliasing" :"render.effect.anti-aliasing",
-        "hdri-ambient" :"render.hdri.ambient",
-        "background-skybox": "render.background.skybox",
-        "background-blur": "background.blur",
-        "light-intensity": "render.light.intensity",
-        "orthographic": "scene.camera.orthographic",
-        "blur-background": "render.background.blur",
-        "blur-coc": "render.background.blur.coc",
-        "use-skybox": "render.background.skybox",
-        "background-color": "render.background.color",
-        "show-edges": "render.show-edges",
-        "edges-width": "render.line-width",
-        "up-direction": "scene.up-direction",
-        "show-points": "model.point-sprites.enable",
-        "point-size": "render.point-size",
-        "model-color": "model.color.rgb",
-        "model-metallic": "model.material.metallic",
-        "model-roughness": "model.material.roughness",
-        "model-opacity": "model.color.opacity",
-        "scivis-component": "model.scivis.component"
-    }
+    settings_section= Gtk.Template.Child()
 
     width = 600
     height = 600
@@ -255,6 +230,29 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.save_as_action = self.create_action('save-as-image', self.open_save_file_chooser)
         self.open_new_action = self.create_action('open-new', self.open_file_chooser)
+
+        settings_action = Gio.SimpleAction.new_stateful(
+            "settings",
+            GLib.VariantType.new("s"),
+            GLib.Variant("s", "general"),
+        )
+        settings_action.connect("activate", self.on_settings_changed)
+        self.add_action(settings_action)
+
+        self.save_settings_action = self.create_action('save-settings', self.on_save_settings)
+        self.save_settings_action.set_enabled(False)
+
+        self.configurations = Gio.resources_lookup_data('/io/github/nokse22/Exhibit/configurations.json', Gio.ResourceLookupFlags.NONE).get_data().decode('utf-8')
+        self.configurations = json.loads(self.configurations)
+
+        item = Gio.MenuItem.new("Custom", "win.settings")
+        item.set_attribute_value("target", GLib.Variant.new_string("custom"))
+        self.settings_section.append_item(item)
+
+        for key, setting in self.configurations.items():
+            item = Gio.MenuItem.new(setting["name"], "win.settings")
+            item.set_attribute_value("target", GLib.Variant.new_string(key))
+            self.settings_section.append_item(item)
 
         self.view_drop_target.set_gtypes([Gdk.FileList])
         self.loading_drop_target.set_gtypes([Gdk.FileList])
@@ -270,7 +268,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.grid_switch.connect("notify::active", self.on_switch_toggled, "grid")
         self.absolute_grid_switch.connect("notify::active", self.on_switch_toggled, "absolute-grid")
 
-        self.translucency_switch.connect("notify::active", self.on_switch_toggled, "translucency")
+        self.translucency_switch.connect("notify::active", self.on_switch_toggled, "translucency-support")
         self.tone_mapping_switch.connect("notify::active", self.on_switch_toggled, "tone-mapping")
         self.ambient_occlusion_switch.connect("notify::active", self.on_switch_toggled, "ambient-occlusion")
         self.anti_aliasing_switch.connect("notify::active", self.on_switch_toggled, "anti-aliasing")
@@ -353,6 +351,23 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             print("start file")
             self.load_file(startup_filepath)
 
+    def on_settings_changed(self, action: Gio.SimpleAction, state: GLib.Variant):
+        action.set_state(state)
+
+        options = {}
+        for key, value in self.configurations[state.get_string()]["settings"].items():
+            options[key] = value
+
+        self.f3d_viewer.update_options(options)
+
+        if state == GLib.Variant("s", "custom"):
+            self.save_settings_action.set_enabled(True)
+        else:
+            self.save_settings_action.set_enabled(False)
+
+    def on_save_settings(self, *args):
+        print("saving settings")
+
     def get_gimble_limit(self):
         return self.distance / 10
 
@@ -387,9 +402,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         if self.window_settings.get_setting("auto-up-dir") and not override:
             up = get_up_from_path(filepath)
-            self.window_settings.set_setting("up-direction", up)
+            self.window_settings.set_setting("up", up)
 
-        options = {"scene.up-direction": self.window_settings.get_setting("up-direction")}
+        options = {"scene.up-direction": self.window_settings.get_setting("up")}
         self.f3d_viewer.update_options(options)
 
         def _load():
@@ -430,7 +445,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 self.window_settings.set_setting("load-type", 0)
 
             self.update_options()
-
             self.filepath = filepath
             GLib.idle_add(self.on_file_opened)
 
@@ -470,7 +484,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.startup_stack.set_visible_child_name("error_page")
         else:
             self.send_toast(_("Can't open") + " " + os.path.basename(filepath))
-        options = {"scene.up-direction": self.window_settings.get_setting("up-direction")}
+        options = {"scene.up-direction": self.window_settings.get_setting("up")}
         self.f3d_viewer.update_options(options)
 
     def send_toast(self, message):
@@ -480,9 +494,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def update_options(self):
         options = {}
         for key, value in self.window_settings.settings.items():
-            if key in self.keys:
-                f3d_key = self.keys[key]
-            options.setdefault(f3d_key, value)
+            options[key] = value
 
         self.f3d_viewer.update_options(options)
         self.update_background_color()
@@ -583,17 +595,17 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     def on_switch_toggled(self, switch, active, name):
         self.window_settings.set_setting(name, switch.get_active())
-        options = {self.keys[name]: switch.get_active()}
+        options = {name: switch.get_active()}
         self.f3d_viewer.update_options(options)
 
     def on_expander_toggled(self, expander, enabled, name):
         self.window_settings.set_setting(name, expander.get_enable_expansion())
-        options = {self.keys[name]: expander.get_enable_expansion()}
+        options = {name: expander.get_enable_expansion()}
         self.f3d_viewer.update_options(options)
 
     def on_spin_changed(self, spin, value, name):
         val = float(round(spin.get_value(), 2))
-        options = {self.keys[name]: val}
+        options = {name: val}
         self.window_settings.set_setting(name, val)
         self.f3d_viewer.update_options(options)
 
@@ -601,7 +613,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         val = switch.get_active()
         self.window_settings.set_setting(name, val)
         if val:
-            self.f3d_viewer.set_view_up(up_dirs_vector[self.window_settings.get_setting("up-direction")])
+            self.f3d_viewer.set_view_up(up_dirs_vector[self.window_settings.get_setting("up")])
             self.f3d_viewer.always_point_up = True
         else:
             self.f3d_viewer.always_point_up = False
@@ -609,15 +621,14 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def on_color_changed(self, btn, color, setting):
         color_list = rgb_to_list(btn.get_rgba().to_string())
         self.window_settings.set_setting(setting, color_list)
-        if setting in self.keys:
-            options = {self.keys[setting]: color_list}
-            self.f3d_viewer.update_options(options)
+        options = {setting: color_list}
+        self.f3d_viewer.update_options(options)
 
     def set_up_direction(self, combo, *args):
         direction = up_dir_n_to_string[combo.get_selected()]
         options = {"scene.up-direction": direction}
         self.f3d_viewer.update_options(options)
-        self.window_settings.set_setting("up-direction", direction)
+        self.window_settings.set_setting("up", direction)
         print("set up")
         self.load_file(self.filepath, True)
 
@@ -646,25 +657,25 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         selected = combo.get_selected()
         self.model_color_row.set_sensitive(True if selected == 0 else False)
 
-        self.window_settings.set_setting("scivis-component", -selected)
+        self.window_settings.set_setting("comp", -selected)
         if selected == 0:
             options = {
-                "model.scivis.component": -1,
-                "model.scivis.cells": True
+                "comp": -1,
+                "cells": True
             }
         else:
             options = {
-                "model.scivis.component": - (selected - 1),
-                "model.scivis.cells": False
+                "comp": - (selected - 1),
+                "cells": False
             }
         self.f3d_viewer.update_options(options)
 
     def on_delete_skybox(self, *args):
-        self.window_settings.set_setting("skybox-path", "")
+        self.window_settings.set_setting("hdri-file", "")
         self.window_settings.set_setting("use-skybox", False)
         self.use_skybox_switch.set_active(False)
-        options = {"render.hdri.file": "",
-                         "render.background.skybox": False}
+        options = {"hdri-file": "",
+                         "hdri-skybox": False}
         self.f3d_viewer.update_options(options)
 
     def on_open_skybox(self, *args):
@@ -692,12 +703,12 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.load_hdri(filepath)
 
     def load_hdri(self, filepath):
-        self.window_settings.set_setting("skybox-path", filepath)
+        self.window_settings.set_setting("hdri-file", filepath)
         self.window_settings.set_setting("use-skybox", True)
         self.use_skybox_switch.set_active(True)
         self.hdri_file_row.set_filename(filepath)
-        options = {"render.hdri.file": filepath,
-                         "render.background.skybox": True}
+        options = {"hdri-file": filepath,
+                         "hdri-skybox": True}
         self.f3d_viewer.update_options(options)
 
     def set_preference_values(self, block=True):
@@ -708,13 +719,13 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.grid_switch.set_active(self.window_settings.get_setting("grid"))
         self.absolute_grid_switch.set_active(self.window_settings.get_setting("absolute-grid"))
 
-        self.translucency_switch.set_active(self.window_settings.get_setting("translucency"))
+        self.translucency_switch.set_active(self.window_settings.get_setting("translucency-support"))
         self.tone_mapping_switch.set_active(self.window_settings.get_setting("tone-mapping"))
         self.ambient_occlusion_switch.set_active(self.window_settings.get_setting("ambient-occlusion"))
         self.anti_aliasing_switch.set_active(self.window_settings.get_setting("anti-aliasing"))
         self.hdri_ambient_switch.set_active(self.window_settings.get_setting("hdri-ambient"))
         self.light_intensity_spin.set_value(self.window_settings.get_setting("light-intensity"))
-        self.hdri_file_row.set_filename(self.window_settings.get_setting("skybox-path"))
+        self.hdri_file_row.set_filename(self.window_settings.get_setting("hdri-file"))
         self.blur_switch.set_active(self.window_settings.get_setting("blur-background"))
         self.blur_coc_spin.set_value(self.window_settings.get_setting("blur-coc"))
         self.use_skybox_switch.set_active(self.window_settings.get_setting("use-skybox"))
@@ -726,7 +737,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.points_size_spin.set_value(self.window_settings.get_setting("point-size"))
 
         self.point_up_switch.set_active(self.window_settings.get_setting("point-up"))
-        self.up_direction_combo.set_selected(up_dir_string_to_n[self.window_settings.get_setting("up-direction")])
+        self.up_direction_combo.set_selected(up_dir_string_to_n[self.window_settings.get_setting("up")])
         self.automatic_up_direction_switch.set_active(self.window_settings.get_setting("auto-up-dir"))
 
         load_type = self.window_settings.get_setting("load-type")

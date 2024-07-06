@@ -494,6 +494,21 @@
             ]
         },
         {
+            "name": "HDRIs",
+            "buildsystem": "simple",
+            "build-commands": [
+            	"mkdir -p ${FLATPAK_DEST}/data/HDRIs",
+                "cp -r ../HDRIs ${FLATPAK_DEST}/data/HDRIs",
+                "ls ${FLATPAK_DEST}/data/"
+            ],
+            "sources": [
+                {
+		  "type": "dir",
+		  "path": "data/HDRIs"
+		}
+            ]
+        },
+        {
             "name": "exhibit",
             "builddir": true,
             "buildsystem": "meson",

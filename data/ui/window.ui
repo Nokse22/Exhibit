@@ -80,6 +80,7 @@
                                       <property name="icon-name">io.github.nokse22.Exhibit</property>
                                       <property name="title" translatable="yes">Exhibit</property>
                                       <property name="vexpand">True</property>
+                                      <property name="css-classes">icon-dropshadow</property>
                                     </object>
                                   </property>
                                 </object>
@@ -177,11 +178,17 @@
                         </child>
                         <child type="end">
                           <object class="GtkMenuButton" id="sidebar_menu">
-                            <property name="primary">True</property>
-                            <property name="visible">True</property>
-                            <property name="icon-name">open-menu-symbolic</property>
+                            <property name="icon-name">view-more-symbolic</property>
                             <property name="tooltip-text" translatable="yes">Menu</property>
-                            <property name="menu-model">primary_menu</property>
+                            <property name="menu-model">settings_menu</property>
+                          </object>
+                        </child>
+                        <child type="start">
+                          <object class="GtkMenuButton">
+                            <property name="icon-name">view-more-symbolic</property>
+                            <property name="tooltip-text" translatable="yes">Menu</property>
+                            <property name="menu-model">settings_menu</property>
+                            <property name="visible" bind-source="sidebar_menu" bind-property="visible" bind-flags="invert-boolean">False</property>
                           </object>
                         </child>
                       </object>
@@ -740,7 +747,7 @@
                         <property name="icon-name">open-menu-symbolic</property>
                         <property name="tooltip-text" translatable="yes">Menu</property>
                         <property name="menu-model">primary_menu</property>
-                        <property name="visible" bind-source="split_view" bind-property="show-sidebar" bind-flags="sync-create | invert-boolean">False</property>
+                        <!-- <property name="visible" bind-source="split_view" bind-property="show-sidebar" bind-flags="sync-create | invert-boolean">False</property> -->
                       </object>
                     </child>
                     <child type="start">
@@ -858,18 +865,28 @@
     </section>
     <section>
       <item>
-        <attribute name="label" translatable="yes">Open HDRI Folder</attribute>
-        <attribute name="action">app.open-hdri-folder</attribute>
-      </item>
-    </section>
-    <section>
-      <item>
         <attribute name="label" translatable="yes">_Keyboard Shortcuts</attribute>
         <attribute name="action">win.show-help-overlay</attribute>
       </item>
       <item>
         <attribute name="label" translatable="yes">_About Exhibit</attribute>
         <attribute name="action">app.about</attribute>
+      </item>
+    </section>
+  </menu>
+  <menu id="settings_menu">
+    <section id="settings_section">
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Save Current Settings</attribute>
+        <attribute name="action">win.save-settings</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Open HDRI Folder</attribute>
+        <attribute name="action">app.open-hdri-folder</attribute>
       </item>
     </section>
   </menu>
