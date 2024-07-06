@@ -1,64 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="exhibit">
 	<schema id="io.github.nokse22.Exhibit" path="/io/github/nokse22/Viewer3D/">
-	  <key name="absolute-grid" type="b">
-      <default>false</default>
-    </key>
-	  <key name="grid" type="b">
-      <default>true</default>
-    </key>
-	  <key name="translucency-support" type="b">
-      <default>true</default>
-    </key>
-	  <key name="tone-mapping" type="b">
-      <default>false</default>
-    </key>
-	  <key name="ambient-occlusion" type="b">
-      <default>false</default>
-    </key>
-	  <key name="anti-aliasing" type="b">
-      <default>true</default>
-    </key>
-	  <key name="hdri-ambient" type="b">
-      <default>false</default>
-    </key>
-	  <key name="orthographic" type="b">
-      <default>false</default>
-    </key>
-	  <key name="light-intensity" type="d">
-      <default>1.0</default>
-    </key>
-	  <key name="point-up" type="b">
-      <default>true</default>
-    </key>
-	  <key name="blur-background" type="b">
-      <default>false</default>
-    </key>
-	  <key name="blur-coc" type="d">
-      <default>20.0</default>
-    </key>
 	  <key name="use-color" type="b">
       <default>false</default>
-    </key>
-	  <key name="background-color" type="s">
-      <default>'rgb(10,10,10)'</default>
-    </key>
-	  <key name="show-edges" type="b">
-      <default>false</default>
-    </key>
-	  <key name="edges-width" type="d">
-      <default>1.0</default>
-    </key>
-	  <key name="up" type="s">
-      <choices>
-        <choice value="-X"/>
-        <choice value="+X"/>
-        <choice value="-Y"/>
-        <choice value="+Y"/>
-        <choice value="-Z"/>
-        <choice value="+Z"/>
-      </choices>
-      <default>'-Y'</default>
     </key>
 	  <key name="auto-up-dir" type="b">
       <default>true</default>
@@ -70,24 +14,6 @@
         <choice value="dark"/>
       </choices>
       <default>'follow'</default>
-    </key>
-	  <key name="model-color" type="s">
-      <default>'rgb(255,255,255)'</default>
-    </key>
-	  <key name="model-metallic" type="d">
-      <default>0.0</default>
-    </key>
-	  <key name="model-roughness" type="d">
-      <default>0.3</default>
-    </key>
-	  <key name="point-size" type="d">
-      <default>1.0</default>
-    </key>
-	  <key name="show-points" type="b">
-      <default>false</default>
-    </key>
-	  <key name="model-opacity" type="d">
-      <default>1.0</default>
     </key>
 	  <key name="startup-width" type="i">
       <default>840</default>

@@ -5,6 +5,16 @@
 		"formats": "*",
 		"settings":
 		{
+			"point-sprites": false,
+			"point-size": 0.0,
+			"point-type": "",
+			"scalars": "color",
+			"comp": 0,
+			"up": "+Y",
+			"tone-mapping": false,
+			"grid": true,
+			"anti-aliasing": true,
+			"translucency-support": true
 		}
 	},
 	"3d_printing":
@@ -46,7 +56,6 @@
 			"comp": -2,
 			"bg-color": "0, 0, 0",
 			"up": "-Y",
-			"trackball": true,
 			"camera-position": "0,1,-5.2",
 			"camera-focal-point": "0,1,0",
 			"tone-mapping": false,
