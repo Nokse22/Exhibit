@@ -78,7 +78,7 @@ class WindowSettings():
 
         self.settings = {
             "grid": True,
-            "absolute-grid": False,
+            "grid-absolute": False,
             "translucency-support": True,
             "tone-mapping": False,
             "ambient-occlusion": False,
@@ -102,6 +102,7 @@ class WindowSettings():
             "model-roughness": 0.3,
             "model-opacity": 1.0,
             "comp": -1,
+            "cells": True,
 
             # these are not view settings
             "auto-best" : True,
@@ -113,11 +114,25 @@ class WindowSettings():
         if key in self.settings:
             self.settings[key] = val
         else:
-            print("key not present")
+            print(f"{key} key not present")
 
     def get_setting(self, key):
         return self.settings[key]
 
+class Setting(GObject.Object):
+    def __init__(self, name, value):
+        super().__init__()
+
+        self._name = name
+        self._value = value
+
+    @GObject.Property(type=str)
+    def name(self) -> str:
+        return self._name
+
+    @GObject.Property(type=str)
+    def value(self) -> str:
+        return self._value
 
 @Gtk.Template(resource_path='/io/github/nokse22/Exhibit/ui/window.ui')
 class Viewer3dWindow(Adw.ApplicationWindow):
@@ -185,7 +200,12 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     startup_stack = Gtk.Template.Child()
 
-    settings_section= Gtk.Template.Child()
+    settings_section = Gtk.Template.Child()
+
+    save_dialog = Gtk.Template.Child()
+    settings_column_view = Gtk.Template.Child()
+    settings_column_view_name_column = Gtk.Template.Child()
+    settings_column_view_value_column = Gtk.Template.Child()
 
     width = 600
     height = 600
@@ -197,6 +217,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def __init__(self, application=None, startup_filepath=None):
         super().__init__(application=application)
 
+        # Defining all the actions
         self.save_as_action = self.create_action('save-as-image', self.open_save_file_chooser)
         self.open_new_action = self.create_action('open-new', self.open_file_chooser)
 
@@ -211,6 +232,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.save_settings_action = self.create_action('save-settings', self.on_save_settings)
         self.save_settings_action.set_enabled(False)
 
+        # Loading the saved configurations
         self.configurations = Gio.resources_lookup_data('/io/github/nokse22/Exhibit/configurations.json', Gio.ResourceLookupFlags.NONE).get_data().decode('utf-8')
         self.configurations = json.loads(self.configurations)
 
@@ -223,19 +245,22 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             item.set_attribute_value("target", GLib.Variant.new_string(key))
             self.settings_section.append_item(item)
 
+        # Setting drop target type
         self.view_drop_target.set_gtypes([Gdk.FileList])
         self.loading_drop_target.set_gtypes([Gdk.FileList])
 
+        # Getting the saved preferences and setting the window to the last state
         self.window_settings = WindowSettings()
         settings = Gio.Settings.new('io.github.nokse22.Exhibit')
 
         self.set_default_size(settings.get_int("startup-width"), settings.get_int("startup-height"))
         self.split_view.set_show_sidebar(settings.get_boolean("startup-sidebar-show"))
 
+        # Setting the UI and connecting widgets
         self.set_preference_values(False)
 
         self.grid_switch.connect("notify::active", self.on_switch_toggled, "grid")
-        self.absolute_grid_switch.connect("notify::active", self.on_switch_toggled, "absolute-grid")
+        self.absolute_grid_switch.connect("notify::active", self.on_switch_toggled, "grid-absolute")
 
         self.translucency_switch.connect("notify::active", self.on_switch_toggled, "translucency-support")
         self.tone_mapping_switch.connect("notify::active", self.on_switch_toggled, "tone-mapping")
@@ -264,24 +289,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.hdri_file_row.connect("delete-file", self.on_delete_skybox)
         self.hdri_file_row.connect("file-added", lambda row, filepath: self.load_hdri(filepath))
 
-        self.hdri_path = os.environ["XDG_DATA_HOME"] + "/HDRIs/"
-        self.hdri_thumbnails_path = self.hdri_path + "/thumbnails/"
-
-        os.makedirs(self.hdri_path, exist_ok=True)
-        os.makedirs(self.hdri_thumbnails_path, exist_ok=True)
-
-        for filename in list_files(self.hdri_path):
-            name, _ = os.path.splitext(filename)
-
-            thumbnail = self.hdri_thumbnails_path + name + ".jpeg"
-            filepath = self.hdri_path + filename
-            try:
-                if not os.path.isfile(thumbnail):
-                    thumbnail = self.generate_thumbnail(filepath)
-                self.hdri_file_row.add_suggested_file(thumbnail, filepath)
-            except Exception as e:
-                print("Couldn't open HDRI file, skipping")
-
         self.blur_switch.connect("notify::active", self.on_switch_toggled, "blur-background")
         self.blur_coc_spin.connect("notify::value", self.on_spin_changed, "blur-coc")
 
@@ -302,6 +309,25 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 lambda switch, *args: self.window_settings.set_setting("auto-best", switch.get_active())
         )
 
+        # Getting the saved HDRI and generating thumbnails
+        self.hdri_path = os.environ["XDG_DATA_HOME"] + "/HDRIs/"
+        self.hdri_thumbnails_path = self.hdri_path + "/thumbnails/"
+
+        os.makedirs(self.hdri_path, exist_ok=True)
+        os.makedirs(self.hdri_thumbnails_path, exist_ok=True)
+
+        for filename in list_files(self.hdri_path):
+            name, _ = os.path.splitext(filename)
+
+            thumbnail = self.hdri_thumbnails_path + name + ".jpeg"
+            filepath = self.hdri_path + filename
+            try:
+                if not os.path.isfile(thumbnail):
+                    thumbnail = self.generate_thumbnail(filepath)
+                self.hdri_file_row.add_suggested_file(thumbnail, filepath)
+            except Exception as e:
+                print("Couldn't open HDRI file, skipping")
+
         if self.window_settings.get_setting("orthographic"):
             self.toggle_orthographic()
 
@@ -319,24 +345,52 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.update_options()
 
     def set_settings_from_name(self, name):
-        options = {}
+        if name == "custom":
+            return
+
+        # Get the default settings and change the ones defined by the chosen presets
+        options = self.configurations["general"]["view-settings"].copy()
         for key, value in self.configurations[name]["view-settings"].items():
             options[key] = value
-            self.window_settings.set_setting(key, value)
-        print("win", options)
-        self.f3d_viewer.update_options(options)
-        self.f3d_viewer.reset_to_bounds()
 
+        # Set all the settings
+        for key, value in options.items():
+            self.window_settings.set_setting(key, value)
+
+        # Update the viewer settings, to support settings without UI
+        self.f3d_viewer.update_options(options)
+
+        # Set all the settings not related to the viewer
         for key, value in self.configurations[name]["other-settings"].items():
             self.window_settings.set_setting(key, value)
 
+        # Update the UI
         self.set_preference_values()
 
+    def check_for_options_change(self):
+        options = self.configurations["general"]["view-settings"].copy()
+        state_name = self.settings_action.get_state().get_string()
+        if state_name == "custom":
+            return
+
+        for key, value in self.configurations[state_name]["view-settings"].items():
+            options[key] = value
+
+        current_settings = self.window_settings.settings
+        for key, value in options.items():
+            if key in current_settings:
+                if current_settings[key] != value:
+                    self.settings_action.set_state(GLib.Variant("s", "custom"))
+                    self.save_settings_action.set_enabled(True)
+                    return
+
     def on_settings_changed(self, action: Gio.SimpleAction, state: GLib.Variant):
+        # Called when the preset is changed
         self.settings_action.set_state(state)
 
         self.set_settings_from_name(state.get_string())
-
+        print("on_settings_changed")
+        # Enable saving the settings only if it's not one already saved
         if state == GLib.Variant("s", "custom"):
             self.save_settings_action.set_enabled(True)
         else:
@@ -344,6 +398,32 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     def on_save_settings(self, *args):
         print("saving settings")
+
+        self.save_dialog.present(self)
+
+        # self.settings_column_view.
+        settings = self.window_settings.settings
+
+        data_model = Gio.ListStore(item_type=Setting)
+        for name, value in settings.items():
+            data_model.append(Setting(name, value))
+
+        def _on_factory_setup(_factory, list_item):
+            label = Gtk.Label(xalign=0)
+            list_item.set_child(label)
+
+        def _on_factory_bind(_factory, list_item, what):
+            label_widget = list_item.get_child()
+            setting = list_item.get_item()
+            label_widget.set_label(str(getattr(setting, what)))
+
+        self.settings_column_view_name_column.get_factory().connect("setup", _on_factory_setup)
+        self.settings_column_view_name_column.get_factory().connect("bind", _on_factory_bind, "name")
+        self.settings_column_view_value_column.get_factory().connect("setup", _on_factory_setup)
+        self.settings_column_view_value_column.get_factory().connect("bind", _on_factory_bind, "value")
+
+        selection = Gtk.NoSelection.new(model=data_model)
+        self.settings_column_view.set_model(model=selection)
 
     def get_gimble_limit(self):
         return self.distance / 10
@@ -370,7 +450,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if file:
             filepath = file.get_path()
             self.window_settings.set_setting("load-type", None)
-            print("open file")
             self.load_file(filepath)
 
     def load_file(self, filepath=None, override=False):
@@ -387,8 +466,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
             self.set_settings_from_name(settings)
 
-        options = {"scene.up-direction": self.window_settings.get_setting("up")}
-        self.f3d_viewer.update_options(options)
         self.settings_action.set_state(GLib.Variant("s", settings))
 
         def _load():
@@ -469,7 +546,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.send_toast(_("Can't open") + " " + os.path.basename(filepath))
         options = {"scene.up-direction": self.window_settings.get_setting("up")}
         self.f3d_viewer.update_options(options)
-        # self.settings_action.set_state(GLib.Variant("s", "custom"))
+        self.check_for_options_change()
 
     def send_toast(self, message):
         toast = Adw.Toast(title=message, timeout=2)
@@ -481,7 +558,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             options[key] = value
 
         self.f3d_viewer.update_options(options)
-        # self.settings_action.set_state(GLib.Variant("s", "custom"))
+        self.check_for_options_change()
         self.update_background_color()
 
     def save_as_image(self, filepath):
@@ -582,20 +659,20 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.window_settings.set_setting(name, switch.get_active())
         options = {name: switch.get_active()}
         self.f3d_viewer.update_options(options)
-        # self.settings_action.set_state(GLib.Variant("s", "custom"))
+        self.check_for_options_change()
 
     def on_expander_toggled(self, expander, enabled, name):
         self.window_settings.set_setting(name, expander.get_enable_expansion())
         options = {name: expander.get_enable_expansion()}
         self.f3d_viewer.update_options(options)
-        # self.settings_action.set_state(GLib.Variant("s", "custom"))
+        self.check_for_options_change()
 
     def on_spin_changed(self, spin, value, name):
         val = float(round(spin.get_value(), 2))
         options = {name: val}
         self.window_settings.set_setting(name, val)
         self.f3d_viewer.update_options(options)
-        # self.settings_action.set_state(GLib.Variant("s", "custom"))
+        self.check_for_options_change()
 
     def set_point_up(self, switch, active, name):
         val = switch.get_active()
@@ -611,19 +688,17 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.window_settings.set_setting(setting, color_list)
         options = {setting: color_list}
         self.f3d_viewer.update_options(options)
-        # self.settings_action.set_state(GLib.Variant("s", "custom"))
+        self.check_for_options_change()
 
     def set_up_direction(self, combo, *args):
         direction = up_dir_n_to_string[combo.get_selected()]
         options = {"scene.up-direction": direction}
         self.f3d_viewer.update_options(options)
-        # self.settings_action.set_state(GLib.Variant("s", "custom"))
+        self.check_for_options_change()
         self.window_settings.set_setting("up", direction)
-        print("set up")
         self.load_file(self.filepath, True)
 
     def set_load_type(self, combo, *args):
-        print("set load type")
         load_type = combo.get_selected()
         self.window_settings.set_setting("load-type", load_type)
         self.load_file()
@@ -634,7 +709,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 "background-color": self.window_settings.get_setting("background-color"),
             }
             self.f3d_viewer.update_options(options)
-            # self.settings_action.set_state(GLib.Variant("s", "custom"))
+            self.check_for_options_change()
             GLib.idle_add(self.f3d_viewer.queue_render)
             return
         if self.style_manager.get_dark():
@@ -642,14 +717,14 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         else:
             options = {"background-color": [1.0, 1.0, 1.0]}
         self.f3d_viewer.update_options(options)
-        # self.settings_action.set_state(GLib.Variant("s", "custom"))
+        self.check_for_options_change()
         GLib.idle_add(self.f3d_viewer.queue_render)
 
     def on_scivis_component_combo_changed(self, combo, *args):
         selected = combo.get_selected()
         self.model_color_row.set_sensitive(True if selected == 0 else False)
 
-        self.window_settings.set_setting("comp", -selected)
+        self.window_settings.set_setting("comp", -(selected - 1))
         if selected == 0:
             options = {
                 "comp": -1,
@@ -661,7 +736,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 "cells": False
             }
         self.f3d_viewer.update_options(options)
-        # self.settings_action.set_state(GLib.Variant("s", "custom"))
+        self.check_for_options_change()
 
     def on_delete_skybox(self, *args):
         self.window_settings.set_setting("hdri-file", "")
@@ -670,7 +745,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         options = {"hdri-file": "",
                          "hdri-skybox": False}
         self.f3d_viewer.update_options(options)
-        # self.settings_action.set_state(GLib.Variant("s", "custom"))
+        self.check_for_options_change()
 
     def on_open_skybox(self, *args):
         file_filter = Gtk.FileFilter(name="All supported formats")
@@ -704,7 +779,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         options = {"hdri-file": filepath,
                          "hdri-skybox": True}
         self.f3d_viewer.update_options(options)
-        # self.settings_action.set_state(GLib.Variant("s", "custom"))
+        self.check_for_options_change()
 
     def set_preference_values(self, block=True):
         if block:
@@ -712,7 +787,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.model_load_combo.handler_block(self.load_type_combo_handler_id)
 
         self.grid_switch.set_active(self.window_settings.get_setting("grid"))
-        self.absolute_grid_switch.set_active(self.window_settings.get_setting("absolute-grid"))
+        self.absolute_grid_switch.set_active(self.window_settings.get_setting("grid-absolute"))
 
         self.translucency_switch.set_active(self.window_settings.get_setting("translucency-support"))
         self.tone_mapping_switch.set_active(self.window_settings.get_setting("tone-mapping"))
@@ -744,7 +819,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         rgba.parse(list_to_rgb(self.window_settings.get_setting("model-color")))
         self.model_color_button.set_rgba(rgba)
         self.model_opacity_spin.set_value(self.window_settings.get_setting("model-opacity"))
+        print("comp: ", self.window_settings.get_setting("comp"))
         self.model_scivis_component_combo.set_selected(-self.window_settings.get_setting("comp") + 1)
+
 
         self.use_color_switch.set_active(self.window_settings.get_setting("use-color"))
         rgba = Gdk.RGBA()

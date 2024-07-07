@@ -5,18 +5,32 @@
 		"formats": ".*()",
 		"view-settings":
 		{
-			"point-sprites": false,
-			"point-size": 0.0,
-			"point-type": "",
-			"scalars": "color",
-			"comp": -1,
-                	"cells": true,
-			"up": "+Y",
-			"tone-mapping": false,
 			"grid": true,
-			"anti-aliasing": true,
+			"grid-absolute": false,
+			"translucency-support": true,
+			"tone-mapping": false,
 			"ambient-occlusion": true,
-			"translucency-support": true
+			"anti-aliasing": true,
+			"hdri-ambient": false,
+			"light-intensity": 1.0,
+			"orthographic": false,
+			"point-up": true,
+			"hdri-file": "",
+			"blur-background": true,
+			"blur-coc": 20.0,
+			"use-skybox": false,
+			"background-color": [1.0, 1.0, 1.0],
+			"show-edges": false,
+			"edges-width": 1.0,
+			"up": "+Y",
+			"show-points": false,
+			"point-size": 1.0,
+			"model-color": [1.0, 1.0, 1.0],
+			"model-metallic": 0.0,
+			"model-roughness": 0.3,
+			"model-opacity": 1.0,
+			"comp": 0,
+			"cells": true
 		},
 		"other-settings":
 		{
@@ -33,8 +47,9 @@
 		{
 			"up": "+Z",
 			"grid": true,
+			"grid-absolute": true,
 			"translucency-support": true,
-			"comp": -1,
+			"comp": 0,
                 	"cells": true
 		},
 		"other-settings":

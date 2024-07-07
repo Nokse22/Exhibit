@@ -43,7 +43,7 @@ class F3DViewer(Gtk.GLArea):
 
     keys = {
         "grid": "render.grid.enable",
-        "absolute-grid": "render.grid.absolute",
+        "grid-absolute": "render.grid.absolute",
         "translucency-support": "render.effect.translucency-support",
         "tone-mapping":"render.effect.tone-mapping",
         "ambient-occlusion": "render.effect.ambient-occlusion",
@@ -152,7 +152,8 @@ class F3DViewer(Gtk.GLArea):
                 f3d_key = self.keys[key]
                 f3d_options[f3d_key] = value
                 self.settings[f3d_key] = value
-        print(options, f3d_options)
+        print(options)
+        print("\n\n", f3d_options)
         self.engine.options.update(f3d_options)
         self.queue_render()
 
