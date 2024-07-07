@@ -4,7 +4,7 @@
 	  <key name="use-color" type="b">
       <default>false</default>
     </key>
-	  <key name="auto-up-dir" type="b">
+	  <key name="auto-best" type="b">
       <default>true</default>
     </key>
 	  <key name="theme" type="s">

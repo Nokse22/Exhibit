@@ -2,58 +2,78 @@
 	"general":
 	{
 		"name": "General",
-		"formats": "*",
-		"settings":
+		"formats": ".*()",
+		"view-settings":
 		{
 			"point-sprites": false,
 			"point-size": 0.0,
 			"point-type": "",
 			"scalars": "color",
-			"comp": 0,
+			"comp": -1,
+                	"cells": true,
 			"up": "+Y",
 			"tone-mapping": false,
 			"grid": true,
 			"anti-aliasing": true,
+			"ambient-occlusion": true,
 			"translucency-support": true
+		},
+		"other-settings":
+		{
+			"point-up" : true,
+			"use-color": false,
+			"load-type": null
 		}
 	},
 	"3d_printing":
 	{
 		"name": "3D Printing",
 		"formats": ".*(3ds|stl|off|3mf)",
-		"settings":
+		"view-settings":
 		{
 			"up": "+Z",
 			"grid": true,
 			"translucency-support": true,
-			"comp": 0
+			"comp": -1,
+                	"cells": true
+		},
+		"other-settings":
+		{
+			"point-up" : true,
+			"use-color": false,
+			"load-type": null
 		}
 	},
 	"mechanical":
 	{
 		"name": "Mechanical",
 		"formats": ".*(step|stp|iges|igs)",
-		"settings":
+		"view-settings":
 		{
-			"load-plugins": "occt",
 			"up": "+Z",
 			"ambient-occlusion": true,
 			"comp": -2,
-			"cells": true,
-			"camera-direction": "-1,1,-0.5"
+			"cells": true
+		},
+		"other-settings":
+		{
+			"point-up" : true,
+			"use-color": false,
+			"load-type": null
 		}
 	},
 	"splat":
 	{
 		"name": "Splat",
 		"formats": ".*(splat)",
-		"settings":
+		"view-settings":
 		{
 			"point-sprites": true,
 			"point-size": 1.0,
 			"point-type": "gaussian",
 			"scalars": "color",
 			"comp": -2,
+			"cells": false,
 			"bg-color": "0, 0, 0",
 			"up": "-Y",
 			"camera-position": "0,1,-5.2",
@@ -62,16 +82,31 @@
 			"grid": false,
 			"anti-aliasing": false,
 			"translucency-support": false
+		},
+		"other-settings":
+		{
+			"point-up" : true,
+			"use-color": false,
+			"load-type": null
 		}
 	},
 	"point_cloud":
 	{
 		"name": "Point Cloud",
 		"formats": ".*(ply)",
-		"settings":
+		"view-settings":
 		{
+			"up": "-X",
 			"comp": -2,
-    		"translucency-support": true
+    			"translucency-support": true,
+    			"cells": false,
+    			"grid": false
+		},
+		"other-settings":
+		{
+			"point-up" : false,
+			"use-color": false,
+			"load-type": null
 		}
 	}
 }

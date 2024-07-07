@@ -32,6 +32,7 @@ import os
 import threading
 import datetime
 import json
+import re
 
 from wand.image import Image
 
@@ -75,11 +76,6 @@ class WindowSettings():
 
         self.saved_settings = Gio.Settings.new('io.github.nokse22.Exhibit')
 
-        self.settings = None
-
-        self.load_settings()
-
-    def load_settings(self):
         self.settings = {
             "grid": True,
             "absolute-grid": False,
@@ -96,35 +92,32 @@ class WindowSettings():
             "blur-coc": 20.0,
             "use-skybox": False,
             "background-color": (1.0, 1.0, 1.0),
-            "use-color": False,
             "show-edges": False,
             "edges-width": 1.0,
             "up": "-Y",
-            "auto-up-dir" : True,
             "show-points": False,
             "point-size": 1.0,
             "model-color": (1.0, 1.0, 1.0),
             "model-metallic": 0.0,
             "model-roughness": 0.3,
             "model-opacity": 1.0,
+            "comp": -1,
+
+            # these are not view settings
+            "auto-best" : True,
+            "use-color": False,
             "load-type": None, # 0 for geometry and 1 for scene
-            "comp": 0,
         }
 
     def set_setting(self, key, val):
-        self.settings[key] = val
+        if key in self.settings:
+            self.settings[key] = val
+        else:
+            print("key not present")
 
     def get_setting(self, key):
         return self.settings[key]
 
-    def save_all_settings(self):
-        pass
-
-    def reset_all(self):
-        for key in self.settings:
-            self.saved_settings.reset(key)
-        self.load_settings()
-        self.save_all_settings()
 
 @Gtk.Template(resource_path='/io/github/nokse22/Exhibit/ui/window.ui')
 class Viewer3dWindow(Adw.ApplicationWindow):
@@ -171,10 +164,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     point_up_switch = Gtk.Template.Child()
     up_direction_combo = Gtk.Template.Child()
 
-    reset_button = Gtk.Template.Child()
-    save_button = Gtk.Template.Child()
-    restore_button = Gtk.Template.Child()
-
     automatic_up_direction_switch = Gtk.Template.Child()
 
     points_group = Gtk.Template.Child()
@@ -203,6 +192,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     distance = 0
 
     file_name = ""
+    filepath = ""
 
     def __init__(self, application=None, startup_filepath=None):
         super().__init__(application=application)
@@ -308,12 +298,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.point_up_switch.connect("notify::active", self.set_point_up, "point-up")
         self.up_direction_combo_handler_id = self.up_direction_combo.connect("notify::selected", self.set_up_direction)
 
-        self.reset_button.connect("clicked", self.on_reset_settings_clicked)
-        self.restore_button.connect("clicked", self.on_restore_settings_clicked)
-        self.save_button.connect("clicked", self.on_save_settings_clicked)
-
         self.automatic_up_direction_switch.connect("notify::active",
-                lambda switch, *args: self.window_settings.set_setting("auto-up-dir", switch.get_active())
+                lambda switch, *args: self.window_settings.set_setting("auto-best", switch.get_active())
         )
 
         if self.window_settings.get_setting("orthographic"):
@@ -330,15 +316,26 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             print("start file")
             self.load_file(startup_filepath)
 
+        self.update_options()
+
+    def set_settings_from_name(self, name):
+        options = {}
+        for key, value in self.configurations[name]["view-settings"].items():
+            options[key] = value
+            self.window_settings.set_setting(key, value)
+        print("win", options)
+        self.f3d_viewer.update_options(options)
+        self.f3d_viewer.reset_to_bounds()
+
+        for key, value in self.configurations[name]["other-settings"].items():
+            self.window_settings.set_setting(key, value)
+
+        self.set_preference_values()
+
     def on_settings_changed(self, action: Gio.SimpleAction, state: GLib.Variant):
         self.settings_action.set_state(state)
 
-        options = {}
-        for key, value in self.configurations[state.get_string()]["settings"].items():
-            options[key] = value
-
-        self.f3d_viewer.update_options(options)
-        self.f3d_viewer.reset_to_bounds()
+        self.set_settings_from_name(state.get_string())
 
         if state == GLib.Variant("s", "custom"):
             self.save_settings_action.set_enabled(True)
@@ -380,13 +377,19 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if filepath is None:
             filepath = self.filepath
 
-        if self.window_settings.get_setting("auto-up-dir") and not override:
-            up = get_up_from_path(filepath)
-            self.window_settings.set_setting("up", up)
+        settings = "general"
+        if self.window_settings.get_setting("auto-best") and not override:
+            for key, value in self.configurations.items():
+                pattern = value["formats"]
+                match = re.search(pattern, filepath)
+                if match:
+                    settings = key
+
+            self.set_settings_from_name(settings)
 
         options = {"scene.up-direction": self.window_settings.get_setting("up")}
         self.f3d_viewer.update_options(options)
-        self.settings_action.set_state(GLib.Variant("s", "custom"))
+        self.settings_action.set_state(GLib.Variant("s", settings))
 
         def _load():
             scene_loaded = False
@@ -425,7 +428,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             elif geometry_loaded:
                 self.window_settings.set_setting("load-type", 0)
 
-            self.update_options()
             self.filepath = filepath
             GLib.idle_add(self.on_file_opened)
 
@@ -467,7 +469,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.send_toast(_("Can't open") + " " + os.path.basename(filepath))
         options = {"scene.up-direction": self.window_settings.get_setting("up")}
         self.f3d_viewer.update_options(options)
-        self.settings_action.set_state(GLib.Variant("s", "custom"))
+        # self.settings_action.set_state(GLib.Variant("s", "custom"))
 
     def send_toast(self, message):
         toast = Adw.Toast(title=message, timeout=2)
@@ -479,7 +481,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             options[key] = value
 
         self.f3d_viewer.update_options(options)
-        self.settings_action.set_state(GLib.Variant("s", "custom"))
+        # self.settings_action.set_state(GLib.Variant("s", "custom"))
         self.update_background_color()
 
     def save_as_image(self, filepath):
@@ -580,20 +582,20 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.window_settings.set_setting(name, switch.get_active())
         options = {name: switch.get_active()}
         self.f3d_viewer.update_options(options)
-        self.settings_action.set_state(GLib.Variant("s", "custom"))
+        # self.settings_action.set_state(GLib.Variant("s", "custom"))
 
     def on_expander_toggled(self, expander, enabled, name):
         self.window_settings.set_setting(name, expander.get_enable_expansion())
         options = {name: expander.get_enable_expansion()}
         self.f3d_viewer.update_options(options)
-        self.settings_action.set_state(GLib.Variant("s", "custom"))
+        # self.settings_action.set_state(GLib.Variant("s", "custom"))
 
     def on_spin_changed(self, spin, value, name):
         val = float(round(spin.get_value(), 2))
         options = {name: val}
         self.window_settings.set_setting(name, val)
         self.f3d_viewer.update_options(options)
-        self.settings_action.set_state(GLib.Variant("s", "custom"))
+        # self.settings_action.set_state(GLib.Variant("s", "custom"))
 
     def set_point_up(self, switch, active, name):
         val = switch.get_active()
@@ -609,13 +611,13 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.window_settings.set_setting(setting, color_list)
         options = {setting: color_list}
         self.f3d_viewer.update_options(options)
-        self.settings_action.set_state(GLib.Variant("s", "custom"))
+        # self.settings_action.set_state(GLib.Variant("s", "custom"))
 
     def set_up_direction(self, combo, *args):
         direction = up_dir_n_to_string[combo.get_selected()]
         options = {"scene.up-direction": direction}
         self.f3d_viewer.update_options(options)
-        self.settings_action.set_state(GLib.Variant("s", "custom"))
+        # self.settings_action.set_state(GLib.Variant("s", "custom"))
         self.window_settings.set_setting("up", direction)
         print("set up")
         self.load_file(self.filepath, True)
@@ -632,7 +634,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 "background-color": self.window_settings.get_setting("background-color"),
             }
             self.f3d_viewer.update_options(options)
-            self.settings_action.set_state(GLib.Variant("s", "custom"))
+            # self.settings_action.set_state(GLib.Variant("s", "custom"))
             GLib.idle_add(self.f3d_viewer.queue_render)
             return
         if self.style_manager.get_dark():
@@ -640,7 +642,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         else:
             options = {"background-color": [1.0, 1.0, 1.0]}
         self.f3d_viewer.update_options(options)
-        self.settings_action.set_state(GLib.Variant("s", "custom"))
+        # self.settings_action.set_state(GLib.Variant("s", "custom"))
         GLib.idle_add(self.f3d_viewer.queue_render)
 
     def on_scivis_component_combo_changed(self, combo, *args):
@@ -659,7 +661,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 "cells": False
             }
         self.f3d_viewer.update_options(options)
-        self.settings_action.set_state(GLib.Variant("s", "custom"))
+        # self.settings_action.set_state(GLib.Variant("s", "custom"))
 
     def on_delete_skybox(self, *args):
         self.window_settings.set_setting("hdri-file", "")
@@ -668,7 +670,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         options = {"hdri-file": "",
                          "hdri-skybox": False}
         self.f3d_viewer.update_options(options)
-        self.settings_action.set_state(GLib.Variant("s", "custom"))
+        # self.settings_action.set_state(GLib.Variant("s", "custom"))
 
     def on_open_skybox(self, *args):
         file_filter = Gtk.FileFilter(name="All supported formats")
@@ -702,7 +704,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         options = {"hdri-file": filepath,
                          "hdri-skybox": True}
         self.f3d_viewer.update_options(options)
-        self.settings_action.set_state(GLib.Variant("s", "custom"))
+        # self.settings_action.set_state(GLib.Variant("s", "custom"))
 
     def set_preference_values(self, block=True):
         if block:
@@ -731,7 +733,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.point_up_switch.set_active(self.window_settings.get_setting("point-up"))
         self.up_direction_combo.set_selected(up_dir_string_to_n[self.window_settings.get_setting("up")])
-        self.automatic_up_direction_switch.set_active(self.window_settings.get_setting("auto-up-dir"))
+        self.automatic_up_direction_switch.set_active(self.window_settings.get_setting("auto-best"))
 
         load_type = self.window_settings.get_setting("load-type")
         self.model_load_combo.set_selected(load_type if load_type else 0)
@@ -742,6 +744,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         rgba.parse(list_to_rgb(self.window_settings.get_setting("model-color")))
         self.model_color_button.set_rgba(rgba)
         self.model_opacity_spin.set_value(self.window_settings.get_setting("model-opacity"))
+        self.model_scivis_component_combo.set_selected(-self.window_settings.get_setting("comp") + 1)
 
         self.use_color_switch.set_active(self.window_settings.get_setting("use-color"))
         rgba = Gdk.RGBA()
@@ -751,18 +754,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if block:
             self.up_direction_combo.handler_unblock(self.up_direction_combo_handler_id)
             self.model_load_combo.handler_unblock(self.load_type_combo_handler_id)
-
-    def on_restore_settings_clicked(self, btn):
-         self.window_settings.load_settings()
-         self.set_preference_values(False)
-
-    def on_reset_settings_clicked(self, btn):
-        self.window_settings.reset_all()
-        self.set_preference_values(False)
-        self.f3d_viewer.queue_render()
-
-    def on_save_settings_clicked(self, btn):
-        self.window_settings.save_all_settings()
 
     def create_action(self, name, callback):
         action = Gio.SimpleAction.new(name, None)
@@ -792,18 +783,6 @@ def rgb_to_list(rgb):
 
 def list_to_rgb(lst):
     return f"rgb({int(lst[0] * 255)},{int(lst[1] * 255)},{int(lst[2] * 255)})"
-
-def get_up_from_path(path):
-    extension = os.path.splitext(path)[1][1:]
-    up_ext = {
-        "stl" : "+Z",
-        "3ds" : "+Z",
-        "obj" : "+Z",
-        "ply" : "+Z"
-    }
-    if extension in up_ext:
-        return up_ext[extension]
-    return "+Y"
 
 def list_files(directory):
     items = os.listdir(directory)
