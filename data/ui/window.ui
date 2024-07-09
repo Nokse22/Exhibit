@@ -666,6 +666,8 @@
                                           </object>
                                         </child>
                                       </object>
+                                    </child>
+                                    <child>
                                       <object class="AdwPreferencesGroup">
                                       <property name="hexpand">True</property>
                                       <property name="hexpand-set">True</property>

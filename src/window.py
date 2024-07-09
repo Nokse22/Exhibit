@@ -73,6 +73,29 @@ allowed_extensions = [pattern.lstrip('*.') for pattern in file_patterns]
 
 image_patterns = ["*.hdr", "*.exr", "*.png", "*.jpg", "*.pnm", "*.tiff", "*.bmp"]
 
+class PeriodicChecker(GObject.Object):
+    def __init__(self, function):
+        super().__init__()
+
+        self._running = False
+        self._function = function
+
+    def run(self):
+        if self._running:
+            return
+        self._running = True
+        GLib.timeout_add(500, self.periodic_check)
+
+    def stop(self):
+        self._running = False
+
+    def periodic_check(self):
+        if self._running:
+            self._function()
+            return True
+        else:
+            return False
+
 class SettingType(Enum):
     VIEW = "view-settings"
     OTHER = "other-settings"
@@ -165,7 +188,7 @@ class WindowSettings(Gio.ListStore):
     other_settings = {
         "use-color": False,
         "point-up" : True,
-        "auto-reload": True
+        "auto-reload": False
     }
 
     internal_settings = {
@@ -331,6 +354,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.save_settings_action = self.create_action('save-settings', self.on_save_settings)
         self.save_settings_action.set_enabled(False)
 
+        # Initialize the change checker
+        self.change_checker = PeriodicChecker(self.periodic_check_for_file_change)
+
         # Saving all the useful paths
         data_home = os.environ["XDG_DATA_HOME"]
 
@@ -490,8 +516,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.save_settings_name_entry.connect("changed", self.on_save_settings_name_entry_changed)
         self.save_settings_extensions_entry.connect("changed", self.on_save_settings_extensions_entry_changed)
 
-        GLib.timeout_add(100, self.periodic_check_for_file_change)
-
     def on_save_settings_button_clicked(self, btn):
         # Extract view settings, name, and formats
         view_settings = self.window_settings.get_view_settings()
@@ -589,6 +613,28 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                     self.save_settings_action.set_enabled(True)
                     return
 
+    def periodic_check_for_file_change(self):
+        if self.filepath == "":
+            return True
+
+        print(self._cached_time_stamp)
+
+        changed = self.update_time_stamp()
+        if changed:
+            print("file changed")
+            self.load_file(preserve_orientation=True)
+
+        if self.window_settings.get_setting("auto-reload"):
+            return True
+        return False
+
+    def update_time_stamp(self):
+        stamp = os.stat(self.filepath).st_mtime
+        if stamp != self._cached_time_stamp:
+            self._cached_time_stamp = stamp
+            return True
+        return False
+
     def on_settings_changed(self, action: Gio.SimpleAction, state: GLib.Variant):
         print("settings changed")
         # Called when the preset is changed
@@ -644,6 +690,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         if filepath is None:
             filepath = self.filepath
+
+        self.change_checker.stop()
 
         settings = "general"
         if self.window_settings.get_setting("auto-best") and not override:
@@ -709,7 +757,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         print("on file opened")
 
         self.update_time_stamp()
-        GLib.timeout_add(500, self.periodic_check_for_file_change)
+        if self.window_settings.get_setting("auto-reload"):
+            self.change_checker.run()
 
         self.file_name = os.path.basename(self.filepath)
 
@@ -895,29 +944,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.load_file(filepath=self.filepath, override=True)
 
     def set_automatic_reload(self, switch, *args):
-        self.window_settings.set_setting("auto-reload", direction)
+        val = switch.get_active()
+        self.window_settings.set_setting("auto-reload", val)
 
-        GLib.timeout_add(500, self.periodic_check_for_file_change)
-
-    def periodic_check_for_file_change(self):
-        if self.filepath == "":
-            return True
-
-        changed = self.update_time_stamp()
-        if changed:
-            print("file changed")
-            self.load_file(preserve_orientation=True)
-
-        if self.window_settings.get_setting("auto-reload"):
-            return True
-        return False
-
-    def update_time_stamp(self):
-        stamp = os.stat(self.filepath).st_mtime
-        if stamp != self._cached_time_stamp:
-            self._cached_time_stamp = stamp
-            return True
-        return False
+        self.change_checker.run()
 
     def set_load_type(self, combo, *args):
         load_type = combo.get_selected()
@@ -1035,6 +1065,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.point_up_switch.set_active(self.window_settings.get_setting("point-up"))
         self.up_direction_combo.set_selected(up_dir_string_to_n[self.window_settings.get_setting("up")])
         self.automatic_settings_switch.set_active(self.window_settings.get_setting("auto-best"))
+        self.automatic_reload_switch.set_active(self.window_settings.get_setting("auto-reload"))
 
         load_type = self.window_settings.get_setting("load-type")
         self.model_load_combo.set_selected(load_type if load_type else 0)
