@@ -11,7 +11,7 @@
     <property name="title" translatable="yes">Exhibit</property>
     <child>
       <object class="AdwBreakpoint">
-        <condition>max-width: 650px</condition>
+        <condition>max-width: 700px</condition>
         <setter object="split_view" property="collapsed">True</setter>
         <setter object="sidebar_menu" property="visible">False</setter>
       </object>
@@ -289,7 +289,7 @@
                                                 <property name="hexpand">True</property>
                                                 <property name="hexpand-set">True</property>
                                                 <property name="title" translatable="yes">Show All Edges</property>
-                                                <property name="sensitive" bind-source="spheres_switch" bind-property="active" bind-flags="invert-boolean">True</property>
+                                                <!-- <property name="sensitive" bind-source="spheres_switch" bind-property="active" bind-flags="invert-boolean">True</property> -->
                                               </object>
                                             </child>
                                             <child>
@@ -319,7 +319,7 @@
                                                 <property name="hexpand">True</property>
                                                 <property name="hexpand-set">True</property>
                                                 <property name="title" translatable="yes">Show Spheres</property>
-                                                <property name="sensitive" bind-source="edges_switch" bind-property="active" bind-flags="invert-boolean">True</property>
+                                                <!-- <property name="sensitive" bind-source="edges_switch" bind-property="active" bind-flags="invert-boolean">True</property> -->
                                               </object>
                                             </child>
                                             <child>
@@ -656,24 +656,25 @@
                                     <object class="AdwPreferencesGroup">
                                       <property name="hexpand">True</property>
                                       <property name="hexpand-set">True</property>
-                                      <property name="title" translatable="yes">Other Settings</property>
+                                      <property name="title" translatable="yes">Loading</property>
                                       <child>
-                                          <object class="AdwSwitchRow" id="automatic_up_direction_switch">
+                                          <object class="AdwSwitchRow" id="automatic_settings_switch">
                                             <property name="hexpand">True</property>
                                             <property name="hexpand-set">True</property>
                                             <property name="title" translatable="yes">Automatic Settings</property>
-                                            <property name="subtitle" translatable="yes">When loading choose the best presets for the format</property>
+                                            <property name="subtitle" translatable="yes">When loading choose the best presets for the file</property>
                                           </object>
                                         </child>
-                                        <child>
-                                          <object class="GtkLabel">
+                                      </object>
+                                      <object class="AdwPreferencesGroup">
+                                      <property name="hexpand">True</property>
+                                      <property name="hexpand-set">True</property>
+                                      <child>
+                                          <object class="AdwSwitchRow" id="automatic_reload_switch">
                                             <property name="hexpand">True</property>
                                             <property name="hexpand-set">True</property>
-                                            <property name="label" translatable="yes">Preferences are per window basis, if you save them next time you will open the app it will start with these preferences</property>
-                                            <property name="margin-top">24</property>
-                                            <property name="css-classes">dim-label</property>
-                                            <property name="wrap">True</property>
-                                            <property name="xalign">0</property>
+                                            <property name="title" translatable="yes">Reload On Change</property>
+                                            <property name="subtitle" translatable="yes">Check for file change</property>
                                           </object>
                                         </child>
                                       </object>
@@ -893,12 +894,12 @@
                         <property name="hexpand">True</property>
                         <property name="valign">center</property>
                         <child>
-                          <object class="AdwEntryRow">
+                          <object class="AdwEntryRow" id="save_settings_name_entry">
                             <property name="title">Name</property>
                           </object>
                         </child>
                         <child>
-                          <object class="AdwEntryRow">
+                          <object class="AdwEntryRow" id="save_settings_extensions_entry">
                             <property name="title">Extensions</property>
                           </object>
                         </child>
@@ -909,6 +910,7 @@
                         <property name="label">Settings</property>
                         <child>
                           <object class="GtkFrame">
+                            <property name="margin-top">6</property>
                             <child>
                               <object class="GtkColumnView" id="settings_column_view">
                                 <property name="reorderable">False</property>
@@ -939,11 +941,12 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkButton">
+                      <object class="GtkButton" id="save_settings_button">
                         <property name="halign">center</property>
                         <property name="label">Save</property>
                         <property name="valign">center</property>
                         <property name="vexpand">True</property>
+                        <property name="sensitive">False</property>
                         <style>
                           <class name="pill"/>
                           <class name="suggested-action"/>
