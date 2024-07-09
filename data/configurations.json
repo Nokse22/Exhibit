@@ -1,127 +1,65 @@
 {
-	"general":
-	{
+    "general": {
 		"name": "General",
-		"formats": ".*()",
-		"view-settings":
-		{
-			"grid": true,
-			"grid-absolute": false,
-			"translucency-support": true,
-			"tone-mapping": false,
-			"ambient-occlusion": true,
-			"anti-aliasing": true,
-			"hdri-ambient": false,
-			"light-intensity": 1.0,
-			"orthographic": false,
-			"point-up": true,
-			"hdri-file": "",
-			"blur-background": true,
-			"blur-coc": 20.0,
-			"use-skybox": false,
-			"background-color": [1.0, 1.0, 1.0],
-			"show-edges": false,
-			"edges-width": 1.0,
-			"up": "+Y",
-			"show-points": false,
-			"point-size": 1.0,
-			"model-color": [1.0, 1.0, 1.0],
-			"model-metallic": 0.0,
-			"model-roughness": 0.3,
-			"model-opacity": 1.0,
-			"comp": 0,
-			"cells": true
-		},
-		"other-settings":
-		{
-			"point-up" : true,
-			"use-color": false,
-			"load-type": null
-		}
-	},
-	"3d_printing":
-	{
-		"name": "3D Printing",
-		"formats": ".*(3ds|stl|off|3mf)",
-		"view-settings":
-		{
-			"up": "+Z",
-			"grid": true,
-			"grid-absolute": true,
-			"translucency-support": true,
-			"comp": 0,
-                	"cells": true
-		},
-		"other-settings":
-		{
-			"point-up" : true,
-			"use-color": false,
-			"load-type": null
-		}
-	},
-	"mechanical":
-	{
-		"name": "Mechanical",
-		"formats": ".*(step|stp|iges|igs)",
-		"view-settings":
-		{
-			"up": "+Z",
-			"ambient-occlusion": true,
-			"comp": -2,
-			"cells": true
-		},
-		"other-settings":
-		{
-			"point-up" : true,
-			"use-color": false,
-			"load-type": null
-		}
-	},
-	"splat":
-	{
-		"name": "Splat",
-		"formats": ".*(splat)",
-		"view-settings":
-		{
-			"point-sprites": true,
-			"point-size": 1.0,
-			"point-type": "gaussian",
-			"scalars": "color",
-			"comp": -2,
-			"cells": false,
-			"bg-color": "0, 0, 0",
-			"up": "-Y",
-			"camera-position": "0,1,-5.2",
-			"camera-focal-point": "0,1,0",
-			"tone-mapping": false,
-			"grid": false,
-			"anti-aliasing": false,
-			"translucency-support": false
-		},
-		"other-settings":
-		{
-			"point-up" : true,
-			"use-color": false,
-			"load-type": null
-		}
-	},
-	"point_cloud":
-	{
-		"name": "Point Cloud",
-		"formats": ".*(ply)",
-		"view-settings":
-		{
-			"up": "-X",
-			"comp": -2,
-    			"translucency-support": true,
-    			"cells": false,
-    			"grid": false
-		},
-		"other-settings":
-		{
-			"point-up" : false,
-			"use-color": false,
-			"load-type": null
-		}
-	}
+        "formats": ".*()",
+        "view-settings": {},
+        "other-settings": {}
+    },
+    "3d_printing": {
+        "name": "3D Printing",
+        "formats": ".*(3ds|stl|off|3mf)",
+        "view-settings": {
+            "up": "+Z",
+            "grid": true,
+            "grid-absolute": true,
+            "translucency-support": true,
+            "comp": -1,
+            "cells": true
+        },
+        "other-settings": {}
+    },
+    "mechanical": {
+        "name": "Mechanical",
+        "formats": ".*(step|stp|iges|igs)",
+        "view-settings": {
+            "up": "+Z",
+            "ambient-occlusion": true,
+            "comp": -1,
+            "cells": true
+        },
+        "other-settings": {}
+    },
+    "splat": {
+        "name": "Splat",
+        "formats": ".*(splat)",
+        "view-settings": {
+            "point-sprites": true,
+            "point-size": 1,
+            "comp": -2,
+            "cells": false,
+            "bg-color": "0, 0, 0",
+            "up": "-Y",
+            "camera-position": "0,1,-5.2",
+            "camera-focal-point": "0,1,0",
+            "tone-mapping": false,
+            "grid": false,
+            "anti-aliasing": false,
+            "translucency-support": false
+        },
+        "other-settings": {}
+    },
+    "point_cloud": {
+        "name": "Point Cloud",
+        "formats": ".*(ply)",
+        "view-settings": {
+            "up": "-X",
+            "comp": -2,
+            "translucency-support": true,
+            "cells": false,
+            "grid": false
+        },
+        "other-settings": {
+            "point-up": false
+        }
+    }
 }
