@@ -68,6 +68,24 @@ class F3DViewer(Gtk.GLArea):
         "comp": "model.scivis.component",
         "hdri-file": "render.hdri.file",
         "cells": "model.scivis.cells",
+
+        # The following settings don't have an UI
+        "texture-matcap": "model.matcap.texture",
+        "texture-base-color": "model.color.texture",
+        "emissive-factor": "model.emissive.factor",
+        "texture-emissive": "model.emissive.texture",
+        "texture-material": "model.material.texture",
+        "normal-scale": "model.normal.scale",
+        "texture-normal": "model.normal.texture",
+        "point-sprites": "model.point-sprites.enable",
+        "point-type": "model.point-sprites.type",
+        "volume": "model.volume.enable",
+        "inverse": "model.volume.inverse",
+        "final-shader": "render.effect.final-shader",
+        "grid-unit": "render.grid.unit",
+        "grid-subdivisions": "render.grid.subdivisions",
+        "grid-color": "render.grid.color",
+        "bg-color": "render.background.color"
     }
 
     def __init__(self, *args):
@@ -152,8 +170,6 @@ class F3DViewer(Gtk.GLArea):
                 f3d_key = self.keys[key]
                 f3d_options[f3d_key] = value
                 self.settings[f3d_key] = value
-        print(options)
-        print("\n\n", f3d_options)
         self.engine.options.update(f3d_options)
         self.queue_render()
 
@@ -252,6 +268,13 @@ class F3DViewer(Gtk.GLArea):
     def set_view_up(self, direction):
         self.camera.setViewUp(direction)
         self.queue_render()
+
+    def set_camera_state(self, state):
+        self.camera.setState(state)
+        self.queue_render()
+
+    def get_camera_state(self):
+        return self.camera.getState()
 
     @Gtk.Template.Callback("on_scroll")
     def on_scroll(self, gesture, dx, dy):
