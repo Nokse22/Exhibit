@@ -12,20 +12,16 @@
             "up": "+Z",
             "grid": true,
             "grid-absolute": true,
-            "translucency-support": true,
-            "comp": -1,
-            "cells": true
+            "translucency-support": true
         },
         "other-settings": {}
     },
     "mechanical": {
-        "name": "Mechanical",
+        "name": "CAD Models",
         "formats": ".*(step|stp|iges|igs)",
         "view-settings": {
             "up": "+Z",
-            "ambient-occlusion": true,
-            "comp": -1,
-            "cells": true
+            "ambient-occlusion": false
         },
         "other-settings": {}
     },
@@ -34,13 +30,11 @@
         "formats": ".*(splat)",
         "view-settings": {
             "point-sprites": true,
-            "point-size": 1,
+            "point-size": 1.0,
             "comp": -2,
             "cells": false,
             "bg-color": "0, 0, 0",
             "up": "-Y",
-            "camera-position": "0,1,-5.2",
-            "camera-focal-point": "0,1,0",
             "tone-mapping": false,
             "grid": false,
             "anti-aliasing": false,
@@ -52,6 +46,8 @@
         "name": "Point Cloud",
         "formats": ".*(ply)",
         "view-settings": {
+			"point-sprites": true,
+			"point-size": 0.0,
             "up": "-X",
             "comp": -2,
             "translucency-support": true,
