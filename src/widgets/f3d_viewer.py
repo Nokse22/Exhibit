@@ -170,13 +170,11 @@ class F3DViewer(Gtk.GLArea):
         f3d_options = {}
         for key, value in options.items():
             if key in self.keys:
-                if key == "hdri-ambient" and value == True and not self.is_mapped:
-                    print("Can't light with hdri on startup")
-                    self.settings["render.hdri.ambient"] = True
-                    continue
                 f3d_key = self.keys[key]
-                f3d_options[f3d_key] = value
                 self.settings[f3d_key] = value
+                if key == "hdri-ambient" and value == True and not self.is_mapped:
+                    continue
+                f3d_options[f3d_key] = value
         self.engine.options.update(f3d_options)
         self.queue_render()
 

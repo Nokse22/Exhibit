@@ -375,6 +375,16 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         os.makedirs(self.hdri_thumbnails_path, exist_ok=True)
         os.makedirs(self.user_configurations_path, exist_ok=True)
 
+        # HDRI
+        hdri_names = ["city.hdr", "meadow.hdr", "field.hdr", "sky.hdr"]
+        for hdri_filename in hdri_names:
+            if not os.path.isfile(self.hdri_path + hdri_filename):
+                hdri = Gio.resources_lookup_data('/io/github/nokse22/Exhibit/HDRIs/' + hdri_filename, Gio.ResourceLookupFlags.NONE).get_data()
+                hdri_bytes = bytearray(hdri)
+                with open(self.hdri_path + hdri_filename, 'wb') as output_file:
+                    output_file.write(hdri_bytes)
+                print(f"Added {hdri_filename}")
+
         # Loading the saved configurations
         self.configurations = Gio.resources_lookup_data('/io/github/nokse22/Exhibit/configurations.json', Gio.ResourceLookupFlags.NONE).get_data().decode('utf-8')
         self.configurations = json.loads(self.configurations)

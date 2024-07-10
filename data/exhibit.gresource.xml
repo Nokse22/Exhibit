@@ -16,5 +16,10 @@
     <file preprocess="xml-stripblanks">icons/16x16/actions/left-large-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/arrow-into-box-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/share-symbolic.svg</file>
+
+    <file>HDRIs/city.hdr</file>
+    <file>HDRIs/field.hdr</file>
+    <file>HDRIs/meadow.hdr</file>
+    <file>HDRIs/sky.hdr</file>
   </gresource>
 </gresources>
