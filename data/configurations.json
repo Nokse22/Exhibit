@@ -1,6 +1,6 @@
 {
     "general": {
-		"name": "General",
+	"name": "General",
         "formats": ".*()",
         "view-settings": {},
         "other-settings": {}

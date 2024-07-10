@@ -107,6 +107,8 @@ class F3DViewer(Gtk.GLArea):
 
         self.distance = 0
 
+        self.is_mapped = False
+
         self.engine = Engine(Window.EXTERNAL)
         self.loader = self.engine.getLoader()
         self.camera = self.engine.window.getCamera()
@@ -117,6 +119,7 @@ class F3DViewer(Gtk.GLArea):
             "scene.up-direction": "+Y",
             "model.scivis.cells": True,
             "model.scivis.array-name": "",
+            "render.hdri.ambient": False
         }
 
         self.engine.options.update(self.settings)
@@ -167,6 +170,10 @@ class F3DViewer(Gtk.GLArea):
         f3d_options = {}
         for key, value in options.items():
             if key in self.keys:
+                if key == "hdri-ambient" and value == True and not self.is_mapped:
+                    print("Can't light with hdri on startup")
+                    self.settings["render.hdri.ambient"] = True
+                    continue
                 f3d_key = self.keys[key]
                 f3d_options[f3d_key] = value
                 self.settings[f3d_key] = value
@@ -199,6 +206,16 @@ class F3DViewer(Gtk.GLArea):
     def on_realize(self, area):
         if self.get_context() is None:
             print("Could not create GL context")
+
+        self.is_mapped = True
+        print("F3D Viewer has been mapped")
+
+        print(self.settings)
+
+        if self.settings["render.hdri.ambient"]:
+            f3d_options = {"render.hdri.ambient": True}
+            self.engine.options.update(f3d_options)
+            self.queue_render()
 
     def on_render(self, area, ctx):
         self.get_context().make_current()
