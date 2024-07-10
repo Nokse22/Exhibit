@@ -887,7 +887,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.load_hdri(filepath)
         else:
             self.window_settings.set_setting("load-type", None)
-            self.load_file(filepath)
+            self.load_file(filepath=filepath)
 
     @Gtk.Template.Callback("on_drop_enter")
     def on_drop_enter(self, drop_target, *args):
@@ -1147,3 +1147,4 @@ def list_files(directory):
     items = os.listdir(directory)
     files = [item for item in items if os.path.isfile(os.path.join(directory, item))]
     return files
+

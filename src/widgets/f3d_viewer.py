@@ -97,6 +97,13 @@ class F3DViewer(Gtk.GLArea):
         self.set_allowed_apis(Gdk.GLAPI.GL)
         # self.set_required_version(1, 0)
 
+        self.settings = {
+            "scene.up-direction": "+Y",
+            "model.scivis.cells": True,
+            "model.scivis.array-name": "",
+            "render.hdri.ambient": False
+        }
+
         self.prev_pan_offset = 0
         self.drag_prev_offset = (0, 0)
         self.drag_start_angle = 0
@@ -114,13 +121,6 @@ class F3DViewer(Gtk.GLArea):
         self.camera = self.engine.window.getCamera()
 
         self.engine.autoload_plugins()
-
-        self.settings = {
-            "scene.up-direction": "+Y",
-            "model.scivis.cells": True,
-            "model.scivis.array-name": "",
-            "render.hdri.ambient": False
-        }
 
         self.engine.options.update(self.settings)
 
