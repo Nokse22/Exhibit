@@ -220,9 +220,14 @@ class WindowSettings(Gio.ListStore):
             if key == setting.name:
                 return setting.value
 
-    def get_updatable_settings(self):
+    def get_default_user_customizable_settings(self):
         settings = self.default_settings.copy()
         settings.update(self.other_settings)
+        return settings
+
+    def get_user_customized_settings(self):
+        settings = self.get_view_settings()
+        settings.update(self.get_other_settings())
         return settings
 
     def set_settings(self, dictionary):
@@ -326,6 +331,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     save_settings_button = Gtk.Template.Child()
     save_settings_name_entry = Gtk.Template.Child()
     save_settings_extensions_entry = Gtk.Template.Child()
+    save_settings_expander = Gtk.Template.Child()
 
     width = 600
     height = 600
@@ -487,12 +493,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.style_manager = Adw.StyleManager().get_default()
         self.style_manager.connect("notify::dark", self.update_background_color)
 
+        self.update_options()
         self.update_background_color()
 
         if startup_filepath:
             self.load_file(filepath=startup_filepath)
-
-        self.update_options()
 
         # Setting up the save settings dialog
         def _on_factory_setup(_factory, list_item):
@@ -569,6 +574,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             entry.add_css_class("error")
 
     def on_save_settings(self, *args):
+        self.save_settings_name_entry.set_text("")
+        self.save_settings_extensions_entry.set_text("")
+        self.save_settings_expander.set_expanded(False)
         self.save_dialog.present(self)
 
     def set_settings_from_name(self, name):
@@ -576,7 +584,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             return
 
         # Get the default settings and change the ones defined by the chosen presets
-        options = self.window_settings.get_updatable_settings()
+        options = self.window_settings.get_default_user_customizable_settings()
         for key, value in self.configurations[name]["view-settings"].items():
             options[key] = value
 
@@ -584,28 +592,33 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         for key, value in options.items():
             self.window_settings.set_setting(key, value)
 
-        # Update the viewer settings, to support settings without UI
+        # Update all the viewer settings, to support settings without UI
         self.f3d_viewer.update_options(options)
-        print(options)
 
         # Set all the settings not related to the viewer
         for key, value in self.configurations[name]["other-settings"].items():
             self.window_settings.set_setting(key, value)
 
         # Update the UI
-        self.set_preference_values()
+        self.set_preference_values(False)
+
+        self.update_background_color()
 
     def check_for_options_change(self):
         state_name = self.settings_action.get_state().get_string()
         if state_name == "custom":
             return
 
-        options = self.window_settings.get_updatable_settings()
-        for key, value in self.configurations[state_name]["view-settings"].items():
-            options[key] = value
+        state_options = self.window_settings.get_default_user_customizable_settings()
 
-        current_settings = self.window_settings.get_updatable_settings()
-        for key, value in options.items():
+        for key, value in self.configurations[state_name]["view-settings"].items():
+            state_options[key] = value
+
+        for key, value in self.configurations[state_name]["other-settings"].items():
+            state_options[key] = value
+
+        current_settings = self.window_settings.get_user_customized_settings()
+        for key, value in state_options.items():
             if key in current_settings:
                 if current_settings[key] != value:
                     print(f"current key: {key}'s value is {current_settings[key]} != {value}")
@@ -804,7 +817,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.f3d_viewer.update_options(options)
         self.check_for_options_change()
-        # self.update_background_color()
 
     def save_as_image(self, filepath):
         img = self.f3d_viewer.render_image()
@@ -946,8 +958,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def set_automatic_reload(self, switch, *args):
         val = switch.get_active()
         self.window_settings.set_setting("auto-reload", val)
-
-        self.change_checker.run()
+        if val:
+            self.change_checker.run()
+        else:
+            self.change_checker.stop()
 
     def set_load_type(self, combo, *args):
         load_type = combo.get_selected()

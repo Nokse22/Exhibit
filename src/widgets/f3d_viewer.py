@@ -174,7 +174,7 @@ class F3DViewer(Gtk.GLArea):
         self.queue_render()
 
     def render_image(self):
-        self.f3d_viewer.get_context().make_current()
+        self.get_context().make_current()
         img = self.engine.window.render_to_image()
         return img
 

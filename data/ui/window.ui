@@ -908,7 +908,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkExpander">
+                      <object class="GtkExpander" id="save_settings_expander">
                         <property name="label">Settings</property>
                         <child>
                           <object class="GtkFrame">
