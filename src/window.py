@@ -609,11 +609,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         for key, value in self.configurations[name]["other-settings"].items():
             self.window_settings.set_setting(key, value)
 
-        # Update the UI
-        self.set_preference_values(False)
-
-        self.update_background_color()
-
     def check_for_options_change(self):
         state_name = self.settings_action.get_state().get_string()
         if state_name == "custom":
@@ -664,6 +659,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.set_settings_from_name(state.get_string())
 
+        # Update the UI
+        self.set_preference_values(False)
+
+        self.update_background_color()
+
         self.settings_action.set_state(state)
 
         # Enable saving the settings only if it's not one already saved
@@ -711,8 +711,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if "preserve_orientation" in kwargs:
             preserve_orientation=kwargs["preserve_orientation"]
 
-        if filepath is None:
+        if filepath is None or filepath == "":
             filepath = self.filepath
+
+        print(f"load file: {filepath}")
 
         self.change_checker.stop()
 
@@ -728,53 +730,54 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.settings_action.set_state(GLib.Variant("s", settings))
 
-        def _load():
-            scene_loaded = False
-            geometry_loaded = False
+        # def _load():
+        scene_loaded = False
+        geometry_loaded = False
 
-            if self.window_settings.get_setting("load-type") is None:
-                if self.f3d_viewer.has_scene_loader(filepath):
-                    self.f3d_viewer.load_scene(filepath)
-                    scene_loaded = True
-                    GLib.idle_add(self.model_load_combo.set_sensitive, True)
-                elif self.f3d_viewer.has_geometry_loader(filepath):
-                    self.f3d_viewer.load_geometry(filepath)
-                    geometry_loaded = True
-                    GLib.idle_add(self.model_load_combo.set_sensitive, False)
+        if self.window_settings.get_setting("load-type") is None:
+            if self.f3d_viewer.has_scene_loader(filepath):
+                self.f3d_viewer.load_scene(filepath)
+                scene_loaded = True
+                self.model_load_combo.set_sensitive(True)
+            elif self.f3d_viewer.has_geometry_loader(filepath):
+                self.f3d_viewer.load_geometry(filepath)
+                geometry_loaded = True
+                self.model_load_combo.set_sensitive(False)
 
-            elif self.window_settings.get_setting("load-type") == 0:
-                if self.f3d_viewer.has_geometry_loader(filepath):
-                    self.f3d_viewer.load_geometry(filepath)
-                    geometry_loaded = True
-            elif self.window_settings.get_setting("load-type") == 1:
-                if self.f3d_viewer.has_scene_loader(filepath):
-                    self.f3d_viewer.load_scene(filepath)
-                    scene_loaded = True
+        elif self.window_settings.get_setting("load-type") == 0:
+            if self.f3d_viewer.has_geometry_loader(filepath):
+                self.f3d_viewer.load_geometry(filepath)
+                geometry_loaded = True
+        elif self.window_settings.get_setting("load-type") == 1:
+            if self.f3d_viewer.has_scene_loader(filepath):
+                self.f3d_viewer.load_scene(filepath)
+                scene_loaded = True
+        print(scene_loaded, geometry_loaded)
+        if not scene_loaded and not geometry_loaded:
+            print("nothing loaded ---------")
+            self.on_file_not_opened(filepath)
+            return
 
-            if not scene_loaded and not geometry_loaded:
-                GLib.idle_add(self.on_file_not_opened, filepath)
-                return
+        if self.f3d_viewer.has_geometry_loader(filepath) and self.f3d_viewer.has_scene_loader(filepath):
+            self.model_load_combo.set_sensitive(True)
+        else:
+            self.model_load_combo.set_sensitive(False)
 
-            if self.f3d_viewer.has_geometry_loader(filepath) and self.f3d_viewer.has_scene_loader(filepath):
-                GLib.idle_add(self.model_load_combo.set_sensitive, True)
-            else:
-                GLib.idle_add(self.model_load_combo.set_sensitive, False)
+        if scene_loaded:
+            self.window_settings.set_setting("load-type", 1)
+        elif geometry_loaded:
+            self.window_settings.set_setting("load-type", 0)
 
-            if scene_loaded:
-                self.window_settings.set_setting("load-type", 1)
-            elif geometry_loaded:
-                self.window_settings.set_setting("load-type", 0)
+        if (scene_loaded or geometry_loaded) and preserve_orientation:
+            self.f3d_viewer.set_camera_state(camera_state)
 
-            if (scene_loaded or geometry_loaded) and preserve_orientation:
-                self.f3d_viewer.set_camera_state(camera_state)
-
-            self.filepath = filepath
-            GLib.idle_add(self.on_file_opened)
+        self.filepath = filepath
+        self.on_file_opened()
 
         if preserve_orientation:
             camera_state = self.f3d_viewer.get_camera_state()
 
-        threading.Thread(target=_load, daemon=True).start()
+        # threading.Thread(target=_load, daemon=True).start()
 
     def on_file_opened(self):
         print("on file opened")
@@ -805,6 +808,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.window_settings.set_setting("show-points", False)
 
         self.set_preference_values()
+
+        self.update_background_color()
 
     def on_file_not_opened(self, filepath):
         print("on file not opened")
