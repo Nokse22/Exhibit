@@ -91,6 +91,7 @@ class F3DViewer(Gtk.GLArea):
     def __init__(self, *args):
         self.set_auto_render(True)
         self.connect("realize", self.on_realize)
+        self.connect("map", self.on_map)
         self.connect("render", self.on_render)
         self.connect("resize", self.on_resize)
 
@@ -205,6 +206,7 @@ class F3DViewer(Gtk.GLArea):
         if self.get_context() is None:
             print("Could not create GL context")
 
+    def on_map(self, *args):
         self.is_mapped = True
         print("F3D Viewer has been mapped")
 
