@@ -210,12 +210,13 @@ class F3DViewer(Gtk.GLArea):
         self.is_mapped = True
         print("F3D Viewer has been mapped")
 
-        print(self.settings)
-
-        if self.settings["render.hdri.ambient"]:
+        def _set_hdri_ambient_true():
             f3d_options = {"render.hdri.ambient": True}
             self.engine.options.update(f3d_options)
             self.queue_render()
+
+        if self.settings["render.hdri.ambient"]:
+            GLib.timeout_add(100, _set_hdri_ambient_true)
 
     def on_render(self, area, ctx):
         self.get_context().make_current()
@@ -341,3 +342,4 @@ class F3DViewer(Gtk.GLArea):
     @Gtk.Template.Callback("on_drag_end")
     def on_drag_end(self, gesture, *args):
         self.drag_prev_offset = (0, 0)
+
