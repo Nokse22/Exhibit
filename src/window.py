@@ -194,6 +194,7 @@ class WindowSettings(Gio.ListStore):
     internal_settings = {
         "auto-best" : True,
         "load-type": None, # 0 for geometry and 1 for scene
+        "sidebar-show": True
     }
 
     def __init__(self):
@@ -345,6 +346,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def __init__(self, application=None, startup_filepath=None):
         super().__init__(application=application)
 
+        self.applying_breakpoint = False
+
         # Defining all the actions
         self.save_as_action = self.create_action('save-as-image', self.open_save_file_chooser)
         self.open_new_action = self.create_action('open-new', self.open_file_chooser)
@@ -422,10 +425,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         # Getting the saved preferences and setting the window to the last state
         self.window_settings = WindowSettings()
-        settings = Gio.Settings.new('io.github.nokse22.Exhibit')
+        self.saved_settings = Gio.Settings.new('io.github.nokse22.Exhibit')
 
-        self.set_default_size(settings.get_int("startup-width"), settings.get_int("startup-height"))
-        self.split_view.set_show_sidebar(settings.get_boolean("startup-sidebar-show"))
+        self.set_default_size(self.saved_settings.get_int("startup-width"), self.saved_settings.get_int("startup-height"))
+        self.split_view.set_show_sidebar(self.saved_settings.get_boolean("startup-sidebar-show"))
+        self.window_settings.set_setting("sidebar-show", self.saved_settings.get_boolean("startup-sidebar-show"))
 
         # Setting the UI and connecting widgets
         self.set_preference_values(False)
@@ -926,6 +930,32 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                         print("Failed to finish Gtk.FileLauncher procedure.")
 
             launcher.launch(self, None, open_file_finish)
+
+    @Gtk.Template.Callback("on_apply_breakpoint")
+    def on_apply_breakpoint(self, *args):
+        state = self.window_settings.get_setting("sidebar-show")
+        print("apply", state)
+        self.applying_breakpoint = True
+        self.split_view.set_collapsed(True)
+        self.split_view.set_show_sidebar(False)
+        self.applying_breakpoint = False
+
+    @Gtk.Template.Callback("on_unapply_breakpoint")
+    def on_unapply_breakpoint(self, *args):
+        state = self.window_settings.get_setting("sidebar-show")
+        print("unapply", state)
+        self.applying_breakpoint = True
+        self.split_view.set_collapsed(False)
+        self.split_view.set_show_sidebar(state)
+        self.applying_breakpoint = False
+
+    @Gtk.Template.Callback("on_split_view_show_sidebar_changed")
+    def on_split_view_show_sidebar_changed(self, *args):
+        if self.applying_breakpoint:
+            return
+        state = self.split_view.get_show_sidebar()
+        print("show sidebar changed", state)
+        self.window_settings.set_setting("sidebar-show", state)
 
     def on_switch_toggled(self, switch, active, name):
         self.window_settings.set_setting(name, switch.get_active())

@@ -12,16 +12,11 @@
     <child>
       <object class="AdwBreakpoint">
         <condition>max-width: 700px</condition>
-        <setter object="split_view" property="collapsed">True</setter>
         <setter object="sidebar_menu" property="visible">False</setter>
-      </object>
-    </child>
-    <child>
-      <object class="AdwBreakpoint">
-        <condition>max-width: 500px</condition>
         <setter object="close_sidebar_button" property="visible">True</setter>
-        <setter object="split_view" property="collapsed">True</setter>
         <setter object="sidebar_menu" property="visible">False</setter>
+        <signal name="apply" handler="on_apply_breakpoint"/>
+        <signal name="unapply" handler="on_unapply_breakpoint"/>
       </object>
     </child>
     <property name="content">
@@ -147,7 +142,8 @@
                 <property name="sidebar-width-unit">px</property>
                 <property name="max-sidebar-width">400</property>
                 <property name="min-sidebar-width">300</property>
-                <property name="show-sidebar" bind-source="reveal_sidebar" bind-property="active" bind-flags="sync-create | bidirectional">True</property>
+                <property name="show-sidebar">false</property>
+                <signal name="notify::show-sidebar" handler="on_split_view_show_sidebar_changed"/>
                 <property name="sidebar">
                   <object class="AdwToolbarView">
                     <property name="top-bar-style">flat</property>
@@ -702,11 +698,12 @@
                     <property name="css-classes">preview-headerbar</property>
                     <property name="show-title">False</property>
                     <child type="start">
-                      <object class="GtkToggleButton" id="reveal_sidebar">
+                      <object class="GtkToggleButton" id="sidebar_toggle_button">
                         <property name="css-classes">flat</property>
-                        <property name="active">True</property>
                         <property name="icon-name">sidebar-show-symbolic</property>
                         <property name="tooltip-text" translatable="yes">Reveal Sidebar</property>
+                        <property name="active" bind-source="split_view" bind-property="show-sidebar" bind-flags="sync-create | bidirectional">True</property>
+                        <!-- <signal name="toggled" handler="on_reveal_sidebar_toggled"/> -->
                       </object>
                     </child>
                     <child type="start">
