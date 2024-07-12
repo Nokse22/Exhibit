@@ -155,6 +155,7 @@ class Viewer3dApplication(Adw.Application):
                 manager.set_color_scheme(Adw.ColorScheme.FORCE_DARK)
 
     def on_window_close(self, window, app_win):
+        print("window closed")
         self.saved_settings.set_int("startup-width", window.get_width())
         self.saved_settings.set_int("startup-height", window.get_height())
         self.saved_settings.set_boolean("startup-sidebar-show", app_win.split_view.get_show_sidebar())
@@ -186,13 +187,13 @@ class Viewer3dApplication(Adw.Application):
                 win = Viewer3dWindow(application=self, startup_filepath=self.open_filepath)
             else:
                 win = Viewer3dWindow(application=self)
-        win.present()
         win.connect("close-request", self.on_window_close, win)
+        win.present()
 
     def open_new_window_action(self, *args):
         win = Viewer3dWindow(application=self)
-        win.present()
         win.connect("close-request", self.on_window_close, win)
+        win.present()
 
     def create_action(self, name, callback, shortcuts=None, argument=None):
         """Add an application action.
