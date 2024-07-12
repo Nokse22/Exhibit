@@ -815,6 +815,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.update_background_color()
 
+        self.f3d_viewer.set_visible(True)
+
     def on_file_not_opened(self, filepath):
         print("on file not opened")
         self.set_title(_("Exhibit"))

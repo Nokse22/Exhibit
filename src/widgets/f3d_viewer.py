@@ -91,7 +91,7 @@ class F3DViewer(Gtk.GLArea):
     def __init__(self, *args):
         self.set_auto_render(True)
         self.connect("realize", self.on_realize)
-        self.connect("map", self.on_map)
+        self.connect("show", self.on_show)
         self.connect("render", self.on_render)
         self.connect("resize", self.on_resize)
 
@@ -115,7 +115,7 @@ class F3DViewer(Gtk.GLArea):
 
         self.distance = 0
 
-        self.is_mapped = False
+        self.is_showed = False
 
         self.engine = Engine(Window.EXTERNAL)
         self.loader = self.engine.getLoader()
@@ -173,7 +173,7 @@ class F3DViewer(Gtk.GLArea):
             if key in self.keys:
                 f3d_key = self.keys[key]
                 self.settings[f3d_key] = value
-                if key == "hdri-ambient" and value == True and not self.is_mapped:
+                if key == "hdri-ambient" and value == True and not self.is_showed:
                     continue
                 f3d_options[f3d_key] = value
         self.engine.options.update(f3d_options)
@@ -206,9 +206,9 @@ class F3DViewer(Gtk.GLArea):
         if self.get_context() is None:
             print("Could not create GL context")
 
-    def on_map(self, *args):
-        self.is_mapped = True
-        print("F3D Viewer has been mapped")
+    def on_show(self, *args):
+        self.is_showed = True
+        print("F3D Viewer has been showed")
 
         def _set_hdri_ambient_true():
             f3d_options = {"render.hdri.ambient": True}

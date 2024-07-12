@@ -758,6 +758,7 @@
                           <object class="AdwToastOverlay" id="toast_overlay">
                             <property name="child">
                               <object class="F3DViewer" id="f3d_viewer">
+                                <property name="visible">False</property>
                               </object>
                             </property>
                           </object>
