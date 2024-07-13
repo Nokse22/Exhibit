@@ -1173,6 +1173,13 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         return thumbnail_filepath
 
+    @Gtk.Template.Callback("on_close_request")
+    def on_close_request(self, window):
+        print("window closed")
+        self.saved_settings.set_int("startup-width", window.get_width())
+        self.saved_settings.set_int("startup-height", window.get_height())
+        self.saved_settings.set_boolean("startup-sidebar-show", window.split_view.get_show_sidebar())
+
 def rgb_to_list(rgb):
     values = [int(x) / 255 for x in rgb[4:-1].split(',')]
     return values

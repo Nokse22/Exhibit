@@ -9,6 +9,7 @@
     <property name="width-request">360</property>
     <property name="height-request">360</property>
     <property name="title" translatable="yes">Exhibit</property>
+    <signal name="close-request" handler="on_close_request"/>
     <child>
       <object class="AdwBreakpoint">
         <condition>max-width: 700px</condition>
@@ -758,7 +759,6 @@
                           <object class="AdwToastOverlay" id="toast_overlay">
                             <property name="child">
                               <object class="F3DViewer" id="f3d_viewer">
-                                <property name="visible">False</property>
                               </object>
                             </property>
                           </object>
