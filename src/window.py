@@ -33,9 +33,42 @@ import threading
 import datetime
 import json
 import re
+import logging
 
 from wand.image import Image
 from enum import Enum
+
+class CustomFormatter(logging.Formatter):
+
+    grey = "\x1b[38;20m"
+    yellow = "\x1b[33;20m"
+    red = "\x1b[31;20m"
+    bold_red = "\x1b[31;1m"
+    reset = "\x1b[0m"
+    format = "%(asctime)s - %(levelname)s - %(message)s (%(filename)s:%(lineno)d)"
+
+    FORMATS = {
+        logging.DEBUG: grey + format + reset,
+        logging.INFO: grey + format + reset,
+        logging.WARNING: yellow + format + reset,
+        logging.ERROR: red + format + reset,
+        logging.CRITICAL: bold_red + format + reset
+    }
+
+    def format(self, record):
+        log_fmt = self.FORMATS.get(record.levelno)
+        formatter = logging.Formatter(log_fmt)
+        return formatter.format(record)
+
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+
+ch = logging.StreamHandler()
+ch.setLevel(logging.DEBUG)
+
+ch.setFormatter(CustomFormatter())
+
+logger.addHandler(ch)
 
 up_dir_n_to_string = {
     0: "-X",
@@ -214,7 +247,7 @@ class WindowSettings(Gio.ListStore):
             if key == setting.name:
                 setting.set_value(val)
                 return
-        print(f"{key} key not present")
+        logger.warning(f"{key} key not present")
 
     def get_setting(self, key):
         for setting in self:
@@ -386,7 +419,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 hdri_bytes = bytearray(hdri)
                 with open(self.hdri_path + hdri_filename, 'wb') as output_file:
                     output_file.write(hdri_bytes)
-                print(f"Added {hdri_filename}")
+                logger.info(f"Added {hdri_filename}")
 
         # Loading the saved configurations
         self.configurations = Gio.resources_lookup_data('/io/github/nokse22/Exhibit/configurations.json', Gio.ResourceLookupFlags.NONE).get_data().decode('utf-8')
@@ -405,10 +438,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                         if required_keys.issubset(first_key_value.keys()):
                             self.configurations.update(configuration)
                         else:
-                            print(f"Error: {filepath} is missing required keys.")
+                            logger.error(f"Error: {filepath} is missing required keys.")
 
                     except json.JSONDecodeError as e:
-                        print(f"Error reading {config_file}: {e}")
+                        logger.error(f"Error reading {config_file}: {e}")
 
         item = Gio.MenuItem.new("Custom", "win.settings")
         item.set_attribute_value("target", GLib.Variant.new_string("custom"))
@@ -497,7 +530,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                     thumbnail = self.generate_thumbnail(filepath)
                 self.hdri_file_row.add_suggested_file(thumbnail, filepath)
             except Exception as e:
-                print("Couldn't open HDRI file, skipping")
+                logger.warning(f"Couldn't open HDRI file {filepath}, skipping")
 
         if self.window_settings.get_setting("orthographic"):
             self.toggle_orthographic()
@@ -594,6 +627,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.save_dialog.present(self)
 
     def set_settings_from_name(self, name):
+        logger.debug("settings from name")
         if name == "custom":
             return
 
@@ -614,6 +648,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.window_settings.set_setting(key, value)
 
     def check_for_options_change(self):
+        self.settings_action.set_state(GLib.Variant("s", "custom"))
+        return
+
         state_name = self.settings_action.get_state().get_string()
         if state_name == "custom":
             return
@@ -630,7 +667,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         for key, value in state_options.items():
             if key in current_settings:
                 if current_settings[key] != value:
-                    print(f"current key: {key}'s value is {current_settings[key]} != {value}")
+                    logger.info(f"current key: {key}'s value is {current_settings[key]} != {value}")
                     self.settings_action.set_state(GLib.Variant("s", "custom"))
                     self.save_settings_action.set_enabled(True)
                     return
@@ -639,11 +676,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if self.filepath == "":
             return True
 
-        print(self._cached_time_stamp)
-
         changed = self.update_time_stamp()
         if changed:
-            print("file changed")
+            logger.debug("file changed")
             self.load_file(preserve_orientation=True)
 
         if self.window_settings.get_setting("auto-reload"):
@@ -658,8 +693,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         return False
 
     def on_settings_changed(self, action: Gio.SimpleAction, state: GLib.Variant):
-        print("settings changed")
         # Called when the preset is changed
+        logger.debug("settings changed")
 
         self.set_settings_from_name(state.get_string())
 
@@ -718,12 +753,13 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if filepath is None or filepath == "":
             filepath = self.filepath
 
-        print(f"load file: {filepath}")
+        logger.debug(f"load file: {filepath}")
 
         self.change_checker.stop()
 
-        settings = "general"
         if self.window_settings.get_setting("auto-best") and not override:
+            logger.debug("choosing best settings")
+            settings = "general"
             for key, value in self.configurations.items():
                 pattern = value["formats"]
                 if pattern == ".*()":
@@ -732,9 +768,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                     settings = key
             self.set_settings_from_name(settings)
 
-        self.settings_action.set_state(GLib.Variant("s", settings))
-
-        # def _load():
         scene_loaded = False
         geometry_loaded = False
 
@@ -756,9 +789,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             if self.f3d_viewer.has_scene_loader(filepath):
                 self.f3d_viewer.load_scene(filepath)
                 scene_loaded = True
-        print(scene_loaded, geometry_loaded)
+
         if not scene_loaded and not geometry_loaded:
-            print("nothing loaded ---------")
             self.on_file_not_opened(filepath)
             return
 
@@ -781,10 +813,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if preserve_orientation:
             camera_state = self.f3d_viewer.get_camera_state()
 
-        # threading.Thread(target=_load, daemon=True).start()
-
     def on_file_opened(self):
-        print("on file opened")
+        logger.debug("on file opened")
 
         self.update_time_stamp()
         if self.window_settings.get_setting("auto-reload"):
@@ -815,17 +845,16 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.update_background_color()
 
-        self.f3d_viewer.set_visible(True)
-
     def on_file_not_opened(self, filepath):
-        print("on file not opened")
+        logger.debug("on file not opened")
+
         self.set_title(_("Exhibit"))
         if self.no_file_loaded:
             self.stack.set_visible_child_name("startup_page")
             self.startup_stack.set_visible_child_name("error_page")
         else:
             self.send_toast(_("Can't open") + " " + os.path.basename(filepath))
-        options = {"scene.up-direction": self.window_settings.get_setting("up")}
+        options = {"up": self.window_settings.get_setting("up")}
         self.f3d_viewer.update_options(options)
         self.check_for_options_change()
 
@@ -919,7 +948,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         try:
             file = Gio.File.new_for_path(self.filepath)
         except GLib.GError as e:
-            print("Failed to construct a new Gio.File object from path.")
+            logger.error("Failed to construct a new Gio.File object from path.")
         else:
             launcher = Gtk.FileLauncher.new(file)
             launcher.set_always_ask(True)
@@ -929,14 +958,13 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                     launcher.launch_finish(result)
                 except GLib.GError as e:
                     if e.code != 2: # 'The portal dialog was dismissed by the user' error
-                        print("Failed to finish Gtk.FileLauncher procedure.")
+                        logger.error("Failed to finish Gtk.FileLauncher procedure.")
 
             launcher.launch(self, None, open_file_finish)
 
     @Gtk.Template.Callback("on_apply_breakpoint")
     def on_apply_breakpoint(self, *args):
         state = self.window_settings.get_setting("sidebar-show")
-        print("apply", state)
         self.applying_breakpoint = True
         self.split_view.set_collapsed(True)
         self.split_view.set_show_sidebar(False)
@@ -945,7 +973,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     @Gtk.Template.Callback("on_unapply_breakpoint")
     def on_unapply_breakpoint(self, *args):
         state = self.window_settings.get_setting("sidebar-show")
-        print("unapply", state)
         self.applying_breakpoint = True
         self.split_view.set_collapsed(False)
         self.split_view.set_show_sidebar(state)
@@ -956,7 +983,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if self.applying_breakpoint:
             return
         state = self.split_view.get_show_sidebar()
-        print("show sidebar changed", state)
         self.window_settings.set_setting("sidebar-show", state)
 
     def on_switch_toggled(self, switch, active, name):
@@ -996,10 +1022,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     def set_up_direction(self, combo, *args):
         direction = up_dir_n_to_string[combo.get_selected()]
-        options = {"scene.up-direction": direction}
+        options = {"up": direction}
         self.f3d_viewer.update_options(options)
-        self.check_for_options_change()
         self.window_settings.set_setting("up", direction)
+        self.check_for_options_change()
         self.load_file(filepath=self.filepath, override=True)
 
     def set_automatic_reload(self, switch, *args):
@@ -1016,7 +1042,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.load_file()
 
     def update_background_color(self, *args):
-        print("USE COLOR IS", self.window_settings.get_setting("use-color"))
+        logger.debug(f"Use color is: {self.window_settings.get_setting('use-color')}")
         if self.window_settings.get_setting("use-color"):
             options = {
                 "background-color": self.window_settings.get_setting("background-color"),
@@ -1098,7 +1124,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.check_for_options_change()
 
     def set_preference_values(self, block=True):
-        print("updating settings")
+        logger.debug("updating settings")
         if block:
             self.up_direction_combo.handler_block(self.up_direction_combo_handler_id)
             self.model_load_combo.handler_block(self.load_type_combo_handler_id)
@@ -1175,7 +1201,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback("on_close_request")
     def on_close_request(self, window):
-        print("window closed")
+        logger.debug("window closed, saving settings")
         self.saved_settings.set_int("startup-width", window.get_width())
         self.saved_settings.set_int("startup-height", window.get_height())
         self.saved_settings.set_boolean("startup-sidebar-show", window.split_view.get_show_sidebar())

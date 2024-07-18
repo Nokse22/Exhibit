@@ -91,7 +91,6 @@ class F3DViewer(Gtk.GLArea):
     def __init__(self, *args):
         self.set_auto_render(True)
         self.connect("realize", self.on_realize)
-        self.connect("show", self.on_show)
         self.connect("render", self.on_render)
         self.connect("resize", self.on_resize)
 
@@ -173,8 +172,6 @@ class F3DViewer(Gtk.GLArea):
             if key in self.keys:
                 f3d_key = self.keys[key]
                 self.settings[f3d_key] = value
-                if key == "hdri-ambient" and value == True and not self.is_showed:
-                    continue
                 f3d_options[f3d_key] = value
         self.engine.options.update(f3d_options)
         self.queue_render()
@@ -191,12 +188,27 @@ class F3DViewer(Gtk.GLArea):
         return self.engine.loader.hasSceneReader(filepath)
 
     def load_geometry(self, filepath):
+        if self.settings["render.hdri.ambient"]:
+            f3d_options = {"render.hdri.ambient": False}
+            self.engine.options.update(f3d_options)
+
         self.engine.loader.load_geometry(filepath, True)
+
         self.get_distance()
 
     def load_scene(self, filepath):
+        if self.settings["render.hdri.ambient"]:
+            f3d_options = {"render.hdri.ambient": False}
+            self.engine.options.update(f3d_options)
+
         self.engine.loader.load_scene(filepath)
+
         self.get_distance()
+
+    def done(self):
+        if self.settings["render.hdri.ambient"]:
+            f3d_options = {"render.hdri.ambient": True}
+            GLib.timeout_add(100, self.engine.options.update, f3d_options)
 
     def on_resize(self, gl_area, width, height):
         self.width = width

@@ -100,7 +100,6 @@ class FileRow(Adw.PreferencesRow):
         self.set_filename(filepath)
 
     def add_suggested_file(self, file_thumbnail, filepath):
-        print("adding", filepath)
         if os.path.isfile(filepath):
             self.suggestions_box.set_visible(True)
 
