@@ -649,6 +649,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     def check_for_options_change(self):
         self.settings_action.set_state(GLib.Variant("s", "custom"))
+        self.save_settings_action.set_enabled(True)
         return
 
         state_name = self.settings_action.get_state().get_string()
@@ -679,7 +680,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         changed = self.update_time_stamp()
         if changed:
             logger.debug("file changed")
-            self.load_file(preserve_orientation=True)
+            self.load_file(preserve_orientation=True, override=True)
 
         if self.window_settings.get_setting("auto-reload"):
             return True
