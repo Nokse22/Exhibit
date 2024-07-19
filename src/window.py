@@ -33,42 +33,11 @@ import threading
 import datetime
 import json
 import re
-import logging
 
 from wand.image import Image
 from enum import Enum
 
-class CustomFormatter(logging.Formatter):
-
-    grey = "\x1b[38;20m"
-    yellow = "\x1b[33;20m"
-    red = "\x1b[31;20m"
-    bold_red = "\x1b[31;1m"
-    reset = "\x1b[0m"
-    format = "%(asctime)s - %(levelname)s - %(message)s (%(filename)s:%(lineno)d)"
-
-    FORMATS = {
-        logging.DEBUG: grey + format + reset,
-        logging.INFO: grey + format + reset,
-        logging.WARNING: yellow + format + reset,
-        logging.ERROR: red + format + reset,
-        logging.CRITICAL: bold_red + format + reset
-    }
-
-    def format(self, record):
-        log_fmt = self.FORMATS.get(record.levelno)
-        formatter = logging.Formatter(log_fmt)
-        return formatter.format(record)
-
-logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
-
-ch = logging.StreamHandler()
-ch.setLevel(logging.DEBUG)
-
-ch.setFormatter(CustomFormatter())
-
-logger.addHandler(ch)
+from . import logger_lib
 
 up_dir_n_to_string = {
     0: "-X",
@@ -166,7 +135,7 @@ class WindowSettings(Gio.ListStore):
     default_settings = {
         "translucency-support": True,
         "tone-mapping": False,
-        "ambient-occlusion": True,
+        "ambient-occlusion": False,
         "anti-aliasing": True,
         "hdri-ambient": False,
         "light-intensity": 1.0,
@@ -247,7 +216,7 @@ class WindowSettings(Gio.ListStore):
             if key == setting.name:
                 setting.set_value(val)
                 return
-        logger.warning(f"{key} key not present")
+        self.logger.warning(f"{key} key not present")
 
     def get_setting(self, key):
         for setting in self:
@@ -379,6 +348,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def __init__(self, application=None, startup_filepath=None):
         super().__init__(application=application)
 
+        self.logger = logger_lib.logger
+
         self.applying_breakpoint = False
 
         # Defining all the actions
@@ -419,7 +390,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 hdri_bytes = bytearray(hdri)
                 with open(self.hdri_path + hdri_filename, 'wb') as output_file:
                     output_file.write(hdri_bytes)
-                logger.info(f"Added {hdri_filename}")
+                self.logger.info(f"Added {hdri_filename}")
 
         # Loading the saved configurations
         self.configurations = Gio.resources_lookup_data('/io/github/nokse22/Exhibit/configurations.json', Gio.ResourceLookupFlags.NONE).get_data().decode('utf-8')
@@ -438,10 +409,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                         if required_keys.issubset(first_key_value.keys()):
                             self.configurations.update(configuration)
                         else:
-                            logger.error(f"Error: {filepath} is missing required keys.")
+                            self.logger.error(f"Error: {filepath} is missing required keys.")
 
                     except json.JSONDecodeError as e:
-                        logger.error(f"Error reading {config_file}: {e}")
+                        self.logger.error(f"Error reading {config_file}: {e}")
 
         item = Gio.MenuItem.new("Custom", "win.settings")
         item.set_attribute_value("target", GLib.Variant.new_string("custom"))
@@ -530,7 +501,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                     thumbnail = self.generate_thumbnail(filepath)
                 self.hdri_file_row.add_suggested_file(thumbnail, filepath)
             except Exception as e:
-                logger.warning(f"Couldn't open HDRI file {filepath}, skipping")
+                self.logger.warning(f"Couldn't open HDRI file {filepath}, skipping")
 
         if self.window_settings.get_setting("orthographic"):
             self.toggle_orthographic()
@@ -627,7 +598,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.save_dialog.present(self)
 
     def set_settings_from_name(self, name):
-        logger.debug("settings from name")
+        self.logger.debug("settings from name")
         if name == "custom":
             return
 
@@ -668,7 +639,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         for key, value in state_options.items():
             if key in current_settings:
                 if current_settings[key] != value:
-                    logger.info(f"current key: {key}'s value is {current_settings[key]} != {value}")
+                    self.logger.info(f"current key: {key}'s value is {current_settings[key]} != {value}")
                     self.settings_action.set_state(GLib.Variant("s", "custom"))
                     self.save_settings_action.set_enabled(True)
                     return
@@ -679,7 +650,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         changed = self.update_time_stamp()
         if changed:
-            logger.debug("file changed")
+            self.logger.debug("file changed")
             self.load_file(preserve_orientation=True, override=True)
 
         if self.window_settings.get_setting("auto-reload"):
@@ -695,7 +666,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     def on_settings_changed(self, action: Gio.SimpleAction, state: GLib.Variant):
         # Called when the preset is changed
-        logger.debug("settings changed")
+        self.logger.debug("settings changed")
 
         self.set_settings_from_name(state.get_string())
 
@@ -754,12 +725,12 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if filepath is None or filepath == "":
             filepath = self.filepath
 
-        logger.debug(f"load file: {filepath}")
+        self.logger.debug(f"load file: {filepath}")
 
         self.change_checker.stop()
 
         if self.window_settings.get_setting("auto-best") and not override:
-            logger.debug("choosing best settings")
+            self.logger.debug("choosing best settings")
             settings = "general"
             for key, value in self.configurations.items():
                 pattern = value["formats"]
@@ -815,7 +786,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             camera_state = self.f3d_viewer.get_camera_state()
 
     def on_file_opened(self):
-        logger.debug("on file opened")
+        self.logger.debug("on file opened")
 
         self.update_time_stamp()
         if self.window_settings.get_setting("auto-reload"):
@@ -847,7 +818,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.update_background_color()
 
     def on_file_not_opened(self, filepath):
-        logger.debug("on file not opened")
+        self.logger.debug("on file not opened")
 
         self.set_title(_("Exhibit"))
         if self.no_file_loaded:
@@ -949,7 +920,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         try:
             file = Gio.File.new_for_path(self.filepath)
         except GLib.GError as e:
-            logger.error("Failed to construct a new Gio.File object from path.")
+            self.logger.error("Failed to construct a new Gio.File object from path.")
         else:
             launcher = Gtk.FileLauncher.new(file)
             launcher.set_always_ask(True)
@@ -959,7 +930,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                     launcher.launch_finish(result)
                 except GLib.GError as e:
                     if e.code != 2: # 'The portal dialog was dismissed by the user' error
-                        logger.error("Failed to finish Gtk.FileLauncher procedure.")
+                        self.logger.error("Failed to finish Gtk.FileLauncher procedure.")
 
             launcher.launch(self, None, open_file_finish)
 
@@ -1043,7 +1014,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.load_file()
 
     def update_background_color(self, *args):
-        logger.debug(f"Use color is: {self.window_settings.get_setting('use-color')}")
+        self.logger.debug(f"Use color is: {self.window_settings.get_setting('use-color')}")
         if self.window_settings.get_setting("use-color"):
             options = {
                 "background-color": self.window_settings.get_setting("background-color"),
@@ -1125,7 +1096,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.check_for_options_change()
 
     def set_preference_values(self, block=True):
-        logger.debug("updating settings")
+        self.logger.debug("updating settings")
         if block:
             self.up_direction_combo.handler_block(self.up_direction_combo_handler_id)
             self.model_load_combo.handler_block(self.load_type_combo_handler_id)
@@ -1202,7 +1173,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback("on_close_request")
     def on_close_request(self, window):
-        logger.debug("window closed, saving settings")
+        self.logger.debug("window closed, saving settings")
         self.saved_settings.set_int("startup-width", window.get_width())
         self.saved_settings.set_int("startup-height", window.get_height())
         self.saved_settings.set_boolean("startup-sidebar-show", window.split_view.get_show_sidebar())
