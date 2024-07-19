@@ -28,6 +28,8 @@ gi.require_version('Adw', '1')
 from gi.repository import Gtk, Gio, Adw, GLib
 from .window import Viewer3dWindow
 
+from . import logger_lib
+
 class Viewer3dApplication(Adw.Application):
     """The main application singleton class."""
 
@@ -37,9 +39,12 @@ class Viewer3dApplication(Adw.Application):
         super().__init__(application_id='io.github.nokse22.Exhibit',
                          flags=Gio.ApplicationFlags.HANDLES_OPEN)
 
-        GLib.setenv("GDK_DEBUG", "gl-prefer-gl", True)
-        GLib.setenv("GSK_RENDERER", "gl", True)
-        GLib.setenv("GDK_DEBUG", "gl-egl", True)
+        logger_lib.init()
+        logger = logger_lib.logger
+
+        GLib.setenv("GDK_DEBUG", "gl-prefer-gl", False)
+        # GLib.setenv("GSK_RENDERER", "gl", True)
+        GLib.setenv("GDK_DEBUG", "gl-egl", False)
 
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action)
