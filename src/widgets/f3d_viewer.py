@@ -50,7 +50,6 @@ class F3DViewer(Gtk.GLArea):
         "anti-aliasing" :"render.effect.anti-aliasing",
         "hdri-ambient" :"render.hdri.ambient",
         "hdri-skybox": "render.background.skybox",
-        "background-blur": "background.blur",
         "light-intensity": "render.light.intensity",
         "orthographic": "scene.camera.orthographic",
         "blur-background": "render.background.blur",
