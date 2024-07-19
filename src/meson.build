@@ -23,7 +23,8 @@ exhibit_sources = [
   '__init__.py',
   'main.py',
   'window.py',
-  'vector_math.py'
+  'vector_math.py',
+  'logger_lib.py',
 ]
 
 install_data(exhibit_sources, install_dir: moduledir)
