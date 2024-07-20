@@ -122,6 +122,7 @@ class Setting(GObject.Object):
 
     __gsignals__ = {
         'changed': (GObject.SignalFlags.RUN_FIRST, None, (str, int, )),
+        'user-changed': (GObject.SignalFlags.RUN_FIRST, None, (str, int, )),
     }
 
     def __init__(self, name, value, setting_type):
@@ -147,6 +148,11 @@ class Setting(GObject.Object):
         if value != self._value:
             self._value = value
             self.emit("changed", self._name, self._type)
+
+    def set_value_without_signal(self, value):
+        if value != self._value:
+            self._value = value
+            self.emit("user-changed", self._name, self._type)
 
     def __repr__(self):
         return f"<Setting {self._name}: {self._value}>"
@@ -232,16 +238,19 @@ class WindowSettings(Gio.ListStore):
         for name, value in self.default_settings.items():
             setting = Setting(name, value, SettingType.VIEW)
             setting.connect("changed", self.on_setting_changed)
+            setting.connect("user-changed", self.on_setting_changed)
             self.append(setting)
 
         for name, value in self.other_settings.items():
             setting = Setting(name, value, SettingType.OTHER)
             setting.connect("changed", self.on_setting_changed)
+            setting.connect("user-changed", self.on_setting_changed)
             self.append(setting)
 
         for name, value in self.internal_settings.items():
             setting = Setting(name, value, SettingType.INTERNAL)
             setting.connect("changed", self.on_setting_changed)
+            setting.connect("user-changed", self.on_setting_changed)
             self.append(setting)
 
     def sync_all_settings(self):
@@ -255,6 +264,13 @@ class WindowSettings(Gio.ListStore):
         for index, setting in enumerate(self):
             if key == setting.name:
                 setting.set_value(val)
+                return
+        self.logger.warning(f"{key} key not present")
+
+    def set_setting_without_signal(self, key, val):
+        for index, setting in enumerate(self):
+            if key == setting.name:
+                setting.set_value_without_signal(val)
                 return
         self.logger.warning(f"{key} key not present")
 
@@ -494,64 +510,14 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             (self.use_skybox_switch, "hdri-skybox"),
             (self.blur_switch, "blur-background"),
             (self.use_color_switch, "use-color"),
-            (self.automatic_settings_switch, "auto-best"),
-            (self.automatic_reload_switch, "auto-reload"),
+            # (self.automatic_settings_switch, "auto-best"),
+            # (self.automatic_reload_switch, "auto-reload")
         ]
 
         for switch, name in switches:
-            print(switch, name)
             switch.connect("notify::active", self.on_switch_toggled, name)
             setting = self.window_settings.get_setting(name)
-            print(setting, name)
-
             setting.connect("changed", self.set_switch_to, switch, setting.value)
-
-
-        switches = []
-
-        # self.grid_switch.connect("notify::active", self.on_switch_toggled, "grid")
-        # self.absolute_grid_switch.connect("notify::active", self.on_switch_toggled, "grid-absolute")
-        # self.translucency_switch.connect("notify::active", self.on_switch_toggled, "translucency-support")
-        # self.tone_mapping_switch.connect("notify::active", self.on_switch_toggled, "tone-mapping")
-        # self.ambient_occlusion_switch.connect("notify::active", self.on_switch_toggled, "ambient-occlusion")
-        # self.anti_aliasing_switch.connect("notify::active", self.on_switch_toggled, "anti-aliasing")
-        # self.hdri_ambient_switch.connect("notify::active", self.on_switch_toggled, "hdri-ambient")
-        # self.edges_switch.connect("notify::active", self.on_switch_toggled, "show-edges")
-        # self.spheres_switch.connect("notify::active", self.on_switch_toggled, "show-points")
-        # self.use_skybox_switch.connect("notify::active", self.on_switch_toggled, "hdri-skybox")
-        # self.blur_switch.connect("notify::active", self.on_switch_toggled, "blur-background")
-        # self.use_color_switch.connect("notify::active", self.on_switch_toggled, "use-color")
-        # self.automatic_settings_switch.connect("notify::active", self.on_switch_toggled, "auto-best")
-        # self.automatic_reload_switch.connect("notify::active", self.on_switch_toggled, "auto-reload")
-
-        # self.window_settings.get_setting("grid").connect("changed",
-        #     lambda setting, *args: self.grid_switch.set_active(setting.value))
-        # self.window_settings.get_setting("grid-absolute").connect("changed",
-        #     lambda setting, *args: self.absolute_grid_switch.set_active(setting.value))
-        # self.window_settings.get_setting("translucency-support").connect("changed",
-        #     lambda setting, *args: self.translucency_switch.set_active(setting.value))
-        # self.window_settings.get_setting("tone-mapping").connect("changed",
-        #     lambda setting, *args: self.tone_mapping_switch.set_active(setting.value))
-        # self.window_settings.get_setting("ambient-occlusion").connect("changed",
-        #     lambda setting, *args: self.ambient_occlusion_switch.set_active(setting.value))
-        # self.window_settings.get_setting("anti-aliasing").connect("changed",
-        #     lambda setting, *args: self.anti_aliasing_switch.set_active(setting.value))
-        # self.window_settings.get_setting("hdri-ambient").connect("changed",
-        #     lambda setting, *args: self.hdri_ambient_switch.set_active(setting.value))
-        # self.window_settings.get_setting("show-edges").connect("changed",
-        #     lambda setting, *args: self.edges_switch.set_active(setting.value))
-        # self.window_settings.get_setting("show-points").connect("changed",
-        #     lambda setting, *args: self.spheres_switch.set_active(setting.value))
-        # self.window_settings.get_setting("hdri-skybox").connect("changed",
-        #     lambda setting, *args: self.use_skybox_switch.set_active(setting.value))
-        # self.window_settings.get_setting("blur-background").connect("changed",
-        #     lambda setting, *args: self.blur_switch.set_active(setting.value))
-        # self.window_settings.get_setting("use-color").connect("changed",
-        #     lambda setting, *args: self.use_color_switch.set_active(setting.value))
-        # self.window_settings.get_setting("auto-best").connect("changed",
-        #     lambda setting, *args: self.automatic_settings_switch.set_active(setting.value))
-        # self.window_settings.get_setting("auto-reload").connect("changed",
-        #     lambda setting, *args: self.automatic_reload_switch.set_active(setting.value))
 
         # Spins
         self.edges_width_spin.connect("notify::value", self.on_spin_changed, "edges-width")
@@ -568,7 +534,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         # Combos
         self.model_scivis_component_combo.connect("notify::selected", self.on_scivis_component_combo_changed)
-        self.load_type_combo_handler_id = self.model_load_combo.connect("notify::selected", self.set_load_type)
+        self.model_load_combo.connect("notify::selected", self.set_load_type)
 
         # File rows
         self.hdri_file_row.connect("open-file", self.on_open_skybox)
@@ -580,7 +546,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.background_color_button.connect("notify::rgba", self.update_background_color)
 
         self.point_up_switch.connect("notify::active", self.set_point_up, "point-up")
-        self.up_direction_combo_handler_id = self.up_direction_combo.connect("notify::selected", self.set_up_direction)
+        self.up_direction_combo.connect("notify::selected", self.set_up_direction)
 
         # Sync the UI with the settings
         self.window_settings.sync_all_settings()
@@ -641,6 +607,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.check_for_options_change()
 
     def set_switch_to(self, setting, name, enum, switch, value):
+        self.logger.info(f"Setting switch to {value}")
         switch.set_active(value)
 
     def on_save_settings_button_clicked(self, btn):
@@ -1062,8 +1029,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.window_settings.set_setting("sidebar-show", state)
 
     def on_switch_toggled(self, switch, active, name):
-        self.window_settings.set_setting(name, switch.get_active())
-        print("toggled", name)
+        self.window_settings.set_setting_without_signal(name, switch.get_active())
 
     def on_expander_toggled(self, expander, enabled, name):
         self.window_settings.set_setting(name, expander.get_enable_expansion())
@@ -1102,7 +1068,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     def set_automatic_reload(self, switch, *args):
         val = switch.get_active()
-        self.window_settings.set_setting("auto-reload", val)
+        # self.window_settings.set_setting("auto-reload", val)
         if val:
             self.change_checker.run()
         else:
