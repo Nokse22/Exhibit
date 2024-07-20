@@ -30,27 +30,26 @@ These options can be changed using the UI.
 |comp|-|-1|model.scivis.component|Component to color with. -1 means magnitude. -2 means direct values.|
 |hdri-file|string|""|render.hdri.file|Path to the HDRI file|
 |cells|bool|True|model.scivis.cells|Color the data with value found on the cells instead of points|
+|bg-color|-|(0.2, 0.2, 0.2)|render.background.color|Background color. Ignored if a hdri skybox is used.|
 
 ### Without UI
 These options are supported, but can only be changed making a configuration file by hand.
 | Option | Type | Default Value | libf3d option | Description |
 |-|-|-|-|-|
-|texture-matcap|string|""|model.matcap.texture|-|-|
-|texture-base-color|-|-|model.color.texture|-|-|
-|emissive-factor|-|(1.0, 1.0, 1.0)|model.emissive.factor|-|-|
-|texture-emissive|-|""|model.emissive.texture|-|-|
-|texture-material|-|""|model.material.texture|-|-|
-|normal-scale|-|1.0|model.normal.scale|-|-|
-|texture-normal|-|""|model.normal.texture|-|-|
-|point-sprites|bool|False|model.point-sprites.enable|-|-|
-|point-type|string|"sphere"|model.point-sprites.type|-|-|
-|volume|bool|False|model.volume.enable|-|-|
-|inverse|bool|False|model.volume.inverse|-|-|
-|final-shader|string|""|render.effect.final-shader|-|-|
-|grid-unit|-|0.0|render.grid.unit|-|-|
-|grid-subdivisions|-|10|render.grid.subdivisions|-|-|
-|grid-color|-|(0.0, 0.0, 0.0)|render.grid.color|-|-|
-|bg-color|-|(0.2, 0.2, 0.2)|render.background.color"
+|texture-matcap|string|""|model.matcap.texture|Path to a texture file containing a material capture. All other model options for surfaces are ignored if this is set.|
+|texture-base-color|string|""|model.color.texture|Path to a texture file that sets the color of the object. Will be multiplied with rgb and opacity.|
+|emissive-factor|-|(1.0, 1.0, 1.0)|model.emissive.factor|Multiply the emissive color when an emissive texture is present.|
+|texture-emissive|-|""|model.emissive.texture|Path to a texture file that sets the emitted light of the object. Multiplied with the model.emissive.factor.|
+|texture-material|-|""|model.material.texture|Path to a texture file that sets the Occlusion, Roughness and Metallic values of the object. Multiplied with the `model-roughness` and `model-metallic`, set both of them to `1.0` to get a true result.|
+|normal-scale|-|1.0|model.normal.scale|Normal scale affects the strength of the normal deviation from the normal texture.|
+|texture-normal|-|""|model.normal.texture|Path to a texture file that sets the normal map of the object.|
+|point-type|string|"sphere"|model.point-sprites.type|Set the sprites type when showing point sprites (can be sphere or gaussian).|
+|volume|bool|False|model.volume.enable|Enable volume rendering. It is only available for 3D image data (vti, dcm, nrrd, mhd files) and will display nothing with other default scene formats.|
+|inverse|bool|False|model.volume.inverse|Inverse the linear opacity function.|
+|final-shader|string|""|render.effect.final-shader|Add a final shader to the output image|
+|grid-unit|-|0.0|render.grid.unit|Set the size of the unit square for the grid. If set to non-positive (the default) a suitable value will be automatically computed.|
+|grid-subdivisions|-|10|render.grid.subdivisions|Set the number of subdivisions for the grid.|
+|grid-color|-|(0.0, 0.0, 0.0)|render.grid.color|Set the color of grid lines.|
 
 ## Other Options
 These options can be changed with the UI and saved in a configuration file.
@@ -64,7 +63,7 @@ These options can be changed with the UI and saved in a configuration file.
 The best way to make a configuration is to use the app and save it to file, but if you want to use settings without UI you will need to edit it manually.
 
 This is an example configuration:
-```
+``` json
 {
     "example": {
         "name": "Example",
