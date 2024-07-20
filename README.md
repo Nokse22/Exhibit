@@ -31,10 +31,15 @@ View 3D models, powered by the [F3D](https://github.com/f3d-app/f3d) library tha
 - [Vase](https://sketchfab.com/3d-models/vase-rawscan-98a29620a45e47ccb80a75d5416c8255)
 - [Sailing Ship](https://sketchfab.com/3d-models/sailing-ship-model-ac65e0168e8c423db9c9fdc71397c84e)
 
+## Help
+Some information about all the supported options are available [here](https://github.com/Nokse22/Exhibit/blob/master/docs/help.md).
+
 ## Installation
 
 ### Flathub
-<a href='https://flathub.org/apps/io.github.nokse22.Exhibit'><img height='80' alt='Download on Flathub' src='https://dl.flathub.org/assets/badges/flathub-badge-en.png'/></a>
+<a href='https://flathub.org/apps/io.github.nokse22.Exhibit'>
+<img height='80' alt='Get it on Flathub on Flathub' src='https://dl.flathub.org/api/badge?locale=en'/>
+</a>
 
 ### From latest build
 
