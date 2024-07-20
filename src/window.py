@@ -35,7 +35,7 @@ import json
 import re
 
 from wand.image import Image
-from enum import Enum
+from enum import IntEnum
 
 from . import logger_lib
 
@@ -98,12 +98,32 @@ class PeriodicChecker(GObject.Object):
         else:
             return False
 
-class SettingType(Enum):
-    VIEW = "view-settings"
-    OTHER = "other-settings"
-    INTERNAL = "internal-settings"
+ #                                     On change
+ #                         ┌─────────┐ update the UI
+ #                         │         ∨
+ # Update           ┌─────────┐     ┌──┐
+ # the settings ━━━▶│ListStore│     │UI│
+ #                  └─────────┘     └──┘
+ #   ┏━━━━━━┓        │     ∧         │
+ #   ┃Viewer┃<───────┘     └─────────┘ On change update
+ #   ┗━━━━━━┛  On change               the ListStore
+ #             update the
+ #             view options
+ #
+ #  Made with  ASCII Draw
+
+class SettingType(IntEnum):
+    VIEW = 0
+    OTHER = 1
+    INTERNAL = 2
 
 class Setting(GObject.Object):
+    __gtype_name__ = 'Setting'
+
+    __gsignals__ = {
+        'changed': (GObject.SignalFlags.RUN_FIRST, None, (str, int, )),
+    }
+
     def __init__(self, name, value, setting_type):
         super().__init__()
 
@@ -124,13 +144,19 @@ class Setting(GObject.Object):
         return self._type
 
     def set_value(self, value):
-        self._value = value
+        if value != self._value:
+            self._value = value
+            self.emit("changed", self._name, self._type)
 
     def __repr__(self):
         return f"<Setting {self._name}: {self._value}>"
 
 class WindowSettings(Gio.ListStore):
     __gtype_name__ = 'WindowSettings'
+
+    __gsignals__ = {
+        'changed': (GObject.SignalFlags.RUN_FIRST, None, (Setting, )),
+    }
 
     default_settings = {
         "translucency-support": True,
@@ -162,7 +188,7 @@ class WindowSettings(Gio.ListStore):
         "blur-background": True,
         "blur-coc": 20.0,
 
-        "background-color": (1.0, 1.0, 1.0),
+        "bg-color": (1.0, 1.0, 1.0),
 
         "up": "+Y",
         "orthographic": False,
@@ -171,7 +197,7 @@ class WindowSettings(Gio.ListStore):
         # There is no UI for the following ones
         "texture-matcap": "",
         "texture-base-color": "",
-        "emissive-factor": [1.0, 1.0, 1.0],
+        "emissive-factor": (1.0, 1.0, 1.0),
         "texture-emissive": "",
         "texture-material": "",
         "normal-scale": 1.0,
@@ -183,8 +209,7 @@ class WindowSettings(Gio.ListStore):
         "final-shader": "",
         "grid-unit": 0.0,
         "grid-subdivisions": 10,
-        "grid-color": [0.0, 0.0, 0.0],
-        "bg-color": [0.2, 0.2, 0.2]
+        "grid-color": (0.0, 0.0, 0.0),
     }
 
     other_settings = {
@@ -202,14 +227,29 @@ class WindowSettings(Gio.ListStore):
     def __init__(self):
         super().__init__()
 
+        self.logger = logger_lib.logger
+
         for name, value in self.default_settings.items():
-            self.append(Setting(name, value, SettingType.VIEW))
+            setting = Setting(name, value, SettingType.VIEW)
+            setting.connect("changed", self.on_setting_changed)
+            self.append(setting)
 
         for name, value in self.other_settings.items():
-            self.append(Setting(name, value, SettingType.OTHER))
+            setting = Setting(name, value, SettingType.OTHER)
+            setting.connect("changed", self.on_setting_changed)
+            self.append(setting)
 
         for name, value in self.internal_settings.items():
-            self.append(Setting(name, value, SettingType.INTERNAL))
+            setting = Setting(name, value, SettingType.INTERNAL)
+            setting.connect("changed", self.on_setting_changed)
+            self.append(setting)
+
+    def sync_all_settings(self):
+        for setting in self:
+            setting.emit("changed", setting.name, setting.type)
+
+    def on_setting_changed(self, setting, name, enum):
+        self.emit("changed", setting)
 
     def set_setting(self, key, val):
         for index, setting in enumerate(self):
@@ -221,7 +261,7 @@ class WindowSettings(Gio.ListStore):
     def get_setting(self, key):
         for setting in self:
             if key == setting.name:
-                return setting.value
+                return setting
 
     def get_default_user_customizable_settings(self):
         settings = self.default_settings.copy()
@@ -429,6 +469,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         # Getting the saved preferences and setting the window to the last state
         self.window_settings = WindowSettings()
+        self.window_settings.connect("changed", self.on_setting_changed)
         self.saved_settings = Gio.Settings.new('io.github.nokse22.Exhibit')
 
         self.set_default_size(self.saved_settings.get_int("startup-width"), self.saved_settings.get_int("startup-height"))
@@ -436,59 +477,113 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.window_settings.set_setting("sidebar-show", self.saved_settings.get_boolean("startup-sidebar-show"))
 
         # Setting the UI and connecting widgets
-        self.set_preference_values(False)
+        # self.set_preference_values(False)
 
-        self.grid_switch.connect("notify::active", self.on_switch_toggled, "grid")
-        self.absolute_grid_switch.connect("notify::active", self.on_switch_toggled, "grid-absolute")
 
-        self.translucency_switch.connect("notify::active", self.on_switch_toggled, "translucency-support")
-        self.tone_mapping_switch.connect("notify::active", self.on_switch_toggled, "tone-mapping")
-        self.ambient_occlusion_switch.connect("notify::active", self.on_switch_toggled, "ambient-occlusion")
-        self.anti_aliasing_switch.connect("notify::active", self.on_switch_toggled, "anti-aliasing")
-        self.hdri_ambient_switch.connect("notify::active", self.on_switch_toggled, "hdri-ambient")
+        # Switches signals
+        switches = [
+            (self.grid_switch, "grid"),
+            (self.absolute_grid_switch, "grid-absolute"),
+            (self.translucency_switch, "translucency-support"),
+            (self.tone_mapping_switch, "tone-mapping"),
+            (self.ambient_occlusion_switch, "ambient-occlusion"),
+            (self.anti_aliasing_switch, "anti-aliasing"),
+            (self.hdri_ambient_switch, "hdri-ambient"),
+            (self.edges_switch, "show-edges"),
+            (self.spheres_switch, "show-points"),
+            (self.use_skybox_switch, "hdri-skybox"),
+            (self.blur_switch, "blur-background"),
+            (self.use_color_switch, "use-color"),
+            (self.automatic_settings_switch, "auto-best"),
+            (self.automatic_reload_switch, "auto-reload"),
+        ]
 
-        self.edges_switch.connect("notify::active", self.on_switch_toggled, "show-edges")
+        for switch, name in switches:
+            print(switch, name)
+            switch.connect("notify::active", self.on_switch_toggled, name)
+            setting = self.window_settings.get_setting(name)
+            print(setting, name)
+
+            setting.connect("changed", self.set_switch_to, switch, setting.value)
+
+
+        switches = []
+
+        # self.grid_switch.connect("notify::active", self.on_switch_toggled, "grid")
+        # self.absolute_grid_switch.connect("notify::active", self.on_switch_toggled, "grid-absolute")
+        # self.translucency_switch.connect("notify::active", self.on_switch_toggled, "translucency-support")
+        # self.tone_mapping_switch.connect("notify::active", self.on_switch_toggled, "tone-mapping")
+        # self.ambient_occlusion_switch.connect("notify::active", self.on_switch_toggled, "ambient-occlusion")
+        # self.anti_aliasing_switch.connect("notify::active", self.on_switch_toggled, "anti-aliasing")
+        # self.hdri_ambient_switch.connect("notify::active", self.on_switch_toggled, "hdri-ambient")
+        # self.edges_switch.connect("notify::active", self.on_switch_toggled, "show-edges")
+        # self.spheres_switch.connect("notify::active", self.on_switch_toggled, "show-points")
+        # self.use_skybox_switch.connect("notify::active", self.on_switch_toggled, "hdri-skybox")
+        # self.blur_switch.connect("notify::active", self.on_switch_toggled, "blur-background")
+        # self.use_color_switch.connect("notify::active", self.on_switch_toggled, "use-color")
+        # self.automatic_settings_switch.connect("notify::active", self.on_switch_toggled, "auto-best")
+        # self.automatic_reload_switch.connect("notify::active", self.on_switch_toggled, "auto-reload")
+
+        # self.window_settings.get_setting("grid").connect("changed",
+        #     lambda setting, *args: self.grid_switch.set_active(setting.value))
+        # self.window_settings.get_setting("grid-absolute").connect("changed",
+        #     lambda setting, *args: self.absolute_grid_switch.set_active(setting.value))
+        # self.window_settings.get_setting("translucency-support").connect("changed",
+        #     lambda setting, *args: self.translucency_switch.set_active(setting.value))
+        # self.window_settings.get_setting("tone-mapping").connect("changed",
+        #     lambda setting, *args: self.tone_mapping_switch.set_active(setting.value))
+        # self.window_settings.get_setting("ambient-occlusion").connect("changed",
+        #     lambda setting, *args: self.ambient_occlusion_switch.set_active(setting.value))
+        # self.window_settings.get_setting("anti-aliasing").connect("changed",
+        #     lambda setting, *args: self.anti_aliasing_switch.set_active(setting.value))
+        # self.window_settings.get_setting("hdri-ambient").connect("changed",
+        #     lambda setting, *args: self.hdri_ambient_switch.set_active(setting.value))
+        # self.window_settings.get_setting("show-edges").connect("changed",
+        #     lambda setting, *args: self.edges_switch.set_active(setting.value))
+        # self.window_settings.get_setting("show-points").connect("changed",
+        #     lambda setting, *args: self.spheres_switch.set_active(setting.value))
+        # self.window_settings.get_setting("hdri-skybox").connect("changed",
+        #     lambda setting, *args: self.use_skybox_switch.set_active(setting.value))
+        # self.window_settings.get_setting("blur-background").connect("changed",
+        #     lambda setting, *args: self.blur_switch.set_active(setting.value))
+        # self.window_settings.get_setting("use-color").connect("changed",
+        #     lambda setting, *args: self.use_color_switch.set_active(setting.value))
+        # self.window_settings.get_setting("auto-best").connect("changed",
+        #     lambda setting, *args: self.automatic_settings_switch.set_active(setting.value))
+        # self.window_settings.get_setting("auto-reload").connect("changed",
+        #     lambda setting, *args: self.automatic_reload_switch.set_active(setting.value))
+
+        # Spins
         self.edges_width_spin.connect("notify::value", self.on_spin_changed, "edges-width")
-
-        self.spheres_switch.connect("notify::active", self.on_switch_toggled, "show-points")
         self.points_size_spin.connect("notify::value", self.on_spin_changed, "point-size")
-
-        self.load_type_combo_handler_id = self.model_load_combo.connect("notify::selected", self.set_load_type)
         self.model_roughness_spin.connect("notify::value", self.on_spin_changed, "model-roughness")
         self.model_metallic_spin.connect("notify::value", self.on_spin_changed, "model-metallic")
-        self.model_color_button.connect("notify::rgba", self.on_color_changed, "model-color")
         self.model_opacity_spin.connect("notify::value", self.on_spin_changed, "model-opacity")
-        self.model_scivis_component_combo.connect("notify::selected", self.on_scivis_component_combo_changed)
-
+        self.blur_coc_spin.connect("notify::value", self.on_spin_changed, "blur-coc")
         self.light_intensity_spin.connect("notify::value", self.on_spin_changed, "light-intensity")
 
-        self.use_skybox_switch.connect("notify::active", self.on_switch_toggled, "hdri-skybox")
+        # Color buttons
+        self.model_color_button.connect("notify::rgba", self.on_color_changed, "model-color")
+        self.background_color_button.connect("notify::rgba", self.on_color_changed, "bg-color")
 
+        # Combos
+        self.model_scivis_component_combo.connect("notify::selected", self.on_scivis_component_combo_changed)
+        self.load_type_combo_handler_id = self.model_load_combo.connect("notify::selected", self.set_load_type)
+
+        # File rows
         self.hdri_file_row.connect("open-file", self.on_open_skybox)
         self.hdri_file_row.connect("delete-file", self.on_delete_skybox)
         self.hdri_file_row.connect("file-added", lambda row, filepath: self.load_hdri(filepath))
 
-        self.blur_switch.connect("notify::active", self.on_switch_toggled, "blur-background")
-        self.blur_coc_spin.connect("notify::value", self.on_spin_changed, "blur-coc")
-
-        self.use_color_switch.connect("notify::active",
-                lambda switch, *args: self.window_settings.set_setting("use-color", switch.get_active())
-        )
+        # Others
         self.use_color_switch.connect("notify::active", self.update_background_color)
-
-        self.background_color_button.connect("notify::rgba", self.on_color_changed, "background-color")
-        self.background_color_button.connect("notify::rgba",
-                lambda *args: self.update_background_color()
-        )
+        self.background_color_button.connect("notify::rgba", self.update_background_color)
 
         self.point_up_switch.connect("notify::active", self.set_point_up, "point-up")
         self.up_direction_combo_handler_id = self.up_direction_combo.connect("notify::selected", self.set_up_direction)
 
-        self.automatic_reload_switch.connect("notify::active", self.set_automatic_reload)
-
-        self.automatic_settings_switch.connect("notify::active",
-                lambda switch, *args: self.window_settings.set_setting("auto-best", switch.get_active())
-        )
+        # Sync the UI with the settings
+        self.window_settings.sync_all_settings()
 
         # Getting the saved HDRI and generating thumbnails
         for filename in list_files(self.hdri_path):
@@ -503,7 +598,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             except Exception as e:
                 self.logger.warning(f"Couldn't open HDRI file {filepath}, skipping")
 
-        if self.window_settings.get_setting("orthographic"):
+        if self.window_settings.get_setting("orthographic").value:
             self.toggle_orthographic()
 
         self.no_file_loaded = True
@@ -538,6 +633,15 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.save_settings_button.connect("clicked", self.on_save_settings_button_clicked)
         self.save_settings_name_entry.connect("changed", self.on_save_settings_name_entry_changed)
         self.save_settings_extensions_entry.connect("changed", self.on_save_settings_extensions_entry_changed)
+
+    def on_setting_changed(self, window_settings, setting):
+        self.logger.info(f"Setting: {setting.name} to {setting.value}")
+        options = {setting.name: setting.value}
+        self.f3d_viewer.update_options(options)
+        self.check_for_options_change()
+
+    def set_switch_to(self, setting, name, enum, switch, value):
+        switch.set_active(value)
 
     def on_save_settings_button_clicked(self, btn):
         # Extract view settings, name, and formats
@@ -653,7 +757,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.logger.debug("file changed")
             self.load_file(preserve_orientation=True, override=True)
 
-        if self.window_settings.get_setting("auto-reload"):
+        if self.window_settings.get_setting("auto-reload").value:
             return True
         return False
 
@@ -729,7 +833,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.change_checker.stop()
 
-        if self.window_settings.get_setting("auto-best") and not override:
+        if self.window_settings.get_setting("auto-best").value and not override:
             self.logger.debug("choosing best settings")
             settings = "general"
             for key, value in self.configurations.items():
@@ -743,7 +847,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         scene_loaded = False
         geometry_loaded = False
 
-        if self.window_settings.get_setting("load-type") is None:
+        if self.window_settings.get_setting("load-type").value is None:
             if self.f3d_viewer.has_scene_loader(filepath):
                 self.f3d_viewer.load_scene(filepath)
                 scene_loaded = True
@@ -753,11 +857,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 geometry_loaded = True
                 self.model_load_combo.set_sensitive(False)
 
-        elif self.window_settings.get_setting("load-type") == 0:
+        elif self.window_settings.get_setting("load-type").value == 0:
             if self.f3d_viewer.has_geometry_loader(filepath):
                 self.f3d_viewer.load_geometry(filepath)
                 geometry_loaded = True
-        elif self.window_settings.get_setting("load-type") == 1:
+        elif self.window_settings.get_setting("load-type").value == 1:
             if self.f3d_viewer.has_scene_loader(filepath):
                 self.f3d_viewer.load_scene(filepath)
                 scene_loaded = True
@@ -789,7 +893,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.logger.debug("on file opened")
 
         self.update_time_stamp()
-        if self.window_settings.get_setting("auto-reload"):
+        if self.window_settings.get_setting("auto-reload").value:
             self.change_checker.run()
 
         self.file_name = os.path.basename(self.filepath)
@@ -803,11 +907,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.drop_revealer.set_reveal_child(False)
         self.toast_overlay.remove_css_class("blurred")
 
-        if self.window_settings.get_setting("load-type") == 0:
+        if self.window_settings.get_setting("load-type").value == 0:
             self.material_group.set_sensitive(True)
             self.points_group.set_sensitive(True)
             self.color_group.set_sensitive(True)
-        elif self.window_settings.get_setting("load-type") == 1:
+        elif self.window_settings.get_setting("load-type").value == 1:
             self.material_group.set_sensitive(False)
             self.points_group.set_sensitive(False)
             self.color_group.set_sensitive(False)
@@ -826,7 +930,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.startup_stack.set_visible_child_name("error_page")
         else:
             self.send_toast(_("Can't open") + " " + os.path.basename(filepath))
-        options = {"up": self.window_settings.get_setting("up")}
+        options = {"up": self.window_settings.get_setting("up").value}
         self.f3d_viewer.update_options(options)
         self.check_for_options_change()
 
@@ -936,7 +1040,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback("on_apply_breakpoint")
     def on_apply_breakpoint(self, *args):
-        state = self.window_settings.get_setting("sidebar-show")
+        state = self.window_settings.get_setting("sidebar-show").value
         self.applying_breakpoint = True
         self.split_view.set_collapsed(True)
         self.split_view.set_show_sidebar(False)
@@ -944,7 +1048,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback("on_unapply_breakpoint")
     def on_unapply_breakpoint(self, *args):
-        state = self.window_settings.get_setting("sidebar-show")
+        state = self.window_settings.get_setting("sidebar-show").value
         self.applying_breakpoint = True
         self.split_view.set_collapsed(False)
         self.split_view.set_show_sidebar(state)
@@ -959,9 +1063,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     def on_switch_toggled(self, switch, active, name):
         self.window_settings.set_setting(name, switch.get_active())
-        options = {name: switch.get_active()}
-        self.f3d_viewer.update_options(options)
-        self.check_for_options_change()
+        print("toggled", name)
 
     def on_expander_toggled(self, expander, enabled, name):
         self.window_settings.set_setting(name, expander.get_enable_expansion())
@@ -973,14 +1075,12 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         val = float(round(spin.get_value(), 2))
         options = {name: val}
         self.window_settings.set_setting(name, val)
-        self.f3d_viewer.update_options(options)
-        self.check_for_options_change()
 
     def set_point_up(self, switch, active, name):
         val = switch.get_active()
         self.window_settings.set_setting(name, val)
         if val:
-            self.f3d_viewer.set_view_up(up_dirs_vector[self.window_settings.get_setting("up")])
+            self.f3d_viewer.set_view_up(up_dirs_vector[self.window_settings.get_setting("up").value])
             self.f3d_viewer.always_point_up = True
         else:
             self.f3d_viewer.always_point_up = False
@@ -1014,19 +1114,19 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.load_file()
 
     def update_background_color(self, *args):
-        self.logger.debug(f"Use color is: {self.window_settings.get_setting('use-color')}")
-        if self.window_settings.get_setting("use-color"):
+        self.logger.debug(f"Use color is: {self.window_settings.get_setting('use-color').value}")
+        if self.window_settings.get_setting("use-color").value:
             options = {
-                "background-color": self.window_settings.get_setting("background-color"),
+                "bg-color": self.window_settings.get_setting("bg-color").value,
             }
             self.f3d_viewer.update_options(options)
             self.check_for_options_change()
             GLib.idle_add(self.f3d_viewer.queue_render)
             return
         if self.style_manager.get_dark():
-            options = {"background-color": [0.2, 0.2, 0.2]}
+            options = {"bg-color": [0.2, 0.2, 0.2]}
         else:
-            options = {"background-color": [1.0, 1.0, 1.0]}
+            options = {"bg-color": [1.0, 1.0, 1.0]}
         self.f3d_viewer.update_options(options)
         self.check_for_options_change()
         GLib.idle_add(self.f3d_viewer.queue_render)
@@ -1097,52 +1197,54 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     def set_preference_values(self, block=True):
         self.logger.debug("updating settings")
+        return
+
         if block:
             self.up_direction_combo.handler_block(self.up_direction_combo_handler_id)
             self.model_load_combo.handler_block(self.load_type_combo_handler_id)
 
-        self.grid_switch.set_active(self.window_settings.get_setting("grid"))
-        self.absolute_grid_switch.set_active(self.window_settings.get_setting("grid-absolute"))
+        self.grid_switch.set_active(self.window_settings.get_setting("grid").value)
+        self.absolute_grid_switch.set_active(self.window_settings.get_setting("grid-absolute").value)
 
-        self.translucency_switch.set_active(self.window_settings.get_setting("translucency-support"))
-        self.tone_mapping_switch.set_active(self.window_settings.get_setting("tone-mapping"))
+        self.translucency_switch.set_active(self.window_settings.get_setting("translucency-support").value)
+        self.tone_mapping_switch.set_active(self.window_settings.get_setting("tone-mapping").value)
         self.ambient_occlusion_switch.set_active(self.window_settings.get_setting("ambient-occlusion"))
-        self.anti_aliasing_switch.set_active(self.window_settings.get_setting("anti-aliasing"))
-        self.hdri_ambient_switch.set_active(self.window_settings.get_setting("hdri-ambient"))
-        self.light_intensity_spin.set_value(self.window_settings.get_setting("light-intensity"))
-        self.hdri_file_row.set_filename(self.window_settings.get_setting("hdri-file"))
-        self.blur_switch.set_active(self.window_settings.get_setting("blur-background"))
-        self.blur_coc_spin.set_value(self.window_settings.get_setting("blur-coc"))
-        self.use_skybox_switch.set_active(self.window_settings.get_setting("hdri-skybox"))
+        self.anti_aliasing_switch.set_active(self.window_settings.get_setting("anti-aliasing").value)
+        self.hdri_ambient_switch.set_active(self.window_settings.get_setting("hdri-ambient").value)
+        self.light_intensity_spin.set_value(self.window_settings.get_setting("light-intensity").value)
+        self.hdri_file_row.set_filename(self.window_settings.get_setting("hdri-file").value)
+        self.blur_switch.set_active(self.window_settings.get_setting("blur-background").value)
+        self.blur_coc_spin.set_value(self.window_settings.get_setting("blur-coc").value)
+        self.use_skybox_switch.set_active(self.window_settings.get_setting("hdri-skybox").value)
 
-        self.edges_switch.set_active(self.window_settings.get_setting("show-edges"))
-        self.edges_width_spin.set_value(self.window_settings.get_setting("edges-width"))
+        self.edges_switch.set_active(self.window_settings.get_setting("show-edges").value)
+        self.edges_width_spin.set_value(self.window_settings.get_setting("edges-width").value)
 
-        self.spheres_switch.set_active(self.window_settings.get_setting("show-points"))
-        self.points_size_spin.set_value(self.window_settings.get_setting("point-size"))
+        self.spheres_switch.set_active(self.window_settings.get_setting("show-points").value)
+        self.points_size_spin.set_value(self.window_settings.get_setting("point-size").value)
 
-        self.point_up_switch.set_active(self.window_settings.get_setting("point-up"))
-        self.up_direction_combo.set_selected(up_dir_string_to_n[self.window_settings.get_setting("up")])
-        self.automatic_settings_switch.set_active(self.window_settings.get_setting("auto-best"))
-        self.automatic_reload_switch.set_active(self.window_settings.get_setting("auto-reload"))
+        self.point_up_switch.set_active(self.window_settings.get_setting("point-up").value)
+        self.up_direction_combo.set_selected(up_dir_string_to_n[self.window_settings.get_setting("up").value])
+        self.automatic_settings_switch.set_active(self.window_settings.get_setting("auto-best").value)
+        self.automatic_reload_switch.set_active(self.window_settings.get_setting("auto-reload").value)
 
-        load_type = self.window_settings.get_setting("load-type")
+        load_type = self.window_settings.get_setting("load-type").value
         self.model_load_combo.set_selected(load_type if load_type else 0)
 
-        self.model_roughness_spin.set_value(self.window_settings.get_setting("model-roughness"))
-        self.model_metallic_spin.set_value(self.window_settings.get_setting("model-metallic"))
+        self.model_roughness_spin.set_value(self.window_settings.get_setting("model-roughness").value)
+        self.model_metallic_spin.set_value(self.window_settings.get_setting("model-metallic").value)
         rgba = Gdk.RGBA()
-        rgba.parse(list_to_rgb(self.window_settings.get_setting("model-color")))
+        rgba.parse(list_to_rgb(self.window_settings.get_setting("model-color").value))
         self.model_color_button.set_rgba(rgba)
-        self.model_opacity_spin.set_value(self.window_settings.get_setting("model-opacity"))
-        if self.window_settings.get_setting("comp") == -1 and self.window_settings.get_setting("cells"):
+        self.model_opacity_spin.set_value(self.window_settings.get_setting("model-opacity").value)
+        if self.window_settings.get_setting("comp") == -1 and self.window_settings.get_setting("cells").value:
             self.model_scivis_component_combo.set_selected(0)
         else:
-            self.model_scivis_component_combo.set_selected(-self.window_settings.get_setting("comp") + 1)
+            self.model_scivis_component_combo.set_selected(-self.window_settings.get_setting("comp").value + 1)
 
-        self.use_color_switch.set_active(self.window_settings.get_setting("use-color"))
+        self.use_color_switch.set_active(self.window_settings.get_setting("use-color").value)
         rgba = Gdk.RGBA()
-        rgba.parse(list_to_rgb(self.window_settings.get_setting("background-color")))
+        rgba.parse(list_to_rgb(self.window_settings.get_setting("bg-color").value))
         self.background_color_button.set_rgba(rgba)
 
         if block:

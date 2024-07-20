@@ -27,6 +27,7 @@ from f3d import *
 import math
 
 from ..vector_math import *
+from .. import logger_lib
 
 up_dirs_vector = {
     "-X": (-1.0, 0.0, 0.0),
@@ -54,7 +55,7 @@ class F3DViewer(Gtk.GLArea):
         "orthographic": "scene.camera.orthographic",
         "blur-background": "render.background.blur",
         "blur-coc": "render.background.blur.coc",
-        "background-color": "render.background.color",
+        "bg-color": "render.background.color",
         "show-edges": "render.show-edges",
         "edges-width": "render.line-width",
         "up": "scene.up-direction",
@@ -84,10 +85,12 @@ class F3DViewer(Gtk.GLArea):
         "grid-unit": "render.grid.unit",
         "grid-subdivisions": "render.grid.subdivisions",
         "grid-color": "render.grid.color",
-        "bg-color": "render.background.color"
     }
 
     def __init__(self, *args):
+
+        self.logger = logger_lib.logger
+
         self.set_auto_render(True)
         self.connect("realize", self.on_realize)
         self.connect("render", self.on_render)

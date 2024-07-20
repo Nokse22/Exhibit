@@ -33,7 +33,6 @@
             "point-size": 1.0,
             "comp": -2,
             "cells": false,
-            "bg-color": "0, 0, 0",
             "up": "-Y",
             "tone-mapping": false,
             "grid": false,
