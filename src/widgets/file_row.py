@@ -50,7 +50,6 @@ class FileRow(Adw.PreferencesRow):
     __gtype_name__ = 'FileRow'
 
     __gsignals__ = {
-        'open-file': (GObject.SignalFlags.RUN_FIRST, None, ()),
         'delete-file': (GObject.SignalFlags.RUN_FIRST, None, ()),
         'file-added': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
     }
@@ -70,6 +69,9 @@ class FileRow(Adw.PreferencesRow):
 
         self.suggested_files_n = 0
 
+        self.file_patterns = []
+        self.window = None
+
         self.file_button.connect("clicked", self.on_open_clicked)
         self.delete_button.connect("clicked", self.on_delete_clicked)
         self.suggestions_box.connect("child-activated", self.on_image_activated)
@@ -78,15 +80,17 @@ class FileRow(Adw.PreferencesRow):
         self.drop_target.set_gtypes([Gdk.FileList])
 
     def on_open_clicked(self, btn):
-        self.emit("open-file")
+        self.on_open_file_dialog()
 
     def set_filename(self, filepath):
         if filepath == "":
             return
 
         self.filepath = filepath
-        self.filename_label.set_label(os.path.basename(filepath))
+        filename = os.path.basename(filepath)
+        self.filename_label.set_label(filename)
         self.filename_label.set_visible(True)
+        self.filename_label.set_tooltip_text(filename)
         self.delete_button.set_visible(True)
 
     def on_delete_clicked(self, btn):
@@ -114,3 +118,27 @@ class FileRow(Adw.PreferencesRow):
         filepath = child.hdri_file
         self.set_filename(filepath)
         self.emit("file-added", filepath)
+
+    def on_open_file_dialog(self, *args):
+        file_filter = Gtk.FileFilter(name="All supported formats")
+
+        for patt in self.file_patterns:
+            file_filter.add_pattern(patt)
+
+        filter_list = Gio.ListStore.new(Gtk.FileFilter())
+        filter_list.append(file_filter)
+
+        dialog = Gtk.FileDialog(
+            title=_("Open File"),
+            filters=filter_list,
+        )
+
+        dialog.open(self.window, None, self.on_open_file_dialog_file_response)
+
+    def on_open_file_dialog_file_response(self, dialog, response):
+        file = dialog.open_finish(response)
+
+        if file:
+            filepath = file.get_path()
+            self.set_filename(filepath)
+            self.emit("file-added", filepath)
