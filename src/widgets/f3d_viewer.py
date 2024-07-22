@@ -22,7 +22,6 @@ from gi.repository import Adw
 from gi.repository import Gtk, Gdk, Gio, GLib, GObject
 
 import f3d
-from f3d import *
 
 import math
 
@@ -91,6 +90,10 @@ class F3DViewer(Gtk.GLArea):
 
         self.logger = logger_lib.logger
 
+        f3d.Log.set_use_coloring(True)
+        f3d.Log.set_verbose_level(f3d.Log.DEBUG)
+        # f3d.Log.print(f3d.Log.DEBUG, 'debug')
+
         self.set_auto_render(True)
         self.connect("realize", self.on_realize)
         self.connect("render", self.on_render)
@@ -118,7 +121,7 @@ class F3DViewer(Gtk.GLArea):
 
         self.is_showed = False
 
-        self.engine = Engine(Window.EXTERNAL)
+        self.engine = f3d.Engine(f3d.Window.EXTERNAL)
         self.loader = self.engine.getLoader()
         self.camera = self.engine.window.getCamera()
 
