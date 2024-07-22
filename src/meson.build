@@ -25,6 +25,7 @@ exhibit_sources = [
   'window.py',
   'vector_math.py',
   'logger_lib.py',
+  'settings_manager.py',
 ]
 
 install_data(exhibit_sources, install_dir: moduledir)
