@@ -38,7 +38,7 @@ Some information about all the supported options are available [here](https://gi
 
 ### Flathub
 <a href='https://flathub.org/apps/io.github.nokse22.Exhibit'>
-<img height='80' alt='Get it on Flathub on Flathub' src='https://dl.flathub.org/api/badge?locale=en'/>
+<img height='80' alt='Get it on Flathub on Flathub' src='https://flathub.org/api/badge'/>
 </a>
 
 ### From latest build
