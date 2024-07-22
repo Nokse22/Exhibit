@@ -17,7 +17,7 @@ These options can be changed using the UI.
 |light-intensity|-|1.0|render.light.intensity|Intensity of all the lights in the scene|
 |orthographic|bool|False|scene.camera.orthographic|Use an orthographic camera|
 |blur-coc|-|20.0|render.background.blur.coc|Blur circle of confusion|
-|background-color|-|(1.0, 1.0, 1.0)|render.background.color|Color of the background, will be viewed only if `use-color` is `True`|
+|bg-color|-|(1.0, 1.0, 1.0)|render.background.color|Color of the background, will be viewed only if `use-color` is `True`|
 |show-edges|-|False|render.show-edges|Show all the edges of the model, some models can define edges that will be viewed always|
 |edges-width|-|1.0|render.line-width|Width of all the edges in a scene|
 |up|string|"+Y"|scene.up-direction|Direction of the up|
@@ -30,7 +30,6 @@ These options can be changed using the UI.
 |comp|-|-1|model.scivis.component|Component to color with. -1 means magnitude. -2 means direct values.|
 |hdri-file|string|""|render.hdri.file|Path to the HDRI file|
 |cells|bool|True|model.scivis.cells|Color the data with value found on the cells instead of points|
-|bg-color|-|(0.2, 0.2, 0.2)|render.background.color|Background color. Ignored if a hdri skybox is used.|
 
 ### Without UI
 These options are supported, but can only be changed making a configuration file by hand.
