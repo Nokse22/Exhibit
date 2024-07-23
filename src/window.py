@@ -407,11 +407,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         # Sync the UI with the settings
         self.window_settings.sync_all_settings()
 
-    #  _   _ ___    ___      _   _
-    # | | | |_ _|  / __| ___| |_| |_ ___ _ _ ___
-    # | |_| || |   \__ \/ -_)  _|  _/ -_) '_(_-<
-    #  \___/|___|  |___/\___|\__|\__\___|_| /__/
-    #
+
     # Functions that set the UI from the settings, triggered when
     #   a setting has changed.
 
@@ -438,20 +434,17 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.model_load_combo.set_selected(load_type if load_type else 0)
 
     def set_scivis_component_combo(self, setting, *args):
-        self.logger.error(f"Setting scivis component combo")
+        self.logger.debug(f"Setting scivis component combo")
         selected = self.model_scivis_component_combo.get_selected()
         self.model_color_row.set_sensitive(True if selected == 0 else False)
 
-        if self.window_settings.get_setting("comp") == -1 and self.window_settings.get_setting("cells").value:
+        print(f"selected: {selected} comp: {self.window_settings.get_setting('comp')} and cells: {self.window_settings.get_setting('cells')}")
+        if self.window_settings.get_setting("comp").value == -1 and self.window_settings.get_setting("cells").value:
             self.model_scivis_component_combo.set_selected(0)
         else:
             self.model_scivis_component_combo.set_selected(-self.window_settings.get_setting("comp").value + 1)
 
-    #  _   _ ___     ___      _ _ _             _
-    # | | | |_ _|   / __|__ _| | | |__  __ _ __| |__ ___
-    # | |_| || |   | (__/ _` | | | '_ \/ _` / _| / /(_-<
-    #  \___/|___|   \___\__,_|_|_|_.__/\__,_\__|_\_\/__/
-    #
+
     # Functions that are called when a UI changes, they should only
     #   set the corresponding setting.
 
@@ -481,20 +474,15 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         selected = self.model_scivis_component_combo.get_selected()
 
         if selected == 0:
-            self.window_settings.set_setting("comp", -1)
+            self.window_settings.set_setting("comp", -1, False)
             self.window_settings.set_setting("cells", True)
         else:
-            self.window_settings.set_setting("comp", -(selected - 1))
+            self.window_settings.set_setting("comp", -(selected - 1), False)
             self.window_settings.set_setting("cells", False)
 
-    #  _   _ ___    _____    _
-    # | | | |_ _|  |_   _| _(_)__ _ __ _ ___ _ _ ___
-    # | |_| || |     | || '_| / _` / _` / -_) '_(_-<
-    #  \___/|___|    |_||_| |_\__, \__, \___|_| /__/
-    #                         |___/|___/
-    #
+
     # Special functions called when a setting changes that trigger
-    #   an action.
+    #   an action like reloading.
 
     def reload_file(self, *args):
         self.logger.info("Loading file because load type or up changed")
@@ -981,11 +969,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         state = self.split_view.get_show_sidebar()
         self.window_settings.set_setting("sidebar-show", state)
 
-    #  _  _ ___  ___ ___    ___             _   _
-    # | || |   \| _ \_ _|  | __|  _ _ _  __| |_(_)___ _ _  ___
-    # | __ | |) |   /| |   | _| || | ' \/ _|  _| / _ \ ' \(_-<
-    # |_||_|___/|_|_\___|  |_| \_,_|_||_\__|\__|_\___/_||_/__/
-    #
+
     # Function called when the HDRI is deleted/added...
 
     def on_delete_skybox(self, *args):

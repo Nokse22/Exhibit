@@ -54,6 +54,7 @@ class Viewer3dApplication(Adw.Application):
 
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action)
+        self.create_action('help', self.on_help_action, ['F1'])
 
         self.create_action('open-hdri-folder', self.on_open_hdri_folder)
 
@@ -132,6 +133,11 @@ class Viewer3dApplication(Adw.Application):
                                 artists=["Jakub Steiner https://jimmac.eu"])
         about.add_link(_("Checkout F3D"), "https://f3d.app")
         about.present(self.props.active_window)
+
+    def on_help_action(self, *args):
+        launcher = Gtk.UriLauncher()
+        launcher.set_uri("help:exhibit")
+        launcher.launch()
 
     def on_open_hdri_folder(self, *args):
         webbrowser.open(self.props.active_window.hdri_path)

@@ -43,6 +43,7 @@ class Setting(GObject.Object):
 
     __gsignals__ = {
         'changed': (GObject.SignalFlags.RUN_FIRST, None, (str, int, )),
+        'changed-no-ui-update': (GObject.SignalFlags.RUN_FIRST, None, (str, int, )),
     }
 
     def __init__(self, name, value, setting_type):
@@ -68,6 +69,11 @@ class Setting(GObject.Object):
         if value != self._value:
             self._value = value
             self.emit("changed", self._name, self._type)
+
+    def set_value_without_ui_update(self, value):
+        if value != self._value:
+            self._value = value
+            self.emit("changed-no-ui-update", self._name, self._type)
 
     def __repr__(self):
         return f"<Setting {self._name}: {self._value}>"
@@ -155,16 +161,19 @@ class WindowSettings(Gio.ListStore):
         for name, value in self.default_settings.items():
             setting = Setting(name, value, SettingType.VIEW)
             setting.connect("changed", self.on_view_setting_changed)
+            setting.connect("changed-no-ui-update", self.on_other_setting_changed)
             self.append(setting)
 
         for name, value in self.other_settings.items():
             setting = Setting(name, value, SettingType.OTHER)
             setting.connect("changed", self.on_other_setting_changed)
+            setting.connect("changed-no-ui-update", self.on_other_setting_changed)
             self.append(setting)
 
         for name, value in self.internal_settings.items():
             setting = Setting(name, value, SettingType.INTERNAL)
             setting.connect("changed", self.on_internal_setting_changed)
+            setting.connect("changed-no-ui-update", self.on_other_setting_changed)
             self.append(setting)
 
     def sync_all_settings(self):
@@ -180,10 +189,13 @@ class WindowSettings(Gio.ListStore):
     def on_internal_setting_changed(self, setting, name, enum):
         self.emit("changed-internal", setting)
 
-    def set_setting(self, key, val):
+    def set_setting(self, key, val, update=True):
         for index, setting in enumerate(self):
             if key == setting.name:
-                setting.set_value(val)
+                if update:
+                    setting.set_value(val)
+                else:
+                    setting.set_value_without_ui_update(val)
                 return
         self.logger.warning(f"{key} key not present")
 
