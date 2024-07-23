@@ -110,8 +110,8 @@
                 "-DVTK_MODULE_ENABLE_VTK_FiltersGeometry=YES",
                 "-DVTK_MODULE_ENABLE_VTK_ImagingCore=YES",
                 "-DVTK_MODULE_ENABLE_VTK_ImagingHybrid=YES",
-                "-DVTK_MODULE_ENABLE_VTK_InteractionStyle=NO",
-                "-DVTK_MODULE_ENABLE_VTK_InteractionWidgets=NO",
+                "-DVTK_MODULE_ENABLE_VTK_InteractionStyle=YES",
+                "-DVTK_MODULE_ENABLE_VTK_InteractionWidgets=YES",
                 "-DVTK_MODULE_ENABLE_VTK_IOCityGML=YES",
                 "-DVTK_MODULE_ENABLE_VTK_IOExodus=YES",
                 "-DVTK_MODULE_ENABLE_VTK_IOGeometry=YES",
@@ -504,8 +504,5 @@
                 }
             ]
         }
-    ],
-    "build-options" : {
-        "env" : {        }
-    }
+    ]
 }
