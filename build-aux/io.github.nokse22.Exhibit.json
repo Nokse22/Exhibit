@@ -26,7 +26,7 @@
         "/CMakeFiles"
     ],
     "modules": [
-        "shared-modules/glew/glew.json",
+	"shared-modules/glew/glew.json",
         {
             "name": "Eigen3",
             "buildsystem": "cmake-ninja",
@@ -127,7 +127,7 @@
                 "-DVTK_MODULE_ENABLE_VTK_RenderingOpenGL2=YES",
                 "-DVTK_MODULE_ENABLE_VTK_RenderingVolumeOpenGL2=YES",
                 "-DVTK_MODULE_ENABLE_VTK_TestingCore=YES",
-                "-DVTK_MODULE_ENABLE_VTK_RenderingRayTracing:STRING=NO",
+                "-DVTK_MODULE_ENABLE_VTK_RenderingRayTracing=NO",
                 "-DVTK_OSPRAY_ENABLE_DENOISER=NO",
                 "-DVTK_SMP_IMPLEMENTATION_TYPE=TBB",
                 "-DVTK_SMP_ENABLE_SEQUENTIAL=OFF",
