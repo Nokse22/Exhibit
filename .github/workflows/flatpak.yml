@@ -22,5 +22,5 @@ jobs:
     - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
       with:
         bundle: io.github.nokse22.Exhibit.flatpak
-        manifest-path: /build-aux/io.github.nokse22.Exhibit.json
+        manifest-path: build-aux/io.github.nokse22.Exhibit.json
         cache-key: flatpak-builder-${{ github.sha }}
