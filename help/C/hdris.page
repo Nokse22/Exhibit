@@ -1,0 +1,25 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      xmlns:its="http://www.w3.org/2005/11/its"
+      type="topic"
+      id="hdris">
+    <info>
+    <link type="guide" xref="index" group="#first"/>
+    <revision pkgversion="3.12" date="2024-07-23" status="review"/>
+
+    <credit type="author copyright">
+      <name>Nokse</name>
+      <years>2024</years>
+    </credit>
+
+    <include href="legal.xml" xmlns="http://www.w3.org/2001/XInclude"/>
+  </info>
+
+    <title>HDRIs</title>
+  	<section id="configuration">
+    <title>HDRIs</title>
+    <p>There are four default 1k HDRIs, you can add more by opening the HDRIs folder from the app hamburger menu and placing them there. Any image added in this path will be used as an HDRI and a thumbnail will be generated.</p>
+
+    <p>If you save a configuration that uses an HDRI make sure it is placed in this folder, this way the app will always be able to access the file.</p>
+
+  </section>
+</page>

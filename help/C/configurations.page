@@ -1,0 +1,54 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      xmlns:its="http://www.w3.org/2005/11/its"
+      type="topic"
+      id="configurations">
+    <info>
+    <link type="guide" xref="index" group="#first"/>
+    <revision pkgversion="3.12" date="2024-07-23" status="review"/>
+
+    <credit type="author copyright">
+      <name>Nokse</name>
+      <years>2024</years>
+    </credit>
+
+    <include href="legal.xml" xmlns="http://www.w3.org/2001/XInclude"/>
+
+    <desc>All the supported options</desc>
+  </info>
+  
+    <title>Configurations</title>
+  	<section id="configuration">
+    <title>Configuration</title>
+    <p>The best way to make a configuration is to use the app and save it to file, but if you want to use settings without UI you will need to edit it manually.</p>
+
+<p>The custom configurations are saved in <code>/home/username/.var/app/io.github.nokse22.Exhibit/data/configurations</code></p>
+
+<p>The default configurations can not be changed.</p>
+
+	<p>This is an example configuration:</p>
+	<pre><code class="language-json">{
+	&quot;example&quot;: {
+	    &quot;name&quot;: &quot;Example&quot;,
+	    &quot;formats&quot;: &quot;.*(stl|3mf)&quot;,
+	    &quot;view-settings&quot;: {
+	        &quot;model-metallic&quot;: 0.7,
+	        &quot;model-roughness&quot;: 0.3,
+	        &quot;model-opacity&quot;: 1.0,
+	        &quot;model-color&quot;: [
+	            0.9019607843137255,
+	            0.3803921568627451,
+	            0.0
+	        ]
+	    },
+	    &quot;other-settings&quot;: {
+	        &quot;use-color&quot;: false,
+	        &quot;point-up&quot;: true,
+	        &quot;auto-reload&quot;: false
+	    }
+	}
+}
+	</code></pre>
+	<p>You can add any option to the dictionary, make sure to put the view options in the <code>view-settings</code> dictionary and the others in the <code>other-settings</code>.</p>
+
+  </section>
+</page>

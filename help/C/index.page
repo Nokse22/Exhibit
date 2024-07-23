@@ -1,0 +1,20 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      xmlns:its="http://www.w3.org/2005/11/its"
+      type="guide"
+      id="index">
+
+  <info>
+    <title type="link" role="trail">Exhibit</title>
+    <title type="link">Exhibit</title>
+    <title type="text">Exhibit</title>
+    <revision pkgversion="3.20" date="2016-01-23" status="stub" />
+
+    <include href="legal.xml" xmlns="http://www.w3.org/2001/XInclude"/>
+  </info>
+
+  <title>
+    <media type="image" its:translate="no" width="48px" height="48px"
+      src="figures/io.github.nokse22.Exhibit.svg"/>Exhibit
+  </title>
+
+</page>
