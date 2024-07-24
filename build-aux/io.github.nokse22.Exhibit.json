@@ -343,90 +343,6 @@
             ]
         },
         {
-            "name" : "libdeflate",
-            "buildsystem" : "cmake-ninja",
-            "sources" : [
-                {
-                    "type" : "archive",
-                    "url" : "https://github.com/ebiggers/libdeflate/releases/download/v1.20/libdeflate-1.20.tar.gz",
-                    "sha256" : "c52cf0239fd644d71c9e88613dd7431a5306ebee1280c5791c71ca264869250a"
-                }
-            ]
-        },
-        {
-            "name" : "openexr",
-            "buildsystem" : "cmake-ninja",
-            "sources" : [
-                {
-                    "type" : "archive",
-                    "url" : "https://github.com/AcademySoftwareFoundation/openexr/archive/refs/tags/v3.2.4.tar.gz",
-                    "sha256" : "81e6518f2c4656fdeaf18a018f135e96a96e7f66dbe1c1f05860dd94772176cc"
-                }
-            ]
-        },
-        {
-            "name" : "Boost",
-            "buildsystem" : "simple",
-            "sources" : [
-                {
-                    "type" : "archive",
-                    "url" : "https://archives.boost.io/release/1.83.0/source/boost_1_83_0.tar.gz",
-                    "sha256" : "c0685b68dd44cc46574cce86c4e17c0f611b15e195be9848dfd0769a0a207628"
-                }
-            ],
-            "build-commands" : [
-                "./bootstrap.sh --prefix=/app --with-libraries=iostreams,filesystem,system,date_time,regex,program_options,python",
-                "./b2 headers",
-                "./b2 -j$FLATPAK_BUILDER_N_JOBS install variant=release cxxstd=17 --layout=system"
-            ]
-        },
-        {
-            "name" : "OpenSubdiv",
-            "buildsystem" : "cmake-ninja",
-            "sources" : [
-                {
-                    "type" : "archive",
-                    "url" : "https://github.com/PixarAnimationStudios/OpenSubdiv/archive/refs/tags/v3_6_0.tar.gz",
-                    "sha256" : "bebfd61ab6657a4f4ff27845fb66a167d00395783bfbd253254d87447ed1d879"
-                }
-            ]
-        },
-        {
-            "name" : "openUSD",
-            "buildsystem" : "cmake-ninja",
-            "config-opts" : [
-                "-DPXR_BUILD_ALEMBIC_PLUGIN:BOOL=OFF",
-                "-DPXR_BUILD_EMBREE_PLUGIN:BOOL=OFF",
-                "-DPXR_BUILD_IMAGING:BOOL=OFF",
-                "-DPXR_BUILD_MONOLITHIC:BOOL=ON",
-                "-DPXR_BUILD_TESTS:BOOL=OFF",
-                "-DPXR_BUILD_USD_IMAGING:BOOL=OFF",
-                "-DPXR_ENABLE_PYTHON_SUPPORT:BOOL=OFF",
-                "-DPXR_BUILD_EXAMPLES:BOOL=OFF",
-                "-DPXR_BUILD_TUTORIALS:BOOL=OFF",
-                "-DPXR_BUILD_USD_TOOLS:BOOL=OFF",
-                "-DPXR_INSTALL_LOCATION:PATH=../lib/usd",
-                "-DCMAKE_BUILD_TYPE=Release",
-                "-DTBB_INCLUDE_DIRS=/app/include",
-                "-DTBB_LIBRARIES=/app/lib/libtbb.so"
-            ],
-            "sources" : [
-                {
-                    "type" : "archive",
-                    "url" : "https://github.com/PixarAnimationStudios/OpenUSD/archive/refs/tags/v23.05.tar.gz",
-                    "sha256" : "f5c3e72cd584bab383a8054628b6ed98aa17b1cbbe896eb98257ac19641d10c7"
-                },
-                {
-                    "type" : "patch",
-                    "path" : "0001-usd-onetbb.patch"
-                },
-                {
-                    "type" : "patch",
-                    "path" : "0002-install-bin.patch"
-                }
-            ]
-        },
-        {
             "name" : "F3D",
             "buildsystem" : "cmake-ninja",
             "builddir" : true,
@@ -463,33 +379,6 @@
                         "stable-only" : true,
                         "url-template" : "https://github.com/f3d-app/f3d/archive/refs/tags/v$version.tar.gz"
                     }
-                }
-            ]
-        },
-        {
-            "name" : "imagemagick",
-            "config-opts" : [
-                "--disable-static"
-            ],
-            "sources" : [
-                {
-                    "type" : "archive",
-                    "url" : "https://imagemagick.org/archive/releases/ImageMagick-6.9.12-96.tar.xz",
-                    "sha256" : "570419d87cc8f22d36a038b4a91de349b181d3c23cfbedc241f89789564402b0"
-                }
-            ]
-        },
-        {
-            "name" : "python3-wand",
-            "buildsystem" : "simple",
-            "build-commands" : [
-                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"wand\" --no-build-isolation"
-            ],
-            "sources" : [
-                {
-                    "type" : "file",
-                    "url" : "https://files.pythonhosted.org/packages/59/d5/1bdd7c9662d5e9078e25ba0eb69bdb122859295746d40ab8dfef3a7b4d42/Wand-0.6.13-py2.py3-none-any.whl",
-                    "sha256" : "e5dda0ac2204a40c29ef5c4cb310770c95d3d05c37b1379e69c94ea79d7d19c0"
                 }
             ]
         },
