@@ -84,6 +84,7 @@ class FileRow(Adw.PreferencesRow):
 
     def set_filename(self, filepath):
         if filepath == "":
+            self.on_delete_clicked()
             return
 
         self.filepath = filepath
@@ -93,7 +94,7 @@ class FileRow(Adw.PreferencesRow):
         self.filename_label.set_tooltip_text(filename)
         self.delete_button.set_visible(True)
 
-    def on_delete_clicked(self, btn):
+    def on_delete_clicked(self, *args):
         self.filename_label.set_visible(False)
         self.delete_button.set_visible(False)
         self.emit("delete-file")

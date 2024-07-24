@@ -384,6 +384,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         # File rows
         self.hdri_file_row.connect("delete-file", self.on_delete_skybox)
         self.hdri_file_row.connect("file-added", lambda row, filepath: self.load_hdri(filepath))
+        self.window_settings.get_setting("hdri-file").connect("changed", self.set_hdri_file_row)
 
         # Combos
         self.model_scivis_component_combo.connect("notify::selected", self.on_scivis_component_combo_changed)
@@ -393,11 +394,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.window_settings.get_setting("cells").connect("changed", self.set_scivis_component_combo)
 
         # Others
-        self.use_color_switch.connect("notify::active", self.update_background_color)
         self.background_color_button.connect("notify::rgba", self.update_background_color)
 
-        self.point_up_switch.connect("notify::active", self.set_point_up, "point-up")
-        self.up_direction_combo.connect("notify::selected", self.set_up_direction)
+        self.up_direction_combo.connect("notify::selected", self.on_up_direction_combo_changed)
 
         self.window_settings.get_setting("load-type").connect("changed", self.reload_file)
         self.window_settings.get_setting("load-type").connect("changed", self.set_model_load_combo)
@@ -410,6 +409,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     # Functions that set the UI from the settings, triggered when
     #   a setting has changed.
+
+    def set_hdri_file_row(self, setting, name, enum):
+        self.logger.info(f"Setting hdri file row filename to {setting.value}")
+        self.hdri_file_row.set_filename(setting.value)
 
     def set_switch_to(self, setting, name, enum, switch):
         self.logger.info(f"Setting switch to {setting.value}")
@@ -438,7 +441,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         selected = self.model_scivis_component_combo.get_selected()
         self.model_color_row.set_sensitive(True if selected == 0 else False)
 
-        print(f"selected: {selected} comp: {self.window_settings.get_setting('comp')} and cells: {self.window_settings.get_setting('cells')}")
         if self.window_settings.get_setting("comp").value == -1 and self.window_settings.get_setting("cells").value:
             self.model_scivis_component_combo.set_selected(0)
         else:
@@ -462,7 +464,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         color_list = rgb_to_list(btn.get_rgba().to_string())
         self.window_settings.set_setting(setting, color_list)
 
-    def set_up_direction(self, combo, *args):
+    def on_up_direction_combo_changed(self, combo, *args):
         direction = up_dir_n_to_string[combo.get_selected()]
         self.window_settings.set_setting("up", direction)
 
@@ -485,26 +487,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     #   an action like reloading.
 
     def reload_file(self, *args):
-        self.logger.info("Loading file because load type or up changed")
         if not self.loading_file_manually:
+            self.logger.info("Loading file because load type or up changed")
             self.load_file(filepath=self.filepath, override=True)
-
-    def set_point_up(self, switch, active, name):
-        val = switch.get_active()
-        self.window_settings.set_setting(name, val)
-        if val:
-            self.f3d_viewer.set_view_up(up_dirs_vector[self.window_settings.get_setting("up").value])
-            self.f3d_viewer.always_point_up = True
-        else:
-            self.f3d_viewer.always_point_up = False
-
-    def set_automatic_reload(self, switch, *args):
-        val = switch.get_active()
-        # self.window_settings.set_setting("auto-reload", val)
-        if val:
-            self.change_checker.run()
-        else:
-            self.change_checker.stop()
 
     def update_background_color(self, *args):
         self.logger.info(f"Use color is: {self.window_settings.get_setting('use-color').value}")
@@ -513,7 +498,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 "bg-color": self.window_settings.get_setting("bg-color").value,
             }
             self.f3d_viewer.update_options(options)
-            self.check_for_options_change()
             GLib.idle_add(self.f3d_viewer.queue_render)
             return
         if self.style_manager.get_dark():
@@ -521,7 +505,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         else:
             options = {"bg-color": [1.0, 1.0, 1.0]}
         self.f3d_viewer.update_options(options)
-        self.check_for_options_change()
         GLib.idle_add(self.f3d_viewer.queue_render)
 
     # Functions to set the settings
@@ -535,11 +518,20 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def on_other_setting_changed(self, window_settings, setting):
         self.logger.info(f"Setting: {setting.name} to {setting.value}")
         if setting.name == "use-color":
-            pass
+            self.update_background_color()
         elif setting.name == "point-up":
-            pass
+            if setting.value:
+                self.f3d_viewer.set_view_up(up_dirs_vector[self.window_settings.get_setting("up").value])
+                self.f3d_viewer.always_point_up = True
+            else:
+                self.f3d_viewer.always_point_up = False
         elif setting.name == "auto-reload":
-            pass
+            if setting.value:
+                self.change_checker.run()
+            else:
+                self.change_checker.stop()
+
+        self.check_for_options_change()
 
     def on_internal_setting_changed(self, window_settings, setting):
         self.logger.info(f"Setting: {setting.name} to {setting.value}")
@@ -843,9 +835,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.startup_stack.set_visible_child_name("error_page")
         else:
             self.send_toast(_("Can't open") + " " + os.path.basename(filepath))
-        options = {"up": self.window_settings.get_setting("up").value}
-        self.f3d_viewer.update_options(options)
-        self.check_for_options_change()
 
     def send_toast(self, message):
         toast = Adw.Toast(title=message, timeout=2)
