@@ -76,7 +76,6 @@ class F3DViewer(Gtk.GLArea):
         "texture-material": "model.material.texture",
         "normal-scale": "model.normal.scale",
         "texture-normal": "model.normal.texture",
-        "point-sprites": "model.point-sprites.enable",
         "point-type": "model.point-sprites.type",
         "volume": "model.volume.enable",
         "inverse": "model.volume.inverse",
@@ -221,11 +220,11 @@ class F3DViewer(Gtk.GLArea):
 
     def on_realize(self, area):
         if self.get_context() is None:
-            print("Could not create GL context")
+            self.logger.critical("Could not create GL context")
 
     def on_show(self, *args):
         self.is_showed = True
-        print("F3D Viewer has been showed")
+        self.logger.debug("F3D Viewer has been showed")
 
         def _set_hdri_ambient_true():
             f3d_options = {"render.hdri.ambient": True}
