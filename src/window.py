@@ -624,13 +624,15 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.window_settings.set_setting(key, value)
 
     def check_for_options_change(self):
-        self.settings_action.set_state(GLib.Variant("s", "custom"))
-        self.save_settings_action.set_enabled(True)
-        return
+        # self.settings_action.set_state(GLib.Variant("s", "custom"))
+        # self.save_settings_action.set_enabled(True)
+        # return
 
         state_name = self.settings_action.get_state().get_string()
         if state_name == "custom":
             return
+
+        self.logger.debug(f"Checking for changed options from {state_name}")
 
         state_options = self.window_settings.get_default_user_customizable_settings()
 
@@ -689,7 +691,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         return self.distance / 10
 
     def open_file_chooser(self, *args):
-        self.loading_file_manually = True
         file_filter = Gtk.FileFilter(name="All supported formats")
 
         for patt in file_patterns:
@@ -710,7 +711,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         if file:
             filepath = file.get_path()
-            self.window_settings.set_setting("load-type", None)
+            self.loading_file_manually = True
+            self.window_settings.set_setting("load-type", None, False)
             self.logger.info("open file response")
             self.load_file(filepath=filepath)
 
@@ -732,7 +734,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if filepath == "" or filepath is None:
             return
 
-        self.logger.debug(f"load file: {filepath}")
+        self.logger.debug(f"load file: {filepath}\nLoad Type: {self.window_settings.get_setting('load-type').value}")
 
         self.change_checker.stop()
 
@@ -795,8 +797,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def on_file_opened(self):
         self.logger.debug("on file opened")
 
-        self.loading_file_manually = False
-
         self.update_time_stamp()
         if self.window_settings.get_setting("auto-reload").value:
             self.change_checker.run()
@@ -824,10 +824,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.update_background_color()
 
+        self.loading_file_manually = False
+
     def on_file_not_opened(self, filepath):
         self.logger.debug("on file not opened")
-
-        self.loading_file_manually = False
 
         self.set_title(_("Exhibit"))
         if self.no_file_loaded:
@@ -835,6 +835,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.startup_stack.set_visible_child_name("error_page")
         else:
             self.send_toast(_("Can't open") + " " + os.path.basename(filepath))
+
+        self.update_background_color()
+
+        self.loading_file_manually = False
 
     def send_toast(self, message):
         toast = Adw.Toast(title=message, timeout=2)
@@ -893,12 +897,14 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     @Gtk.Template.Callback("on_drop_received")
     def on_drop_received(self, drop, value, x, y):
         filepath = value.get_files()[0].get_path()
-        extension = os.path.splitext(filepath)[1][1:]
+        extension = "*." + os.path.splitext(filepath)[1][1:].lower()
 
-        if "*." + extension in image_patterns:
+        if extension in image_patterns:
             self.load_hdri(filepath)
-        else:
-            self.window_settings.set_setting("load-type", None)
+        elif extension in file_patterns:
+            self.loading_file_manually = True
+
+            self.window_settings.set_setting("load-type", None, False)
             self.logger.info("drop received")
             self.load_file(filepath=filepath)
 
@@ -979,62 +985,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                          "hdri-skybox": True}
         self.f3d_viewer.update_options(options)
         self.check_for_options_change()
-
-    # def set_preference_values(self, block=True):
-    #     self.logger.debug("updating settings")
-    #     return
-
-    #     if block:
-    #         self.up_direction_combo.handler_block(self.up_direction_combo_handler_id)
-    #         self.model_load_combo.handler_block(self.load_type_combo_handler_id)
-
-    #     self.grid_switch.set_active(self.window_settings.get_setting("grid").value)
-    #     self.absolute_grid_switch.set_active(self.window_settings.get_setting("grid-absolute").value)
-
-    #     self.translucency_switch.set_active(self.window_settings.get_setting("translucency-support").value)
-    #     self.tone_mapping_switch.set_active(self.window_settings.get_setting("tone-mapping").value)
-    #     self.ambient_occlusion_switch.set_active(self.window_settings.get_setting("ambient-occlusion"))
-    #     self.anti_aliasing_switch.set_active(self.window_settings.get_setting("anti-aliasing").value)
-    #     self.hdri_ambient_switch.set_active(self.window_settings.get_setting("hdri-ambient").value)
-    #     self.light_intensity_spin.set_value(self.window_settings.get_setting("light-intensity").value)
-    #     self.hdri_file_row.set_filename(self.window_settings.get_setting("hdri-file").value)
-    #     self.blur_switch.set_active(self.window_settings.get_setting("blur-background").value)
-    #     self.blur_coc_spin.set_value(self.window_settings.get_setting("blur-coc").value)
-    #     self.use_skybox_switch.set_active(self.window_settings.get_setting("hdri-skybox").value)
-
-    #     self.edges_switch.set_active(self.window_settings.get_setting("show-edges").value)
-    #     self.edges_width_spin.set_value(self.window_settings.get_setting("edges-width").value)
-
-    #     self.spheres_switch.set_active(self.window_settings.get_setting("show-points").value)
-    #     self.points_size_spin.set_value(self.window_settings.get_setting("point-size").value)
-
-    #     self.point_up_switch.set_active(self.window_settings.get_setting("point-up").value)
-    #     self.up_direction_combo.set_selected(up_dir_string_to_n[self.window_settings.get_setting("up").value])
-    #     self.automatic_settings_switch.set_active(self.window_settings.get_setting("auto-best").value)
-    #     self.automatic_reload_switch.set_active(self.window_settings.get_setting("auto-reload").value)
-
-    #     load_type = self.window_settings.get_setting("load-type").value
-    #     self.model_load_combo.set_selected(load_type if load_type else 0)
-
-    #     self.model_roughness_spin.set_value(self.window_settings.get_setting("model-roughness").value)
-    #     self.model_metallic_spin.set_value(self.window_settings.get_setting("model-metallic").value)
-    #     rgba = Gdk.RGBA()
-    #     rgba.parse(list_to_rgb(self.window_settings.get_setting("model-color").value))
-    #     self.model_color_button.set_rgba(rgba)
-    #     self.model_opacity_spin.set_value(self.window_settings.get_setting("model-opacity").value)
-    #     if self.window_settings.get_setting("comp") == -1 and self.window_settings.get_setting("cells").value:
-    #         self.model_scivis_component_combo.set_selected(0)
-    #     else:
-    #         self.model_scivis_component_combo.set_selected(-self.window_settings.get_setting("comp").value + 1)
-
-    #     self.use_color_switch.set_active(self.window_settings.get_setting("use-color").value)
-    #     rgba = Gdk.RGBA()
-    #     rgba.parse(list_to_rgb(self.window_settings.get_setting("bg-color").value))
-    #     self.background_color_button.set_rgba(rgba)
-
-    #     if block:
-    #         self.up_direction_combo.handler_unblock(self.up_direction_combo_handler_id)
-    #         self.model_load_combo.handler_unblock(self.load_type_combo_handler_id)
 
     def create_action(self, name, callback):
         action = Gio.SimpleAction.new(name, None)
