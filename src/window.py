@@ -304,9 +304,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.update_background_color()
 
-        if startup_filepath:
-            self.logger.info(f"startup file detected: {startup_filepath}")
-            self.load_file(filepath=startup_filepath)
+
 
         # Setting up the save settings dialog
         def _on_factory_setup(_factory, list_item):
@@ -405,6 +403,12 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         # Sync the UI with the settings
         self.window_settings.sync_all_settings()
+
+        if startup_filepath:
+            self.loading_file_manually = True
+            self.window_settings.set_setting("load-type", None, False)
+            self.logger.info(f"startup file detected: {startup_filepath}")
+            self.load_file(filepath=startup_filepath)
 
 
     # Functions that set the UI from the settings, triggered when
