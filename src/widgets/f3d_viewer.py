@@ -212,7 +212,8 @@ class F3DViewer(Gtk.GLArea):
     def done(self):
         if self.settings["render.hdri.ambient"]:
             f3d_options = {"render.hdri.ambient": True}
-            GLib.timeout_add(100, self.engine.options.update, f3d_options)
+            self.engine.options.update(f3d_options)
+            self.queue_render()
 
     def on_resize(self, gl_area, width, height):
         self.width = width

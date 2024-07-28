@@ -825,6 +825,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.update_background_color()
 
         self.loading_file_manually = False
+        GLib.timeout_add(100, self.f3d_viewer.done)
 
     def on_file_not_opened(self, filepath):
         self.logger.debug("on file not opened")
