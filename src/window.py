@@ -226,6 +226,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         os.makedirs(self.hdri_path, exist_ok=True)
         os.makedirs(self.hdri_thumbnails_path, exist_ok=True)
         os.makedirs(self.user_configurations_path, exist_ok=True)
+        os.makedirs(data_home + "/other files/", exist_ok=True)
 
         # HDRI
         hdri_names = ["city.hdr", "meadow.hdr", "field.hdr", "sky.hdr"]
@@ -738,7 +739,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if filepath == "" or filepath is None:
             return
 
-        self.logger.debug(f"load file: {filepath}\nLoad Type: {self.window_settings.get_setting('load-type').value}")
+        self.logger.debug(f"load file: {filepath}")
+        self.logger.debug(f"Load Type: {self.window_settings.get_setting('load-type').value}")
 
         self.change_checker.stop()
 

@@ -1,4 +1,5 @@
 import logging
+import os
 
 class CustomFormatter(logging.Formatter):
 
@@ -22,6 +23,14 @@ class CustomFormatter(logging.Formatter):
 
 def init():
     global logger
+    data_home = os.environ["XDG_DATA_HOME"]
+    log_path = data_home + "/log.txt"
+
+    logging.basicConfig(
+        filename=log_path,
+        filemode='a',
+        format=f'%(asctime)s (%(filename)s:%(lineno)d) %(levelname)s: %(message)s',
+        datefmt='%H:%M:%S',)
 
     ch = logging.StreamHandler()
     ch.setLevel(logging.DEBUG)
