@@ -26,6 +26,9 @@ def init():
     data_home = os.environ["XDG_DATA_HOME"]
     log_path = data_home + "/log.txt"
 
+    if os.path.exists(log_path):
+        os.remove(log_path)
+
     logging.basicConfig(
         filename=log_path,
         filemode='a',
