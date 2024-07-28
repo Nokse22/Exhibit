@@ -6,16 +6,6 @@ from enum import IntEnum
 
 from . import logger_lib
 
- #    ___      _   _   _
- #   / __| ___| |_| |_(_)_ _  __ _ ___
- #   \__ \/ -_)  _|  _| | ' \/ _` (_-<
- #   |___/\___|\__|\__|_|_||_\__, /__/
- #                           |___/
- #                                _   _
- #        __ ___ _ _  _ _  ___ __| |_(_)___ _ _  ___
- #       / _/ _ \ ' \| ' \/ -_) _|  _| / _ \ ' \(_-<
- #       \__\___/_||_|_||_\___\__|\__|_\___/_||_/__/
- #
  #
  #   Other special
  #   functions if  <──────┐                 On change
@@ -121,7 +111,6 @@ class WindowSettings(Gio.ListStore):
 
         "up": "+Y",
         "orthographic": False,
-        "point-up": True,
 
         # There is no UI for the following ones
         "texture-matcap": "",
