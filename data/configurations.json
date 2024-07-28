@@ -7,7 +7,7 @@
     },
     "3d_printing": {
         "name": "3D Printing",
-        "formats": ".*(3ds|stl|off|3mf)",
+        "formats": ".*(3ds|stl|3mf)",
         "view-settings": {
             "up": "+Z",
             "grid": true,
@@ -18,7 +18,7 @@
     },
     "mechanical": {
         "name": "CAD Models",
-        "formats": ".*(step|stp|iges|igs)",
+        "formats": ".*(step|stp|iges|igs|off)",
         "view-settings": {
             "up": "+Z",
             "ambient-occlusion": false
