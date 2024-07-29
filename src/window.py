@@ -397,7 +397,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.up_direction_combo.connect("notify::selected", self.on_up_direction_combo_changed)
 
-        self.window_settings.get_setting("load-type").connect("changed", self.reload_file)
         self.window_settings.get_setting("load-type").connect("changed", self.set_model_load_combo)
 
         self.window_settings.get_setting("up").connect("changed", self.reload_file)
@@ -520,6 +519,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.f3d_viewer.update_options(options)
         self.check_for_options_change()
 
+        if setting.name == "up":
+            self.reload_file()
+
     def on_other_setting_changed(self, window_settings, setting):
         self.logger.info(f"Setting: {setting.name} to {setting.value}")
         if setting.name == "use-color":
@@ -540,8 +542,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     def on_internal_setting_changed(self, window_settings, setting):
         self.logger.info(f"Setting: {setting.name} to {setting.value}")
-        if setting.name == "load-type" and not self.loading_file_manually:
-            self.load_file()
+        if setting.name == "load-type":
+            self.reload_file()
         elif setting.name == "auto-best":
             pass
         elif setting.name == "sidebar-show":
