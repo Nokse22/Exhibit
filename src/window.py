@@ -40,6 +40,10 @@ from enum import IntEnum
 from . import logger_lib
 from .settings_manager import WindowSettings
 
+import time
+
+start = time.time()
+
 up_dir_n_to_string = {
     0: "-X",
     1: "+X",
@@ -206,7 +210,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             GLib.VariantType.new("s"),
             GLib.Variant("s", "general"),
         )
-        self.settings_action.connect("activate", self.on_settings_changed)
+        self.settings_action.connect("change-state", lambda action, state: self.change_setting_state(state))
         self.add_action(self.settings_action)
 
         self.save_settings_action = self.create_action('save-settings', self.on_save_settings)
@@ -399,8 +403,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.window_settings.get_setting("load-type").connect("changed", self.set_model_load_combo)
 
-        self.window_settings.get_setting("up").connect("changed", self.reload_file)
-
         # Sync the UI with the settings
         self.window_settings.sync_all_settings()
 
@@ -409,6 +411,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.window_settings.set_setting("load-type", None, False)
             self.logger.info(f"startup file detected: {startup_filepath}")
             self.load_file(filepath=startup_filepath)
+
+        end = time.time()
+        self.logger.info(f"Startup in {end - start} seconds")
 
 
     # Functions that set the UI from the settings, triggered when
@@ -631,10 +636,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.window_settings.set_setting(key, value)
 
     def check_for_options_change(self):
-        # self.settings_action.set_state(GLib.Variant("s", "custom"))
-        # self.save_settings_action.set_enabled(True)
-        # return
-
         state_name = self.settings_action.get_state().get_string()
         if state_name == "custom":
             return
@@ -654,7 +655,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             if key in current_settings:
                 if current_settings[key] != value:
                     self.logger.info(f"current key: {key}'s value is {current_settings[key]} != {value}")
-                    self.settings_action.set_state(GLib.Variant("s", "custom"))
+                    self.change_setting_state(GLib.Variant("s", "custom"))
                     self.save_settings_action.set_enabled(True)
                     return
 
@@ -678,21 +679,21 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             return True
         return False
 
-    def on_settings_changed(self, action: Gio.SimpleAction, state: GLib.Variant):
-        # Called when the preset is changed
-        self.logger.debug("settings changed")
-
-        self.set_settings_from_name(state.get_string())
-
-        self.update_background_color()
-
-        self.settings_action.set_state(state)
+    def change_setting_state(self, state):
+        self.logger.debug(f"Requested changing settings to {state}")
 
         # Enable saving the settings only if it's not one already saved
         if state == GLib.Variant("s", "custom"):
             self.save_settings_action.set_enabled(True)
-        else:
-            self.save_settings_action.set_enabled(False)
+            return
+
+        self.save_settings_action.set_enabled(False)
+
+        self.set_settings_from_name(state.get_string())
+
+        self.settings_action.set_state(state)
+
+        self.update_background_color()
 
     def get_gimble_limit(self):
         return self.distance / 10
@@ -755,7 +756,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                     continue
                 if re.search(pattern, filepath):
                     settings = key
-            self.set_settings_from_name(settings)
+            self.logger.debug(f"best settings is {settings}")
+            self.change_setting_state(GLib.Variant("s", settings))
 
         scene_loaded = False
         geometry_loaded = False
@@ -1025,7 +1027,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.saved_settings.set_boolean("startup-sidebar-show", window.split_view.get_show_sidebar())
 
 def rgb_to_list(rgb):
-    values = [int(x) / 255 for x in rgb[4:-1].split(',')]
+    values = tuple(int(x) / 255 for x in rgb[4:-1].split(','))
     return values
 
 def list_to_rgb(lst):
