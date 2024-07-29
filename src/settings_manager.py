@@ -83,7 +83,7 @@ class WindowSettings(Gio.ListStore):
         "ambient-occlusion": False,
         "anti-aliasing": True,
         "hdri-ambient": False,
-        "light-intensity": 3.0,
+        "light-intensity": 2.5,
 
         "show-edges": False,
         "edges-width": 1.0,
@@ -133,7 +133,7 @@ class WindowSettings(Gio.ListStore):
     other_settings = {
         "use-color": False,
         "point-up" : True,
-        "auto-reload": False
+        "auto-reload": True
     }
 
     internal_settings = {
