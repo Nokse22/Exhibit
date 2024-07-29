@@ -20,7 +20,6 @@
 import sys
 import gi
 import os
-import webbrowser
 
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
@@ -133,7 +132,9 @@ class Viewer3dApplication(Adw.Application):
         launcher.launch()
 
     def on_open_hdri_folder(self, *args):
-        webbrowser.open(self.props.active_window.hdri_path)
+        launcher = Gtk.UriLauncher()
+        launcher.set_uri(self.props.active_window.hdri_path)
+        launcher.launch()
 
     def on_theme_setting_changed(self, action: Gio.SimpleAction, state: GLib.Variant):
         action.set_state(state)
