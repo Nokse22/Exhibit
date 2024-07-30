@@ -83,7 +83,7 @@ class WindowSettings(Gio.ListStore):
         "ambient-occlusion": False,
         "anti-aliasing": True,
         "hdri-ambient": False,
-        "light-intensity": 2.5,
+        "light-intensity": 2.0,
 
         "show-edges": False,
         "edges-width": 1.0,
