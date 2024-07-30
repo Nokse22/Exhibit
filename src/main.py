@@ -48,6 +48,26 @@ Copyright: {info.copyright}
 License: {info.license}
 Authors: {info.authors}\n\n"""
 
+release_notes="""
+<ul>
+  <li>Using latest stable release of F3D</li>
+  <li>Added open with external app button</li>
+  <li>Reworked how the settings works</li>
+  <li>Added four default presets for different files types</li>
+  <li>Added bundled HDRIs and custom with thumbnails</li>
+  <li>Improved mimetype names</li>
+  <li>Added pinch to zoom</li>
+  <li>Changed some shortcuts</li>
+  <li>Added different model coloring modes</li>
+  <li>Changed some settings UI</li>
+  <li>Added automatic reload on file change</li>
+  <li>Added saving custom settings</li>
+  <li>Added French translation (Thibaut)</li>
+  <li>Translation updates</li>
+  <li>Added help pages</li>
+</ul>
+"""
+
 class Viewer3dApplication(Adw.Application):
     """The main application singleton class."""
 
@@ -149,6 +169,8 @@ class Viewer3dApplication(Adw.Application):
             f"GSK_RENDERER: {GLib.getenv('GSK_RENDERER')}\n\n" +
             f3d_info
         )
+
+        about.set_release_notes(release_notes)
 
         about.present(self.props.active_window)
 
