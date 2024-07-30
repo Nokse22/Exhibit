@@ -25,26 +25,6 @@
         },
         "other-settings": {}
     },
-    "splat": {
-        "name": "Splat",
-        "formats": ".*(splat)",
-        "view-settings": {
-            "point-sprites": true,
-            "point-size": 1.0,
-            "comp": -2,
-            "cells": false,
-            "up": "-Y",
-            "tone-mapping": false,
-            "grid": false,
-            "anti-aliasing": false,
-            "translucency-support": true,
-            "scalar" : "color",
-            "point-type": "gaussian"
-        },
-        "other-settings": {
-            "point-up": false
-        }
-    },
     "point_cloud": {
         "name": "Point Cloud",
         "formats": ".*(ply)",
