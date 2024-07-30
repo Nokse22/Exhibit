@@ -286,7 +286,6 @@
                                                 <property name="hexpand">True</property>
                                                 <property name="hexpand-set">True</property>
                                                 <property name="title" translatable="yes">Show All Edges</property>
-                                                <!-- <property name="sensitive" bind-source="spheres_switch" bind-property="active" bind-flags="invert-boolean">True</property> -->
                                               </object>
                                             </child>
                                             <child>
@@ -316,7 +315,6 @@
                                                 <property name="hexpand">True</property>
                                                 <property name="hexpand-set">True</property>
                                                 <property name="title" translatable="yes">Show Spheres</property>
-                                                <!-- <property name="sensitive" bind-source="edges_switch" bind-property="active" bind-flags="invert-boolean">True</property> -->
                                               </object>
                                             </child>
                                             <child>
@@ -327,7 +325,7 @@
                                                 <!-- <property name="digits">1</property> -->
                                                 <property name="adjustment">
                                                   <object class="GtkAdjustment">
-                                                    <property name="lower">0</property>
+                                                    <property name="lower">1</property>
                                                     <property name="upper">10</property>
                                                     <property name="value">1</property>
                                                     <property name="step-increment">1</property>
