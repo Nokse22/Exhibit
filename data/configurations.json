@@ -29,8 +29,8 @@
         "name": "Point Cloud",
         "formats": ".*(ply)",
         "view-settings": {
-            "point-sprites": true,
-            "point-size": 1.0,
+            "point-sprites": false,
+            "point-size": 2.0,
             "up": "-X",
             "comp": -2,
             "translucency-support": true,
