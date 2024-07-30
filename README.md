@@ -19,7 +19,7 @@ View 3D models, powered by the [F3D](https://github.com/f3d-app/f3d) library tha
     <img src="data/resources/screenshot 4.png" max-height="500"/>
     <img src="data/resources/screenshot 5.png" max-height="500"/>
     <img src="data/resources/screenshot 6.png" max-height="500"/>
-    <img src="data/resources/screenshot 8.png" max-height="500"/>
+    <img src="data/resources/screenshot 7.png" max-height="500"/>
     </div>
 </details>
 
