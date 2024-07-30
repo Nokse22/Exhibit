@@ -7,7 +7,7 @@
   <name>Exhibit</name>
   <summary>Preview your 3D models</summary>
   <description>
-    <p>Based on the F3D library that supports many file formats, from digital content to scientific datasets including glTF, STL, STEP, PLY, OBJ, FBX, USD, Alembic and many more.
+    <p>Based on the F3D library, it supports many file formats, from digital content to scientific datasets including glTF, STL, STEP, PLY, OBJ, FBX, USD, Alembic and many more.
 You can drag and drop 3d models into the app and export an image of the rendered model.
 Change many settings like tone mapping, ambient occlusion, anti aliasing, material roughness, metallic, color and opacity to achieve the perfect render.
 You can use an HDRI image or a custom color as a background.</p>
@@ -39,11 +39,11 @@ You can use an HDRI image or a custom color as a background.</p>
   <screenshots>
     <screenshot type="default">
       <image>https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%201.png</image>
-      <caption>Bechy</caption>
+      <caption>3D Bechy</caption>
     </screenshot>
 	  <screenshot>
 	    <image>https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%202.png</image>
-	    <caption>Retro Computer Setup with a HDRI background</caption>
+	    <caption>Retro Computer Setup with a HDRI skybox</caption>
 	  </screenshot>
     <screenshot>
 	    <image>https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%203.png</image>
@@ -51,30 +51,31 @@ You can use an HDRI image or a custom color as a background.</p>
 	  </screenshot>
     <screenshot>
 	    <image>https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%204.png</image>
-	    <caption>Cow with a HDRI background in dark theme</caption>
+	    <caption>Cow with an HDRI background and dark theme</caption>
 	  </screenshot>
     <screenshot>
 	    <image>https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%205.png</image>
-	    <caption>Nissan Fairlady in dark theme</caption>
+	    <caption>Nissan Fairlady with dark theme</caption>
 	  </screenshot>
     <screenshot>
 	    <image>https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%206.png</image>
-	    <caption>Vase 3d scan with HDRI</caption>
+	    <caption>Vase 3d scan with HDRI skybox</caption>
 	  </screenshot>
     <screenshot>
-	    <image>https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%208.png</image>
-	    <caption>Sailing Ship 3d scan rendered as points</caption>
+	    <image>https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%207.png</image>
+	    <caption>Point cloud of a boat with dark theme</caption>
 	  </screenshot>
   </screenshots>
 
   <releases>
-    <release version="1.3.0" date="2024-07-29">
+    <release version="1.3.0" date="2024-07-31">
       <description translate="no">
         <ul>
           <li>Using latest stable release of F3D</li>
+          <li>Added open with external app button</li>
           <li>Reworked how the settings works</li>
-          <li>Added five default presets for different files</li>
-          <li>Added bundled HDRIs</li>
+          <li>Added four default presets for different files types</li>
+          <li>Added bundled HDRIs and custom with thumbnails</li>
           <li>Improved mimetype names</li>
           <li>Added pinch to zoom</li>
           <li>Changed some shortcuts</li>
@@ -84,6 +85,7 @@ You can use an HDRI image or a custom color as a background.</p>
           <li>Added saving custom settings</li>
           <li>Added French translation (Thibaut)</li>
           <li>Translation updates</li>
+          <li>Added help pages</li>
         </ul>
       </description>
     </release>
