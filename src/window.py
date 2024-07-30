@@ -683,8 +683,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def change_setting_state(self, state):
         self.logger.debug(f"Requested changing settings to {state}")
 
-        # Enable saving the settings only if it's not one already saved
-        if self.settings_action.get_state() == GLib.Variant("s", "custom") or state == GLib.Variant("s", "custom"):
+        if state.get_string() == "custom":
             self.save_settings_action.set_enabled(True)
             self.settings_action.set_state(state)
             return
