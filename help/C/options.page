@@ -57,7 +57,7 @@
         <tr>
             <td><p>tone-mapping</p></td>
             <td><p>bool</p></td>
-            <td><p>False</p></td>
+            <td><p>True</p></td>
             <td><p>render.effect.tone-mapping</p></td>
             <td><p>Make the colors correct on your screen</p></td>
         </tr>
@@ -99,7 +99,7 @@
         <tr>
             <td><p>light-intensity</p></td>
             <td><p>float</p></td>
-            <td><p>1.0</p></td>
+            <td><p>1.5</p></td>
             <td><p>render.light.intensity</p></td>
             <td><p>Intensity of all the lights in the scene</p></td>
         </tr>
@@ -355,7 +355,7 @@
         <tr>
             <td><p>auto-reload</p></td>
             <td><p>bool</p></td>
-            <td><p>False</p></td>
+            <td><p>True</p></td>
             <td><p>Check if the file has changed and reload</p></td>
         </tr>
     </tbody>
