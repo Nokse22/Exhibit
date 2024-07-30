@@ -72,8 +72,8 @@ up_dirs_vector = {
 }
 
 file_patterns = ["*.vtk", "*.vtp", "*.vtu", "*.vtr", "*.vti", "*.vts", "*.vtm", "*.ply", "*.stl", "*.dcm", "*.drc", "*.nrrd",
-    "*.nhrd", "*.mhd", "*.mha", "*.ex2", "*.e", "*.exo", "*.g", "*.gml", "*.pts",
-    "*.ply", "*.step", "*.stp", "*.iges", "*.igs", "*.brep", "*.abc", "*.vdb", "*.obj", "*.gltf",
+    "*.nhrd", "*.mhd", "*.mha", "*.ex2", "*.e", "*.exo", "*.g", "*.gml", "*.pts", "*.splat",
+    "*.ply", "*.step", "*.stp", "*.iges", "*.igs", "*.brep", "*.abc", "*.obj", "*.gltf",
     "*.glb", "*.3ds", "*.wrl", "*.fbx", "*.dae", "*.off", "*.dxf", "*.x", "*.3mf", "*.usd", "*.usda", "*.usdc", "*.usdz"]
 
 allowed_extensions = [pattern.lstrip('*.') for pattern in file_patterns]
@@ -348,7 +348,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             (self.anti_aliasing_switch, "anti-aliasing"),
             (self.hdri_ambient_switch, "hdri-ambient"),
             (self.edges_switch, "show-edges"),
-            (self.spheres_switch, "show-points"),
+            (self.spheres_switch, "point-sprites"),
             (self.use_skybox_switch, "hdri-skybox"),
             (self.blur_switch, "blur-background"),
             (self.use_color_switch, "use-color"),
@@ -830,7 +830,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.material_group.set_sensitive(False)
             self.points_group.set_sensitive(False)
             self.color_group.set_sensitive(False)
-            self.window_settings.set_setting("show-points", False)
+            self.window_settings.set_setting("point-sprites", False)
 
         self.update_background_color()
 

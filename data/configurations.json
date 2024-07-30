@@ -37,9 +37,13 @@
             "tone-mapping": false,
             "grid": false,
             "anti-aliasing": false,
-            "translucency-support": false
+            "translucency-support": true,
+            "scalar" : "color",
+            "point-type": "gaussian"
         },
-        "other-settings": {}
+        "other-settings": {
+            "point-up": false
+        }
     },
     "point_cloud": {
         "name": "Point Cloud",

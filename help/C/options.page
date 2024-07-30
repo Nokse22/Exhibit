@@ -146,7 +146,7 @@
             <td><p>Direction of the up</p></td>
         </tr>
         <tr>
-            <td><p>show-points</p></td>
+            <td><p>point-sprites</p></td>
             <td><p>bool</p></td>
             <td><p>False</p></td>
             <td><p>model.point-sprites.enable</p></td>

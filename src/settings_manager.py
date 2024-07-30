@@ -88,7 +88,7 @@ class WindowSettings(Gio.ListStore):
         "show-edges": False,
         "edges-width": 1.0,
 
-        "show-points": False,
+        "point-sprites": False,
         "point-size": 1.0,
 
         "model-metallic": 0.0,
@@ -120,7 +120,6 @@ class WindowSettings(Gio.ListStore):
         "texture-material": "",
         "normal-scale": 1.0,
         "texture-normal": "",
-        "point-sprites": False,
         "point-type": "sphere",
         "volume": False,
         "inverse": False,
@@ -128,6 +127,7 @@ class WindowSettings(Gio.ListStore):
         "grid-unit": 0.0,
         "grid-subdivisions": 10,
         "grid-color": (0.0, 0.0, 0.0),
+        "scalar" : ""
     }
 
     other_settings = {

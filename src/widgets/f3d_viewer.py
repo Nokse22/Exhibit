@@ -58,7 +58,7 @@ class F3DViewer(Gtk.GLArea):
         "show-edges": "render.show-edges",
         "edges-width": "render.line-width",
         "up": "scene.up-direction",
-        "show-points": "model.point-sprites.enable",
+        "point-sprites": "model.point-sprites.enable",
         "point-size": "render.point-size",
         "model-color": "model.color.rgb",
         "model-metallic": "model.material.metallic",
@@ -83,6 +83,7 @@ class F3DViewer(Gtk.GLArea):
         "grid-unit": "render.grid.unit",
         "grid-subdivisions": "render.grid.subdivisions",
         "grid-color": "render.grid.color",
+        "scalar" : "model.scivis.array-name"
     }
 
     def __init__(self, *args):
