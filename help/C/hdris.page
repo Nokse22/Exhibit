@@ -14,12 +14,11 @@
     <include href="legal.xml" xmlns="http://www.w3.org/2001/XInclude"/>
   </info>
 
-    <title>HDRIs</title>
+	<title>HDRIs</title>
   	<section id="configuration">
-    <title>HDRIs</title>
-    <p>There are four default 1k HDRIs, you can add more by opening the HDRIs folder from the app hamburger menu and placing them there. Any image added in this path will be used as an HDRI and a thumbnail will be generated.</p>
+  <title>HDRIs</title>
+  <p>There are four default 1k HDRIs, you can add more by opening the HDRIs folder from the app hamburger menu and placing them there. Any image added in this path will be used as an HDRI and a thumbnail will be generated. Images added when the app is running will be visible the next time the app is started.</p>
 
-    <p>If you save a configuration that uses an HDRI make sure it is placed in this folder, this way the app will always be able to access the file.</p>
-
+  <p>If you save a configuration that uses an HDRI make sure it is placed in this folder, this way the app will always be able to access the file.</p>
   </section>
 </page>

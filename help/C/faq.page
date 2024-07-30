@@ -1,0 +1,29 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      xmlns:its="http://www.w3.org/2005/11/its"
+      type="topic"
+      id="faqs">
+    <info>
+    <link type="guide" xref="index" group="#first"/>
+    <revision pkgversion="3.12" date="2024-07-23" status="review"/>
+
+    <credit type="author copyright">
+      <name>Nokse</name>
+      <years>2024</years>
+    </credit>
+
+    <include href="legal.xml" xmlns="http://www.w3.org/2001/XInclude"/>
+  </info>
+
+	<title>FAQs</title>
+
+	<section id="blurry">
+	<title>The app is blurry with fractional scaling on Wayland</title>
+	<p>You can set the GSK renderer to ngl using <code>flatpak override --env=GSK_RENDERER=ngl io.github.nokse22.Exhibit</code> by default it is set to gl (the older renderer) because some user has experienced issues with the new one.</p>
+  </section>
+
+  <section id="gl-context">
+	<title>Unable to create a GL context or black screen</title>
+	<p>Try running <code>flatpak override --env=GDK_DEBUG=gl-prefer-gl io.github.nokse22.Exhibit</code> </p>
+
+  </section>
+</page>

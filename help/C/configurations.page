@@ -12,18 +12,16 @@
     </credit>
 
     <include href="legal.xml" xmlns="http://www.w3.org/2001/XInclude"/>
-
-    <desc>All the supported options</desc>
   </info>
   
-    <title>Configurations</title>
+  <title>Configurations</title>
   	<section id="configuration">
     <title>Configuration</title>
-    <p>The best way to make a configuration is to use the app and save it to file, but if you want to use settings without UI you will need to edit it manually.</p>
+    <p>The best way to make a configuration is to use the app and save it to file, but if you want to use some of the supported options that don't have an UI you will need to edit it manually.</p>
 
-<p>The custom configurations are saved in <code>/home/username/.var/app/io.github.nokse22.Exhibit/data/configurations</code></p>
+		<p>The custom configurations are saved in <code>/home/username/.var/app/io.github.nokse22.Exhibit/data/configurations</code></p>
 
-<p>The default configurations can not be changed.</p>
+		<p>The default configurations can not be changed.</p>
 
 	<p>This is an example configuration:</p>
 	<pre><code class="language-json">{
