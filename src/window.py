@@ -446,8 +446,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.model_load_combo.set_selected(load_type if load_type else 0)
 
     def set_scivis_component_combo(self, setting, *args):
-        self.logger.debug(f"Setting scivis component combo")
         selected = self.model_scivis_component_combo.get_selected()
+        self.logger.debug(f"Setting scivis component combo, selected: {selected}")
         self.model_color_row.set_sensitive(True if selected == 0 else False)
 
         if self.window_settings.get_setting("comp").value == -1 and self.window_settings.get_setting("cells").value:
@@ -683,7 +683,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.logger.debug(f"Requested changing settings to {state}")
 
         # Enable saving the settings only if it's not one already saved
-        if state == GLib.Variant("s", "custom"):
+        if self.settings_action.get_state() == GLib.Variant("s", "custom") and state == GLib.Variant("s", "custom"):
             self.save_settings_action.set_enabled(True)
             return
 
