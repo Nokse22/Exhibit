@@ -101,8 +101,10 @@ class FileRow(Adw.PreferencesRow):
 
     def on_drop_received(self, drop, value, x, y):
         filepath = value.get_files()[0].get_path()
-        self.emit("file-added", filepath)
-        self.set_filename(filepath)
+        extension = "*." + os.path.splitext(filepath)[1][1:].lower()
+        if extension in self.file_patterns:
+            self.emit("file-added", filepath)
+            self.set_filename(filepath)
 
     def add_suggested_file(self, file_thumbnail, filepath):
         if os.path.isfile(filepath):
