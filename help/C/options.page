@@ -98,7 +98,7 @@
         </tr>
         <tr>
             <td><p>light-intensity</p></td>
-            <td><p>-</p></td>
+            <td><p>float</p></td>
             <td><p>1.0</p></td>
             <td><p>render.light.intensity</p></td>
             <td><p>Intensity of all the lights in the scene</p></td>
@@ -112,7 +112,7 @@
         </tr>
         <tr>
             <td><p>blur-coc</p></td>
-            <td><p>-</p></td>
+            <td><p>float</p></td>
             <td><p>20.0</p></td>
             <td><p>render.background.blur.coc</p></td>
             <td><p>Blur circle of confusion</p></td>
@@ -126,14 +126,14 @@
         </tr>
         <tr>
             <td><p>show-edges</p></td>
-            <td><p>-</p></td>
+            <td><p>bool</p></td>
             <td><p>False</p></td>
             <td><p>render.show-edges</p></td>
             <td><p>Show all the edges of the model, some models can define edges that will be viewed always</p></td>
         </tr>
         <tr>
             <td><p>edges-width</p></td>
-            <td><p>-</p></td>
+            <td><p>float</p></td>
             <td><p>1.0</p></td>
             <td><p>render.line-width</p></td>
             <td><p>Width of all the edges in a scene</p></td>
@@ -154,7 +154,7 @@
         </tr>
         <tr>
             <td><p>point-size</p></td>
-            <td><p>-</p></td>
+            <td><p>float</p></td>
             <td><p>1.0</p></td>
             <td><p>render.point-size</p></td>
             <td><p>Size of points when showing vertices and point sprites</p></td>
@@ -168,28 +168,28 @@
         </tr>
         <tr>
             <td><p>model-metallic</p></td>
-            <td><p>-</p></td>
+            <td><p>float</p></td>
             <td><p>0.0</p></td>
             <td><p>model.material.metallic</p></td>
             <td><p>Set the metallic coefficient on the geometry (0.0-1.0). Multiplied with the model.material.texture when present</p></td>
         </tr>
         <tr>
             <td><p>model-roughness</p></td>
-            <td><p>-</p></td>
+            <td><p>float</p></td>
             <td><p>0.3</p></td>
             <td><p>model.material.roughness</p></td>
             <td><p>Roughness coefficient on the geometry (0.0-1.0). Multiplied with the model.material.texture when present</p></td>
         </tr>
         <tr>
             <td><p>model-opacity</p></td>
-            <td><p>-</p></td>
+            <td><p>float</p></td>
             <td><p>1.0</p></td>
             <td><p>model.color.opacity</p></td>
             <td><p>Opacity on the geometry. Usually used with Depth Peeling option. Multiplied with the model.color.texture when present</p></td>
         </tr>
         <tr>
             <td><p>comp</p></td>
-            <td><p>-</p></td>
+            <td><p>int</p></td>
             <td><p>-1</p></td>
             <td><p>model.scivis.component</p></td>
             <td><p>Component to color with. -1 means magnitude. -2 means direct values.</p></td>
@@ -247,28 +247,28 @@
         </tr>
         <tr>
             <td><p>texture-emissive</p></td>
-            <td><p>-</p></td>
+            <td><p>string</p></td>
             <td><p>&quot;&quot;</p></td>
             <td><p>model.emissive.texture</p></td>
             <td><p>Path to a texture file that sets the emitted light of the object. Multiplied with the model.emissive.factor.</p></td>
         </tr>
         <tr>
             <td><p>texture-material</p></td>
-            <td><p>-</p></td>
+            <td><p>string</p></td>
             <td><p>&quot;&quot;</p></td>
             <td><p>model.material.texture</p></td>
             <td><p>Path to a texture file that sets the Occlusion, Roughness and Metallic values of the object. Multiplied with the <code>model-roughness</code> and <code>model-metallic</code>, set both of them to <code>1.0</code> to get a true result.</p></td>
         </tr>
         <tr>
             <td><p>normal-scale</p></td>
-            <td><p>-</p></td>
+            <td><p>float</p></td>
             <td><p>1.0</p></td>
             <td><p>model.normal.scale</p></td>
             <td><p>Normal scale affects the strength of the normal deviation from the normal texture.</p></td>
         </tr>
         <tr>
             <td><p>texture-normal</p></td>
-            <td><p>-</p></td>
+            <td><p>string</p></td>
             <td><p>&quot;&quot;</p></td>
             <td><p>model.normal.texture</p></td>
             <td><p>Path to a texture file that sets the normal map of the object.</p></td>
@@ -303,14 +303,14 @@
         </tr>
         <tr>
             <td><p>grid-unit</p></td>
-            <td><p>-</p></td>
+            <td><p>float</p></td>
             <td><p>0.0</p></td>
             <td><p>render.grid.unit</p></td>
             <td><p>Set the size of the unit square for the grid. If set to non-positive (the default) a suitable value will be automatically computed.</p></td>
         </tr>
         <tr>
             <td><p>grid-subdivisions</p></td>
-            <td><p>-</p></td>
+            <td><p>int</p></td>
             <td><p>10</p></td>
             <td><p>render.grid.subdivisions</p></td>
             <td><p>Set the number of subdivisions for the grid.</p></td>
