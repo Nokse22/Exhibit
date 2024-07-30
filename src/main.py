@@ -33,7 +33,7 @@ from . import logger_lib
 
 info = f3d.Engine.get_lib_info()
 
-info_string = f"""=========== F3D Info ===========
+f3d_info = f"""=========== F3D Info ===========
 Version: {info.version}
 Version Full: {info.version_full}
 Build Date: {info.build_date}
@@ -46,7 +46,7 @@ VTK Version: {info.vtk_version}
 Previous Copyright: {info.previous_copyright}
 Copyright: {info.copyright}
 License: {info.license}
-Authors: {info.authors}"""
+Authors: {info.authors}\n\n"""
 
 class Viewer3dApplication(Adw.Application):
     """The main application singleton class."""
@@ -59,9 +59,9 @@ class Viewer3dApplication(Adw.Application):
 
         logger_lib.init()
         logger = logger_lib.logger
-        GLib.setenv("GDK_DEBUG", "gl-prefer-gl", True)
+
         GLib.setenv("GSK_RENDERER", "gl", False)
-        GLib.setenv("GDK_DEBUG", "gl-egl", True)
+        GLib.setenv("GDK_DEBUG", "gl-egl:gl-prefer-gl", True)
 
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action)
@@ -135,7 +135,7 @@ class Viewer3dApplication(Adw.Application):
                                 application_name='Exhibit',
                                 application_icon='io.github.nokse22.Exhibit',
                                 developer_name='Nokse22',
-                                version='1.2.0',
+                                version='1.3.0',
                                 website='https://github.com/Nokse22/Exhibit',
                                 issue_url='https://github.com/Nokse22/Exhibit/issues',
                                 developers=['Nokse'],
@@ -144,7 +144,11 @@ class Viewer3dApplication(Adw.Application):
                                 artists=["Jakub Steiner https://jimmac.eu"])
         about.add_link(_("Checkout F3D"), "https://f3d.app")
 
-        about.set_debug_info(info_string)
+        about.set_debug_info(
+            f"GDK_DEBUG: {GLib.getenv('GDK_DEBUG')}\n" +
+            f"GSK_RENDERER: {GLib.getenv('GSK_RENDERER')}\n\n" +
+            f3d_info
+        )
 
         about.present(self.props.active_window)
 
