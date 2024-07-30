@@ -310,7 +310,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.update_background_color()
 
 
-
         # Setting up the save settings dialog
         def _on_factory_setup(_factory, list_item):
             label = Gtk.Label(xalign=0, ellipsize=3)
@@ -402,6 +401,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.up_direction_combo.connect("notify::selected", self.on_up_direction_combo_changed)
 
         self.window_settings.get_setting("load-type").connect("changed", self.set_model_load_combo)
+
+        self.window_settings.set_setting("auto-best", self.saved_settings.get_boolean("auto-best"))
 
         # Sync the UI with the settings
         self.window_settings.sync_all_settings()
@@ -1025,6 +1026,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.saved_settings.set_int("startup-width", window.get_width())
         self.saved_settings.set_int("startup-height", window.get_height())
         self.saved_settings.set_boolean("startup-sidebar-show", window.split_view.get_show_sidebar())
+        self.saved_settings.set_boolean("auto-best", self.window_settings.get_setting("auto-best").value)
 
 def rgb_to_list(rgb):
     values = tuple(int(x) / 255 for x in rgb[4:-1].split(','))
