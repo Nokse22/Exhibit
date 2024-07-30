@@ -41,9 +41,9 @@ class Viewer3dApplication(Adw.Application):
 
         logger_lib.init()
         logger = logger_lib.logger
-        GLib.setenv("GDK_DEBUG", "gl-prefer-gl", False)
+        GLib.setenv("GDK_DEBUG", "gl-prefer-gl", True)
         GLib.setenv("GSK_RENDERER", "gl", False)
-        GLib.setenv("GDK_DEBUG", "gl-egl", False)
+        GLib.setenv("GDK_DEBUG", "gl-egl", True)
 
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action)
