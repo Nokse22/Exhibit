@@ -361,3 +361,4 @@ class F3DViewer(Gtk.GLArea):
     def on_drag_end(self, gesture, *args):
         self.drag_prev_offset = (0, 0)
 
+

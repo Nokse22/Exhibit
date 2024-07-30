@@ -79,11 +79,11 @@ class WindowSettings(Gio.ListStore):
 
     default_settings = {
         "translucency-support": True,
-        "tone-mapping": False,
+        "tone-mapping": True,
         "ambient-occlusion": False,
         "anti-aliasing": True,
         "hdri-ambient": False,
-        "light-intensity": 2.0,
+        "light-intensity": 1.5,
 
         "show-edges": False,
         "edges-width": 1.0,
