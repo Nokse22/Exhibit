@@ -21,6 +21,7 @@ import sys
 import gi
 import os
 import webbrowser
+import f3d
 
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
@@ -29,6 +30,23 @@ from gi.repository import Gtk, Gio, Adw, GLib
 from .window import Viewer3dWindow
 
 from . import logger_lib
+
+info = f3d.Engine.get_lib_info()
+
+info_string = f"""=========== F3D Info ===========
+Version: {info.version}
+Version Full: {info.version_full}
+Build Date: {info.build_date}
+Build System: {info.build_system}
+Compiler: {info.compiler}
+Raytracing Module: {info.raytracing_module}
+External Rendering Module: {info.external_rendering_module}
+OpenEXR Module: {info.openexr_module}
+VTK Version: {info.vtk_version}
+Previous Copyright: {info.previous_copyright}
+Copyright: {info.copyright}
+License: {info.license}
+Authors: {info.authors}"""
 
 class Viewer3dApplication(Adw.Application):
     """The main application singleton class."""
@@ -125,6 +143,9 @@ class Viewer3dApplication(Adw.Application):
                                 copyright='© 2024 Nokse22',
                                 artists=["Jakub Steiner https://jimmac.eu"])
         about.add_link(_("Checkout F3D"), "https://f3d.app")
+
+        about.set_debug_info(info_string)
+
         about.present(self.props.active_window)
 
     def on_help_action(self, *args):
