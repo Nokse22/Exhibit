@@ -490,7 +490,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.window_settings.set_setting("comp", -1, False)
             self.window_settings.set_setting("cells", True)
         else:
-            self.window_settings.set_setting("comp", -(selected - 1), False)
+            self.window_settings.set_setting("comp", -(selected - 1))
             self.window_settings.set_setting("cells", False)
 
 
