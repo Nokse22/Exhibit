@@ -199,7 +199,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         # Flags
         self.applying_breakpoint = False
-        self.loading_file_manually = False
+        self.loading_file = False
 
         # Defining all the actions
         self.save_as_action = self.create_action('save-as-image', self.open_save_file_chooser)
@@ -408,7 +408,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.window_settings.sync_all_settings()
 
         if startup_filepath:
-            self.loading_file_manually = True
+            self.loading_file = True
             self.window_settings.set_setting("load-type", None, False)
             self.logger.info(f"startup file detected: {startup_filepath}")
             self.load_file(filepath=startup_filepath)
@@ -498,7 +498,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     #   an action like reloading.
 
     def reload_file(self, *args):
-        if not self.loading_file_manually:
+        if not self.loading_file:
             self.logger.info("Loading file because load type or up changed")
             self.load_file(filepath=self.filepath, override=True)
 
@@ -638,6 +638,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.window_settings.set_setting(key, value)
 
     def check_for_options_change(self):
+        if self.loading_file:
+            return
+
         state_name = self.settings_action.get_state().get_string()
         if state_name == "custom":
             return
@@ -658,7 +661,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 if current_settings[key] != value:
                     self.logger.info(f"current key: {key}'s value is {current_settings[key]} != {value}")
                     self.change_setting_state(GLib.Variant("s", "custom"))
-                    self.save_settings_action.set_enabled(True)
                     return
 
     def periodic_check_for_file_change(self):
@@ -692,11 +694,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.settings_action.set_state(state)
             return
 
-        self.save_settings_action.set_enabled(False)
-
         self.set_settings_from_name(state.get_string())
 
         self.settings_action.set_state(state)
+
+        self.save_settings_action.set_enabled(False)
 
         self.update_background_color()
 
@@ -725,7 +727,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
             if file:
                 filepath = file.get_path()
-                self.loading_file_manually = True
+                self.loading_file = True
                 self.window_settings.set_setting("load-type", None, False)
                 self.logger.info("open file response")
                 self.load_file(filepath=filepath)
@@ -842,7 +844,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.update_background_color()
 
-        self.loading_file_manually = False
+        self.loading_file = False
         GLib.timeout_add(100, self.f3d_viewer.done)
 
     def on_file_not_opened(self, filepath):
@@ -857,7 +859,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.update_background_color()
 
-        self.loading_file_manually = False
+        self.loading_file = False
 
     def send_toast(self, message):
         toast = Adw.Toast(title=message, timeout=2)
@@ -921,7 +923,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if extension in image_patterns:
             self.load_hdri(filepath)
         elif extension in file_patterns:
-            self.loading_file_manually = True
+            self.loading_file = True
 
             self.window_settings.set_setting("load-type", None, False)
             self.logger.info("drop received")
