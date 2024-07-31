@@ -54,11 +54,11 @@
                         </child>
                           <property name="content">
                             <object class="GtkStack" id="startup_stack">
+                              <property name="css-classes" bind-source="toast_overlay" bind-property="css-classes" bind-flags="sync-create | bidirectional"></property>
                               <child>
                                 <object class="GtkStackPage">
                                   <property name="child">
                                     <object class="AdwStatusPage">
-                                      <property name="css-classes" bind-source="toast_overlay" bind-property="css-classes" bind-flags="sync-create | bidirectional"></property>
                                       <property name="child">
                                         <object class="GtkButton">
                                           <style>
@@ -85,7 +85,6 @@
                                 <object class="GtkStackPage">
                                   <property name="child">
                                     <object class="AdwStatusPage">
-                                      <property name="css-classes" bind-source="toast_overlay" bind-property="css-classes" bind-flags="sync-create | bidirectional"></property>
                                       <property name="child">
                                         <object class="GtkButton">
                                           <style>
