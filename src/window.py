@@ -484,6 +484,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     def on_scivis_component_combo_changed(self, *args):
         selected = self.model_scivis_component_combo.get_selected()
+        self.model_color_row.set_sensitive(True if selected == 0 else False)
 
         if selected == 0:
             self.window_settings.set_setting("comp", -1, False)
@@ -674,11 +675,14 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         return False
 
     def update_time_stamp(self):
-        stamp = os.stat(self.filepath).st_mtime
-        if stamp != self._cached_time_stamp:
-            self._cached_time_stamp = stamp
-            return True
-        return False
+        try:
+            stamp = os.stat(self.filepath).st_mtime
+            if stamp != self._cached_time_stamp:
+                self._cached_time_stamp = stamp
+                return True
+            return False
+        except:
+            return False
 
     def change_setting_state(self, state):
         self.logger.debug(f"Requested changing settings to {state}")
@@ -716,14 +720,17 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         dialog.open(self, None, self.on_open_file_response)
 
     def on_open_file_response(self, dialog, response):
-        file = dialog.open_finish(response)
+        try:
+            file = dialog.open_finish(response)
 
-        if file:
-            filepath = file.get_path()
-            self.loading_file_manually = True
-            self.window_settings.set_setting("load-type", None, False)
-            self.logger.info("open file response")
-            self.load_file(filepath=filepath)
+            if file:
+                filepath = file.get_path()
+                self.loading_file_manually = True
+                self.window_settings.set_setting("load-type", None, False)
+                self.logger.info("open file response")
+                self.load_file(filepath=filepath)
+        except:
+            return
 
     def load_file(self, **kwargs):
         filepath=None
