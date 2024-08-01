@@ -29,7 +29,7 @@ View 3D models, powered by the [F3D](https://github.com/f3d-app/f3d) library tha
 - [Benchy](https://www.printables.com/model/3161-3d-benchy#preview:file-3QVl)
 - [Nissan Fairlady](https://sketchfab.com/3d-models/nissan-fairlady-z-s30240z-1978-0d9286ebb8cc426e993e1d398b874a34)
 - [Vase](https://sketchfab.com/3d-models/vase-rawscan-98a29620a45e47ccb80a75d5416c8255)
-- [Sailing Ship](https://sketchfab.com/3d-models/sailing-ship-model-ac65e0168e8c423db9c9fdc71397c84e)
+- [Point Cloud Ship](https://sketchfab.com/3d-models/mv-spartan-point-cloud-3bf41cd55bd1406b99f7008c0184a057)
 
 ## Help
 Some information about all the supported options are available [here](https://github.com/Nokse22/Exhibit/blob/master/docs/help.md).
