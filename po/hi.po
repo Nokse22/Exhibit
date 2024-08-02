@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: exhibit\n"
 "Report-Msgid-Bugs-To: https://github.com/Nokse22/Exhibit/issues\n"
-"POT-Creation-Date: 2024-07-11 21:52+0200\n"
-"PO-Revision-Date: 2024-07-17 10:29+0530\n"
+"POT-Creation-Date: 2024-07-29 23:06+0200\n"
+"PO-Revision-Date: 2024-08-03 00:10+0530\n"
 "Last-Translator: Scrambled777 <weblate.scrambled777@simplelogin.com>\n"
 "Language-Team: Hindi <indlinux-hindi@lists.sourceforge.net>\n"
 "Language: hi\n"
@@ -19,8 +19,8 @@ msgstr ""
 "X-Generator: Gtranslator 46.1\n"
 
 #: data/io.github.nokse22.Exhibit.desktop.in:3
-#: data/io.github.nokse22.Exhibit.metainfo.xml.in:7 src/window.py:811
-#: data/ui/window.ui:11 data/ui/window.ui:81 data/ui/window.ui:159
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:7 src/window.py:843
+#: data/ui/window.ui:11 data/ui/window.ui:77 data/ui/window.ui:156
 msgid "Exhibit"
 msgstr "एक्ज़िबिट"
 
@@ -32,7 +32,7 @@ msgstr "3डी मॉडल दर्शक"
 msgid "fbx;step;stl;dcm;ex2;gml;obj;3ds;gltf;pbr;rendering;3d-model;"
 msgstr "fbx;कदम;stl;dcm;ex2;gml;obj;3ds;gltf;pbr;प्रतिपादन;3डी-मॉडल;"
 
-#: data/io.github.nokse22.Exhibit.metainfo.xml.in:8 data/ui/window.ui:77
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:8 data/ui/window.ui:73
 msgid "Preview your 3D models"
 msgstr "अपने 3डी मॉडल का पूर्वावलोकन करें"
 
@@ -81,343 +81,343 @@ msgstr "एचडीआरआई के साथ फूलदान 3डी स
 msgid "Sailing Ship 3d scan rendered as points"
 msgstr "नौकायन जहाज 3डी स्कैन को बिंदुओं के रूप में प्रतिपादन किया गया"
 
-#: src/main.py:122
+#: src/main.py:127
 msgid "Checkout F3D"
 msgstr "एफ3डी चेकआउट करें"
 
-#: src/window.py:688
+#: src/window.py:711
 msgid "Open File"
 msgstr "फाइल खोलें"
 
-#: src/window.py:816
+#: src/window.py:848
 msgid "Can't open"
 msgstr "खोल नहीं सके"
 
-#: src/window.py:837
+#: src/window.py:864
 msgid "Save File"
 msgstr "फाइल सहेजें"
 
-#: src/window.py:1039
-msgid "Open Skybox File"
-msgstr "स्काईबॉक्स फाइल खोलें"
-
-#: data/ui/window.ui:53 data/ui/window.ui:182 data/ui/window.ui:189
-#: data/ui/window.ui:716
+#: data/ui/window.ui:49 data/ui/window.ui:179 data/ui/window.ui:186
+#: data/ui/window.ui:714
 msgid "Menu"
 msgstr "मेनू"
 
-#: data/ui/window.ui:73
+#: data/ui/window.ui:69
 msgid "Load"
 msgstr "लोड करें"
 
-#: data/ui/window.ui:100
+#: data/ui/window.ui:96
 msgid "Try Another"
 msgstr "कोई दूसरा आज़माएं"
 
-#: data/ui/window.ui:104
+#: data/ui/window.ui:100
 msgid "Couldn't load the file"
 msgstr "फाइल लोड नहीं की जा सकी"
 
-#: data/ui/window.ui:108
+#: data/ui/window.ui:104
 msgid "Error Loading File"
 msgstr "फाइल लोड करने में त्रुटि"
 
-#: data/ui/window.ui:165 data/ui/window.ui:724
+#: data/ui/window.ui:162 data/ui/window.ui:722
 msgid "Open With External App"
 msgstr "बाहरी ऐप से खोलें"
 
-#: data/ui/window.ui:175
+#: data/ui/window.ui:172
 msgid "Close Sidebar"
 msgstr "पार्श्वपट्टी बंद करें"
 
-#: data/ui/window.ui:212
+#: data/ui/window.ui:209
 msgid "Render"
 msgstr "प्रतिपादन करें"
 
-#: data/ui/window.ui:226
+#: data/ui/window.ui:223
 msgid "Rendering"
 msgstr "प्रतिपादन"
 
-#: data/ui/window.ui:231
+#: data/ui/window.ui:228
 msgid "Translucency"
 msgstr "पारदर्शता"
 
-#: data/ui/window.ui:238
+#: data/ui/window.ui:235
 msgid "Tone Mapping"
 msgstr "टोन मैपिंग"
 
-#: data/ui/window.ui:239
+#: data/ui/window.ui:236
 msgid "Map colors properly to the monitor colors"
 msgstr "रंगों को मॉनिटर के रंगों के साथ उचित रूप से मैप करें"
 
-#: data/ui/window.ui:246
+#: data/ui/window.ui:243
 msgid "Ambient Occlusion"
 msgstr "परिवेशीय समावेशन"
 
-#: data/ui/window.ui:247
+#: data/ui/window.ui:244
 msgid "Provides approximate shadows"
 msgstr "अनुमानित छायाएं प्रदान करता है"
 
-#: data/ui/window.ui:254
+#: data/ui/window.ui:251
 msgid "Anti Aliasing"
 msgstr "एंटी एलियासिंग"
 
-#: data/ui/window.ui:261
+#: data/ui/window.ui:258
 msgid "Light with HDRI"
 msgstr "एचडीआरआई के साथ प्रकाश"
 
-#: data/ui/window.ui:262
+#: data/ui/window.ui:259
 msgid "Light the scene using a the loaded HDRI or the default"
 msgstr "लोड किए गए एचडीआरआई या तयशुदा का उपयोग करके दृश्य को रोशन करें"
 
-#: data/ui/window.ui:277
+#: data/ui/window.ui:274
 msgid "Light Intensity"
 msgstr "प्रकाश तीव्रता"
 
-#: data/ui/window.ui:286
+#: data/ui/window.ui:283
 msgid "Model Rendering"
 msgstr "मॉडल प्रतिपादन"
 
-#: data/ui/window.ui:291
+#: data/ui/window.ui:288
 msgid "Show All Edges"
 msgstr "सभी किनारे दिखाएं"
 
-#: data/ui/window.ui:299
+#: data/ui/window.ui:296
 msgid "Edges Width"
 msgstr "किनारों की चौड़ाई"
 
-#: data/ui/window.ui:321
+#: data/ui/window.ui:318
 msgid "Show Spheres"
 msgstr "गोले दिखाएं"
 
-#: data/ui/window.ui:329
+#: data/ui/window.ui:326
 msgid "Points Size"
 msgstr "बिंदु आकार"
 
-#: data/ui/window.ui:353 data/ui/window.ui:367
+#: data/ui/window.ui:350 data/ui/window.ui:364
 msgid "Model"
 msgstr "मॉडल"
 
-#: data/ui/window.ui:373
+#: data/ui/window.ui:370
 msgid "Load type"
 msgstr "लोड प्रकार"
 
-#: data/ui/window.ui:377
+#: data/ui/window.ui:374
 msgid "Geometry"
 msgstr "ज्यामिति"
 
-#: data/ui/window.ui:378 data/ui/window.ui:494
+#: data/ui/window.ui:375 data/ui/window.ui:491
 msgid "Scene"
 msgstr "दृश्य"
 
-#: data/ui/window.ui:391
+#: data/ui/window.ui:388
 msgid "Material"
 msgstr "सामग्री"
 
-#: data/ui/window.ui:396
+#: data/ui/window.ui:393
 msgid "Model Metallic"
 msgstr "मॉडल धात्विक"
 
-#: data/ui/window.ui:412
+#: data/ui/window.ui:409
 msgid "Model Roughness"
 msgstr "मॉडल खुरदरापन"
 
-#: data/ui/window.ui:429
+#: data/ui/window.ui:426
 msgid "Model Opacity"
 msgstr "मॉडल अपारदर्शिता"
 
-#: data/ui/window.ui:447
+#: data/ui/window.ui:444
 msgid "Color"
 msgstr "रंग"
 
-#: data/ui/window.ui:453
+#: data/ui/window.ui:450
 msgid "Coloration"
 msgstr "रंगाई"
 
-#: data/ui/window.ui:457
+#: data/ui/window.ui:454
 msgid "Custom"
 msgstr "तदनुकूल"
 
-#: data/ui/window.ui:458
+#: data/ui/window.ui:455
 msgid "Normal"
 msgstr "सामान्य"
 
-#: data/ui/window.ui:459
+#: data/ui/window.ui:456
 msgid "Magnitude"
 msgstr "परिमाण"
 
-#: data/ui/window.ui:460
+#: data/ui/window.ui:457
 msgid "Direct"
 msgstr "सीधे"
 
-#: data/ui/window.ui:470
+#: data/ui/window.ui:467
 msgid "Model Color"
 msgstr "मॉडल का रंग"
 
-#: data/ui/window.ui:508
+#: data/ui/window.ui:505
 msgid "Grid"
 msgstr "ग्रिड"
 
-#: data/ui/window.ui:513
+#: data/ui/window.ui:510
 msgid "View Grid"
 msgstr "ग्रिड दृश्य"
 
-#: data/ui/window.ui:520
+#: data/ui/window.ui:517
 msgid "Grid Absolute"
 msgstr "ग्रिड निरपेक्ष"
 
-#: data/ui/window.ui:529
+#: data/ui/window.ui:526
 msgid "Background"
 msgstr "पृष्ठभूमि"
 
-#: data/ui/window.ui:534
+#: data/ui/window.ui:531
 msgid "HDRI as Background"
 msgstr "पृष्ठभूमि के रूप में एचडीआरआई"
 
-#: data/ui/window.ui:535
+#: data/ui/window.ui:532
 msgid "Use the loaded HDRI or the default one as a background"
 msgstr "लोड किए गए एचडीआरआई या तयशुदा को पृष्ठभूमि के रूप में उपयोग करें"
 
-#: data/ui/window.ui:542
+#: data/ui/window.ui:539
 msgid "HDRI Image"
 msgstr "एचडीआरआई छवि"
 
-#: data/ui/window.ui:549
+#: data/ui/window.ui:546
 msgid "Blur Background"
 msgstr "पृष्ठभूमि धुंधला करें"
 
-#: data/ui/window.ui:556
+#: data/ui/window.ui:553
 msgid "Blur Circle Of Confusion"
 msgstr "भ्रांति घेरा को धुंधला करें"
 
-#: data/ui/window.ui:578
+#: data/ui/window.ui:575
 msgid "Use Custom Color"
 msgstr "तदनुकूल रंग का प्रयोग करें"
 
-#: data/ui/window.ui:579
+#: data/ui/window.ui:576
 msgid "HDRI background takes priority over this"
 msgstr "एचडीआरआई पृष्ठभूमि को इस पर वरीयता दी जाती है"
 
-#: data/ui/window.ui:586
+#: data/ui/window.ui:583
 msgid "Background Color"
 msgstr "पृष्ठभूमि रंग"
 
-#: data/ui/window.ui:587
+#: data/ui/window.ui:584
 msgid "Transparent colors not supported"
 msgstr "पारदर्शी रंग समर्थित नहीं हैं"
 
-#: data/ui/window.ui:611
+#: data/ui/window.ui:608
 msgid "More"
 msgstr "अधिक"
 
-#: data/ui/window.ui:625
+#: data/ui/window.ui:622
 msgid "Navigation"
 msgstr "पथ-प्रदर्शन"
 
-#: data/ui/window.ui:630
+#: data/ui/window.ui:627
 msgid "Always Point Up"
 msgstr "हमेशा ऊपर इंगित करें"
 
-#: data/ui/window.ui:637
+#: data/ui/window.ui:634
 msgid "Up Direction"
 msgstr "ऊपर की दिशा"
 
-#: data/ui/window.ui:638
+#: data/ui/window.ui:635
 msgid "Changing it will reload the file"
 msgstr "इसे बदलने से फाइल पुनः लोड हो जाएगी"
 
-#: data/ui/window.ui:642
+#: data/ui/window.ui:639
 msgid "- X"
 msgstr "- X"
 
-#: data/ui/window.ui:643
+#: data/ui/window.ui:640
 msgid "+ X"
 msgstr "+ X"
 
-#: data/ui/window.ui:644
+#: data/ui/window.ui:641
 msgid "- Y"
 msgstr "- Y"
 
-#: data/ui/window.ui:645
+#: data/ui/window.ui:642
 msgid "+ Y"
 msgstr "+ Y"
 
-#: data/ui/window.ui:646
+#: data/ui/window.ui:643
 msgid "- Z"
 msgstr "- Z"
 
-#: data/ui/window.ui:647
+#: data/ui/window.ui:644
 msgid "+ Z"
 msgstr "+ Z"
 
-#: data/ui/window.ui:659
+#: data/ui/window.ui:656
 msgid "Loading"
 msgstr "लोड हो रहा है"
 
-#: data/ui/window.ui:664
+#: data/ui/window.ui:661
 msgid "Automatic Settings"
 msgstr "स्वचालित सेटिंग"
 
-#: data/ui/window.ui:665
+#: data/ui/window.ui:662
 msgid "When loading choose the best presets for the file"
 msgstr "लोड करते समय फाइल के लिए सर्वोत्तम प्रीसेट चुनें"
 
-#: data/ui/window.ui:678
+#: data/ui/window.ui:675
 msgid "Reload On Change"
 msgstr "बदलाव पर पुनः लोड करें"
 
-#: data/ui/window.ui:679
+#: data/ui/window.ui:676
 msgid "Check for file change"
 msgstr "फाइल बदलाव हेतु जांचें"
 
-#: data/ui/window.ui:709
+#: data/ui/window.ui:705
 msgid "Reveal Sidebar"
 msgstr "पार्श्वपट्टी प्रकट करें"
 
-#: data/ui/window.ui:733
+#: data/ui/window.ui:731
 msgid "Toggle Orthographic"
 msgstr "ऑर्थोग्राफ़िक टॉगल करें"
 
-#: data/ui/window.ui:741
+#: data/ui/window.ui:739
 msgid "Reset to Bounds"
 msgstr "सीमाओं पर रीसेट करें"
 
-#: data/ui/window.ui:803
+#: data/ui/window.ui:801
 msgid "Follow System"
 msgstr "सिस्टम की पालना"
 
-#: data/ui/window.ui:808
+#: data/ui/window.ui:806
 msgid "Light Theme"
 msgstr "हल्की थीम"
 
-#: data/ui/window.ui:813
+#: data/ui/window.ui:811
 msgid "Dark Theme"
 msgstr "गहरी थीम"
 
-#: data/ui/window.ui:818 data/ui/window.ui:864
+#: data/ui/window.ui:816 data/ui/window.ui:866
 msgid "_New Window"
 msgstr "नई विंडो (_N)"
 
-#: data/ui/window.ui:824
+#: data/ui/window.ui:822
 msgid "_Load New File"
 msgstr "नई फाइल लोड करें (_L)"
 
-#: data/ui/window.ui:830
+#: data/ui/window.ui:828
 msgid "_Export Image"
 msgstr "छवि निर्यात करें (_E)"
 
-#: data/ui/window.ui:836 data/ui/window.ui:870
+#: data/ui/window.ui:834 data/ui/window.ui:872
+msgid "_Help"
+msgstr "सहायता (_H)"
+
+#: data/ui/window.ui:838 data/ui/window.ui:876
 msgid "_Keyboard Shortcuts"
 msgstr "कीबोर्ड शॉर्टकट (_K)"
 
-#: data/ui/window.ui:840 data/ui/window.ui:874
+#: data/ui/window.ui:842 data/ui/window.ui:880
 msgid "_About Exhibit"
 msgstr "एक्ज़िबिट का परिचय (_A)"
 
-#: data/ui/window.ui:850
+#: data/ui/window.ui:852
 msgid "Save Current Settings"
 msgstr "वर्तमान सेटिंग सहेजें"
 
-#: data/ui/window.ui:856
+#: data/ui/window.ui:858
 msgid "Open HDRI Folder"
 msgstr "एचडीआरआई फोल्डर खोलें"
