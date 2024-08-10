@@ -1,0 +1,425 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-07-29 23:06+0200\n"
+"PO-Revision-Date: 2024-08-10 13:03+0400\n"
+"Last-Translator: Egor <petruhin-enot@yandex.ru>\n"
+"Language-Team: \n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.4.4\n"
+
+#: data/io.github.nokse22.Exhibit.desktop.in:3
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:7 src/window.py:843
+#: data/ui/window.ui:11 data/ui/window.ui:77 data/ui/window.ui:156
+msgid "Exhibit"
+msgstr "Exhibit"
+
+#: data/io.github.nokse22.Exhibit.desktop.in:4
+msgid "3D Model Viewer"
+msgstr "Просмотрщик 3D моделей"
+
+#: data/io.github.nokse22.Exhibit.desktop.in:11
+msgid "fbx;step;stl;dcm;ex2;gml;obj;3ds;gltf;pbr;rendering;3d-model;"
+msgstr "fbx;step;stl;dcm;ex2;gml;obj;3ds;gltf;pbr;rendering;3d-model;"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:8 data/ui/window.ui:73
+msgid "Preview your 3D models"
+msgstr "Предварительный просмотр ваших 3D-моделей"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:10
+msgid ""
+"Based on the F3D library that supports many file formats, from digital "
+"content to scientific datasets including glTF, STL, STEP, PLY, OBJ, FBX, "
+"USD, Alembic and many more. You can drag and drop 3d models into the app and "
+"export an image of the rendered model. Change many settings like tone "
+"mapping, ambient occlusion, anti aliasing, material roughness, metallic, "
+"color and opacity to achieve the perfect render. You can use an HDRI image "
+"or a custom color as a background."
+msgstr ""
+"Основано на библиотеке F3D, которая поддерживает множество форматов файлов, "
+"от цифрового контента до научных наборов данных, включая glTF, STL, STEP, "
+"PLY, OBJ, FBX, USD, Alembic и многие другие. Вы можете перетаскивать 3d-"
+"модели в приложение и экспортировать изображение отрендеренной модели. "
+"Изменяйте множество настроек, таких как тональное отображение, окклюзия, "
+"сглаживание, шероховатость материала, металлик, цвет и непрозрачность, чтобы "
+"добиться идеального рендера. В качестве фона можно использовать HDRI-"
+"изображение или пользовательский цвет."
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:42
+msgid "Bechy"
+msgstr "Bechy"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:46
+msgid "Retro Computer Setup with a HDRI background"
+msgstr "Ретро компьютер с HDRI фоном"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:50
+msgid "Green Metallic Suzanne"
+msgstr "Зеленая металлическая Сюзанна"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:54
+msgid "Cow with a HDRI background in dark theme"
+msgstr "Корова с HDRI фоном и темная тема"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:58
+msgid "Nissan Fairlady in dark theme"
+msgstr "Nissan Fairlady и темная тема"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:62
+msgid "Vase 3d scan with HDRI"
+msgstr "3D-скан вазы с HDRI"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:66
+msgid "Sailing Ship 3d scan rendered as points"
+msgstr "3D-скан плавающего корабля в виде точек"
+
+#: src/main.py:127
+msgid "Checkout F3D"
+msgstr "Проверить F3D"
+
+#: src/window.py:711
+msgid "Open File"
+msgstr "Открыть файл"
+
+#: src/window.py:848
+msgid "Can't open"
+msgstr "Невозможно открыть"
+
+#: src/window.py:864
+msgid "Save File"
+msgstr "Сохранить файл"
+
+#: data/ui/window.ui:49 data/ui/window.ui:179 data/ui/window.ui:186
+#: data/ui/window.ui:714
+msgid "Menu"
+msgstr "Меню"
+
+#: data/ui/window.ui:69
+msgid "Load"
+msgstr "Открыть"
+
+#: data/ui/window.ui:96
+msgid "Try Another"
+msgstr "Попробовать другой"
+
+#: data/ui/window.ui:100
+msgid "Couldn't load the file"
+msgstr "Невозможно открыть файл"
+
+#: data/ui/window.ui:104
+msgid "Error Loading File"
+msgstr "Ошибка открытия файла"
+
+#: data/ui/window.ui:162 data/ui/window.ui:722
+msgid "Open With External App"
+msgstr "Открыть через стороннее приложение"
+
+#: data/ui/window.ui:172
+msgid "Close Sidebar"
+msgstr "Закрыть боковую панель"
+
+#: data/ui/window.ui:209
+msgid "Render"
+msgstr "Рендер"
+
+#: data/ui/window.ui:223
+msgid "Rendering"
+msgstr "Рендеринг"
+
+#: data/ui/window.ui:228
+msgid "Translucency"
+msgstr "Полупрозрачность"
+
+#: data/ui/window.ui:235
+msgid "Tone Mapping"
+msgstr "Тональное отображение"
+
+#: data/ui/window.ui:236
+msgid "Map colors properly to the monitor colors"
+msgstr "Правильное отображение цветов на мониторе"
+
+#: data/ui/window.ui:243
+msgid "Ambient Occlusion"
+msgstr "Окружающее затенение"
+
+#: data/ui/window.ui:244
+msgid "Provides approximate shadows"
+msgstr "Предоставляет приблизительные тени"
+
+#: data/ui/window.ui:251
+msgid "Anti Aliasing"
+msgstr "Сглаживание"
+
+#: data/ui/window.ui:258
+msgid "Light with HDRI"
+msgstr "Свет с HDRI"
+
+#: data/ui/window.ui:259
+msgid "Light the scene using a the loaded HDRI or the default"
+msgstr "Освещение сцены с помощью загруженного HDRI"
+
+#: data/ui/window.ui:274
+msgid "Light Intensity"
+msgstr "Интенсивность света"
+
+#: data/ui/window.ui:283
+msgid "Model Rendering"
+msgstr "Рендеринг модели"
+
+#: data/ui/window.ui:288
+msgid "Show All Edges"
+msgstr "Показывать все грани"
+
+#: data/ui/window.ui:296
+msgid "Edges Width"
+msgstr "Ширина граней"
+
+#: data/ui/window.ui:318
+msgid "Show Spheres"
+msgstr "Показывать вершины"
+
+#: data/ui/window.ui:326
+msgid "Points Size"
+msgstr "Размер точек"
+
+#: data/ui/window.ui:350 data/ui/window.ui:364
+msgid "Model"
+msgstr "Модель"
+
+#: data/ui/window.ui:370
+msgid "Load type"
+msgstr "Тип загрузки"
+
+#: data/ui/window.ui:374
+msgid "Geometry"
+msgstr "Геометрия"
+
+#: data/ui/window.ui:375 data/ui/window.ui:491
+msgid "Scene"
+msgstr "Сцена"
+
+#: data/ui/window.ui:388
+msgid "Material"
+msgstr "Материал"
+
+#: data/ui/window.ui:393
+msgid "Model Metallic"
+msgstr "Металлизация модели"
+
+#: data/ui/window.ui:409
+msgid "Model Roughness"
+msgstr "Шероховатость модели"
+
+#: data/ui/window.ui:426
+msgid "Model Opacity"
+msgstr "Непрозрачность модели"
+
+#: data/ui/window.ui:444
+msgid "Color"
+msgstr "Цвет"
+
+#: data/ui/window.ui:450
+msgid "Coloration"
+msgstr "Окраска"
+
+#: data/ui/window.ui:454
+msgid "Custom"
+msgstr "Своя"
+
+#: data/ui/window.ui:455
+msgid "Normal"
+msgstr "Обычная"
+
+#: data/ui/window.ui:456
+msgid "Magnitude"
+msgstr "Величина"
+
+#: data/ui/window.ui:457
+msgid "Direct"
+msgstr "Прямая"
+
+#: data/ui/window.ui:467
+msgid "Model Color"
+msgstr "Цвет модели"
+
+#: data/ui/window.ui:505
+msgid "Grid"
+msgstr "Сетка"
+
+#: data/ui/window.ui:510
+msgid "View Grid"
+msgstr "Отображать сетку"
+
+#: data/ui/window.ui:517
+msgid "Grid Absolute"
+msgstr "Абсолютное позиционирование сетки"
+
+#: data/ui/window.ui:526
+msgid "Background"
+msgstr "Фон"
+
+#: data/ui/window.ui:531
+msgid "HDRI as Background"
+msgstr "HDRI как фон"
+
+#: data/ui/window.ui:532
+msgid "Use the loaded HDRI or the default one as a background"
+msgstr "Использовать загруженный HDRI или один из стандартных как фон"
+
+#: data/ui/window.ui:539
+msgid "HDRI Image"
+msgstr "HDRI изображение"
+
+#: data/ui/window.ui:546
+msgid "Blur Background"
+msgstr "Размывать фон"
+
+#: data/ui/window.ui:553
+msgid "Blur Circle Of Confusion"
+msgstr "Сила размытия"
+
+#: data/ui/window.ui:575
+msgid "Use Custom Color"
+msgstr "Использовать свой цвет"
+
+#: data/ui/window.ui:576
+msgid "HDRI background takes priority over this"
+msgstr "HDRI фон имеет приоритет над этим"
+
+#: data/ui/window.ui:583
+msgid "Background Color"
+msgstr "Цвет фона"
+
+#: data/ui/window.ui:584
+msgid "Transparent colors not supported"
+msgstr "Прозрачные цвета не поддерживаются"
+
+#: data/ui/window.ui:608
+msgid "More"
+msgstr "Еще"
+
+#: data/ui/window.ui:622
+msgid "Navigation"
+msgstr "Ориентация"
+
+#: data/ui/window.ui:627
+msgid "Always Point Up"
+msgstr "Всегда направлять вверх"
+
+#: data/ui/window.ui:634
+msgid "Up Direction"
+msgstr "Вертикальное направление"
+
+#: data/ui/window.ui:635
+msgid "Changing it will reload the file"
+msgstr "При изменении файл будет перезагружен"
+
+#: data/ui/window.ui:639
+msgid "- X"
+msgstr "- X"
+
+#: data/ui/window.ui:640
+msgid "+ X"
+msgstr "+ X"
+
+#: data/ui/window.ui:641
+msgid "- Y"
+msgstr "- Y"
+
+#: data/ui/window.ui:642
+msgid "+ Y"
+msgstr "+ Y"
+
+#: data/ui/window.ui:643
+msgid "- Z"
+msgstr "- Z"
+
+#: data/ui/window.ui:644
+msgid "+ Z"
+msgstr "+ Z"
+
+#: data/ui/window.ui:656
+msgid "Loading"
+msgstr "Загрузка"
+
+#: data/ui/window.ui:661
+msgid "Automatic Settings"
+msgstr "Автоматические настройки"
+
+#: data/ui/window.ui:662
+msgid "When loading choose the best presets for the file"
+msgstr "При загрузке выбирает лучшие настройки для файла"
+
+#: data/ui/window.ui:675
+msgid "Reload On Change"
+msgstr "Перезагрузить при изменении"
+
+#: data/ui/window.ui:676
+msgid "Check for file change"
+msgstr "Проверять файл на изменения"
+
+#: data/ui/window.ui:705
+msgid "Reveal Sidebar"
+msgstr "Развернуть боковую панель"
+
+#: data/ui/window.ui:731
+msgid "Toggle Orthographic"
+msgstr "Ортографический режим"
+
+#: data/ui/window.ui:739
+msgid "Reset to Bounds"
+msgstr "Сброс"
+
+#: data/ui/window.ui:801
+msgid "Follow System"
+msgstr "Системная тема"
+
+#: data/ui/window.ui:806
+msgid "Light Theme"
+msgstr "Светлая тема"
+
+#: data/ui/window.ui:811
+msgid "Dark Theme"
+msgstr "Темная тема"
+
+#: data/ui/window.ui:816 data/ui/window.ui:866
+msgid "_New Window"
+msgstr "_Новое окно"
+
+#: data/ui/window.ui:822
+msgid "_Load New File"
+msgstr "_Открыть новый файл"
+
+#: data/ui/window.ui:828
+msgid "_Export Image"
+msgstr "_Экспортировать изображение"
+
+#: data/ui/window.ui:834 data/ui/window.ui:872
+msgid "_Help"
+msgstr "_Cправка"
+
+#: data/ui/window.ui:838 data/ui/window.ui:876
+msgid "_Keyboard Shortcuts"
+msgstr "_Сочетания клавиш"
+
+#: data/ui/window.ui:842 data/ui/window.ui:880
+msgid "_About Exhibit"
+msgstr "_О Exhibit"
+
+#: data/ui/window.ui:852
+msgid "Save Current Settings"
+msgstr "Сохранить текущие настройки"
+
+#: data/ui/window.ui:858
+msgid "Open HDRI Folder"
+msgstr "Открыть директорию HDRI"
