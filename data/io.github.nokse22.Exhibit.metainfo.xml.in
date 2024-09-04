@@ -71,6 +71,8 @@ You can use an HDRI image or a custom color as a background.</p>
     <release version="1.3.1" date="2024-09-04">
       <description translate="no">
         <p>Fixed Bugs</p>
+        <p>Added Russian Translation</p>
+        <p>Updated Translations</p>
       </description>
     </release>
     <release version="1.3.0" date="2024-07-31">
