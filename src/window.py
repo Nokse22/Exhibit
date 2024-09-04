@@ -24,18 +24,13 @@ from gi.repository import Gtk, Gdk, Gio, GLib, GObject
 from .widgets import *
 from .vector_math import *
 
-import f3d
 from f3d import *
 
-import math
 import os
-import threading
-import datetime
 import json
 import re
 
 from wand.image import Image
-from enum import IntEnum
 
 from . import logger_lib
 from .settings_manager import WindowSettings
@@ -735,16 +730,17 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             return
 
     def load_file(self, **kwargs):
-        filepath=None
-        override=False
-        preserve_orientation=False
+        filepath = None
+        override = False
+        preserve_orientation = False
 
         if "filepath" in kwargs:
-            filepath=kwargs["filepath"]
+            filepath = kwargs["filepath"]
         if "override" in kwargs:
-            override=kwargs["override"]
+            override = kwargs["override"]
         if "preserve_orientation" in kwargs:
-            preserve_orientation=kwargs["preserve_orientation"]
+            preserve_orientation = kwargs["preserve_orientation"]
+            camera_state = self.f3d_viewer.get_camera_state()
 
         if filepath is None:
             filepath = self.filepath
@@ -757,7 +753,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.change_checker.stop()
 
-        if self.window_settings.get_setting("auto-best").value and not override:
+        if (self.window_settings.get_setting("auto-best").value
+                and not override):
             self.logger.debug("choosing best settings")
             settings = "general"
             for key, value in self.configurations.items():
@@ -795,7 +792,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.on_file_not_opened(filepath)
             return
 
-        if self.f3d_viewer.has_geometry_loader(filepath) and self.f3d_viewer.has_scene_loader(filepath):
+        if (self.f3d_viewer.has_geometry_loader(filepath) and
+                self.f3d_viewer.has_scene_loader(filepath)):
             self.model_load_combo.set_sensitive(True)
         else:
             self.model_load_combo.set_sensitive(False)
@@ -810,9 +808,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.filepath = filepath
         self.on_file_opened()
-
-        if preserve_orientation:
-            camera_state = self.f3d_viewer.get_camera_state()
 
     def on_file_opened(self):
         self.logger.debug("on file opened")
