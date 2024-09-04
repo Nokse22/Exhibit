@@ -1,6 +1,7 @@
 import logging
 import os
 
+
 class CustomFormatter(logging.Formatter):
 
     log_end = ": %(message)s"
@@ -20,6 +21,7 @@ class CustomFormatter(logging.Formatter):
         log_fmt = self.FORMATS.get(record.levelno)
         formatter = logging.Formatter(log_fmt, self.time_format)
         return formatter.format(record)
+
 
 def init():
     global logger

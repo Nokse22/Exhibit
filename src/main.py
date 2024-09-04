@@ -18,22 +18,19 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import sys
-import gi
 import os
 import webbrowser
 import f3d
 
-gi.require_version('Gtk', '4.0')
-gi.require_version('Adw', '1')
-
-from gi.repository import Gtk, Gio, Adw, GLib
+from gi.repository import Gtk, Gio, Adw, Gdk
 from .window import Viewer3dWindow
 
 from . import logger_lib
 
 info = f3d.Engine.get_lib_info()
 
-f3d_info = f"""=========== F3D Info ===========
+f3d_info = f"""
+=========== F3D Info ===========
 Version: {info.version}
 Version Full: {info.version_full}
 Build Date: {info.build_date}
@@ -48,25 +45,6 @@ Copyright: {info.copyright}
 License: {info.license}
 Authors: {info.authors}\n\n"""
 
-release_notes="""
-<ul>
-  <li>Using latest stable release of F3D</li>
-  <li>Added open with external app button</li>
-  <li>Reworked how the settings works</li>
-  <li>Added four default presets for different files types</li>
-  <li>Added bundled HDRIs and custom with thumbnails</li>
-  <li>Improved mimetype names</li>
-  <li>Added pinch to zoom</li>
-  <li>Changed some shortcuts</li>
-  <li>Added different model coloring modes</li>
-  <li>Changed some settings UI</li>
-  <li>Added automatic reload on file change</li>
-  <li>Added saving custom settings</li>
-  <li>Added French translation (Thibaut)</li>
-  <li>Translation updates</li>
-  <li>Added help pages</li>
-</ul>
-"""
 
 class Viewer3dApplication(Adw.Application):
     """The main application singleton class."""
@@ -78,10 +56,7 @@ class Viewer3dApplication(Adw.Application):
                          flags=Gio.ApplicationFlags.HANDLES_OPEN)
 
         logger_lib.init()
-        logger = logger_lib.logger
-
-        GLib.setenv("GSK_RENDERER", "gl", False)
-        GLib.setenv("GDK_DEBUG", "gl-egl:gl-prefer-gl", True)
+        # logger = logger_lib.logger
 
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action)
@@ -136,7 +111,7 @@ class Viewer3dApplication(Adw.Application):
     def show_image_external(self, _action, image_path: GLib.Variant, *args):
         try:
             image_file = Gio.File.new_for_path(image_path.get_string())
-        except GLib.GError as e:
+        except GLib.GError:
             print("Failed to construct a new Gio.File object from path.")
         else:
             launcher = Gtk.FileLauncher.new(image_file)
@@ -145,7 +120,7 @@ class Viewer3dApplication(Adw.Application):
                 try:
                     launcher.launch_finish(result)
                 except GLib.GError as e:
-                    if e.code != 2: # 'The portal dialog was dismissed by the user' error
+                    if e.code != 2:
                         print("Failed to finish Gtk.FileLauncher procedure.")
 
             launcher.launch(self.props.active_window, None, open_image_finish)
@@ -155,7 +130,7 @@ class Viewer3dApplication(Adw.Application):
                                 application_name='Exhibit',
                                 application_icon='io.github.nokse22.Exhibit',
                                 developer_name='Nokse22',
-                                version='1.3.0',
+                                version='1.3.1',
                                 website='https://github.com/Nokse22/Exhibit',
                                 issue_url='https://github.com/Nokse22/Exhibit/issues',
                                 developers=['Nokse'],
@@ -164,13 +139,27 @@ class Viewer3dApplication(Adw.Application):
                                 artists=["Jakub Steiner https://jimmac.eu"])
         about.add_link(_("Checkout F3D"), "https://f3d.app")
 
+        # about.set_debug_info(
+        #     f"GDK_DEBUG: {GLib.getenv('GDK_DEBUG')}\n" +
+        #     f"GSK_RENDERER: {GLib.getenv('GSK_RENDERER')}\n\n" +
+        #     f3d_info
+        # )
+
         about.set_debug_info(
             f"GDK_DEBUG: {GLib.getenv('GDK_DEBUG')}\n" +
-            f"GSK_RENDERER: {GLib.getenv('GSK_RENDERER')}\n\n" +
+            f"GSK_RENDERER: {GLib.getenv('GSK_RENDERER')}\n" +
+            f"DISPLAY: {GLib.getenv('DISPLAY')}\n" +
+            f"XDG_SESSION_TYPE: {GLib.getenv('XDG_SESSION_TYPE')}\n" +
+            f"XDG_SESSION_DESKTOP: {GLib.getenv('XDG_SESSION_DESKTOP')}\n" +
+            f"GTK_THEME: {GLib.getenv('GTK_THEME')}\n" +
+            f"GTK_OVERLAY_SCROLLING: {GLib.getenv('GTK_OVERLAY_SCROLLING')}\n" +
+            f"GTK_DEBUG: {GLib.getenv('GTK_DEBUG')}\n" +
+            f"GTK_MODULES: {GLib.getenv('GTK_MODULES')}\n" +
+            f"GDK_BACKEND: {GLib.getenv('GDK_BACKEND')}\n" +
+            f"GNOME_SESSION_XDG_SESSION_DESKTOP: {GLib.getenv('GNOME_SESSION_XDG_SESSION_DESKTOP')}\n" +
+            f"GTK Version: {Gtk.MAJOR_VERSION}.{Gtk.MINOR_VERSION}.{Gtk.MICRO_VERSION}\n" +
             f3d_info
         )
-
-        about.set_release_notes(release_notes)
 
         about.present(self.props.active_window)
 
