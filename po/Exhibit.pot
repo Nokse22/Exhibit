@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-29 23:06+0200\n"
+"POT-Creation-Date: 2024-09-04 15:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,8 +18,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: data/io.github.nokse22.Exhibit.desktop.in:3
-#: data/io.github.nokse22.Exhibit.metainfo.xml.in:7 src/window.py:843
-#: data/ui/window.ui:11 data/ui/window.ui:77 data/ui/window.ui:156
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:7 src/window.py:848
+#: data/ui/window.ui:11 data/ui/window.ui:77 data/ui/window.ui:155
 msgid "Exhibit"
 msgstr ""
 
@@ -37,7 +37,7 @@ msgstr ""
 
 #: data/io.github.nokse22.Exhibit.metainfo.xml.in:10
 msgid ""
-"Based on the F3D library that supports many file formats, from digital "
+"Based on the F3D library, it supports many file formats, from digital "
 "content to scientific datasets including glTF, STL, STEP, PLY, OBJ, FBX, "
 "USD, Alembic and many more. You can drag and drop 3d models into the app and "
 "export an image of the rendered model. Change many settings like tone "
@@ -47,11 +47,11 @@ msgid ""
 msgstr ""
 
 #: data/io.github.nokse22.Exhibit.metainfo.xml.in:42
-msgid "Bechy"
+msgid "3D Bechy"
 msgstr ""
 
 #: data/io.github.nokse22.Exhibit.metainfo.xml.in:46
-msgid "Retro Computer Setup with a HDRI background"
+msgid "Retro Computer Setup with a HDRI skybox"
 msgstr ""
 
 #: data/io.github.nokse22.Exhibit.metainfo.xml.in:50
@@ -59,39 +59,39 @@ msgid "Green Metallic Suzanne"
 msgstr ""
 
 #: data/io.github.nokse22.Exhibit.metainfo.xml.in:54
-msgid "Cow with a HDRI background in dark theme"
+msgid "Cow with an HDRI background and dark theme"
 msgstr ""
 
 #: data/io.github.nokse22.Exhibit.metainfo.xml.in:58
-msgid "Nissan Fairlady in dark theme"
+msgid "Nissan Fairlady with dark theme"
 msgstr ""
 
 #: data/io.github.nokse22.Exhibit.metainfo.xml.in:62
-msgid "Vase 3d scan with HDRI"
+msgid "Vase 3d scan with HDRI skybox"
 msgstr ""
 
 #: data/io.github.nokse22.Exhibit.metainfo.xml.in:66
-msgid "Sailing Ship 3d scan rendered as points"
+msgid "Point cloud of a boat with dark theme"
 msgstr ""
 
-#: src/main.py:127
+#: src/main.py:140
 msgid "Checkout F3D"
 msgstr ""
 
-#: src/window.py:711
+#: src/window.py:713
 msgid "Open File"
 msgstr ""
 
-#: src/window.py:848
+#: src/window.py:853
 msgid "Can't open"
 msgstr ""
 
-#: src/window.py:864
+#: src/window.py:869
 msgid "Save File"
 msgstr ""
 
-#: data/ui/window.ui:49 data/ui/window.ui:179 data/ui/window.ui:186
-#: data/ui/window.ui:714
+#: data/ui/window.ui:49 data/ui/window.ui:178 data/ui/window.ui:185
+#: data/ui/window.ui:711
 msgid "Menu"
 msgstr ""
 
@@ -99,318 +99,318 @@ msgstr ""
 msgid "Load"
 msgstr ""
 
-#: data/ui/window.ui:96
+#: data/ui/window.ui:95
 msgid "Try Another"
 msgstr ""
 
-#: data/ui/window.ui:100
+#: data/ui/window.ui:99
 msgid "Couldn't load the file"
 msgstr ""
 
-#: data/ui/window.ui:104
+#: data/ui/window.ui:103
 msgid "Error Loading File"
 msgstr ""
 
-#: data/ui/window.ui:162 data/ui/window.ui:722
+#: data/ui/window.ui:161 data/ui/window.ui:719
 msgid "Open With External App"
 msgstr ""
 
-#: data/ui/window.ui:172
+#: data/ui/window.ui:171
 msgid "Close Sidebar"
 msgstr ""
 
-#: data/ui/window.ui:209
+#: data/ui/window.ui:208
 msgid "Render"
 msgstr ""
 
-#: data/ui/window.ui:223
+#: data/ui/window.ui:222
 msgid "Rendering"
 msgstr ""
 
-#: data/ui/window.ui:228
+#: data/ui/window.ui:227
 msgid "Translucency"
 msgstr ""
 
-#: data/ui/window.ui:235
+#: data/ui/window.ui:234
 msgid "Tone Mapping"
 msgstr ""
 
-#: data/ui/window.ui:236
+#: data/ui/window.ui:235
 msgid "Map colors properly to the monitor colors"
 msgstr ""
 
-#: data/ui/window.ui:243
+#: data/ui/window.ui:242
 msgid "Ambient Occlusion"
 msgstr ""
 
-#: data/ui/window.ui:244
+#: data/ui/window.ui:243
 msgid "Provides approximate shadows"
 msgstr ""
 
-#: data/ui/window.ui:251
+#: data/ui/window.ui:250
 msgid "Anti Aliasing"
 msgstr ""
 
-#: data/ui/window.ui:258
+#: data/ui/window.ui:257
 msgid "Light with HDRI"
 msgstr ""
 
-#: data/ui/window.ui:259
+#: data/ui/window.ui:258
 msgid "Light the scene using a the loaded HDRI or the default"
 msgstr ""
 
-#: data/ui/window.ui:274
+#: data/ui/window.ui:273
 msgid "Light Intensity"
 msgstr ""
 
-#: data/ui/window.ui:283
+#: data/ui/window.ui:282
 msgid "Model Rendering"
 msgstr ""
 
-#: data/ui/window.ui:288
+#: data/ui/window.ui:287
 msgid "Show All Edges"
 msgstr ""
 
-#: data/ui/window.ui:296
+#: data/ui/window.ui:294
 msgid "Edges Width"
 msgstr ""
 
-#: data/ui/window.ui:318
+#: data/ui/window.ui:316
 msgid "Show Spheres"
 msgstr ""
 
-#: data/ui/window.ui:326
+#: data/ui/window.ui:323
 msgid "Points Size"
 msgstr ""
 
-#: data/ui/window.ui:350 data/ui/window.ui:364
+#: data/ui/window.ui:347 data/ui/window.ui:361
 msgid "Model"
 msgstr ""
 
-#: data/ui/window.ui:370
+#: data/ui/window.ui:367
 msgid "Load type"
 msgstr ""
 
-#: data/ui/window.ui:374
+#: data/ui/window.ui:371
 msgid "Geometry"
 msgstr ""
 
-#: data/ui/window.ui:375 data/ui/window.ui:491
+#: data/ui/window.ui:372 data/ui/window.ui:488
 msgid "Scene"
 msgstr ""
 
-#: data/ui/window.ui:388
+#: data/ui/window.ui:385
 msgid "Material"
 msgstr ""
 
-#: data/ui/window.ui:393
+#: data/ui/window.ui:390
 msgid "Model Metallic"
 msgstr ""
 
-#: data/ui/window.ui:409
+#: data/ui/window.ui:406
 msgid "Model Roughness"
 msgstr ""
 
-#: data/ui/window.ui:426
+#: data/ui/window.ui:423
 msgid "Model Opacity"
 msgstr ""
 
-#: data/ui/window.ui:444
+#: data/ui/window.ui:441
 msgid "Color"
 msgstr ""
 
-#: data/ui/window.ui:450
+#: data/ui/window.ui:447
 msgid "Coloration"
 msgstr ""
 
-#: data/ui/window.ui:454
+#: data/ui/window.ui:451
 msgid "Custom"
 msgstr ""
 
-#: data/ui/window.ui:455
+#: data/ui/window.ui:452
 msgid "Normal"
 msgstr ""
 
-#: data/ui/window.ui:456
+#: data/ui/window.ui:453
 msgid "Magnitude"
 msgstr ""
 
-#: data/ui/window.ui:457
+#: data/ui/window.ui:454
 msgid "Direct"
 msgstr ""
 
-#: data/ui/window.ui:467
+#: data/ui/window.ui:464
 msgid "Model Color"
 msgstr ""
 
-#: data/ui/window.ui:505
+#: data/ui/window.ui:502
 msgid "Grid"
 msgstr ""
 
-#: data/ui/window.ui:510
+#: data/ui/window.ui:507
 msgid "View Grid"
 msgstr ""
 
-#: data/ui/window.ui:517
+#: data/ui/window.ui:514
 msgid "Grid Absolute"
 msgstr ""
 
-#: data/ui/window.ui:526
+#: data/ui/window.ui:523
 msgid "Background"
 msgstr ""
 
-#: data/ui/window.ui:531
+#: data/ui/window.ui:528
 msgid "HDRI as Background"
 msgstr ""
 
-#: data/ui/window.ui:532
+#: data/ui/window.ui:529
 msgid "Use the loaded HDRI or the default one as a background"
 msgstr ""
 
-#: data/ui/window.ui:539
+#: data/ui/window.ui:536
 msgid "HDRI Image"
 msgstr ""
 
-#: data/ui/window.ui:546
+#: data/ui/window.ui:543
 msgid "Blur Background"
 msgstr ""
 
-#: data/ui/window.ui:553
+#: data/ui/window.ui:550
 msgid "Blur Circle Of Confusion"
 msgstr ""
 
-#: data/ui/window.ui:575
+#: data/ui/window.ui:572
 msgid "Use Custom Color"
 msgstr ""
 
-#: data/ui/window.ui:576
+#: data/ui/window.ui:573
 msgid "HDRI background takes priority over this"
 msgstr ""
 
-#: data/ui/window.ui:583
+#: data/ui/window.ui:580
 msgid "Background Color"
 msgstr ""
 
-#: data/ui/window.ui:584
+#: data/ui/window.ui:581
 msgid "Transparent colors not supported"
 msgstr ""
 
-#: data/ui/window.ui:608
+#: data/ui/window.ui:605
 msgid "More"
 msgstr ""
 
-#: data/ui/window.ui:622
+#: data/ui/window.ui:619
 msgid "Navigation"
 msgstr ""
 
-#: data/ui/window.ui:627
+#: data/ui/window.ui:624
 msgid "Always Point Up"
 msgstr ""
 
-#: data/ui/window.ui:634
+#: data/ui/window.ui:631
 msgid "Up Direction"
 msgstr ""
 
-#: data/ui/window.ui:635
+#: data/ui/window.ui:632
 msgid "Changing it will reload the file"
 msgstr ""
 
-#: data/ui/window.ui:639
+#: data/ui/window.ui:636
 msgid "- X"
 msgstr ""
 
-#: data/ui/window.ui:640
+#: data/ui/window.ui:637
 msgid "+ X"
 msgstr ""
 
-#: data/ui/window.ui:641
+#: data/ui/window.ui:638
 msgid "- Y"
 msgstr ""
 
-#: data/ui/window.ui:642
+#: data/ui/window.ui:639
 msgid "+ Y"
 msgstr ""
 
-#: data/ui/window.ui:643
+#: data/ui/window.ui:640
 msgid "- Z"
 msgstr ""
 
-#: data/ui/window.ui:644
+#: data/ui/window.ui:641
 msgid "+ Z"
 msgstr ""
 
-#: data/ui/window.ui:656
+#: data/ui/window.ui:653
 msgid "Loading"
 msgstr ""
 
-#: data/ui/window.ui:661
+#: data/ui/window.ui:658
 msgid "Automatic Settings"
 msgstr ""
 
-#: data/ui/window.ui:662
+#: data/ui/window.ui:659
 msgid "When loading choose the best presets for the file"
 msgstr ""
 
-#: data/ui/window.ui:675
+#: data/ui/window.ui:672
 msgid "Reload On Change"
 msgstr ""
 
-#: data/ui/window.ui:676
+#: data/ui/window.ui:673
 msgid "Check for file change"
 msgstr ""
 
-#: data/ui/window.ui:705
+#: data/ui/window.ui:702
 msgid "Reveal Sidebar"
 msgstr ""
 
-#: data/ui/window.ui:731
+#: data/ui/window.ui:728
 msgid "Toggle Orthographic"
 msgstr ""
 
-#: data/ui/window.ui:739
+#: data/ui/window.ui:736
 msgid "Reset to Bounds"
 msgstr ""
 
-#: data/ui/window.ui:801
+#: data/ui/window.ui:798
 msgid "Follow System"
 msgstr ""
 
-#: data/ui/window.ui:806
+#: data/ui/window.ui:803
 msgid "Light Theme"
 msgstr ""
 
-#: data/ui/window.ui:811
+#: data/ui/window.ui:808
 msgid "Dark Theme"
 msgstr ""
 
-#: data/ui/window.ui:816 data/ui/window.ui:866
+#: data/ui/window.ui:813 data/ui/window.ui:863
 msgid "_New Window"
 msgstr ""
 
-#: data/ui/window.ui:822
+#: data/ui/window.ui:819
 msgid "_Load New File"
 msgstr ""
 
-#: data/ui/window.ui:828
+#: data/ui/window.ui:825
 msgid "_Export Image"
 msgstr ""
 
-#: data/ui/window.ui:834 data/ui/window.ui:872
+#: data/ui/window.ui:831 data/ui/window.ui:869
 msgid "_Help"
 msgstr ""
 
-#: data/ui/window.ui:838 data/ui/window.ui:876
+#: data/ui/window.ui:835 data/ui/window.ui:873
 msgid "_Keyboard Shortcuts"
 msgstr ""
 
-#: data/ui/window.ui:842 data/ui/window.ui:880
+#: data/ui/window.ui:839 data/ui/window.ui:877
 msgid "_About Exhibit"
 msgstr ""
 
-#: data/ui/window.ui:852
+#: data/ui/window.ui:849
 msgid "Save Current Settings"
 msgstr ""
 
-#: data/ui/window.ui:858
+#: data/ui/window.ui:855
 msgid "Open HDRI Folder"
 msgstr ""
