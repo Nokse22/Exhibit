@@ -22,7 +22,7 @@ import os
 import webbrowser
 import f3d
 
-from gi.repository import Gtk, Gio, Adw, Gdk
+from gi.repository import Gtk, Gio, Adw, GLib
 from .window import Viewer3dWindow
 
 from . import logger_lib
@@ -139,12 +139,6 @@ class Viewer3dApplication(Adw.Application):
                                 artists=["Jakub Steiner https://jimmac.eu"])
         about.add_link(_("Checkout F3D"), "https://f3d.app")
 
-        # about.set_debug_info(
-        #     f"GDK_DEBUG: {GLib.getenv('GDK_DEBUG')}\n" +
-        #     f"GSK_RENDERER: {GLib.getenv('GSK_RENDERER')}\n\n" +
-        #     f3d_info
-        # )
-
         about.set_debug_info(
             f"GDK_DEBUG: {GLib.getenv('GDK_DEBUG')}\n" +
             f"GSK_RENDERER: {GLib.getenv('GSK_RENDERER')}\n" +
@@ -169,7 +163,7 @@ class Viewer3dApplication(Adw.Application):
     def on_open_hdri_folder(self, *args):
         webbrowser.open(self.props.active_window.hdri_path)
 
-    def on_theme_setting_changed(self, action: Gio.SimpleAction, state: GLib.Variant):
+    def on_theme_setting_changed(self, action, state):
         action.set_state(state)
         self.saved_settings.set_string("theme", state.get_string())
         self.update_theme()
@@ -189,7 +183,7 @@ class Viewer3dApplication(Adw.Application):
         self.props.active_window.f3d_viewer.rotate_camera(direction)
 
     def update_theme(self):
-        manager  = Adw.StyleManager().get_default()
+        manager = Adw.StyleManager().get_default()
         match self.saved_settings.get_string("theme"):
             case "follow":
                 manager.set_color_scheme(Adw.ColorScheme.DEFAULT)
@@ -249,8 +243,8 @@ class Viewer3dApplication(Adw.Application):
         if shortcuts:
             self.set_accels_for_action(f"app.{name}", shortcuts)
 
+
 def main(version):
     """The application's entry point."""
     app = Viewer3dApplication()
     return app.run(sys.argv)
-
