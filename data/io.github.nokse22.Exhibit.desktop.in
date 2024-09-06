@@ -3,7 +3,7 @@ Name=Exhibit
 GenericName=3D Model Viewer
 Exec=exhibit %U
 Icon=io.github.nokse22.Exhibit
-MimeType=text/plain;model/3mf;model/step;model/obj;model/stl;application/octet-stream;model/x-other;application/vnd.ms-3mfdocument;application/prs.wavefront-obj;model/gltf-binary;model/gltf-json;text/vnd.abc;image/x-3ds;image/tiff;model/iges;application/gml+xml;image/vnd.dxf;model/gltf+json;application/vnd.3ds;application/vnd.pts;application/vnd.ply;application/vnd.splat;application/vnd.vtk;application/vnd.vtp;application/vnd.vtu;application/vnd.vtr;application/vnd.vti;application/vnd.vts;application/vnd.vtm;application/vnd.abc;application/vnd.fbx;application/vnd.dae;application/vnd.off;application/vnd.x;application/vnd.drc;application/vnd.exodus;application/vnd.step;application/vnd.brep;application/vnd.usd;application/vnd.usdc;model/vnd.usda;model/vnd.usdz+zip;application/vnd.vdb
+MimeType=application/gml+xml;application/prs.wavefront-obj;application/vnd.3ds;application/vnd.abc;application/vnd.brep;application/vnd.dae;application/vnd.drc;application/vnd.exodus;application/vnd.fbx;application/vnd.ms-3mfdocument;application/vnd.off;application/vnd.ply;application/vnd.pts;application/vnd.splat;application/vnd.step;application/vnd.usd;application/vnd.usdc;application/vnd.vdb;application/vnd.vdbMimeType=text/plain;application/vnd.vti;application/vnd.vtk;application/vnd.vtm;application/vnd.vtp;application/vnd.vtr;application/vnd.vts;application/vnd.vtu;application/vnd.x;image/tiff;image/vnd.dxf;image/x-3ds;model/3mf;model/gltf+json;model/gltf-binary;model/gltf-json;model/iges;model/obj;model/step;model/stl;model/vnd.usda;model/vnd.usdz+zip;model/x-other;text/plain;text/vnd.abc
 Terminal=false
 Type=Application
 Categories=GTK;Graphics;Science;3DGraphics;Viewer;GNOME;

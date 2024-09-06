@@ -942,7 +942,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def on_open_with_external_app_clicked(self, *args):
         try:
             file = Gio.File.new_for_path(self.filepath)
-        except GLib.GError as e:
+        except GLib.GError:
             self.logger.error("Failed to construct a new Gio.File object from path.")
         else:
             launcher = Gtk.FileLauncher.new(file)
@@ -952,7 +952,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 try:
                     launcher.launch_finish(result)
                 except GLib.GError as e:
-                    if e.code != 2: # 'The portal dialog was dismissed by the user' error
+                    if e.code != 2:
                         self.logger.error("Failed to finish Gtk.FileLauncher procedure.")
 
             launcher.launch(self, None, open_file_finish)
