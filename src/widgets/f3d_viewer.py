@@ -17,15 +17,11 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import gi
-from gi.repository import Adw
-from gi.repository import Gtk, Gdk, Gio, GLib, GObject
+from gi.repository import Gtk, Gdk, GLib
 
 import f3d
 
-import math
-
-from ..vector_math import *
+from .vector_math import p_dist, v_abs, v_norm, v_add, v_sub, v_mul, v_dot_p
 from .. import logger_lib
 
 up_dirs_vector = {
@@ -37,6 +33,7 @@ up_dirs_vector = {
     "+Z": (0.0, 0.0, 1.0)
 }
 
+
 @Gtk.Template(resource_path='/io/github/nokse22/Exhibit/ui/f3d_viewer.ui')
 class F3DViewer(Gtk.GLArea):
     __gtype_name__ = 'F3DViewer'
@@ -45,10 +42,10 @@ class F3DViewer(Gtk.GLArea):
         "grid": "render.grid.enable",
         "grid-absolute": "render.grid.absolute",
         "translucency-support": "render.effect.translucency-support",
-        "tone-mapping":"render.effect.tone-mapping",
+        "tone-mapping": "render.effect.tone-mapping",
         "ambient-occlusion": "render.effect.ambient-occlusion",
-        "anti-aliasing" :"render.effect.anti-aliasing",
-        "hdri-ambient" :"render.hdri.ambient",
+        "anti-aliasing": "render.effect.anti-aliasing",
+        "hdri-ambient": "render.hdri.ambient",
         "hdri-skybox": "render.background.skybox",
         "light-intensity": "render.light.intensity",
         "orthographic": "scene.camera.orthographic",
@@ -83,7 +80,7 @@ class F3DViewer(Gtk.GLArea):
         "grid-unit": "render.grid.unit",
         "grid-subdivisions": "render.grid.subdivisions",
         "grid-color": "render.grid.color",
-        "scalar" : "model.scivis.array-name"
+        "scalar": "model.scivis.array-name"
     }
 
     def __init__(self, *args):
@@ -138,7 +135,8 @@ class F3DViewer(Gtk.GLArea):
         up_v = up_dirs_vector[self.settings["scene.up-direction"]]
         vector = v_mul(tuple([up_v[2], up_v[0], up_v[1]]), 1000)
         self.camera.position = v_add(self.camera.focal_point, vector)
-        self.camera.setViewUp(up_dirs_vector[self.settings["scene.up-direction"]])
+        self.camera.setViewUp(
+            up_dirs_vector[self.settings["scene.up-direction"]])
         self.camera.resetToBounds()
         self.get_distance()
         self.queue_render()
@@ -147,7 +145,8 @@ class F3DViewer(Gtk.GLArea):
         up_v = up_dirs_vector[self.settings["scene.up-direction"]]
         vector = v_mul(tuple([up_v[1], up_v[2], up_v[0]]), 1000)
         self.camera.position = v_add(self.camera.focal_point, vector)
-        self.camera.setViewUp(up_dirs_vector[self.settings["scene.up-direction"]])
+        self.camera.setViewUp(
+            up_dirs_vector[self.settings["scene.up-direction"]])
         self.camera.resetToBounds()
         self.get_distance()
         self.queue_render()
@@ -166,7 +165,8 @@ class F3DViewer(Gtk.GLArea):
         up_v = up_dirs_vector[self.settings["scene.up-direction"]]
         vector = v_add(tuple([up_v[2], up_v[0], up_v[1]]), tuple([up_v[1], up_v[2], up_v[0]]))
         self.camera.position = v_mul(v_norm(v_add(vector, up_v)), 1000)
-        self.camera.setViewUp(up_dirs_vector[self.settings["scene.up-direction"]])
+        self.camera.setViewUp(
+            up_dirs_vector[self.settings["scene.up-direction"]])
         self.camera.resetToBounds()
         self.get_distance()
         self.queue_render()
@@ -265,7 +265,7 @@ class F3DViewer(Gtk.GLArea):
         return self.distance / 10
 
     def get_distance(self):
-        self.distance = p_dist(self.camera.position, (0,0,0))
+        self.distance = p_dist(self.camera.position, (0, 0, 0))
 
     def pan(self, x, y, z):
         val = self.distance / 40
@@ -360,5 +360,3 @@ class F3DViewer(Gtk.GLArea):
     @Gtk.Template.Callback("on_drag_end")
     def on_drag_end(self, gesture, *args):
         self.drag_prev_offset = (0, 0)
-
-
