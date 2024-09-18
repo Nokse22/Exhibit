@@ -127,16 +127,16 @@ class Viewer3dApplication(Adw.Application):
 
     def on_about_action(self, *args):
         about = Adw.AboutDialog(
-                                application_name='Exhibit',
-                                application_icon='io.github.nokse22.Exhibit',
-                                developer_name='Nokse22',
-                                version='1.3.1',
-                                website='https://github.com/Nokse22/Exhibit',
-                                issue_url='https://github.com/Nokse22/Exhibit/issues',
-                                developers=['Nokse'],
-                                license_type="GTK_LICENSE_GPL_3_0",
-                                copyright='© 2024 Nokse22',
-                                artists=["Jakub Steiner https://jimmac.eu"])
+            application_name='Exhibit',
+            application_icon='io.github.nokse22.Exhibit',
+            developer_name='Nokse22',
+            version='1.3.2',
+            website='https://github.com/Nokse22/Exhibit',
+            issue_url='https://github.com/Nokse22/Exhibit/issues',
+            developers=['Nokse'],
+            license_type="GTK_LICENSE_GPL_3_0",
+            copyright='© 2024 Nokse22',
+            artists=["Jakub Steiner https://jimmac.eu"])
         about.add_link(_("Checkout F3D"), "https://f3d.app")
 
         about.set_debug_info(
