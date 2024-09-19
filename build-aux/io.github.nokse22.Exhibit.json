@@ -1,515 +1,514 @@
 {
-  "id": "io.github.nokse22.Exhibit",
-  "runtime": "org.gnome.Platform",
-  "runtime-version": "47",
-  "sdk": "org.gnome.Sdk",
-  "command": "exhibit",
-  "finish-args": [
-    "--share=ipc",
-    "--socket=wayland",
-    "--socket=fallback-x11",
-    "--device=dri"
-  ],
-  "cleanup": [
-    "/include",
-    "/lib/pkgconfig",
-    "/man",
-    "/share/doc",
-    "/share/gtk-doc",
-    "/share/man",
-    "/share/pkgconfig",
-    "*.la",
-    "*.a",
-    "/etc",
-    "/vtkext",
-    "/cmake",
-    "/CMakeFiles"
-  ],
-  "modules": [
-    {
-      "name": "F3D",
-      "buildsystem": "cmake-ninja",
-      "builddir": true,
-      "build-options": {
-        "env": {
-          "LIBRARY_PATH": "/app/lib:/usr/lib",
-          "LD_LIBRARY_PATH": "/app/lib:/usr/lib"
-        }
-      },
-      "config-opts": [
-        "-DF3D_BUILD_APPLICATION:BOOL=OFF",
-        "-DF3D_MODULE_EXTERNAL_RENDERING:BOOL=ON",
-        "-DF3D_MODULE_EXR:BOOL=ON",
-        "-DF3D_BINDINGS_PYTHON:BOOL=ON",
-        "-DCMAKE_INSTALL_PREFIX:PATH=/app",
-        "-DBUILD_TESTING:BOOL=OFF",
-        "-DF3D_LINUX_INSTALL_DEFAULT_CONFIGURATION_FILE_IN_PREFIX:BOOL=ON",
-        "-DF3D_PLUGINS_STATIC_BUILD=ON",
-        "-DF3D_PLUGIN_BUILD_ALEMBIC=ON",
-        "-DF3D_PLUGIN_BUILD_ASSIMP:BOOL=ON",
-        "-DF3D_PLUGIN_BUILD_DRACO:BOOL=ON",
-        "-DF3D_PLUGIN_BUILD_EXODUS:BOOL=ON",
-        "-DF3D_PLUGIN_BUILD_OCCT:BOOL=ON",
-        "-DF3D_PLUGIN_BUILD_USD:BOOL=ON"
-      ],
-      "sources": [
+    "id": "io.github.nokse22.Exhibit",
+    "runtime": "org.gnome.Platform",
+    "runtime-version": "47",
+    "sdk": "org.gnome.Sdk",
+    "command": "exhibit",
+    "finish-args": [
+        "--share=ipc",
+        "--socket=wayland",
+        "--socket=fallback-x11",
+        "--device=dri"
+    ],
+    "cleanup": [
+        "/include",
+        "/lib/pkgconfig",
+        "/man",
+        "/share/doc",
+        "/share/gtk-doc",
+        "/share/man",
+        "/share/pkgconfig",
+        "*.la",
+        "*.a",
+        "/etc",
+        "/vtkext",
+        "/cmake",
+        "/CMakeFiles"
+    ],
+    "modules": [
         {
-          "type": "archive",
-          "url": "https://github.com/f3d-app/f3d/archive/refs/tags/v2.5.0.tar.gz",
-          "sha256": "d7f6dd7d9e4465c1f44d168c3a38aad24569a25907673180c8791a783e73f02f",
-          "x-checker-data": {
-            "type": "anitya",
-            "project-id": 224911,
-            "stable-only": true,
-            "url-template": "https://github.com/f3d-app/f3d/archive/refs/tags/v$version.tar.gz"
-          }
-        },
-        {
-      	  "type": "patch",
-      	  "path": "lib_info.patch"
-      	}
-      ],
-      "modules": [
-        "shared-modules/glew/glew.json",
-        {
-          "name": "Eigen3",
-          "buildsystem": "cmake-ninja",
-          "builddir": true,
-          "sources": [
-            {
-              "type": "archive",
-              "url": "https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.bz2",
-              "sha256": "b4c198460eba6f28d34894e3a5710998818515104d6e74e5cc331ce31e46e626",
-              "x-checker-data": {
-                "type": "anitya",
-                "project-id": 13751,
-                "stable-only": true,
-                "url-template": "https://gitlab.com/libeigen/eigen/-/archive/$version/eigen-$version.tar.bz2"
-              }
-            }
-          ],
-          "cleanup": [
-            "*"
-          ]
-        },
-        {
-          "name": "hdf5",
-          "buildsystem": "cmake-ninja",
-          "builddir": true,
-          "config-opts": [
-            "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
-            "-DBUILD_TESTING:BOOL=OFF",
-            "-DHDF5_BUILD_EXAMPLES:BOOL=OFF"
-          ],
-          "cleanup": [
-            "/share/hdf5_examples"
-          ],
-          "sources": [
-            {
-              "type": "archive",
-              "url": "https://github.com/HDFGroup/hdf5/archive/refs/tags/hdf5-1_14_3.tar.gz",
-              "sha256": "df5ee33c74d5efb59738075ef96f4201588e1f1eeb233f047ac7fd1072dee1f6",
-              "x-checker-data": {
-                "type": "anitya",
-                "project-id": 1303,
-                "stable-only": true,
-                "url-template": "https://github.com/HDFGroup/hdf5/archive/refs/tags/hdf5-$version.tar.gz"
-              }
-            }
-          ]
-        },
-        {
-          "name": "TBB",
-          "buildsystem": "cmake",
-          "builddir": true,
-          "config-opts": [
-            "-DTBB_TEST=OFF",
-            "-DTBB_EXAMPLES=OFF"
-          ],
-          "sources": [
-            {
-              "type": "archive",
-              "url": "https://github.com/oneapi-src/oneTBB/archive/refs/tags/v2021.13.0.tar.gz",
-              "sha256": "3ad5dd08954b39d113dc5b3f8a8dc6dc1fd5250032b7c491eb07aed5c94133e1"
-            }
-          ]
-        },
-        {
-          "name": "VTK",
-          "buildsystem": "cmake-ninja",
-          "builddir": true,
-          "config-opts": [
-            "-DBUILD_SHARED_LIBS=ON",
-            "-DOpenGL_GL_PREFERENCE=GLVND",
-            "-DVTK_ENABLE_LOGGING=OFF",
-            "-DVTK_OPENGL_HAS_EGL=ON",
-            "-DVTK_ENABLE_WRAPPING=OFF",
-            "-DVTK_BUILD_TESTING=OFF",
-            "-DVTK_LEGACY_REMOVE=ON",
-            "-DVTK_VERSIONED_INSTALL=OFF",
-            "-DVTK_GROUP_ENABLE_Rendering=DEFAULT",
-            "-DVTK_GROUP_ENABLE_StandAlone=DEFAULT",
-            "-DVTK_MODULE_ENABLE_VTK_CommonSystem=YES",
-            "-DVTK_MODULE_ENABLE_VTK_FiltersGeneral=YES",
-            "-DVTK_MODULE_ENABLE_VTK_FiltersGeometry=YES",
-            "-DVTK_MODULE_ENABLE_VTK_ImagingCore=YES",
-            "-DVTK_MODULE_ENABLE_VTK_ImagingHybrid=YES",
-            "-DVTK_MODULE_ENABLE_VTK_InteractionStyle=YES",
-            "-DVTK_MODULE_ENABLE_VTK_InteractionWidgets=YES",
-            "-DVTK_MODULE_ENABLE_VTK_IOCityGML=YES",
-            "-DVTK_MODULE_ENABLE_VTK_IOExodus=YES",
-            "-DVTK_MODULE_ENABLE_VTK_IOGeometry=YES",
-            "-DVTK_MODULE_ENABLE_VTK_IOImage=YES",
-            "-DVTK_MODULE_ENABLE_VTK_IOImport=YES",
-            "-DVTK_MODULE_ENABLE_VTK_IOParallel=YES",
-            "-DVTK_MODULE_ENABLE_VTK_IOPLY=YES",
-            "-DVTK_MODULE_ENABLE_VTK_IOXML=YES",
-            "-DVTK_MODULE_ENABLE_VTK_RenderingAnnotation=YES",
-            "-DVTK_MODULE_ENABLE_VTK_RenderingCore=YES",
-            "-DVTK_MODULE_ENABLE_VTK_RenderingExternal=YES",
-            "-DVTK_MODULE_ENABLE_VTK_RenderingLabel=YES",
-            "-DVTK_MODULE_ENABLE_VTK_RenderingOpenGL2=YES",
-            "-DVTK_MODULE_ENABLE_VTK_RenderingVolumeOpenGL2=YES",
-            "-DVTK_MODULE_ENABLE_VTK_TestingCore=YES",
-            "-DVTK_MODULE_ENABLE_VTK_RenderingRayTracing=NO",
-            "-DVTK_SMP_IMPLEMENTATION_TYPE=TBB",
-            "-DVTK_SMP_ENABLE_SEQUENTIAL=OFF",
-            "-DVTK_SMP_ENABLE_STDTHREAD=OFF",
-            "-DVTK_SMP_ENABLE_TBB=ON"
-          ],
-          "sources": [
-            {
-              "type": "archive",
-              "url": "https://www.vtk.org/files/release/9.3/VTK-9.3.1.tar.gz",
-              "sha256": "8354ec084ea0d2dc3d23dbe4243823c4bfc270382d0ce8d658939fd50061cab8",
-              "x-checker-data": {
-                "type": "anitya",
-                "project-id": 15084,
-                "stable-only": true,
-                "url-template": "https://www.vtk.org/files/release/$major.$minor/VTK-$version.tar.gz"
-              }
-            }
-          ]
-        },
-        {
-          "name": "Tcl",
-          "buildsystem": "autotools",
-          "subdir": "unix",
-          "build-options": {
-            "no-debuginfo": true
-          },
-          "sources": [
-            {
-              "type": "archive",
-              "url": "https://prdownloads.sourceforge.net/tcl/tcl8.6.14-src.tar.gz",
-              "sha256": "5880225babf7954c58d4fb0f5cf6279104ce1cd6aa9b71e9a6322540e1c4de66",
-              "x-checker-data": {
-                "type": "anitya",
-                "project-id": 4941,
-                "stable-only": true,
-                "url-template": "https://prdownloads.sourceforge.net/tcl/tcl$version-src.tar.gz"
-              }
-            }
-          ]
-        },
-        {
-          "name": "tk",
-          "subdir": "unix",
-          "build-options": {
-            "no-debuginfo": true
-          },
-          "make-install-args": [
-            "install-private-headers"
-          ],
-          "cleanup": [
-            "/bin",
-            "/man"
-          ],
-          "sources": [
-            {
-              "type": "archive",
-              "url": "https://prdownloads.sourceforge.net/tcl/tk8.6.14-src.tar.gz",
-              "sha256": "8ffdb720f47a6ca6107eac2dd877e30b0ef7fac14f3a84ebbd0b3612cee41a94",
-              "x-checker-data": {
-                "type": "anitya",
-                "project-id": 11426,
-                "stable-only": true,
-                "url-template": "https://prdownloads.sourceforge.net/tcl/tk$version-src.tar.gz"
-              }
-            }
-          ]
-        },
-        {
-          "name": "libXmu",
-          "cleanup": [
-            "/share/doc"
-          ],
-          "sources": [
-            {
-              "type": "archive",
-              "url": "https://www.x.org/archive/individual/lib/libXmu-1.2.1.tar.gz",
-              "sha256": "bf0902583dd1123856c11e0a5085bd3c6e9886fbbd44954464975fd7d52eb599",
-              "x-checker-data": {
-                "type": "anitya",
-                "project-id": 1785,
-                "stable-only": true,
-                "url-template": "https://www.x.org/archive/individual/lib/libXmu-$version.tar.gz"
-              }
-            }
-          ]
-        },
-        {
-          "name": "Draco",
-          "buildsystem": "cmake-ninja",
-          "builddir": true,
-          "build-options": {
-            "cflags": "-fPIC",
-            "cxxflags": "-fPIC"
-          },
-          "sources": [
-            {
-              "type": "archive",
-              "url": "https://github.com/google/draco/archive/refs/tags/1.5.7.tar.gz",
-              "sha256": "bf6b105b79223eab2b86795363dfe5e5356050006a96521477973aba8f036fe1",
-              "x-checker-data": {
-                "type": "anitya",
-                "project-id": 322269,
-                "stable-only": true,
-                "url-template": "https://github.com/google/draco/archive/refs/tags/$version.tar.gz"
-              }
-            }
-          ]
-        },
-        {
-          "name": "OCCT",
-          "buildsystem": "cmake-ninja",
-          "config-opts": [
-            "-D3RDPARTY_TK_INCLUDE_DIR:PATH=/app/include",
-            "-DBUILD_MODULE_ApplicationFramework=OFF",
-            "-DBUILD_MODULE_DataExchange=ON",
-            "-DBUILD_MODULE_Draw=OFF",
-            "-DBUILD_MODULE_FoundationClasses=OFF",
-            "-DBUILD_MODULE_ModelingAlgorithms=OFF",
-            "-DBUILD_MODULE_ModelingData=OFF",
-            "-DBUILD_MODULE_Visualization=OFF",
-            "-DBUILD_DOC_Overview=OFF"
-          ],
-          "sources": [
-            {
-              "type": "git",
-              "url": "https://github.com/Open-Cascade-SAS/OCCT.git",
-              "tag": "V7_7_2",
-              "commit": "cec1ecd0c9f3b3d2572c47035d11949e8dfa85e2"
-            }
-          ]
-        },
-        {
-          "name": "assimp",
-          "buildsystem": "cmake-ninja",
-          "config-opts": [
-            "-DASSIMP_BUILD_ASSIMP_TOOLS:BOOL=NO",
-            "-DASSIMP_BUILD_TESTS:BOOL=NO"
-          ],
-          "sources": [
-            {
-              "type": "archive",
-              "url": "https://github.com/assimp/assimp/archive/refs/tags/v5.4.2.tar.gz",
-              "sha256": "7414861a7b038e407b510e8b8c9e58d5bf8ca76c9dfe07a01d20af388ec5086a",
-              "x-checker-data": {
-                "type": "anitya",
-                "project-id": 6988,
-                "stable-only": true,
-                "url-template": "https://github.com/assimp/assimp/archive/refs/tags/v$version.tar.gz"
-              }
-            }
-          ]
-        },
-        {
-          "name": "Imath",
-          "buildsystem": "cmake-ninja",
-          "config-opts": [
-            "-DBUILD_TESTING:BOOL=OFF"
-          ],
-          "sources": [
-            {
-              "type": "git",
-              "url": "https://github.com/AcademySoftwareFoundation/Imath.git",
-              "tag": "v3.1.11",
-              "x-checker-data": {
-                "type": "git",
-                "tag-pattern": "^(v[\\d.]+)$"
-              },
-              "commit": "5ac1d5335cb34f0f356c5f2461a57c845b96b115"
-            }
-          ]
-        },
-        {
-          "name": "Alembic",
-          "buildsystem": "cmake-ninja",
-          "config-opts": [
-            "-DUSE_TESTS:BOOL=OFF",
-            "-DUSE_HDF5:BOOL=ON"
-          ],
-          "sources": [
-            {
-              "type": "archive",
-              "url": "https://github.com/alembic/alembic/archive/refs/tags/1.8.6.tar.gz",
-              "sha256": "c572ebdea3a5f0ce13774dd1fceb5b5815265cd1b29d142cf8c144b03c131c8c",
-              "x-checker-data": {
-                "type": "anitya",
-                "project-id": 13980,
-                "stable-only": true,
-                "url-template": "https://github.com/alembic/alembic/archive/refs/tags/$version.tar.gz"
-              }
-            }
-          ]
-        },
-        {
-          "name": "pybind11",
-          "config-opts": [
-            "-DPYBIND11_FINDPYTHON=ON",
-            "-DPYBIND11_TEST=OFF"
-          ],
-          "buildsystem": "cmake-ninja",
-          "builddir": true,
-          "sources": [
-            {
-              "type": "archive",
-              "url": "https://github.com/pybind/pybind11/archive/refs/tags/v2.13.1.tar.gz",
-              "sha256": "51631e88960a8856f9c497027f55c9f2f9115cafb08c0005439838a05ba17bfc",
-              "x-checker-data": {
-                "type": "anitya",
-                "project-id": 13384,
-                "url-template": "https://github.com/pybind/pybind11/archive/refs/tags/v$version.tar.gz"
-              }
-            }
-          ]
-        },
-        {
-          "name": "libdeflate",
-          "buildsystem": "cmake-ninja",
-          "sources": [
-            {
-              "type": "archive",
-              "url": "https://github.com/ebiggers/libdeflate/releases/download/v1.20/libdeflate-1.20.tar.gz",
-              "sha256": "c52cf0239fd644d71c9e88613dd7431a5306ebee1280c5791c71ca264869250a"
-            }
-          ]
-        },
-        {
-          "name": "openexr",
-          "buildsystem": "cmake-ninja",
-          "sources": [
-            {
-              "type": "archive",
-              "url": "https://github.com/AcademySoftwareFoundation/openexr/archive/refs/tags/v3.2.4.tar.gz",
-              "sha256": "81e6518f2c4656fdeaf18a018f135e96a96e7f66dbe1c1f05860dd94772176cc"
-            }
-          ]
-        },
-        {
-          "name": "Boost",
-          "buildsystem": "simple",
-          "sources": [
-            {
-              "type": "archive",
-              "url": "https://archives.boost.io/release/1.83.0/source/boost_1_83_0.tar.gz",
-              "sha256": "c0685b68dd44cc46574cce86c4e17c0f611b15e195be9848dfd0769a0a207628"
-            }
-          ],
-          "build-commands": [
-            "./bootstrap.sh --prefix=/app --with-libraries=iostreams,filesystem,system,date_time,regex,program_options,python",
-            "./b2 headers",
-            "./b2 -j$FLATPAK_BUILDER_N_JOBS install variant=release cxxstd=17 --layout=system"
-          ]
-        },
-        {
-          "name": "OpenSubdiv",
-          "buildsystem": "cmake-ninja",
-          "sources": [
-            {
-              "type": "archive",
-              "url": "https://github.com/PixarAnimationStudios/OpenSubdiv/archive/refs/tags/v3_6_0.tar.gz",
-              "sha256": "bebfd61ab6657a4f4ff27845fb66a167d00395783bfbd253254d87447ed1d879"
-            }
-          ]
-        },
-        {
-          "name": "openUSD",
-          "buildsystem": "cmake-ninja",
-          "config-opts": [
-            "-DPXR_BUILD_ALEMBIC_PLUGIN:BOOL=OFF",
-            "-DPXR_BUILD_EMBREE_PLUGIN:BOOL=OFF",
-            "-DPXR_BUILD_IMAGING:BOOL=OFF",
-            "-DPXR_BUILD_MONOLITHIC:BOOL=ON",
-            "-DPXR_BUILD_TESTS:BOOL=OFF",
-            "-DPXR_BUILD_USD_IMAGING:BOOL=OFF",
-            "-DPXR_ENABLE_PYTHON_SUPPORT:BOOL=OFF",
-            "-DPXR_BUILD_EXAMPLES:BOOL=OFF",
-            "-DPXR_BUILD_TUTORIALS:BOOL=OFF",
-            "-DPXR_BUILD_USD_TOOLS:BOOL=OFF",
-            "-DPXR_INSTALL_LOCATION:PATH=../lib/usd",
-            "-DCMAKE_BUILD_TYPE=Release",
-            "-DTBB_INCLUDE_DIRS=/app/include",
-            "-DTBB_LIBRARIES=/app/lib/libtbb.so"
-          ],
-          "sources": [
-            {
-              "type": "archive",
-              "url": "https://github.com/PixarAnimationStudios/OpenUSD/archive/refs/tags/v23.05.tar.gz",
-              "sha256": "f5c3e72cd584bab383a8054628b6ed98aa17b1cbbe896eb98257ac19641d10c7"
+            "name": "F3D",
+            "buildsystem": "cmake-ninja",
+            "builddir": true,
+            "build-options": {
+                "env": {
+                    "LIBRARY_PATH": "/app/lib:/usr/lib",
+                    "LD_LIBRARY_PATH": "/app/lib:/usr/lib"
+                }
             },
-            {
-              "type": "patch",
-              "path": "0001-usd-onetbb.patch"
-            },
-            {
-              "type": "patch",
-              "path": "0002-install-bin.patch"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "python3-wand",
-      "buildsystem": "simple",
-      "build-commands": [
-        "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"wand\" --no-build-isolation"
-      ],
-      "sources": [
+            "config-opts": [
+                "-DF3D_BUILD_APPLICATION:BOOL=OFF",
+                "-DF3D_MODULE_EXTERNAL_RENDERING:BOOL=ON",
+                "-DF3D_MODULE_EXR:BOOL=ON",
+                "-DF3D_BINDINGS_PYTHON:BOOL=ON",
+                "-DCMAKE_INSTALL_PREFIX:PATH=/app",
+                "-DBUILD_TESTING:BOOL=OFF",
+                "-DF3D_LINUX_INSTALL_DEFAULT_CONFIGURATION_FILE_IN_PREFIX:BOOL=ON",
+                "-DF3D_PLUGINS_STATIC_BUILD=ON",
+                "-DF3D_PLUGIN_BUILD_ALEMBIC=ON",
+                "-DF3D_PLUGIN_BUILD_ASSIMP:BOOL=ON",
+                "-DF3D_PLUGIN_BUILD_DRACO:BOOL=ON",
+                "-DF3D_PLUGIN_BUILD_EXODUS:BOOL=ON",
+                "-DF3D_PLUGIN_BUILD_OCCT:BOOL=ON",
+                "-DF3D_PLUGIN_BUILD_USD:BOOL=ON"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/f3d-app/f3d/archive/refs/tags/v2.5.0.tar.gz",
+                    "sha256": "d7f6dd7d9e4465c1f44d168c3a38aad24569a25907673180c8791a783e73f02f",
+                    "x-checker-data": {
+                        "type": "anitya",
+                        "project-id": 224911,
+                        "stable-only": true,
+                        "url-template": "https://github.com/f3d-app/f3d/archive/refs/tags/v$version.tar.gz"
+                    }
+                },
+                {
+                    "type": "patch",
+                    "path": "lib_info.patch"
+                }
+            ],
+            "modules": [
+                "shared-modules/glew/glew.json",
+                {
+                    "name": "Eigen3",
+                    "buildsystem": "cmake-ninja",
+                    "builddir": true,
+                    "sources": [
+                        {
+                            "type": "archive",
+                            "url": "https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.bz2",
+                            "sha256": "b4c198460eba6f28d34894e3a5710998818515104d6e74e5cc331ce31e46e626",
+                            "x-checker-data": {
+                                "type": "anitya",
+                                "project-id": 13751,
+                                "stable-only": true,
+                                "url-template": "https://gitlab.com/libeigen/eigen/-/archive/$version/eigen-$version.tar.bz2"
+                            }
+                        }
+                    ],
+                    "cleanup": [
+                        "*"
+                    ]
+                },
+                {
+                    "name": "hdf5",
+                    "buildsystem": "cmake-ninja",
+                    "builddir": true,
+                    "config-opts": [
+                        "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
+                        "-DBUILD_TESTING:BOOL=OFF",
+                        "-DHDF5_BUILD_EXAMPLES:BOOL=OFF"
+                    ],
+                    "cleanup": [
+                        "/share/hdf5_examples"
+                    ],
+                    "sources": [
+                        {
+                            "type": "archive",
+                            "url": "https://github.com/HDFGroup/hdf5/archive/refs/tags/hdf5-1_14_3.tar.gz",
+                            "sha256": "df5ee33c74d5efb59738075ef96f4201588e1f1eeb233f047ac7fd1072dee1f6",
+                            "x-checker-data": {
+                                "type": "anitya",
+                                "project-id": 1303,
+                                "stable-only": true,
+                                "url-template": "https://github.com/HDFGroup/hdf5/archive/refs/tags/hdf5-$version.tar.gz"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "TBB",
+                    "buildsystem": "cmake",
+                    "builddir": true,
+                    "config-opts": [
+                        "-DTBB_TEST=OFF",
+                        "-DTBB_EXAMPLES=OFF"
+                    ],
+                    "sources": [
+                        {
+                            "type": "archive",
+                            "url": "https://github.com/oneapi-src/oneTBB/archive/refs/tags/v2021.13.0.tar.gz",
+                            "sha256": "3ad5dd08954b39d113dc5b3f8a8dc6dc1fd5250032b7c491eb07aed5c94133e1"
+                        }
+                    ]
+                },
+                {
+                    "name": "VTK",
+                    "buildsystem": "cmake-ninja",
+                    "builddir": true,
+                    "config-opts": [
+                        "-DBUILD_SHARED_LIBS=ON",
+                        "-DOpenGL_GL_PREFERENCE=GLVND",
+                        "-DVTK_ENABLE_LOGGING=OFF",
+                        "-DVTK_OPENGL_HAS_EGL=ON",
+                        "-DVTK_ENABLE_WRAPPING=OFF",
+                        "-DVTK_BUILD_TESTING=OFF",
+                        "-DVTK_LEGACY_REMOVE=ON",
+                        "-DVTK_VERSIONED_INSTALL=OFF",
+                        "-DVTK_GROUP_ENABLE_Rendering=DEFAULT",
+                        "-DVTK_GROUP_ENABLE_StandAlone=DEFAULT",
+                        "-DVTK_MODULE_ENABLE_VTK_CommonSystem=YES",
+                        "-DVTK_MODULE_ENABLE_VTK_FiltersGeneral=YES",
+                        "-DVTK_MODULE_ENABLE_VTK_FiltersGeometry=YES",
+                        "-DVTK_MODULE_ENABLE_VTK_ImagingCore=YES",
+                        "-DVTK_MODULE_ENABLE_VTK_ImagingHybrid=YES",
+                        "-DVTK_MODULE_ENABLE_VTK_InteractionStyle=YES",
+                        "-DVTK_MODULE_ENABLE_VTK_InteractionWidgets=YES",
+                        "-DVTK_MODULE_ENABLE_VTK_IOCityGML=YES",
+                        "-DVTK_MODULE_ENABLE_VTK_IOExodus=YES",
+                        "-DVTK_MODULE_ENABLE_VTK_IOGeometry=YES",
+                        "-DVTK_MODULE_ENABLE_VTK_IOImage=YES",
+                        "-DVTK_MODULE_ENABLE_VTK_IOImport=YES",
+                        "-DVTK_MODULE_ENABLE_VTK_IOParallel=YES",
+                        "-DVTK_MODULE_ENABLE_VTK_IOPLY=YES",
+                        "-DVTK_MODULE_ENABLE_VTK_IOXML=YES",
+                        "-DVTK_MODULE_ENABLE_VTK_RenderingAnnotation=YES",
+                        "-DVTK_MODULE_ENABLE_VTK_RenderingCore=YES",
+                        "-DVTK_MODULE_ENABLE_VTK_RenderingExternal=YES",
+                        "-DVTK_MODULE_ENABLE_VTK_RenderingLabel=YES",
+                        "-DVTK_MODULE_ENABLE_VTK_RenderingOpenGL2=YES",
+                        "-DVTK_MODULE_ENABLE_VTK_RenderingVolumeOpenGL2=YES",
+                        "-DVTK_MODULE_ENABLE_VTK_TestingCore=YES",
+                        "-DVTK_MODULE_ENABLE_VTK_RenderingRayTracing=NO",
+                        "-DVTK_SMP_IMPLEMENTATION_TYPE=TBB",
+                        "-DVTK_SMP_ENABLE_SEQUENTIAL=OFF",
+                        "-DVTK_SMP_ENABLE_STDTHREAD=OFF",
+                        "-DVTK_SMP_ENABLE_TBB=ON"
+                    ],
+                    "sources": [
+                        {
+                            "type": "archive",
+                            "url": "https://www.vtk.org/files/release/9.3/VTK-9.3.1.tar.gz",
+                            "sha256": "8354ec084ea0d2dc3d23dbe4243823c4bfc270382d0ce8d658939fd50061cab8",
+                            "x-checker-data": {
+                                "type": "anitya",
+                                "project-id": 15084,
+                                "stable-only": true,
+                                "url-template": "https://www.vtk.org/files/release/$major.$minor/VTK-$version.tar.gz"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Tcl",
+                    "buildsystem": "autotools",
+                    "subdir": "unix",
+                    "build-options": {
+                        "no-debuginfo": true
+                    },
+                    "sources": [
+                        {
+                            "type": "archive",
+                            "url": "https://prdownloads.sourceforge.net/tcl/tcl8.6.15-src.tar.gz",
+                            "sha256": "861e159753f2e2fbd6ec1484103715b0be56be3357522b858d3cbb5f893ffef1",
+                            "x-checker-data": {
+                                "type": "anitya",
+                                "project-id": 4941,
+                                "stable-only": true,
+                                "url-template": "https://prdownloads.sourceforge.net/tcl/tcl$version-src.tar.gz"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "tk",
+                    "subdir": "unix",
+                    "build-options": {
+                        "no-debuginfo": true
+                    },
+                    "make-install-args": [
+                        "install-private-headers"
+                    ],
+                    "cleanup": [
+                        "/bin",
+                        "/man"
+                    ],
+                    "sources": [
+                        {
+                            "type": "archive",
+                            "url": "https://prdownloads.sourceforge.net/tcl/tk8.6.15-src.tar.gz",
+                            "sha256": "550969f35379f952b3020f3ab7b9dd5bfd11c1ef7c9b7c6a75f5c49aca793fec",
+                            "x-checker-data": {
+                                "type": "anitya",
+                                "project-id": 11426,
+                                "stable-only": true,
+                                "url-template": "https://prdownloads.sourceforge.net/tcl/tk$version-src.tar.gz"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "libXmu",
+                    "cleanup": [
+                        "/share/doc"
+                    ],
+                    "sources": [
+                        {
+                            "type": "archive",
+                            "url": "https://www.x.org/archive/individual/lib/libXmu-1.2.1.tar.gz",
+                            "sha256": "bf0902583dd1123856c11e0a5085bd3c6e9886fbbd44954464975fd7d52eb599",
+                            "x-checker-data": {
+                                "type": "anitya",
+                                "project-id": 1785,
+                                "stable-only": true,
+                                "url-template": "https://www.x.org/archive/individual/lib/libXmu-$version.tar.gz"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Draco",
+                    "buildsystem": "cmake-ninja",
+                    "builddir": true,
+                    "build-options": {
+                        "cflags": "-fPIC",
+                        "cxxflags": "-fPIC"
+                    },
+                    "sources": [
+                        {
+                            "type": "archive",
+                            "url": "https://github.com/google/draco/archive/refs/tags/1.5.7.tar.gz",
+                            "sha256": "bf6b105b79223eab2b86795363dfe5e5356050006a96521477973aba8f036fe1",
+                            "x-checker-data": {
+                                "type": "anitya",
+                                "project-id": 322269,
+                                "stable-only": true,
+                                "url-template": "https://github.com/google/draco/archive/refs/tags/$version.tar.gz"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "OCCT",
+                    "buildsystem": "cmake-ninja",
+                    "config-opts": [
+                        "-DBUILD_MODULE_ApplicationFramework=OFF",
+                        "-DBUILD_MODULE_DataExchange=ON",
+                        "-DBUILD_MODULE_Draw=OFF",
+                        "-DBUILD_MODULE_FoundationClasses=OFF",
+                        "-DBUILD_MODULE_ModelingAlgorithms=OFF",
+                        "-DBUILD_MODULE_ModelingData=OFF",
+                        "-DBUILD_MODULE_Visualization=OFF",
+                        "-DBUILD_DOC_Overview=OFF",
+                        "-DCMAKE_CXX_FLAGS=-fpermissive"
+                    ],
+                    "sources": [
+                        {
+                            "type": "git",
+                            "url": "https://github.com/Open-Cascade-SAS/OCCT.git",
+                            "tag": "V7_8_1"
+                        }
+                    ]
+                },
+                {
+                    "name": "assimp",
+                    "buildsystem": "cmake-ninja",
+                    "config-opts": [
+                        "-DASSIMP_BUILD_ASSIMP_TOOLS:BOOL=NO",
+                        "-DASSIMP_BUILD_TESTS:BOOL=NO"
+                    ],
+                    "sources": [
+                        {
+                            "type": "archive",
+                            "url": "https://github.com/assimp/assimp/archive/refs/tags/v5.4.3.tar.gz",
+                            "sha256": "66dfbaee288f2bc43172440a55d0235dfc7bf885dda6435c038e8000e79582cb",
+                            "x-checker-data": {
+                                "type": "anitya",
+                                "project-id": 6988,
+                                "stable-only": true,
+                                "url-template": "https://github.com/assimp/assimp/archive/refs/tags/v$version.tar.gz"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Imath",
+                    "buildsystem": "cmake-ninja",
+                    "config-opts": [
+                        "-DBUILD_TESTING:BOOL=OFF"
+                    ],
+                    "sources": [
+                        {
+                            "type": "git",
+                            "url": "https://github.com/AcademySoftwareFoundation/Imath.git",
+                            "tag": "v3.1.12",
+                            "x-checker-data": {
+                                "type": "git",
+                                "tag-pattern": "^(v[\\d.]+)$"
+                            },
+                            "commit": "c0396a055a01bc537d32f435aee11a9b7ed6f0b5"
+                        }
+                    ]
+                },
+                {
+                    "name": "Alembic",
+                    "buildsystem": "cmake-ninja",
+                    "config-opts": [
+                        "-DUSE_TESTS:BOOL=OFF",
+                        "-DUSE_HDF5:BOOL=ON"
+                    ],
+                    "sources": [
+                        {
+                            "type": "archive",
+                            "url": "https://github.com/alembic/alembic/archive/refs/tags/1.8.6.tar.gz",
+                            "sha256": "c572ebdea3a5f0ce13774dd1fceb5b5815265cd1b29d142cf8c144b03c131c8c",
+                            "x-checker-data": {
+                                "type": "anitya",
+                                "project-id": 13980,
+                                "stable-only": true,
+                                "url-template": "https://github.com/alembic/alembic/archive/refs/tags/$version.tar.gz"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "pybind11",
+                    "config-opts": [
+                        "-DPYBIND11_FINDPYTHON=ON",
+                        "-DPYBIND11_TEST=OFF"
+                    ],
+                    "buildsystem": "cmake-ninja",
+                    "builddir": true,
+                    "sources": [
+                        {
+                            "type": "archive",
+                            "url": "https://github.com/pybind/pybind11/archive/refs/tags/v2.13.6.tar.gz",
+                            "sha256": "e08cb87f4773da97fa7b5f035de8763abc656d87d5773e62f6da0587d1f0ec20",
+                            "x-checker-data": {
+                                "type": "anitya",
+                                "project-id": 13384,
+                                "url-template": "https://github.com/pybind/pybind11/archive/refs/tags/v$version.tar.gz"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "libdeflate",
+                    "buildsystem": "cmake-ninja",
+                    "sources": [
+                        {
+                            "type": "archive",
+                            "url": "https://github.com/ebiggers/libdeflate/releases/download/v1.20/libdeflate-1.20.tar.gz",
+                            "sha256": "c52cf0239fd644d71c9e88613dd7431a5306ebee1280c5791c71ca264869250a"
+                        }
+                    ]
+                },
+                {
+                    "name": "openexr",
+                    "buildsystem": "cmake-ninja",
+                    "sources": [
+                        {
+                            "type": "archive",
+                            "url": "https://github.com/AcademySoftwareFoundation/openexr/archive/refs/tags/v3.2.4.tar.gz",
+                            "sha256": "81e6518f2c4656fdeaf18a018f135e96a96e7f66dbe1c1f05860dd94772176cc"
+                        }
+                    ]
+                },
+                {
+                    "name": "Boost",
+                    "buildsystem": "simple",
+                    "sources": [
+                        {
+                            "type": "archive",
+                            "url": "https://archives.boost.io/release/1.83.0/source/boost_1_83_0.tar.gz",
+                            "sha256": "c0685b68dd44cc46574cce86c4e17c0f611b15e195be9848dfd0769a0a207628"
+                        }
+                    ],
+                    "build-commands": [
+                        "./bootstrap.sh --prefix=/app --with-libraries=iostreams,filesystem,system,date_time,regex,program_options,python",
+                        "./b2 headers",
+                        "./b2 -j$FLATPAK_BUILDER_N_JOBS install variant=release cxxstd=17 --layout=system"
+                    ]
+                },
+                {
+                    "name": "OpenSubdiv",
+                    "buildsystem": "cmake-ninja",
+                    "sources": [
+                        {
+                            "type": "archive",
+                            "url": "https://github.com/PixarAnimationStudios/OpenSubdiv/archive/refs/tags/v3_6_0.tar.gz",
+                            "sha256": "bebfd61ab6657a4f4ff27845fb66a167d00395783bfbd253254d87447ed1d879"
+                        }
+                    ]
+                },
+                {
+                    "name": "openUSD",
+                    "buildsystem": "cmake-ninja",
+                    "config-opts": [
+                        "-DPXR_BUILD_ALEMBIC_PLUGIN:BOOL=OFF",
+                        "-DPXR_BUILD_EMBREE_PLUGIN:BOOL=OFF",
+                        "-DPXR_BUILD_IMAGING:BOOL=OFF",
+                        "-DPXR_BUILD_MONOLITHIC:BOOL=ON",
+                        "-DPXR_BUILD_TESTS:BOOL=OFF",
+                        "-DPXR_BUILD_USD_IMAGING:BOOL=OFF",
+                        "-DPXR_ENABLE_PYTHON_SUPPORT:BOOL=OFF",
+                        "-DPXR_BUILD_EXAMPLES:BOOL=OFF",
+                        "-DPXR_BUILD_TUTORIALS:BOOL=OFF",
+                        "-DPXR_BUILD_USD_TOOLS:BOOL=OFF",
+                        "-DPXR_INSTALL_LOCATION:PATH=../lib/usd",
+                        "-DCMAKE_BUILD_TYPE=Release",
+                        "-DTBB_INCLUDE_DIRS=/app/include",
+                        "-DTBB_LIBRARIES=/app/lib/libtbb.so"
+                    ],
+                    "sources": [
+                        {
+                            "type": "archive",
+                            "url": "https://github.com/PixarAnimationStudios/OpenUSD/archive/refs/tags/v23.05.tar.gz",
+                            "sha256": "f5c3e72cd584bab383a8054628b6ed98aa17b1cbbe896eb98257ac19641d10c7"
+                        },
+                        {
+                            "type": "patch",
+                            "path": "0001-usd-onetbb.patch"
+                        },
+                        {
+                            "type": "patch",
+                            "path": "0002-install-bin.patch"
+                        }
+                    ]
+                }
+            ]
+        },
         {
-          "type": "file",
-          "url": "https://files.pythonhosted.org/packages/59/d5/1bdd7c9662d5e9078e25ba0eb69bdb122859295746d40ab8dfef3a7b4d42/Wand-0.6.13-py2.py3-none-any.whl",
-          "sha256": "e5dda0ac2204a40c29ef5c4cb310770c95d3d05c37b1379e69c94ea79d7d19c0"
-        }
-      ],
-      "modules" : [
+            "name": "python3-wand",
+            "buildsystem": "simple",
+            "build-commands": [
+                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"wand\" --no-build-isolation"
+            ],
+            "sources": [
+                {
+                    "type": "file",
+                    "url": "https://files.pythonhosted.org/packages/59/d5/1bdd7c9662d5e9078e25ba0eb69bdb122859295746d40ab8dfef3a7b4d42/Wand-0.6.13-py2.py3-none-any.whl",
+                    "sha256": "e5dda0ac2204a40c29ef5c4cb310770c95d3d05c37b1379e69c94ea79d7d19c0"
+                }
+            ],
+            "modules": [
+                {
+                    "name": "imagemagick",
+                    "config-opts": [
+                        "--disable-static"
+                    ],
+                    "sources": [
+                        {
+                            "type": "archive",
+                            "url": "https://imagemagick.org/archive/releases/ImageMagick-6.9.12-96.tar.xz",
+                            "sha256": "570419d87cc8f22d36a038b4a91de349b181d3c23cfbedc241f89789564402b0"
+                        }
+                    ]
+                }
+            ]
+        },
         {
-      	  "name": "imagemagick",
-      	  "config-opts": [
-      	    "--disable-static"
-      	  ],
-      	  "sources": [
-      	    {
-      	      "type": "archive",
-      	      "url": "https://imagemagick.org/archive/releases/ImageMagick-6.9.12-96.tar.xz",
-      	      "sha256": "570419d87cc8f22d36a038b4a91de349b181d3c23cfbedc241f89789564402b0"
-      	    }
-      	  ]
-      	}
-      ]
-    },
-    {
-      "name": "exhibit",
-      "buildsystem": "meson",
-      "sources": [
-        {
-          "type": "git",
-          "url": "https://github.com/nokse22/Exhibit",
-          "branch": "master"
+            "name": "exhibit",
+            "buildsystem": "meson",
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://github.com/nokse22/Exhibit",
+                    "tag": "v1.3.1"
+                }
+            ]
         }
-      ]
-    }
-  ]
+    ]
 }

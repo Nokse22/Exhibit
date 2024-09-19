@@ -146,11 +146,6 @@ class Viewer3dApplication(Adw.Application):
             f"XDG_SESSION_TYPE: {GLib.getenv('XDG_SESSION_TYPE')}\n" +
             f"XDG_SESSION_DESKTOP: {GLib.getenv('XDG_SESSION_DESKTOP')}\n" +
             f"GTK_THEME: {GLib.getenv('GTK_THEME')}\n" +
-            f"GTK_OVERLAY_SCROLLING: {GLib.getenv('GTK_OVERLAY_SCROLLING')}\n" +
-            f"GTK_DEBUG: {GLib.getenv('GTK_DEBUG')}\n" +
-            f"GTK_MODULES: {GLib.getenv('GTK_MODULES')}\n" +
-            f"GDK_BACKEND: {GLib.getenv('GDK_BACKEND')}\n" +
-            f"GNOME_SESSION_XDG_SESSION_DESKTOP: {GLib.getenv('GNOME_SESSION_XDG_SESSION_DESKTOP')}\n" +
             f"GTK Version: {Gtk.MAJOR_VERSION}.{Gtk.MINOR_VERSION}.{Gtk.MICRO_VERSION}\n" +
             f3d_info
         )

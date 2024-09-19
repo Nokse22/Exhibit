@@ -18,9 +18,9 @@
     <file preprocess="xml-stripblanks">icons/16x16/actions/share-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/sidebar-show-symbolic.svg</file>
 
-    <file>HDRIs/city.hdr</file>
-    <file>HDRIs/field.hdr</file>
-    <file>HDRIs/meadow.hdr</file>
-    <file>HDRIs/sky.hdr</file>
+    <file compressed="true">HDRIs/city.hdr</file>
+    <file compressed="true">HDRIs/field.hdr</file>
+    <file compressed="true">HDRIs/meadow.hdr</file>
+    <file compressed="true">HDRIs/sky.hdr</file>
   </gresource>
 </gresources>

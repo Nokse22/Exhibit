@@ -21,7 +21,7 @@ from gi.repository import Gtk, Gdk, GLib
 
 import f3d
 
-from .vector_math import p_dist, v_abs, v_norm, v_add, v_sub, v_mul, v_dot_p
+from ..vector_math import p_dist, v_abs, v_norm, v_add, v_sub, v_mul, v_dot_p
 from .. import logger_lib
 
 up_dirs_vector = {
