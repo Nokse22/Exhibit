@@ -73,6 +73,7 @@ You can use an HDRI image or a custom color as a background.</p>
         <ul>
           <li>Updated to GNOME 47</li>
           <li>Removed octet-stream mime type</li>
+          <li>Now using the default GTK renderer</li>
         </ul>
       </description>
     </release>
