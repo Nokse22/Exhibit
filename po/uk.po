@@ -1,0 +1,429 @@
+# Ukrainian translation for Exhibit.
+# Copyright (C) 2024 THE Exhibit COPYRIGHT HOLDER
+# This file is distributed under the same license as the Exhibit package.
+# volkov <volkovissocool@gmail.com>, 2024.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Exhibit\n"
+"Report-Msgid-Bugs-To: https://github.com/Nokse22/Exhibit/issues\n"
+"POT-Creation-Date: 2024-09-04 15:16+0200\n"
+"PO-Revision-Date: 2024-09-22 18:50+0300\n"
+"Last-Translator: volkov <volkovissocool@gmail.com>\n"
+"Language-Team: volkov <volkovissocool@gmail.com>\n"
+"Language: uk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.4.4\n"
+
+#: data/io.github.nokse22.Exhibit.desktop.in:3
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:7 src/window.py:848
+#: data/ui/window.ui:11 data/ui/window.ui:77 data/ui/window.ui:155
+msgid "Exhibit"
+msgstr "Експонат"
+
+#: data/io.github.nokse22.Exhibit.desktop.in:4
+msgid "3D Model Viewer"
+msgstr "Перегляд 3D-моделей"
+
+#: data/io.github.nokse22.Exhibit.desktop.in:11
+msgid "fbx;step;stl;dcm;ex2;gml;obj;3ds;gltf;pbr;rendering;3d-model;"
+msgstr ""
+"fbx;step;stl;dcm;ex2;gml;obj;3ds;gltf;pbr;rendering;3d-model;модель;три;"
+"графіка;обробка;3д;"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:8 data/ui/window.ui:73
+msgid "Preview your 3D models"
+msgstr "Переглядайте ваші 3D-моделі"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:10
+msgid ""
+"Based on the F3D library, it supports many file formats, from digital "
+"content to scientific datasets including glTF, STL, STEP, PLY, OBJ, FBX, "
+"USD, Alembic and many more. You can drag and drop 3d models into the app and "
+"export an image of the rendered model. Change many settings like tone "
+"mapping, ambient occlusion, anti aliasing, material roughness, metallic, "
+"color and opacity to achieve the perfect render. You can use an HDRI image "
+"or a custom color as a background."
+msgstr ""
+"Ця програма базується на бібліотеці F3D яка підтримує багато форматів "
+"файлів, від цифрового вмісту до наукових даних, включаючи glTF, STL, STEP, "
+"PLY, OBJ, FBX, USD, Alembic та багато інших. Ви можете перетягнути і скинути "
+"3D модель у вікно додатку і експортувати оброблену модель у зображення. "
+"Також можна змінити багато налаштувань, як тональне відображення, ambient "
+"occlusion, згладження, жорсткість матеріалу, металевість, колір та "
+"прозорість щоб досягти ідеального зображення. Ви можете використовувати HDRI "
+"зображення або колір у якості заднього фону."
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:42
+msgid "3D Bechy"
+msgstr "3д Bechy"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:46
+msgid "Retro Computer Setup with a HDRI skybox"
+msgstr "Ретро-комп'ютер з HDRI скайбоксом"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:50
+msgid "Green Metallic Suzanne"
+msgstr "Зелена металева Сюзанна"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:54
+msgid "Cow with an HDRI background and dark theme"
+msgstr "Корова з HDRI заднім фоном і темним стилем інтерфейсу"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:58
+msgid "Nissan Fairlady with dark theme"
+msgstr "Nissan Fairlady з темним стилем інтерфейсу"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:62
+msgid "Vase 3d scan with HDRI skybox"
+msgstr "3д скан вази з HDRI скайбоксом"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:66
+msgid "Point cloud of a boat with dark theme"
+msgstr "Човен з темним стилем інтерфейсу"
+
+#: src/main.py:140
+msgid "Checkout F3D"
+msgstr "Дізнатися більше про F3D"
+
+#: src/window.py:713
+msgid "Open File"
+msgstr "Відкрити файл"
+
+#: src/window.py:853
+msgid "Can't open"
+msgstr "Не вдалося відкрити"
+
+#: src/window.py:869
+msgid "Save File"
+msgstr "Зберегти файл"
+
+#: data/ui/window.ui:49 data/ui/window.ui:178 data/ui/window.ui:185
+#: data/ui/window.ui:711
+msgid "Menu"
+msgstr "Меню"
+
+#: data/ui/window.ui:69
+msgid "Load"
+msgstr "Завантажити"
+
+#: data/ui/window.ui:95
+msgid "Try Another"
+msgstr "Спробувати інший"
+
+#: data/ui/window.ui:99
+msgid "Couldn't load the file"
+msgstr "Не вдалося завантажити файл"
+
+#: data/ui/window.ui:103
+msgid "Error Loading File"
+msgstr "Помилка при завантаженні файлу"
+
+#: data/ui/window.ui:161 data/ui/window.ui:719
+msgid "Open With External App"
+msgstr "Відкрити у іншому додатку"
+
+#: data/ui/window.ui:171
+msgid "Close Sidebar"
+msgstr "Закрити бокову панель"
+
+#: data/ui/window.ui:208
+msgid "Render"
+msgstr "Обробка"
+
+#: data/ui/window.ui:222
+msgid "Rendering"
+msgstr "Обробка"
+
+#: data/ui/window.ui:227
+msgid "Translucency"
+msgstr "Прозорість"
+
+#: data/ui/window.ui:234
+msgid "Tone Mapping"
+msgstr "Тональне відображення"
+
+#: data/ui/window.ui:235
+msgid "Map colors properly to the monitor colors"
+msgstr "Належно відображати кольори відносно кольорів монітору"
+
+#: data/ui/window.ui:242
+msgid "Ambient Occlusion"
+msgstr "Ambient Occlusion"
+
+#: data/ui/window.ui:243
+msgid "Provides approximate shadows"
+msgstr "Забезпечує приблизні тіні"
+
+#: data/ui/window.ui:250
+msgid "Anti Aliasing"
+msgstr "Згладження"
+
+#: data/ui/window.ui:257
+msgid "Light with HDRI"
+msgstr "Освітлення з HDRI"
+
+#: data/ui/window.ui:258
+msgid "Light the scene using a the loaded HDRI or the default"
+msgstr "Освітити сцену використовуючи завантажене HDRI або стандартне"
+
+#: data/ui/window.ui:273
+msgid "Light Intensity"
+msgstr "Інтенсивність світла"
+
+#: data/ui/window.ui:282
+msgid "Model Rendering"
+msgstr "Обробка моделі"
+
+#: data/ui/window.ui:287
+msgid "Show All Edges"
+msgstr "Показати всі краї"
+
+#: data/ui/window.ui:294
+msgid "Edges Width"
+msgstr "Ширина країв"
+
+#: data/ui/window.ui:316
+msgid "Show Spheres"
+msgstr "Показати сфери"
+
+#: data/ui/window.ui:323
+msgid "Points Size"
+msgstr "Розмір точок"
+
+#: data/ui/window.ui:347 data/ui/window.ui:361
+msgid "Model"
+msgstr "Модель"
+
+#: data/ui/window.ui:367
+msgid "Load type"
+msgstr "Завантажити тип"
+
+#: data/ui/window.ui:371
+msgid "Geometry"
+msgstr "Геометрія"
+
+#: data/ui/window.ui:372 data/ui/window.ui:488
+msgid "Scene"
+msgstr "Сцена"
+
+#: data/ui/window.ui:385
+msgid "Material"
+msgstr "Матеріал"
+
+#: data/ui/window.ui:390
+msgid "Model Metallic"
+msgstr "Металевість моделі"
+
+#: data/ui/window.ui:406
+msgid "Model Roughness"
+msgstr "Жорстокість моделі"
+
+#: data/ui/window.ui:423
+msgid "Model Opacity"
+msgstr "Прозорість моделі"
+
+#: data/ui/window.ui:441
+msgid "Color"
+msgstr "Колір"
+
+#: data/ui/window.ui:447
+msgid "Coloration"
+msgstr "Кольоровість"
+
+#: data/ui/window.ui:451
+msgid "Custom"
+msgstr "Власний"
+
+#: data/ui/window.ui:452
+msgid "Normal"
+msgstr "Нормальна"
+
+#: data/ui/window.ui:453
+msgid "Magnitude"
+msgstr "Величина"
+
+#: data/ui/window.ui:454
+msgid "Direct"
+msgstr "Напряму"
+
+#: data/ui/window.ui:464
+msgid "Model Color"
+msgstr "Колір моделі"
+
+#: data/ui/window.ui:502
+msgid "Grid"
+msgstr "Ґратка"
+
+#: data/ui/window.ui:507
+msgid "View Grid"
+msgstr "Показати ґратку"
+
+#: data/ui/window.ui:514
+msgid "Grid Absolute"
+msgstr "Ґратка абсолютна"
+
+#: data/ui/window.ui:523
+msgid "Background"
+msgstr "Задній фон"
+
+#: data/ui/window.ui:528
+msgid "HDRI as Background"
+msgstr "HDRI як задній фон"
+
+#: data/ui/window.ui:529
+msgid "Use the loaded HDRI or the default one as a background"
+msgstr ""
+"Використовувати завантажене HDRI або стандартне зображення у якості заднього "
+"фону"
+
+#: data/ui/window.ui:536
+msgid "HDRI Image"
+msgstr "HDRI зображення"
+
+#: data/ui/window.ui:543
+msgid "Blur Background"
+msgstr "Розмити задній фон"
+
+#: data/ui/window.ui:550
+msgid "Blur Circle Of Confusion"
+msgstr "Розмиття"
+
+#: data/ui/window.ui:572
+msgid "Use Custom Color"
+msgstr "Використовувати власний колір"
+
+#: data/ui/window.ui:573
+msgid "HDRI background takes priority over this"
+msgstr "HDRI задній фон отримає більший пріоритет над цим"
+
+#: data/ui/window.ui:580
+msgid "Background Color"
+msgstr "Колір заднього фону"
+
+#: data/ui/window.ui:581
+msgid "Transparent colors not supported"
+msgstr "Прозорі кольори не підтримуються"
+
+#: data/ui/window.ui:605
+msgid "More"
+msgstr "Більше"
+
+#: data/ui/window.ui:619
+msgid "Navigation"
+msgstr "Навігація"
+
+#: data/ui/window.ui:624
+msgid "Always Point Up"
+msgstr "Завжди вказувати вгору"
+
+#: data/ui/window.ui:631
+msgid "Up Direction"
+msgstr "Напрям вгору"
+
+#: data/ui/window.ui:632
+msgid "Changing it will reload the file"
+msgstr "Зміна цього перезавантажить файл"
+
+#: data/ui/window.ui:636
+msgid "- X"
+msgstr ""
+
+#: data/ui/window.ui:637
+msgid "+ X"
+msgstr ""
+
+#: data/ui/window.ui:638
+msgid "- Y"
+msgstr ""
+
+#: data/ui/window.ui:639
+msgid "+ Y"
+msgstr ""
+
+#: data/ui/window.ui:640
+msgid "- Z"
+msgstr ""
+
+#: data/ui/window.ui:641
+msgid "+ Z"
+msgstr ""
+
+#: data/ui/window.ui:653
+msgid "Loading"
+msgstr "Завантаження"
+
+#: data/ui/window.ui:658
+msgid "Automatic Settings"
+msgstr "Автоматичні налаштування"
+
+#: data/ui/window.ui:659
+msgid "When loading choose the best presets for the file"
+msgstr "При завантаженні обирати найкращі налаштування для файлу"
+
+#: data/ui/window.ui:672
+msgid "Reload On Change"
+msgstr "Перезавантажити при змінах"
+
+#: data/ui/window.ui:673
+msgid "Check for file change"
+msgstr "Перевірити файл на зміни"
+
+#: data/ui/window.ui:702
+msgid "Reveal Sidebar"
+msgstr "Показати бокову панель"
+
+#: data/ui/window.ui:728
+msgid "Toggle Orthographic"
+msgstr "Перемикнути на ортографічний перегляд"
+
+#: data/ui/window.ui:736
+msgid "Reset to Bounds"
+msgstr "Скинути до меж"
+
+#: data/ui/window.ui:798
+msgid "Follow System"
+msgstr "Системний стиль"
+
+#: data/ui/window.ui:803
+msgid "Light Theme"
+msgstr "Світлий стиль"
+
+#: data/ui/window.ui:808
+msgid "Dark Theme"
+msgstr "Темний стиль"
+
+#: data/ui/window.ui:813 data/ui/window.ui:863
+msgid "_New Window"
+msgstr "_Нове вікно"
+
+#: data/ui/window.ui:819
+msgid "_Load New File"
+msgstr "_Завантажити новий файл"
+
+#: data/ui/window.ui:825
+msgid "_Export Image"
+msgstr "_Експортувати зображення"
+
+#: data/ui/window.ui:831 data/ui/window.ui:869
+msgid "_Help"
+msgstr "_Допомога"
+
+#: data/ui/window.ui:835 data/ui/window.ui:873
+msgid "_Keyboard Shortcuts"
+msgstr "_Клавіатурні скорочення"
+
+#: data/ui/window.ui:839 data/ui/window.ui:877
+msgid "_About Exhibit"
+msgstr "_Про Експонат"
+
+#: data/ui/window.ui:849
+msgid "Save Current Settings"
+msgstr "Зберегти поточні налаштування"
+
+#: data/ui/window.ui:855
+msgid "Open HDRI Folder"
+msgstr "Відкрити HDRI теку"
