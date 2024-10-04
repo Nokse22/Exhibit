@@ -1,0 +1,426 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-04 15:16+0200\n"
+"PO-Revision-Date: 2024-10-04 23:47+0200\n"
+"Last-Translator: Sunniva Løvstad <turtle@turtle.garden>\n"
+"Language-Team: \n"
+"Language: nb\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.5\n"
+
+#: data/io.github.nokse22.Exhibit.desktop.in:3
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:7 src/window.py:848
+#: data/ui/window.ui:11 data/ui/window.ui:77 data/ui/window.ui:155
+msgid "Exhibit"
+msgstr "Exhibit"
+
+#: data/io.github.nokse22.Exhibit.desktop.in:4
+msgid "3D Model Viewer"
+msgstr "3D-modellvisere"
+
+#: data/io.github.nokse22.Exhibit.desktop.in:11
+msgid "fbx;step;stl;dcm;ex2;gml;obj;3ds;gltf;pbr;rendering;3d-model;"
+msgstr "fbx;step;stl;dcm;ex2;gml;obj;3ds;gltf;pbr;gjengivelse;3d-modell;"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:8 data/ui/window.ui:73
+msgid "Preview your 3D models"
+msgstr "Forhåndsvis 3D-modellene dine"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:10
+msgid ""
+"Based on the F3D library, it supports many file formats, from digital "
+"content to scientific datasets including glTF, STL, STEP, PLY, OBJ, FBX, "
+"USD, Alembic and many more. You can drag and drop 3d models into the app and "
+"export an image of the rendered model. Change many settings like tone "
+"mapping, ambient occlusion, anti aliasing, material roughness, metallic, "
+"color and opacity to achieve the perfect render. You can use an HDRI image "
+"or a custom color as a background."
+msgstr ""
+"Drivet av F3D-biblioteket støtter Exhibit mange filformater, fra digitalt "
+"innhold til vitenskapelige datasetter, nemlig glTF, STL, STEP, PLY, OBJ, "
+"FBX, USD, Alembic, og mange flere. Du kan dra og slipp 3D-modeller inn i "
+"appen og eksporter et bilde av den gjengitte modellen. Du kan også forandre "
+"mange innstillinger, slik som tonekartlegging, omgivelsesokklusjon, "
+"antialiasing, materiellujevnhet, metalliskhet, farge, og gjennomsiktighet, "
+"for å oppnå den perfekte gjengivelsen. Du kan bruke et HDRI-bilde eller en "
+"tilpasset farge som bakgrunn."
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:42
+msgid "3D Bechy"
+msgstr "Bechy i 3D"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:46
+msgid "Retro Computer Setup with a HDRI skybox"
+msgstr "Et retro-datasett med HDRI-skybox"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:50
+msgid "Green Metallic Suzanne"
+msgstr "Grøn metallisk Suzanne"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:54
+msgid "Cow with an HDRI background and dark theme"
+msgstr "Ku med HDRI-skybox og mørk drakt"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:58
+msgid "Nissan Fairlady with dark theme"
+msgstr "Nissan Fairlady med mørk drakt"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:62
+msgid "Vase 3d scan with HDRI skybox"
+msgstr "En 3D-skanning av en vase med HDRI-skybox"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:66
+msgid "Point cloud of a boat with dark theme"
+msgstr "Punktsky av en båt med mørk drakt"
+
+#: src/main.py:140
+msgid "Checkout F3D"
+msgstr "Sjekk ut F3D"
+
+#: src/window.py:713
+msgid "Open File"
+msgstr "Åpne fil"
+
+#: src/window.py:853
+msgid "Can't open"
+msgstr "Kan ikke åpne"
+
+#: src/window.py:869
+msgid "Save File"
+msgstr "Lagre fil"
+
+#: data/ui/window.ui:49 data/ui/window.ui:178 data/ui/window.ui:185
+#: data/ui/window.ui:711
+msgid "Menu"
+msgstr "Meny"
+
+#: data/ui/window.ui:69
+msgid "Load"
+msgstr "Last inn fil…"
+
+#: data/ui/window.ui:95
+msgid "Try Another"
+msgstr "Prøv en annen"
+
+#: data/ui/window.ui:99
+msgid "Couldn't load the file"
+msgstr "Kunne ikke laste inn filen"
+
+#: data/ui/window.ui:103
+msgid "Error Loading File"
+msgstr "Feil ved innlasting av filen"
+
+#: data/ui/window.ui:161 data/ui/window.ui:719
+msgid "Open With External App"
+msgstr "Åpne med ekstern app"
+
+#: data/ui/window.ui:171
+msgid "Close Sidebar"
+msgstr "Steng sidefelt"
+
+#: data/ui/window.ui:208
+msgid "Render"
+msgstr "Gjengi"
+
+#: data/ui/window.ui:222
+msgid "Rendering"
+msgstr "Gjengivelse"
+
+#: data/ui/window.ui:227
+msgid "Translucency"
+msgstr "Gjennomsiktighet"
+
+#: data/ui/window.ui:234
+msgid "Tone Mapping"
+msgstr "Tonekartlegging"
+
+#: data/ui/window.ui:235
+msgid "Map colors properly to the monitor colors"
+msgstr "Kartlegg farger riktig til fargene på skjermen"
+
+#: data/ui/window.ui:242
+msgid "Ambient Occlusion"
+msgstr "Omgivelsesokklusjon"
+
+#: data/ui/window.ui:243
+msgid "Provides approximate shadows"
+msgstr "Gjengir omtrentlige skygger"
+
+#: data/ui/window.ui:250
+msgid "Anti Aliasing"
+msgstr "Antialiasing"
+
+#: data/ui/window.ui:257
+msgid "Light with HDRI"
+msgstr "Belys med HDRI"
+
+#: data/ui/window.ui:258
+msgid "Light the scene using a the loaded HDRI or the default"
+msgstr ""
+"Belys senen med bruk av enten det innlastede HDRI-bildet eller standarden"
+
+#: data/ui/window.ui:273
+msgid "Light Intensity"
+msgstr "Belysningsintensitet"
+
+#: data/ui/window.ui:282
+msgid "Model Rendering"
+msgstr "Modellgjengivelse"
+
+#: data/ui/window.ui:287
+msgid "Show All Edges"
+msgstr "Vis alle kanter"
+
+#: data/ui/window.ui:294
+msgid "Edges Width"
+msgstr "Kantbredde"
+
+#: data/ui/window.ui:316
+msgid "Show Spheres"
+msgstr "Kantsfærer"
+
+#: data/ui/window.ui:323
+msgid "Points Size"
+msgstr "Punktstørrelse"
+
+#: data/ui/window.ui:347 data/ui/window.ui:361
+msgid "Model"
+msgstr "Modell"
+
+#: data/ui/window.ui:367
+msgid "Load type"
+msgstr "Innlastingstype"
+
+#: data/ui/window.ui:371
+msgid "Geometry"
+msgstr "Geometri"
+
+#: data/ui/window.ui:372 data/ui/window.ui:488
+msgid "Scene"
+msgstr "Sene"
+
+#: data/ui/window.ui:385
+msgid "Material"
+msgstr "Materiell"
+
+#: data/ui/window.ui:390
+msgid "Model Metallic"
+msgstr "Modellmetalliskhet"
+
+#: data/ui/window.ui:406
+msgid "Model Roughness"
+msgstr "Modellujevnhet"
+
+#: data/ui/window.ui:423
+msgid "Model Opacity"
+msgstr "Modellgjennomsiktighet"
+
+#: data/ui/window.ui:441
+msgid "Color"
+msgstr "Farge"
+
+#: data/ui/window.ui:447
+msgid "Coloration"
+msgstr "Farging"
+
+#: data/ui/window.ui:451
+msgid "Custom"
+msgstr "Tilpasset"
+
+#: data/ui/window.ui:452
+msgid "Normal"
+msgstr "Normal"
+
+#: data/ui/window.ui:453
+msgid "Magnitude"
+msgstr "Størrelse"
+
+#: data/ui/window.ui:454
+msgid "Direct"
+msgstr "Direkt"
+
+#: data/ui/window.ui:464
+msgid "Model Color"
+msgstr "Modellfarge"
+
+#: data/ui/window.ui:502
+msgid "Grid"
+msgstr "Rutenett"
+
+#: data/ui/window.ui:507
+msgid "View Grid"
+msgstr "Vis rutenett"
+
+#: data/ui/window.ui:514
+msgid "Grid Absolute"
+msgstr "Absolutt rutenett"
+
+#: data/ui/window.ui:523
+msgid "Background"
+msgstr "Bakgrunn"
+
+#: data/ui/window.ui:528
+msgid "HDRI as Background"
+msgstr "HDRI som bakgrunn"
+
+#: data/ui/window.ui:529
+msgid "Use the loaded HDRI or the default one as a background"
+msgstr "Bruk det innlastede HDRI-bildet eller standarden som bakgrunn"
+
+#: data/ui/window.ui:536
+msgid "HDRI Image"
+msgstr "HDRI-bilde"
+
+#: data/ui/window.ui:543
+msgid "Blur Background"
+msgstr "Gjør bakgrunnen uskarp"
+
+#: data/ui/window.ui:550
+msgid "Blur Circle Of Confusion"
+msgstr "Bakgrunnsuskarphet"
+
+#: data/ui/window.ui:572
+msgid "Use Custom Color"
+msgstr "Bruk tilpasset farge"
+
+#: data/ui/window.ui:573
+msgid "HDRI background takes priority over this"
+msgstr "HDRI-bakgrunnsinnstillingen overstyrer dette"
+
+#: data/ui/window.ui:580
+msgid "Background Color"
+msgstr "Bakgrunnsfarge"
+
+#: data/ui/window.ui:581
+msgid "Transparent colors not supported"
+msgstr "Gjennomsiktige farger støttes ikke"
+
+#: data/ui/window.ui:605
+msgid "More"
+msgstr "Mer"
+
+#: data/ui/window.ui:619
+msgid "Navigation"
+msgstr "Navigering"
+
+#: data/ui/window.ui:624
+msgid "Always Point Up"
+msgstr "Pek alltid oppover"
+
+#: data/ui/window.ui:631
+msgid "Up Direction"
+msgstr "Opp-retning"
+
+#: data/ui/window.ui:632
+msgid "Changing it will reload the file"
+msgstr "Å endre dette laster inn filen på nytt"
+
+#: data/ui/window.ui:636
+msgid "- X"
+msgstr "- X"
+
+#: data/ui/window.ui:637
+msgid "+ X"
+msgstr "+ X"
+
+#: data/ui/window.ui:638
+msgid "- Y"
+msgstr "- Y"
+
+#: data/ui/window.ui:639
+msgid "+ Y"
+msgstr "+ Y"
+
+#: data/ui/window.ui:640
+msgid "- Z"
+msgstr "- Z"
+
+#: data/ui/window.ui:641
+msgid "+ Z"
+msgstr "+ Z"
+
+#: data/ui/window.ui:653
+msgid "Loading"
+msgstr "Laster inn"
+
+#: data/ui/window.ui:658
+msgid "Automatic Settings"
+msgstr "Automatiske innstillinger"
+
+#: data/ui/window.ui:659
+msgid "When loading choose the best presets for the file"
+msgstr "Ved innlasting skal Exhibit velge de beste standardene for filen"
+
+#: data/ui/window.ui:672
+msgid "Reload On Change"
+msgstr "Last inn på nytt ved endring"
+
+#: data/ui/window.ui:673
+msgid "Check for file change"
+msgstr "Sjekk for filendring"
+
+#: data/ui/window.ui:702
+msgid "Reveal Sidebar"
+msgstr "Vis sidefelt"
+
+#: data/ui/window.ui:728
+msgid "Toggle Orthographic"
+msgstr "Slå på/av ortografiskmodus"
+
+#: data/ui/window.ui:736
+msgid "Reset to Bounds"
+msgstr "Tilbakestille til grensene"
+
+#: data/ui/window.ui:798
+msgid "Follow System"
+msgstr "Følg systemet"
+
+#: data/ui/window.ui:803
+msgid "Light Theme"
+msgstr "Lys drakt"
+
+#: data/ui/window.ui:808
+msgid "Dark Theme"
+msgstr "Mørk drakt"
+
+#: data/ui/window.ui:813 data/ui/window.ui:863
+msgid "_New Window"
+msgstr "_Nytt vindu"
+
+#: data/ui/window.ui:819
+msgid "_Load New File"
+msgstr "_Last inn ny fil"
+
+#: data/ui/window.ui:825
+msgid "_Export Image"
+msgstr "_Eksporter bilde"
+
+#: data/ui/window.ui:831 data/ui/window.ui:869
+msgid "_Help"
+msgstr "_Hjelp"
+
+#: data/ui/window.ui:835 data/ui/window.ui:873
+msgid "_Keyboard Shortcuts"
+msgstr "_Tastatursnarveier"
+
+#: data/ui/window.ui:839 data/ui/window.ui:877
+msgid "_About Exhibit"
+msgstr "_Om Exhibit"
+
+#: data/ui/window.ui:849
+msgid "Save Current Settings"
+msgstr "Lagre nåværende innstillinger"
+
+#: data/ui/window.ui:855
+msgid "Open HDRI Folder"
+msgstr "Åpne HDRI-mappen"
