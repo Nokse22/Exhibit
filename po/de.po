@@ -1,0 +1,426 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-04 15:16+0200\n"
+"PO-Revision-Date: 2024-10-23 14:51+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.4.4\n"
+
+#: data/io.github.nokse22.Exhibit.desktop.in:3
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:7 src/window.py:848
+#: data/ui/window.ui:11 data/ui/window.ui:77 data/ui/window.ui:155
+msgid "Exhibit"
+msgstr "Ausstellung"
+
+#: data/io.github.nokse22.Exhibit.desktop.in:4
+msgid "3D Model Viewer"
+msgstr "3D Modelbetrachter"
+
+#: data/io.github.nokse22.Exhibit.desktop.in:11
+msgid "fbx;step;stl;dcm;ex2;gml;obj;3ds;gltf;pbr;rendering;3d-model;"
+msgstr "fbx;step;stl;dcm;ex2;gml;obj;3ds;gltf;pbr;rendering;3d-model;"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:8 data/ui/window.ui:73
+msgid "Preview your 3D models"
+msgstr "Betrachte dein 3D Model"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:10
+msgid ""
+"Based on the F3D library, it supports many file formats, from digital "
+"content to scientific datasets including glTF, STL, STEP, PLY, OBJ, FBX, "
+"USD, Alembic and many more. You can drag and drop 3d models into the app and "
+"export an image of the rendered model. Change many settings like tone "
+"mapping, ambient occlusion, anti aliasing, material roughness, metallic, "
+"color and opacity to achieve the perfect render. You can use an HDRI image "
+"or a custom color as a background."
+msgstr ""
+"Basierend auf der F3D Bibliothek unterstützt es viele Dateiformate. Von "
+"Digitalen Inhalten über Wissenschaftliche Datensätze werden die Formate "
+"glTF, STL, STEP, PLY, OBJ, FBX, USD, Alembic und viele weiter unterstützt. "
+"3D Modele können einfach über der Anwendung fallengelassen werden und als "
+"Bilder exportiert werden. Außerdem können viele Einstellungen angepasst "
+"werden, wie der Farbton, Umgebungsverdeckung, Antialiasing und "
+"Materialeigenschaften wie Rauheit, metallisches Glänzen, Farbe und die "
+"Transparenz um das perfekte Aussehen zu erreichen. Außerdem können HDR "
+"Bilder für einen Benutzerdefinierten Hintergrund verwendet werden."
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:42
+msgid "3D Bechy"
+msgstr "3D Benchy"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:46
+msgid "Retro Computer Setup with a HDRI skybox"
+msgstr "Alter Computer mit HDR Hintergrund"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:50
+msgid "Green Metallic Suzanne"
+msgstr "Grün-metallische Suzanne"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:54
+msgid "Cow with an HDRI background and dark theme"
+msgstr "Kuh mit HDR Hintergrund im dunklem Thema"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:58
+msgid "Nissan Fairlady with dark theme"
+msgstr "Nissan Fairlady im dunklem Thema"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:62
+msgid "Vase 3d scan with HDRI skybox"
+msgstr "3D Scan einer Vase mit HDR Hintergrund"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:66
+msgid "Point cloud of a boat with dark theme"
+msgstr "Ein Boot als Punktewolke im dunklem Thema"
+
+#: src/main.py:140
+msgid "Checkout F3D"
+msgstr "F3D ausschecken"
+
+#: src/window.py:713
+msgid "Open File"
+msgstr "Datei öffnen"
+
+#: src/window.py:853
+msgid "Can't open"
+msgstr "Kann nicht geöffnet werden"
+
+#: src/window.py:869
+msgid "Save File"
+msgstr "Datei speichern"
+
+#: data/ui/window.ui:49 data/ui/window.ui:178 data/ui/window.ui:185
+#: data/ui/window.ui:711
+msgid "Menu"
+msgstr "Menü"
+
+#: data/ui/window.ui:69
+msgid "Load"
+msgstr "Laden"
+
+#: data/ui/window.ui:95
+msgid "Try Another"
+msgstr "Ein anderes Verssuchen"
+
+#: data/ui/window.ui:99
+msgid "Couldn't load the file"
+msgstr "Datei konnte nicht geladen werden"
+
+#: data/ui/window.ui:103
+msgid "Error Loading File"
+msgstr "Fehler beim Laden der Datei"
+
+#: data/ui/window.ui:161 data/ui/window.ui:719
+msgid "Open With External App"
+msgstr "In externer Anwendung öffnen"
+
+#: data/ui/window.ui:171
+msgid "Close Sidebar"
+msgstr "Seitenleiste schließen"
+
+#: data/ui/window.ui:208
+msgid "Render"
+msgstr "Render"
+
+#: data/ui/window.ui:222
+msgid "Rendering"
+msgstr "Rendering"
+
+#: data/ui/window.ui:227
+msgid "Translucency"
+msgstr "Durschsichtigkeit"
+
+#: data/ui/window.ui:234
+msgid "Tone Mapping"
+msgstr "Farbton"
+
+#: data/ui/window.ui:235
+msgid "Map colors properly to the monitor colors"
+msgstr "Stimmt die Farben mit dem Farbraumes des Monitors ab"
+
+#: data/ui/window.ui:242
+msgid "Ambient Occlusion"
+msgstr "Umgebungsverdeckung"
+
+#: data/ui/window.ui:243
+msgid "Provides approximate shadows"
+msgstr "Bietet angenäherte Schatten"
+
+#: data/ui/window.ui:250
+msgid "Anti Aliasing"
+msgstr "Antialiasing"
+
+#: data/ui/window.ui:257
+msgid "Light with HDRI"
+msgstr "Mit HDRI belichten"
+
+#: data/ui/window.ui:258
+msgid "Light the scene using a the loaded HDRI or the default"
+msgstr "Belichtet die Szene mit dem Standard oder dem geladenen HDR Bild"
+
+#: data/ui/window.ui:273
+msgid "Light Intensity"
+msgstr "Lichtintensität"
+
+#: data/ui/window.ui:282
+msgid "Model Rendering"
+msgstr "Model Rendering"
+
+#: data/ui/window.ui:287
+msgid "Show All Edges"
+msgstr "Alle Kanten anzeigen"
+
+#: data/ui/window.ui:294
+msgid "Edges Width"
+msgstr "Kantenbreite"
+
+#: data/ui/window.ui:316
+msgid "Show Spheres"
+msgstr "Zeige Spheren"
+
+#: data/ui/window.ui:323
+msgid "Points Size"
+msgstr "Punktgröße"
+
+#: data/ui/window.ui:347 data/ui/window.ui:361
+msgid "Model"
+msgstr "Model"
+
+#: data/ui/window.ui:367
+msgid "Load type"
+msgstr "Ladetyp"
+
+#: data/ui/window.ui:371
+msgid "Geometry"
+msgstr "Gemoetrie"
+
+#: data/ui/window.ui:372 data/ui/window.ui:488
+msgid "Scene"
+msgstr "Szene"
+
+#: data/ui/window.ui:385
+msgid "Material"
+msgstr "Material"
+
+#: data/ui/window.ui:390
+msgid "Model Metallic"
+msgstr "Model Metallisch"
+
+#: data/ui/window.ui:406
+msgid "Model Roughness"
+msgstr "Model Rauheit"
+
+#: data/ui/window.ui:423
+msgid "Model Opacity"
+msgstr "Model Deckfähigkeit"
+
+#: data/ui/window.ui:441
+msgid "Color"
+msgstr "Farbe"
+
+#: data/ui/window.ui:447
+msgid "Coloration"
+msgstr "Färbung"
+
+#: data/ui/window.ui:451
+msgid "Custom"
+msgstr "Benutzerdefiniert"
+
+#: data/ui/window.ui:452
+msgid "Normal"
+msgstr "Normale"
+
+#: data/ui/window.ui:453
+msgid "Magnitude"
+msgstr "Außmaße"
+
+#: data/ui/window.ui:454
+msgid "Direct"
+msgstr "Direkt"
+
+#: data/ui/window.ui:464
+msgid "Model Color"
+msgstr "Modelfarbe"
+
+#: data/ui/window.ui:502
+msgid "Grid"
+msgstr "Gitter"
+
+#: data/ui/window.ui:507
+msgid "View Grid"
+msgstr "Zeige Gitter"
+
+#: data/ui/window.ui:514
+msgid "Grid Absolute"
+msgstr "Absolutes Gitter"
+
+#: data/ui/window.ui:523
+msgid "Background"
+msgstr "Hintergrund"
+
+#: data/ui/window.ui:528
+msgid "HDRI as Background"
+msgstr "HDRI als Hintergrund"
+
+#: data/ui/window.ui:529
+msgid "Use the loaded HDRI or the default one as a background"
+msgstr "Geladenes HDRI oder den Standard als Hintergrund verwenden"
+
+#: data/ui/window.ui:536
+msgid "HDRI Image"
+msgstr "HDR Bild"
+
+#: data/ui/window.ui:543
+msgid "Blur Background"
+msgstr "Hintergrund verwischen"
+
+#: data/ui/window.ui:550
+msgid "Blur Circle Of Confusion"
+msgstr "Verwische Zerstreuungskreis"
+
+#: data/ui/window.ui:572
+msgid "Use Custom Color"
+msgstr "Benutzerdefinierte Farbe verwenden"
+
+#: data/ui/window.ui:573
+msgid "HDRI background takes priority over this"
+msgstr "HDRI Hintergrund hat höhere Priorität"
+
+#: data/ui/window.ui:580
+msgid "Background Color"
+msgstr "Hintegrundfarbe"
+
+#: data/ui/window.ui:581
+msgid "Transparent colors not supported"
+msgstr "Durchsichtige Farben werden nicht unterstützt"
+
+#: data/ui/window.ui:605
+msgid "More"
+msgstr "Mehr"
+
+#: data/ui/window.ui:619
+msgid "Navigation"
+msgstr "Navigation"
+
+#: data/ui/window.ui:624
+msgid "Always Point Up"
+msgstr "Immer nach oben zeigen"
+
+#: data/ui/window.ui:631
+msgid "Up Direction"
+msgstr "Aufwärtsrichtung"
+
+#: data/ui/window.ui:632
+msgid "Changing it will reload the file"
+msgstr "Diese Änderung wird die Datei neuladen"
+
+#: data/ui/window.ui:636
+msgid "- X"
+msgstr "- X"
+
+#: data/ui/window.ui:637
+msgid "+ X"
+msgstr "+ X"
+
+#: data/ui/window.ui:638
+msgid "- Y"
+msgstr "- Y"
+
+#: data/ui/window.ui:639
+msgid "+ Y"
+msgstr "+ Y"
+
+#: data/ui/window.ui:640
+msgid "- Z"
+msgstr "- Z"
+
+#: data/ui/window.ui:641
+msgid "+ Z"
+msgstr "+ Z"
+
+#: data/ui/window.ui:653
+msgid "Loading"
+msgstr "Lade"
+
+#: data/ui/window.ui:658
+msgid "Automatic Settings"
+msgstr "Automatische Einstellungen"
+
+#: data/ui/window.ui:659
+msgid "When loading choose the best presets for the file"
+msgstr "Beim Laden die beste Voreinstellung für Datei verwenden"
+
+#: data/ui/window.ui:672
+msgid "Reload On Change"
+msgstr "Bei Änderung neuladen"
+
+#: data/ui/window.ui:673
+msgid "Check for file change"
+msgstr "Auf Dateiänderungen prüfen"
+
+#: data/ui/window.ui:702
+msgid "Reveal Sidebar"
+msgstr "Seitenleiste anzeigen"
+
+#: data/ui/window.ui:728
+msgid "Toggle Orthographic"
+msgstr "Orthographisch wechseln"
+
+#: data/ui/window.ui:736
+msgid "Reset to Bounds"
+msgstr "Auf Ursprung zurücksetzten"
+
+#: data/ui/window.ui:798
+msgid "Follow System"
+msgstr "Systemthema"
+
+#: data/ui/window.ui:803
+msgid "Light Theme"
+msgstr "Helles Thema"
+
+#: data/ui/window.ui:808
+msgid "Dark Theme"
+msgstr "Dunkles Thema"
+
+#: data/ui/window.ui:813 data/ui/window.ui:863
+msgid "_New Window"
+msgstr "_Neues Fenster"
+
+#: data/ui/window.ui:819
+msgid "_Load New File"
+msgstr "_Neue Datei laden"
+
+#: data/ui/window.ui:825
+msgid "_Export Image"
+msgstr "_Bild exportieren"
+
+#: data/ui/window.ui:831 data/ui/window.ui:869
+msgid "_Help"
+msgstr "_Hilfe"
+
+#: data/ui/window.ui:835 data/ui/window.ui:873
+msgid "_Keyboard Shortcuts"
+msgstr "_Tastenkürzel"
+
+#: data/ui/window.ui:839 data/ui/window.ui:877
+msgid "_About Exhibit"
+msgstr "_Über Austellung"
+
+#: data/ui/window.ui:849
+msgid "Save Current Settings"
+msgstr "Aktuelle Einstellungen speichern"
+
+#: data/ui/window.ui:855
+msgid "Open HDRI Folder"
+msgstr "HDRI Ordner öffnen"
