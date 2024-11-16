@@ -30,13 +30,13 @@ up_dirs_vector = {
     "-Y": (0.0, -1.0, 0.0),
     "+Y": (0.0, 1.0, 0.0),
     "-Z": (0.0, 0.0, -1.0),
-    "+Z": (0.0, 0.0, 1.0)
+    "+Z": (0.0, 0.0, 1.0),
 }
 
 
-@Gtk.Template(resource_path='/io/github/nokse22/Exhibit/ui/f3d_viewer.ui')
+@Gtk.Template(resource_path="/io/github/nokse22/Exhibit/ui/f3d_viewer.ui")
 class F3DViewer(Gtk.GLArea):
-    __gtype_name__ = 'F3DViewer'
+    __gtype_name__ = "F3DViewer"
 
     keys = {
         "grid": "render.grid.enable",
@@ -64,7 +64,6 @@ class F3DViewer(Gtk.GLArea):
         "comp": "model.scivis.component",
         "hdri-file": "render.hdri.file",
         "cells": "model.scivis.cells",
-
         # The following settings don't have an UI
         "texture-matcap": "model.matcap.texture",
         "texture-base-color": "model.color.texture",
@@ -80,7 +79,7 @@ class F3DViewer(Gtk.GLArea):
         "grid-unit": "render.grid.unit",
         "grid-subdivisions": "render.grid.subdivisions",
         "grid-color": "render.grid.color",
-        "scalar": "model.scivis.array-name"
+        "scalar": "model.scivis.array-name",
     }
 
     def __init__(self, *args):
@@ -103,7 +102,7 @@ class F3DViewer(Gtk.GLArea):
             "scene.up-direction": "+Y",
             "model.scivis.cells": True,
             "model.scivis.array-name": "",
-            "render.hdri.ambient": False
+            "render.hdri.ambient": False,
         }
 
         self.prev_pan_offset = 0
@@ -135,8 +134,7 @@ class F3DViewer(Gtk.GLArea):
         up_v = up_dirs_vector[self.settings["scene.up-direction"]]
         vector = v_mul(tuple([up_v[2], up_v[0], up_v[1]]), 1000)
         self.camera.position = v_add(self.camera.focal_point, vector)
-        self.camera.setViewUp(
-            up_dirs_vector[self.settings["scene.up-direction"]])
+        self.camera.setViewUp(up_dirs_vector[self.settings["scene.up-direction"]])
         self.camera.resetToBounds()
         self.get_distance()
         self.queue_render()
@@ -145,8 +143,7 @@ class F3DViewer(Gtk.GLArea):
         up_v = up_dirs_vector[self.settings["scene.up-direction"]]
         vector = v_mul(tuple([up_v[1], up_v[2], up_v[0]]), 1000)
         self.camera.position = v_add(self.camera.focal_point, vector)
-        self.camera.setViewUp(
-            up_dirs_vector[self.settings["scene.up-direction"]])
+        self.camera.setViewUp(up_dirs_vector[self.settings["scene.up-direction"]])
         self.camera.resetToBounds()
         self.get_distance()
         self.queue_render()
@@ -163,10 +160,11 @@ class F3DViewer(Gtk.GLArea):
 
     def isometric_view(self, *args):
         up_v = up_dirs_vector[self.settings["scene.up-direction"]]
-        vector = v_add(tuple([up_v[2], up_v[0], up_v[1]]), tuple([up_v[1], up_v[2], up_v[0]]))
+        vector = v_add(
+            tuple([up_v[2], up_v[0], up_v[1]]), tuple([up_v[1], up_v[2], up_v[0]])
+        )
         self.camera.position = v_mul(v_norm(v_add(vector, up_v)), 1000)
-        self.camera.setViewUp(
-            up_dirs_vector[self.settings["scene.up-direction"]])
+        self.camera.setViewUp(up_dirs_vector[self.settings["scene.up-direction"]])
         self.camera.resetToBounds()
         self.get_distance()
         self.queue_render()
@@ -286,12 +284,16 @@ class F3DViewer(Gtk.GLArea):
                 self.camera.focal_point = focal_point
             case "up":
                 dist, direction = self.get_camera_to_focal_distance()
-                if dist > self.get_gimble_limit() or (dist < self.get_gimble_limit() and direction == -1):
+                if dist > self.get_gimble_limit() or (
+                    dist < self.get_gimble_limit() and direction == -1
+                ):
                     self.camera.pan(0, val, 0)
                     self.camera.focal_point = focal_point
             case "down":
                 dist, direction = self.get_camera_to_focal_distance()
-                if dist > self.get_gimble_limit() or (dist < self.get_gimble_limit() and direction == 1):
+                if dist > self.get_gimble_limit() or (
+                    dist < self.get_gimble_limit() and direction == 1
+                ):
                     self.camera.pan(0, -val, 0)
                     self.camera.focal_point = focal_point
 
@@ -315,9 +317,9 @@ class F3DViewer(Gtk.GLArea):
     @Gtk.Template.Callback("on_scroll")
     def on_scroll(self, gesture, dx, dy):
         if self.settings["scene.camera.orthographic"]:
-            self.camera.zoom(1 - 0.1*dy)
+            self.camera.zoom(1 - 0.1 * dy)
         else:
-            self.camera.dolly(1 - 0.1*dy)
+            self.camera.dolly(1 - 0.1 * dy)
         self.get_distance()
         self.queue_render()
 
@@ -338,15 +340,21 @@ class F3DViewer(Gtk.GLArea):
                 self.camera.elevation(y)
                 self.camera.azimuth(x)
             else:
-                if (dist > self.get_gimble_limit() or (dist < self.get_gimble_limit()) and
-                        (direction == 1 and y < 0) or (dist < self.get_gimble_limit() and direction == -1 and y > 0)):
+                if (
+                    dist > self.get_gimble_limit()
+                    or (dist < self.get_gimble_limit())
+                    and (direction == 1 and y < 0)
+                    or (dist < self.get_gimble_limit() and direction == -1 and y > 0)
+                ):
                     self.camera.elevation(y)
                 self.camera.azimuth(x)
         elif gesture.get_current_button() == 2:
             self.camera.pan(
-                (self.drag_prev_offset[0] - x_offset) * (0.0000001*self.width + 0.001*self.distance),
-                -(self.drag_prev_offset[1] - y_offset) * (0.0000001*self.height + 0.001*self.distance),
-                0
+                (self.drag_prev_offset[0] - x_offset)
+                * (0.0000001 * self.width + 0.001 * self.distance),
+                -(self.drag_prev_offset[1] - y_offset)
+                * (0.0000001 * self.height + 0.001 * self.distance),
+                0,
             )
 
         if self.always_point_up:

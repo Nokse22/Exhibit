@@ -328,7 +328,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.update_background_color()
 
-
         # Setting up the save settings dialog
         def _on_factory_setup(_factory, list_item):
             label = Gtk.Label(xalign=0, ellipsize=3)
