@@ -68,6 +68,14 @@ You can use an HDRI image or a custom color as a background.</p>
   </screenshots>
 
   <releases>
+    <release version="1.4.2" date="2024-11-16">
+      <description translate="no">
+        <ul>
+          <li>Added Norwegian Bokmål translation (turtlegarden)</li>
+          <li>Added German translation (Vortex Acherontic)</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.4.1" date="2024-09-29">
       <description translate="no">
         <ul>

@@ -17,21 +17,19 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from gi.repository import Adw
-from gi.repository import Gtk, Gdk, Gio, GLib, GObject
-
-from .widgets import F3DViewer, FileRow
-
 import os
 import json
 import re
+import time
 
+from gi.repository import Adw, Gtk, Gdk, Gio, GLib, GObject
+from .widgets import F3DViewer, FileRow
 from wand.image import Image
 
 from . import logger_lib
 from .settings_manager import WindowSettings
 
-import time
+from gettext import gettext as _
 
 start = time.time()
 
@@ -241,14 +239,18 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         hdri_names = ["city.hdr", "meadow.hdr", "field.hdr", "sky.hdr"]
         for hdri_filename in hdri_names:
             if not os.path.isfile(self.hdri_path + hdri_filename):
-                hdri = Gio.resources_lookup_data('/io/github/nokse22/Exhibit/HDRIs/' + hdri_filename, Gio.ResourceLookupFlags.NONE).get_data()
+                hdri = Gio.resources_lookup_data(
+                    '/io/github/nokse22/Exhibit/HDRIs/' + hdri_filename,
+                    Gio.ResourceLookupFlags.NONE).get_data()
                 hdri_bytes = bytearray(hdri)
                 with open(self.hdri_path + hdri_filename, 'wb') as output_file:
                     output_file.write(hdri_bytes)
                 self.logger.info(f"Added {hdri_filename}")
 
         # Loading the saved configurations
-        self.configurations = Gio.resources_lookup_data('/io/github/nokse22/Exhibit/configurations.json', Gio.ResourceLookupFlags.NONE).get_data().decode('utf-8')
+        self.configurations = Gio.resources_lookup_data(
+            '/io/github/nokse22/Exhibit/configurations.json',
+            Gio.ResourceLookupFlags.NONE).get_data().decode('utf-8')
         self.configurations = json.loads(self.configurations)
 
         for filename in os.listdir(self.user_configurations_path):
@@ -584,7 +586,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         elif setting.name == "point-up":
             if setting.value:
                 self.f3d_viewer.set_view_up(
-                    up_dirs_vector[self.window_settings.get_setting("up").value])
+                    up_dirs_vector[
+                        self.window_settings.get_setting("up").value])
                 self.f3d_viewer.always_point_up = True
             else:
                 self.f3d_viewer.always_point_up = False
@@ -628,8 +631,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         }
 
         # Save to JSON file
-        with open(self.user_configurations_path + key + '.json', 'w') as json_file:
-            json.dump(settings_dict, json_file, indent=4)
+        with open(self.user_configurations_path + key + '.json', 'w') as j_f:
+            json.dump(settings_dict, j_f, indent=4)
 
         # Update configurations and menu UI
         self.configurations.update(settings_dict)
@@ -652,9 +655,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             entry.remove_css_class("error")
             return
 
-        entered_extensions = [ext.strip() for ext in extensions_text.split(',')]
+        entered_exts = [ext.strip() for ext in extensions_text.split(',')]
 
-        if all(ext in allowed_extensions for ext in entered_extensions):
+        if all(ext in allowed_extensions for ext in entered_exts):
             entry.remove_css_class("error")
         else:
             entry.add_css_class("error")
@@ -1109,5 +1112,7 @@ def list_to_rgb(lst):
 
 def list_files(directory):
     items = os.listdir(directory)
-    files = [item for item in items if os.path.isfile(os.path.join(directory, item))]
+    files = [
+        item for item in items if os.path.isfile(os.path.join(directory, item))
+    ]
     return files

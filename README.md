@@ -54,3 +54,7 @@ git clone https://github.com/Nokse22/Exhibit.git
 ```
 
 Open the project in GNOME Builder and click "Run Project".
+
+## License
+
+Exhibit is distributed under the GPLv3 license, it uses F3D that is distributed under the 3-Clause BSD License, see [this](https://github.com/f3d-app/f3d?tab=readme-ov-file#license) for more info on F3D libraries licenses.

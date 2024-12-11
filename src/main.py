@@ -20,7 +20,6 @@
 import sys
 import os
 import webbrowser
-import f3d
 
 from gi.repository import Gtk, Gio, Adw, GLib
 from .window import Viewer3dWindow
@@ -40,7 +39,7 @@ class Viewer3dApplication(Adw.Application):
                          flags=Gio.ApplicationFlags.HANDLES_OPEN)
 
         logger_lib.init()
-        # logger = logger_lib.logger
+        logger = logger_lib.logger
 
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action)
@@ -48,29 +47,46 @@ class Viewer3dApplication(Adw.Application):
 
         self.create_action('open-hdri-folder', self.on_open_hdri_folder)
 
-        self.create_action('open-new-window', self.open_new_window_action, ['<primary><shift>n'])
-        self.create_action('toggle-orthographic', self.toggle_orthographic, ['<primary>5'])
+        self.create_action(
+            'open-new-window',
+            self.open_new_window_action, ['<primary><shift>n'])
+        self.create_action(
+            'toggle-orthographic', self.toggle_orthographic, ['<primary>5'])
         self.create_action('front-view', self.front_view, ['<primary>1'])
         self.create_action('right-view', self.right_view, ['<primary>3'])
         self.create_action('top-view', self.top_view, ['<primary>7'])
-        self.create_action('isometric-view', self.isometric_view, ['<primary>9'])
+        self.create_action(
+            'isometric-view', self.isometric_view, ['<primary>9'])
 
-        self.create_action('move-camera-w', self.on_move_camera, ['<primary>w'], "w")
-        self.create_action('move-camera-a', self.on_move_camera, ['<primary>a'], "a")
-        self.create_action('move-camera-s', self.on_move_camera, ['<primary>s'], "s")
-        self.create_action('move-camera-d', self.on_move_camera, ['<primary>d'], "d")
+        self.create_action(
+            'move-camera-w', self.on_move_camera, ['<primary>w'], "w")
+        self.create_action(
+            'move-camera-a', self.on_move_camera, ['<primary>a'], "a")
+        self.create_action(
+            'move-camera-s', self.on_move_camera, ['<primary>s'], "s")
+        self.create_action(
+            'move-camera-d', self.on_move_camera, ['<primary>d'], "d")
 
-        self.create_action('rotate-camera-left', self.on_rotate_camera, ['<primary>Left'], "left")
-        self.create_action('rotate-camera-right', self.on_rotate_camera, ['<primary>Right'], "right")
-        self.create_action('rotate-camera-up', self.on_rotate_camera, ['<primary>Up'], "up")
-        self.create_action('rotate-camera-down', self.on_rotate_camera, ['<primary>Down'], "down")
+        self.create_action(
+            'rotate-camera-left',
+            self.on_rotate_camera, ['<primary>Left'], "left")
+        self.create_action(
+            'rotate-camera-right',
+            self.on_rotate_camera, ['<primary>Right'], "right")
+        self.create_action(
+            'rotate-camera-up',
+            self.on_rotate_camera, ['<primary>Up'], "up")
+        self.create_action(
+            'rotate-camera-down',
+            self.on_rotate_camera, ['<primary>Down'], "down")
 
         user_home_dir = os.environ.get("XDG_CONFIG_HOME", os.environ["HOME"])
         show_image_external_action = Gio.SimpleAction.new_stateful(
                 'show-image-externally',
                 GLib.VariantType.new("s"),
                 GLib.Variant("s", user_home_dir))
-        show_image_external_action.connect('activate', self.show_image_external)
+        show_image_external_action.connect(
+            'activate', self.show_image_external)
         self.add_action(show_image_external_action)
 
         self.saved_settings = Gio.Settings.new('io.github.nokse22.Exhibit')
@@ -95,17 +111,16 @@ class Viewer3dApplication(Adw.Application):
     def show_image_external(self, _action, image_path: GLib.Variant, *args):
         try:
             image_file = Gio.File.new_for_path(image_path.get_string())
-        except GLib.GError:
-            print("Failed to construct a new Gio.File object from path.")
+        except Exception as e:
+            self.logger.error(e)
         else:
             launcher = Gtk.FileLauncher.new(image_file)
 
             def open_image_finish(_, result, *args):
                 try:
                     launcher.launch_finish(result)
-                except GLib.GError as e:
-                    if e.code != 2:
-                        print("Failed to finish Gtk.FileLauncher procedure.")
+                except Exception as e:
+                    self.logger.error(e)
 
             launcher.launch(self.props.active_window, None, open_image_finish)
 
@@ -114,7 +129,7 @@ class Viewer3dApplication(Adw.Application):
             application_name='Exhibit',
             application_icon='io.github.nokse22.Exhibit',
             developer_name='Nokse22',
-            version='1.4.1',
+            version='1.4.2',
             website='https://github.com/Nokse22/Exhibit',
             issue_url='https://github.com/Nokse22/Exhibit/issues',
             developers=['Nokse'],
@@ -186,15 +201,11 @@ class Viewer3dApplication(Adw.Application):
         self.props.active_window.f3d_viewer.isometric_view()
 
     def do_activate(self):
-        """Called when the application is activated.
-
-        We raise the application's main window, creating it if
-        necessary.
-        """
         win = self.props.active_window
         if not win:
             if self.open_filepath:
-                win = Viewer3dWindow(application=self, startup_filepath=self.open_filepath)
+                win = Viewer3dWindow(
+                    application=self, startup_filepath=self.open_filepath)
             else:
                 win = Viewer3dWindow(application=self)
         win.present()
@@ -204,14 +215,6 @@ class Viewer3dApplication(Adw.Application):
         win.present()
 
     def create_action(self, name, callback, shortcuts=None, argument=None):
-        """Add an application action.
-
-        Args:
-            name: the name of the action
-            callback: the function to be called when the action is
-              activated
-            shortcuts: an optional list of accelerators
-        """
         action = Gio.SimpleAction.new(name, None)
         if argument:
             action.connect("activate", callback, argument)

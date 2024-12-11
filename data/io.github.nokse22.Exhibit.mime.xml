@@ -19,14 +19,6 @@
     <generic-icon name="io.github.nokse22.Exhibit.mime"/>
   </mime-type>
 
-  <mime-type type="model/gltf-binary">
-    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
-  </mime-type>
-
-  <mime-type type="model/gltf-json">
-    <generic-icon name="io.github.nokse22.Exhibit.mime"/>
-  </mime-type>
-
   <mime-type type="application/dicom">
     <generic-icon name="io.github.nokse22.Exhibit.mime"/>
   </mime-type>
