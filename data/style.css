@@ -24,3 +24,29 @@
 flowbox flowboxchild {
   padding: 0px;
 }
+
+.main-view headerbar button {
+ background-color: alpha(var(--view-bg-color), 0.6);
+ border-radius:9999px;
+}
+
+.main-view headerbar button:hover {
+ background-color: alpha(var(--view-bg-color), 0.7);
+}
+
+.main-view headerbar button:active {
+ background-color: alpha(var(--view-bg-color), 0.9);
+}
+
+.main-view headerbar button:selected {
+ background-color: alpha(var(--view-bg-color), 1);
+}
+
+windowcontrols button{
+ padding: 0px;
+}
+
+windowcontrols {
+ padding-left: 6px;
+ padding-right: 6px;
+}

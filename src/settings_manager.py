@@ -1,39 +1,60 @@
-import gi
-from gi.repository import Adw
-from gi.repository import Gtk, Gdk, Gio, GLib, GObject
+# settings_manager.py
+#
+# Copyright 2024 Nokse22
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+
+from gi.repository import Gio, GObject
 
 from enum import IntEnum
 
 from . import logger_lib
 
- #
- #   Other special
- #   functions if  <──────┐                 On change
- #   connected            │     ┌─────────┐ update the UI
- #                        │     │         ∨
- #                       ┌─────────┐     ┌──┐
- #      Update       ━━━▶│ListStore│     │UI│
- #      the settings     └─────────┘     └──┘
- #                        │     ∧         │
- #                        │     └─────────┘ On change update
- #                        │                 the ListStore
- #        ┏━━━━━━┓        │ On change
- #        ┃Viewer┃<───────┘ update the
- #        ┗━━━━━━┛          view options
- #
- # Made with  ASCII Draw
+#   Other special
+#   functions if  <──────┐                 On change
+#   connected            │     ┌─────────┐ update the UI
+#                        │     │         ∨
+#                       ┌─────────┐     ┌──┐
+#      Update       ━━━▶│ListStore│     │UI│
+#      the settings     └─────────┘     └──┘
+#                        │     ∧         │
+#                        │     └─────────┘ On change update
+#                        │                 the ListStore
+#        ┏━━━━━━┓        │ On change
+#        ┃Viewer┃<───────┘ update the
+#        ┗━━━━━━┛          view options
+#
+# Made with  ASCII Draw
+
 
 class SettingType(IntEnum):
     VIEW = 0
     OTHER = 1
     INTERNAL = 2
 
+
 class Setting(GObject.Object):
     __gtype_name__ = 'Setting'
 
     __gsignals__ = {
-        'changed': (GObject.SignalFlags.RUN_FIRST, None, (str, int, )),
-        'changed-no-ui-update': (GObject.SignalFlags.RUN_FIRST, None, (str, int, )),
+        'changed': (
+            GObject.SignalFlags.RUN_FIRST, None, (str, int, )),
+        'changed-no-ui-update': (
+            GObject.SignalFlags.RUN_FIRST, None, (str, int, )),
     }
 
     def __init__(self, name, value, setting_type):
@@ -67,6 +88,7 @@ class Setting(GObject.Object):
 
     def __repr__(self):
         return f"<Setting {self._name}: {self._value}>"
+
 
 class WindowSettings(Gio.ListStore):
     __gtype_name__ = 'WindowSettings'
@@ -112,33 +134,37 @@ class WindowSettings(Gio.ListStore):
         "up": "+Y",
         "orthographic": False,
 
+        "animation-index": 0,
+        "animation-time": 0.0,
+
         # There is no UI for the following ones
-        "texture-matcap": "",
-        "texture-base-color": "",
+
+        # "texture-matcap": "",
+        # "texture-base-color": "",
         "emissive-factor": (1.0, 1.0, 1.0),
-        "texture-emissive": "",
-        "texture-material": "",
+        # "texture-emissive": "",
+        # "texture-material": "",
         "normal-scale": 1.0,
-        "texture-normal": "",
+        # "texture-normal": "",
         "point-type": "sphere",
         "volume": False,
         "inverse": False,
-        "final-shader": "",
-        "grid-unit": 0.0,
-        "grid-subdivisions": 10,
+        # "final-shader": "",
+        # "grid-unit": 0.0,
+        # "grid-subdivisions": 10,
         "grid-color": (0.0, 0.0, 0.0),
-        "scalar" : ""
+        "scalar": ""
     }
 
     other_settings = {
         "use-color": False,
-        "point-up" : True,
+        "point-up": True,
         "auto-reload": True
     }
 
     internal_settings = {
-        "auto-best" : True,
-        "load-type": None, # 0 for geometry and 1 for scene
+        "auto-best": True,
+        "load-type": None,  # 0 for geometry and 1 for scene
         "sidebar-show": True
     }
 
@@ -150,19 +176,22 @@ class WindowSettings(Gio.ListStore):
         for name, value in self.default_settings.items():
             setting = Setting(name, value, SettingType.VIEW)
             setting.connect("changed", self.on_view_setting_changed)
-            setting.connect("changed-no-ui-update", self.on_other_setting_changed)
+            setting.connect(
+                "changed-no-ui-update", self.on_other_setting_changed)
             self.append(setting)
 
         for name, value in self.other_settings.items():
             setting = Setting(name, value, SettingType.OTHER)
             setting.connect("changed", self.on_other_setting_changed)
-            setting.connect("changed-no-ui-update", self.on_other_setting_changed)
+            setting.connect(
+                "changed-no-ui-update", self.on_other_setting_changed)
             self.append(setting)
 
         for name, value in self.internal_settings.items():
             setting = Setting(name, value, SettingType.INTERNAL)
             setting.connect("changed", self.on_internal_setting_changed)
-            setting.connect("changed-no-ui-update", self.on_other_setting_changed)
+            setting.connect(
+                "changed-no-ui-update", self.on_other_setting_changed)
             self.append(setting)
 
     def sync_all_settings(self):

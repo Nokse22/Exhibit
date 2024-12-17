@@ -8,7 +8,7 @@
     <property name="has-stencil-buffer">true</property>
     <property name="vexpand">true</property>
     <property name="overflow">hidden</property>
-    <property name="css-classes">fix-render</property>
+    <property name="css-name">f3dviewer</property>
     <child>
       <object class="GtkGestureDrag">
         <signal name="drag-update" handler="on_drag_update"/>

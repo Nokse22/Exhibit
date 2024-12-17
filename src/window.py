@@ -179,6 +179,12 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     save_settings_extensions_entry = Gtk.Template.Child()
     save_settings_expander = Gtk.Template.Child()
 
+    animation_group = Gtk.Template.Child()
+    animation_adj = Gtk.Template.Child()
+    animation_time_adj = Gtk.Template.Child()
+    animation_spin_button = Gtk.Template.Child()
+    play_button = Gtk.Template.Child()
+
     width = 600
     height = 600
     distance = 0
@@ -450,6 +456,20 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.window_settings.set_setting(
             "auto-best", self.saved_settings.get_boolean("auto-best"))
 
+        self.animation_time_adj.bind_property(
+            "lower", self.f3d_viewer, "lower-time-range", 1)
+        self.animation_time_adj.bind_property(
+            "upper", self.f3d_viewer, "upper-time-range", 1)
+        self.animation_time_adj.bind_property(
+            "value", self.f3d_viewer, "animation-time", 3)
+
+        self.play_button.connect("clicked", self.on_play_button_clicked)
+
+        self.f3d_viewer.connect("notify::playing", self.on_playing_changed)
+
+        self.animation_spin_button.connect(
+            "notify::value", self.on_animation_index_changed)
+
         # Sync the UI with the settings
         self.window_settings.sync_all_settings()
 
@@ -509,6 +529,17 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     # Functions that are called when a UI changes, they should only
     #   set the corresponding setting.
 
+    def on_animation_index_changed(self, spin, *args):
+        val = int(spin.get_value())
+        options = {"animation-index": val}
+        self.f3d_viewer.update_options(options)
+        self.f3d_viewer.animation_time = self.f3d_viewer.lower_time_range
+        self.f3d_viewer.playing = False
+        self.reload_file(True)
+
+        if self.f3d_viewer.upper_time_range == 0.0:
+            self.animation_group.set_visible(False)
+
     def on_switch_toggled(self, switch, active, name):
         self.window_settings.set_setting(name, switch.get_active())
 
@@ -546,10 +577,13 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     # Special functions called when a setting changes that trigger
     #   an action like reloading.
 
-    def reload_file(self, *args):
+    def reload_file(self, pres_or=False):
         if not self.loading_file:
             self.logger.info("Loading file because load type or up changed")
-            self.load_file(filepath=self.filepath, override=True)
+            self.load_file(
+                filepath=self.filepath,
+                override=True,
+                preserve_orientation=pres_or)
 
     def update_background_color(self, *args):
         self.logger.info(
@@ -788,16 +822,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             return
 
     def load_file(self, **kwargs):
-        filepath = None
-        override = False
-        preserve_orientation = False
+        filepath = kwargs.get("filepath", None)
+        override = kwargs.get("override", False)
+        preserve_orientation = kwargs.get("preserve_orientation", False)
 
-        if "filepath" in kwargs:
-            filepath = kwargs["filepath"]
-        if "override" in kwargs:
-            override = kwargs["override"]
-        if "preserve_orientation" in kwargs:
-            preserve_orientation = kwargs["preserve_orientation"]
+        if preserve_orientation:
             camera_state = self.f3d_viewer.get_camera_state()
 
         if filepath is None:
@@ -1040,6 +1069,17 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             return
         state = self.split_view.get_show_sidebar()
         self.window_settings.set_setting("sidebar-show", state)
+
+    def on_play_button_clicked(self, btn):
+        self.f3d_viewer.playing = not self.f3d_viewer.playing
+
+    def on_playing_changed(self, *args):
+        if self.f3d_viewer.playing:
+            self.play_button.set_icon_name("media-playback-stop-symbolic")
+            self.play_button.set_tooltip_text(_("Stop"))
+        else:
+            self.play_button.set_icon_name("media-playback-start-symbolic")
+            self.play_button.set_tooltip_text(_("Start"))
 
     #
     # Function called when the HDRI is deleted/added...

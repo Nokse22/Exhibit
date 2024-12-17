@@ -467,7 +467,10 @@
                                                     <property name="valign">center</property>
                                                     <property name="rgba">rgb(119,118,123)</property>
                                                     <property name="dialog">
-                                                      <object class="GtkColorDialog"/>
+                                                      <object class="GtkColorDialog">
+                                                        <property name="title" translatable="yes">Model Color</property>
+                                                        <property name="with-alpha">False</property>
+                                                      </object>
                                                     </property>
                                                   </object>
                                                 </child>
@@ -578,13 +581,15 @@
                                             <property name="hexpand">True</property>
                                             <property name="hexpand-set">True</property>
                                             <property name="title" translatable="yes">Background Color</property>
-                                            <property name="subtitle" translatable="yes">Transparent colors not supported</property>
                                             <child>
                                               <object class="GtkColorDialogButton" id="background_color_button">
                                                 <property name="valign">center</property>
                                                 <property name="rgba">rgb(246,97,81)</property>
                                                 <property name="dialog">
-                                                  <object class="GtkColorDialog"/>
+                                                  <object class="GtkColorDialog">
+                                                    <property name="title" translatable="yes">Background Color</property>
+                                                    <property name="with-alpha">False</property>
+                                                  </object>
                                                 </property>
                                               </object>
                                             </child>
@@ -647,6 +652,53 @@
                                       </object>
                                     </child>
                                     <child>
+                                      <object class="AdwPreferencesGroup" id="animation_group">
+                                        <property name="title" translatable="yes">Animation</property>
+                                        <child>
+                                          <object class="AdwSpinRow" id="animation_spin_button">
+                                            <property name="title" translatable="yes">Animation Index</property>
+                                            <property name="adjustment">
+                                              <object class="GtkAdjustment" id="animation_adj">
+                                                <property name="upper">99</property>
+                                                <property name="step-increment">1.0</property>
+                                              </object>
+                                            </property>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="AdwPreferencesRow">
+                                            <child>
+                                              <object class="GtkBox">
+                                                <property name="margin-top">6</property>
+                                                <property name="margin-bottom">6</property>
+                                                <property name="margin-start">6</property>
+                                                <property name="margin-end">6</property>
+                                                <property name="spacing">6</property>
+                                                <child>
+                                                  <object class="GtkButton" id="play_button">
+                                                    <property name="icon-name">media-playback-start-symbolic</property>
+                                                    <property name="tooltip-text" translatable="yes">Play</property>
+                                                    <property name="has-tooltip">true</property>
+                                                  </object>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkScale">
+                                                    <property name="digits">2</property>
+                                                    <property name="hexpand">true</property>
+                                                    <property name="adjustment">
+                                                      <object class="GtkAdjustment" id="animation_time_adj">
+                                                        <property name="upper">20.0</property>
+                                                      </object>
+                                                    </property>
+                                                  </object>
+                                                </child>
+                                              </object>
+                                            </child>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <child>
                                     <object class="AdwPreferencesGroup">
                                       <property name="hexpand">True</property>
                                       <property name="hexpand-set">True</property>
@@ -691,6 +743,7 @@
               <object class="AdwToolbarView" id="toolbar_view">
                 <property name="top-bar-style">flat</property>
                 <property name="extend-content-to-top-edge">true</property>
+                <property name="css-classes">main-view</property>
                 <child type="top">
                   <object class="AdwHeaderBar" id="header_bar">
                     <property name="css-classes">preview-headerbar</property>
@@ -756,6 +809,7 @@
                           <object class="AdwToastOverlay" id="toast_overlay">
                             <property name="child">
                               <object class="F3DViewer" id="f3d_viewer">
+                                <property name="css-classes">fix-render</property>
                               </object>
                             </property>
                           </object>

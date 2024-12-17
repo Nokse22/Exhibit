@@ -17,7 +17,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from gi.repository import Gtk, Gdk, GLib
+from gi.repository import Gtk, GLib, GObject
 
 import f3d
 
@@ -41,22 +41,22 @@ class F3DViewer(Gtk.GLArea):
     keys = {
         "grid": "render.grid.enable",
         "grid-absolute": "render.grid.absolute",
-        "translucency-support": "render.effect.translucency-support",
-        "tone-mapping": "render.effect.tone-mapping",
-        "ambient-occlusion": "render.effect.ambient-occlusion",
-        "anti-aliasing": "render.effect.anti-aliasing",
+        "translucency-support": "render.effect.translucency_support",
+        "tone-mapping": "render.effect.tone_mapping",
+        "ambient-occlusion": "render.effect.ambient_occlusion",
+        "anti-aliasing": "render.effect.anti_aliasing",
         "hdri-ambient": "render.hdri.ambient",
         "hdri-skybox": "render.background.skybox",
         "light-intensity": "render.light.intensity",
         "orthographic": "scene.camera.orthographic",
         "blur-background": "render.background.blur",
-        "blur-coc": "render.background.blur.coc",
+        "blur-coc": "render.background.blur_coc",
         "bg-color": "render.background.color",
-        "show-edges": "render.show-edges",
-        "edges-width": "render.line-width",
-        "up": "scene.up-direction",
-        "point-sprites": "model.point-sprites.enable",
-        "point-size": "render.point-size",
+        "show-edges": "render.show_edges",
+        "edges-width": "render.line_width",
+        "up": "scene.up_direction",
+        "point-sprites": "model.point_sprites.enable",
+        "point-size": "render.point_size",
         "model-color": "model.color.rgb",
         "model-metallic": "model.material.metallic",
         "model-roughness": "model.material.roughness",
@@ -64,7 +64,9 @@ class F3DViewer(Gtk.GLArea):
         "comp": "model.scivis.component",
         "hdri-file": "render.hdri.file",
         "cells": "model.scivis.cells",
+
         # The following settings don't have an UI
+
         "texture-matcap": "model.matcap.texture",
         "texture-base-color": "model.color.texture",
         "emissive-factor": "model.emissive.factor",
@@ -72,14 +74,15 @@ class F3DViewer(Gtk.GLArea):
         "texture-material": "model.material.texture",
         "normal-scale": "model.normal.scale",
         "texture-normal": "model.normal.texture",
-        "point-type": "model.point-sprites.type",
+        "point-type": "model.point_sprites.type",
         "volume": "model.volume.enable",
         "inverse": "model.volume.inverse",
-        "final-shader": "render.effect.final-shader",
+        "final-shader": "render.effect.final_shader",
         "grid-unit": "render.grid.unit",
         "grid-subdivisions": "render.grid.subdivisions",
         "grid-color": "render.grid.color",
-        "scalar": "model.scivis.array-name",
+        "scalar": "model.scivis.array_name",
+        "animation-index": "scene.animation.index"
     }
 
     def __init__(self, *args):
@@ -88,20 +91,17 @@ class F3DViewer(Gtk.GLArea):
 
         f3d.Log.set_use_coloring(True)
         f3d.Log.set_verbose_level(f3d.Log.DEBUG)
-        # f3d.Log.print(f3d.Log.DEBUG, 'debug')
+        f3d.Log.print(f3d.Log.DEBUG, 'debug')
 
         self.set_auto_render(True)
         self.connect("realize", self.on_realize)
         self.connect("render", self.on_render)
         self.connect("resize", self.on_resize)
 
-        self.set_allowed_apis(Gdk.GLAPI.GL)
-        # self.set_required_version(1, 0)
-
         self.settings = {
-            "scene.up-direction": "+Y",
+            "scene.up_direction": "+Y",
             "model.scivis.cells": True,
-            "model.scivis.array-name": "",
+            "model.scivis.array_name": "",
             "render.hdri.ambient": False,
         }
 
@@ -117,55 +117,101 @@ class F3DViewer(Gtk.GLArea):
 
         self.is_showed = False
 
-        self.engine = f3d.Engine(f3d.Window.EXTERNAL)
-        self.loader = self.engine.getLoader()
-        self.camera = self.engine.window.getCamera()
+        self._animation_time = 0
+        self._playing = False
+
+        self.engine = f3d.Engine.create_external_egl()
+        self.scene = self.engine.scene
+        self.window = self.engine.window
+        self.camera = self.window.camera
 
         self.engine.autoload_plugins()
 
         self.engine.options.update(self.settings)
 
+    @GObject.Property(type=float)
+    def upper_time_range(self):
+        _lower, upper = self.scene.animation_time_range()
+        print("TIME RANGE", _lower, upper)
+        return upper
+
+    @GObject.Property(type=float)
+    def lower_time_range(self):
+        lower, _upper = self.scene.animation_time_range()
+        print("TIME RANGE", lower, _upper)
+        return lower
+
+    @GObject.Property(type=float)
+    def animation_time(self):
+        return self._animation_time
+
+    @animation_time.setter
+    def animation_time(self, value):
+        self._animation_time = value
+        self.scene.load_animation_time(self._animation_time)
+        self.queue_render()
+
+    @GObject.Property(type=bool, default=False)
+    def playing(self):
+        return self._playing
+
+    @playing.setter
+    def playing(self, value):
+        self._playing = value
+
+        if self._playing:
+            if self.animation_time >= self.upper_time_range:
+                self.animation_time = self.lower_time_range
+            GLib.timeout_add(10, self._advance_animation)
+
+    def _advance_animation(self):
+        self.animation_time = self.animation_time + 0.01
+        if self.animation_time >= self.upper_time_range:
+            self.playing = False
+        return self._playing
+
     def reset_to_bounds(self):
-        self.camera.resetToBounds()
+        self.camera.reset_to_bounds()
         self.get_distance()
         self.queue_render()
 
     def front_view(self, *args):
-        up_v = up_dirs_vector[self.settings["scene.up-direction"]]
+        up_v = up_dirs_vector[self.settings["scene.up_direction"]]
         vector = v_mul(tuple([up_v[2], up_v[0], up_v[1]]), 1000)
         self.camera.position = v_add(self.camera.focal_point, vector)
-        self.camera.setViewUp(up_dirs_vector[self.settings["scene.up-direction"]])
-        self.camera.resetToBounds()
+        self.camera.view_up = up_dirs_vector[self.settings["scene.up_direction"]]
+        self.camera.reset_to_bounds()
         self.get_distance()
         self.queue_render()
 
     def right_view(self, *args):
-        up_v = up_dirs_vector[self.settings["scene.up-direction"]]
+        up_v = up_dirs_vector[self.settings["scene.up_direction"]]
         vector = v_mul(tuple([up_v[1], up_v[2], up_v[0]]), 1000)
         self.camera.position = v_add(self.camera.focal_point, vector)
-        self.camera.setViewUp(up_dirs_vector[self.settings["scene.up-direction"]])
-        self.camera.resetToBounds()
+        self.camera.view_up = up_dirs_vector[self.settings["scene.up_direction"]]
+        self.camera.reset_to_bounds()
         self.get_distance()
         self.queue_render()
 
     def top_view(self, *args):
-        up_v = up_dirs_vector[self.settings["scene.up-direction"]]
+        up_v = up_dirs_vector[self.settings["scene.up_direction"]]
         vector = v_mul(up_v, 1000)
         self.camera.position = v_add(self.camera.focal_point, vector)
         vector = v_mul(tuple([up_v[1], up_v[2], up_v[0]]), 1000)
-        self.camera.setViewUp(vector)
-        self.camera.resetToBounds()
+        self.camera.view_up = vector
+        self.camera.reset_to_bounds()
         self.get_distance()
         self.queue_render()
 
     def isometric_view(self, *args):
-        up_v = up_dirs_vector[self.settings["scene.up-direction"]]
+        up_v = up_dirs_vector[self.settings["scene.up_direction"]]
         vector = v_add(
-            tuple([up_v[2], up_v[0], up_v[1]]), tuple([up_v[1], up_v[2], up_v[0]])
+            tuple([up_v[2], up_v[0], up_v[1]]),
+            tuple([up_v[1], up_v[2], up_v[0]])
         )
         self.camera.position = v_mul(v_norm(v_add(vector, up_v)), 1000)
-        self.camera.setViewUp(up_dirs_vector[self.settings["scene.up-direction"]])
-        self.camera.resetToBounds()
+        self.camera.view_up = up_dirs_vector[self.settings["scene.up_direction"]]
+        self.camera.reset_to_bounds()
         self.get_distance()
         self.queue_render()
 
@@ -176,26 +222,35 @@ class F3DViewer(Gtk.GLArea):
                 f3d_key = self.keys[key]
                 self.settings[f3d_key] = value
                 f3d_options[f3d_key] = value
+
+        print(f3d_options)
         self.engine.options.update(f3d_options)
         self.queue_render()
 
     def render_image(self):
         self.get_context().make_current()
-        img = self.engine.window.render_to_image()
+        img = self.window.render_to_image()
         return img
 
     def has_geometry_loader(self, filepath):
-        return self.engine.loader.hasGeometryReader(filepath)
+        return True
+        # return self.engine.loader.hasGeometryReader(filepath)
 
     def has_scene_loader(self, filepath):
-        return self.engine.loader.hasSceneReader(filepath)
+        return True
+        # return self.engine.loader.hasSceneReader(filepath)
 
     def load_geometry(self, filepath):
         if self.settings["render.hdri.ambient"]:
             f3d_options = {"render.hdri.ambient": False}
             self.engine.options.update(f3d_options)
 
-        self.engine.loader.load_geometry(filepath, True)
+        # self.engine.loader.load_geometry(filepath, True)
+        self.scene.clear()
+        self.scene.add(filepath)
+
+        self.notify("lower-time-range")
+        self.notify("upper-time-range")
 
         self.get_distance()
 
@@ -204,7 +259,12 @@ class F3DViewer(Gtk.GLArea):
             f3d_options = {"render.hdri.ambient": False}
             self.engine.options.update(f3d_options)
 
-        self.engine.loader.load_scene(filepath)
+        # self.engine.loader.load_scene(filepath)
+        self.scene.clear()
+        self.scene.add(filepath)
+
+        self.notify("lower-time-range")
+        self.notify("upper-time-range")
 
         self.get_distance()
 
@@ -236,11 +296,11 @@ class F3DViewer(Gtk.GLArea):
 
     def on_render(self, area, ctx):
         self.get_context().make_current()
-        self.engine.window.render()
-        return True
+        self.engine.window.size = self.width, self.height
+        self.window.render()
 
     def get_camera_to_focal_distance(self):
-        up = up_dirs_vector[self.settings["scene.up-direction"]]
+        up = up_dirs_vector[self.settings["scene.up_direction"]]
         pos = self.camera.position
         foc = self.camera.focal_point
 
@@ -298,21 +358,21 @@ class F3DViewer(Gtk.GLArea):
                     self.camera.focal_point = focal_point
 
         if self.always_point_up:
-            up = up_dirs_vector[self.settings["scene.up-direction"]]
-            self.camera.setViewUp(up)
+            up = up_dirs_vector[self.settings["scene.up_direction"]]
+            self.camera.view_up = up
 
         self.queue_render()
 
     def set_view_up(self, direction):
-        self.camera.setViewUp(direction)
+        self.camera.view_up = direction
         self.queue_render()
 
     def set_camera_state(self, state):
-        self.camera.setState(state)
+        self.camera.state = state
         self.queue_render()
 
     def get_camera_state(self):
-        return self.camera.getState()
+        return self.camera.state
 
     @Gtk.Template.Callback("on_scroll")
     def on_scroll(self, gesture, dx, dy):
@@ -358,8 +418,8 @@ class F3DViewer(Gtk.GLArea):
             )
 
         if self.always_point_up:
-            up = up_dirs_vector[self.settings["scene.up-direction"]]
-            self.camera.setViewUp(up)
+            up = up_dirs_vector[self.settings["scene.up_direction"]]
+            self.camera.view_up = up
 
         self.queue_render()
 
