@@ -55,6 +55,23 @@ git clone https://github.com/Nokse22/Exhibit.git
 
 Open the project in GNOME Builder and click "Run Project".
 
+## Help
+
+You can view the extended help pages from `Main Menu > Help` or by pressing `F1`.
+
+### Custom Configurations
+Custom configurations are saved in `/home/username/.var/app/io.github.nokse22.Exhibit/data/configurations`. The best way to make a custom configuration is to use the app and save it to file, but if you want to use some of the supported options that don't have an UI you will need to later edit it manually.
+
+The default configurations can not be changed, but if one of your custom configurations supports the file you are opening it will have priority over the default ones.
+
+### HDRI
+There are 4 default 1k HDRIs, you can add more by opening the HDRIs folder from the app hamburger menu and placing them there. Any image added in this path will be used as an HDRI and a thumbnail will be generated. Images added when the app is running will be visible the next time the app is started.
+
+If you save a configuration that uses an HDRI make sure it is placed in this folder, this way the app will always be able to access the file.
+
+### Options
+To view all the options description and also all the supported options that don't have an UI you can visit the `Options` page in the `Help`.
+
 ## License
 
 Exhibit is distributed under the GPLv3 license, it uses F3D that is distributed under the 3-Clause BSD License, see [this](https://github.com/f3d-app/f3d?tab=readme-ov-file#license) for more info on F3D libraries licenses.
