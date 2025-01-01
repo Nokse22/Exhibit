@@ -20,30 +20,11 @@
 import sys
 import os
 import webbrowser
-import f3d
 
 from gi.repository import Gtk, Gio, Adw, GLib
 from .window import Viewer3dWindow
 
 from . import logger_lib
-
-info = f3d.Engine.get_lib_info()
-
-f3d_info = f"""
-=========== F3D Info ===========
-Version: {info.version}
-Version Full: {info.version_full}
-Build Date: {info.build_date}
-Build System: {info.build_system}
-Compiler: {info.compiler}
-Raytracing Module: {info.raytracing_module}
-External Rendering Module: {info.external_rendering_module}
-OpenEXR Module: {info.openexr_module}
-VTK Version: {info.vtk_version}
-Previous Copyright: {info.previous_copyright}
-Copyright: {info.copyright}
-License: {info.license}
-Authors: {info.authors}\n\n"""
 
 
 class Viewer3dApplication(Adw.Application):
@@ -130,7 +111,7 @@ class Viewer3dApplication(Adw.Application):
             application_name='Exhibit',
             application_icon='io.github.nokse22.Exhibit',
             developer_name='Nokse22',
-            version='1.4.1',
+            version='1.4.2',
             website='https://github.com/Nokse22/Exhibit',
             issue_url='https://github.com/Nokse22/Exhibit/issues',
             developers=['Nokse'],
@@ -146,8 +127,7 @@ class Viewer3dApplication(Adw.Application):
             f"XDG_SESSION_TYPE: {GLib.getenv('XDG_SESSION_TYPE')}\n" +
             f"XDG_SESSION_DESKTOP: {GLib.getenv('XDG_SESSION_DESKTOP')}\n" +
             f"GTK_THEME: {GLib.getenv('GTK_THEME')}\n" +
-            f"GTK Version: {Gtk.MAJOR_VERSION}.{Gtk.MINOR_VERSION}.{Gtk.MICRO_VERSION}\n" +
-            f3d_info
+            f"GTK Version: {Gtk.MAJOR_VERSION}.{Gtk.MINOR_VERSION}.{Gtk.MICRO_VERSION}\n"
         )
 
         about.present(self.props.active_window)
