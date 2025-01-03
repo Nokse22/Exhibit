@@ -20,7 +20,7 @@
 import os
 import json
 import re
-import time
+import threading
 
 from gi.repository import Adw, Gtk, Gdk, Gio, GLib, GObject
 from .widgets import F3DViewer, FileRow
@@ -30,8 +30,6 @@ from . import logger_lib
 from .settings_manager import WindowSettings
 
 from gettext import gettext as _
-
-start = time.time()
 
 up_dir_n_to_string = {
     0: "-X",
@@ -103,6 +101,8 @@ class PeriodicChecker(GObject.Object):
 @Gtk.Template(resource_path='/io/github/nokse22/Exhibit/ui/window.ui')
 class Viewer3dWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'Viewer3dWindow'
+
+    loading_label = Gtk.Template.Child()
 
     split_view = Gtk.Template.Child()
 
@@ -418,16 +418,17 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             "notify::value", self.on_animation_index_changed)
 
         # Sync the UI with the settings
-        self.window_settings.sync_all_settings()
+        # self.window_settings.sync_all_settings()
 
         if startup_filepath:
             self.loading_file = True
             self.window_settings.set_setting("load-type", None, False)
             self.logger.info(f"startup file detected: {startup_filepath}")
             self.load_file(filepath=startup_filepath)
+            # GLib.idle_add(
+            #     lambda *args: self.load_file(filepath=startup_filepath))
 
-        end = time.time()
-        self.logger.info(f"Startup in {end - start} seconds")
+        self.logger.info("Started")
 
     def setup_configurations(self):
         self.configurations = Gio.resources_lookup_data(
@@ -811,18 +812,29 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def on_open_file_response(self, dialog, response):
         try:
             file = dialog.open_finish(response)
-
-            if file:
-                filepath = file.get_path()
-                self.loading_file = True
-                self.window_settings.set_setting("load-type", None, False)
-                self.logger.info("open file response")
-                self.load_file(filepath=filepath)
         except Exception as e:
             self.logger.error("Exception Opening file: " + e)
             return
 
+        if file:
+            filepath = file.get_path()
+            self.loading_file = True
+            self.window_settings.set_setting("load-type", None, False)
+            self.logger.info("open file response")
+            self.load_file(filepath=filepath)
+
     def load_file(self, **kwargs):
+        self.startup_stack.set_visible_child_name("loading_page")
+        self.stack.set_visible_child_name("startup_page")
+        self.loading_label.set_label(
+            _("Loading {}").format(
+                os.path.basename(kwargs.get("filepath", "Nothing"))))
+        GLib.timeout_add(
+            100,
+            lambda *args: threading.Thread(
+                target=self._load_file, kwargs=(kwargs)).start())
+
+    def _load_file(self, **kwargs):
         filepath = kwargs.get("filepath", None)
         override = kwargs.get("override", False)
         preserve_orientation = kwargs.get("preserve_orientation", False)
@@ -880,7 +892,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.file_name = os.path.basename(self.filepath)
 
-        self.set_title(f"View {self.file_name}")
+        self.set_title(_("Exhibit - {}").format(self.file_name))
         self.title_widget.set_subtitle(self.file_name)
         self.stack.set_visible_child_name("3d_page")
 
