@@ -20,13 +20,17 @@
 import sys
 import os
 import webbrowser
+import asyncio
 
 from gi.repository import Gtk, Gio, Adw, GLib
+from gi.events import GLibEventLoopPolicy
 from .window import Viewer3dWindow
 
 from gettext import gettext as _
 
 from . import logger_lib
+
+asyncio.set_event_loop_policy(GLibEventLoopPolicy())
 
 
 class Viewer3dApplication(Adw.Application):
@@ -39,7 +43,6 @@ class Viewer3dApplication(Adw.Application):
                          flags=Gio.ApplicationFlags.HANDLES_OPEN)
 
         logger_lib.init()
-        logger = logger_lib.logger
 
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action)

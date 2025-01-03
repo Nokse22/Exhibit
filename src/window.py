@@ -114,7 +114,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     view_button_headerbar = Gtk.Template.Child()
 
-    drop_revealer = Gtk.Template.Child()
     view_drop_target = Gtk.Template.Child()
     loading_drop_target = Gtk.Template.Child()
 
@@ -152,8 +151,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     points_group = Gtk.Template.Child()
     spheres_switch = Gtk.Template.Child()
     points_size_spin = Gtk.Template.Child()
-
-    model_load_combo = Gtk.Template.Child()
 
     material_group = Gtk.Template.Child()
 
@@ -209,6 +206,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             'save-as-image', self.open_save_file_chooser)
         self.open_new_action = self.create_action(
             'open-new', self.open_file_chooser)
+        self.open_new_action = self.create_action(
+            'add-new', self.open_file_chooser)
 
         self.settings_action = Gio.SimpleAction.new_stateful(
             "settings",
@@ -236,61 +235,14 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.user_configurations_path = data_home + "/configurations/"
 
-        os.makedirs(self.hdri_path, exist_ok=True)
-        os.makedirs(self.hdri_thumbnails_path, exist_ok=True)
         os.makedirs(self.user_configurations_path, exist_ok=True)
         os.makedirs(data_home + "/other files/", exist_ok=True)
 
-        # HDRI
-        hdri_names = ["city.hdr", "meadow.hdr", "field.hdr", "sky.hdr"]
-        for hdri_filename in hdri_names:
-            if not os.path.isfile(self.hdri_path + hdri_filename):
-                hdri = Gio.resources_lookup_data(
-                    '/io/github/nokse22/Exhibit/HDRIs/' + hdri_filename,
-                    Gio.ResourceLookupFlags.NONE).get_data()
-                hdri_bytes = bytearray(hdri)
-                with open(self.hdri_path + hdri_filename, 'wb') as output_file:
-                    output_file.write(hdri_bytes)
-                self.logger.info(f"Added {hdri_filename}")
+        # Create the hdri folder and add the default if there are none
+        self.setup_hdri_folder()
 
         # Loading the saved configurations
-        self.configurations = Gio.resources_lookup_data(
-            '/io/github/nokse22/Exhibit/configurations.json',
-            Gio.ResourceLookupFlags.NONE).get_data().decode('utf-8')
-        self.configurations = json.loads(self.configurations)
-
-        for filename in os.listdir(self.user_configurations_path):
-            if filename.endswith('.json'):
-                filepath = os.path.join(
-                    self.user_configurations_path, filename)
-                with open(filepath, 'r') as file:
-                    try:
-                        configuration = json.load(file)
-
-                        # Check if the loaded configurations
-                        #   has all the required keys
-                        required_keys = {
-                            "name", "formats",
-                            "view-settings", "other-settings"
-                        }
-                        first_key_value = next(iter(configuration.values()))
-                        if required_keys.issubset(first_key_value.keys()):
-                            self.configurations.update(configuration)
-                        else:
-                            self.logger.error(
-                                f"Error: {filepath} is missing required keys.")
-
-                    except json.JSONDecodeError as e:
-                        self.logger.error(f"Error reading {filename}: {e}")
-
-        item = Gio.MenuItem.new("Custom", "win.settings")
-        item.set_attribute_value("target", GLib.Variant.new_string("custom"))
-        self.settings_section.append_item(item)
-
-        for key, setting in self.configurations.items():
-            item = Gio.MenuItem.new(setting["name"], "win.settings")
-            item.set_attribute_value("target", GLib.Variant.new_string(key))
-            self.settings_section.append_item(item)
+        self.setup_configurations()
 
         # Setting drop target type
         self.view_drop_target.set_gtypes([Gdk.FileList])
@@ -434,8 +386,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         # Combos
         self.model_scivis_component_combo.connect(
             "notify::selected", self.on_scivis_component_combo_changed)
-        self.model_load_combo.connect(
-            "notify::selected", self.on_load_type_combo_changed)
         self.window_settings.get_setting("up").connect(
             "changed", self.set_up_direction_combo)
         self.window_settings.get_setting("comp").connect(
@@ -449,9 +399,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.up_direction_combo.connect(
             "notify::selected", self.on_up_direction_combo_changed)
-
-        self.window_settings.get_setting("load-type").connect(
-            "changed", self.set_model_load_combo)
 
         self.window_settings.set_setting(
             "auto-best", self.saved_settings.get_boolean("auto-best"))
@@ -482,6 +429,63 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         end = time.time()
         self.logger.info(f"Startup in {end - start} seconds")
 
+    def setup_configurations(self):
+        self.configurations = Gio.resources_lookup_data(
+            '/io/github/nokse22/Exhibit/configurations.json',
+            Gio.ResourceLookupFlags.NONE).get_data().decode('utf-8')
+        self.configurations = json.loads(self.configurations)
+
+        for filename in os.listdir(self.user_configurations_path):
+            if filename.endswith('.json'):
+                filepath = os.path.join(
+                    self.user_configurations_path, filename)
+                with open(filepath, 'r') as file:
+                    try:
+                        configuration = json.load(file)
+
+                        # Check if the loaded configurations
+                        #   has all the required keys
+                        required_keys = {
+                            "name", "formats",
+                            "view-settings", "other-settings"
+                        }
+                        first_key_value = next(iter(configuration.values()))
+                        if required_keys.issubset(first_key_value.keys()):
+                            self.configurations.update(configuration)
+                        else:
+                            self.logger.error(
+                                f"Error: {filepath} is missing required keys.")
+
+                    except json.JSONDecodeError as e:
+                        self.logger.error(f"Error reading {filename}: {e}")
+
+        item = Gio.MenuItem.new("Custom", "win.settings")
+        item.set_attribute_value("target", GLib.Variant.new_string("custom"))
+        self.settings_section.append_item(item)
+
+        for key, setting in self.configurations.items():
+            item = Gio.MenuItem.new(setting["name"], "win.settings")
+            item.set_attribute_value("target", GLib.Variant.new_string(key))
+            self.settings_section.append_item(item)
+
+    def setup_hdri_folder(self):
+        if not os.path.isdir(self.hdri_path):
+            return
+
+        os.makedirs(self.hdri_path, exist_ok=True)
+        os.makedirs(self.hdri_thumbnails_path, exist_ok=True)
+
+        hdri_names = ["city.hdr", "meadow.hdr", "field.hdr", "sky.hdr"]
+        for hdri_filename in hdri_names:
+            if not os.path.isfile(self.hdri_path + hdri_filename):
+                hdri = Gio.resources_lookup_data(
+                    '/io/github/nokse22/Exhibit/HDRIs/' + hdri_filename,
+                    Gio.ResourceLookupFlags.NONE).get_data()
+                hdri_bytes = bytearray(hdri)
+                with open(self.hdri_path + hdri_filename, 'wb') as output_file:
+                    output_file.write(hdri_bytes)
+                self.logger.info(f"Added {hdri_filename}")
+
     #
     # Functions that set the UI from the settings, triggered when
     #   a setting has changed.
@@ -507,10 +511,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         rgba = Gdk.RGBA()
         rgba.parse(list_to_rgb(setting.value))
         color_button.set_rgba(rgba)
-
-    def set_model_load_combo(self, *args):
-        load_type = self.window_settings.get_setting("load-type").value
-        self.model_load_combo.set_selected(load_type if load_type else 0)
 
     def set_scivis_component_combo(self, setting, *args):
         selected = self.model_scivis_component_combo.get_selected()
@@ -793,7 +793,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         return self.distance / 10
 
     def open_file_chooser(self, *args):
-        file_filter = Gtk.FileFilter(name="All supported formats")
+        file_filter = Gtk.FileFilter(name=_("All supported formats"))
 
         for patt in file_patterns:
             file_filter.add_pattern(patt)
@@ -818,13 +818,15 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 self.window_settings.set_setting("load-type", None, False)
                 self.logger.info("open file response")
                 self.load_file(filepath=filepath)
-        except Exception:
+        except Exception as e:
+            self.logger.error("Exception Opening file: " + e)
             return
 
     def load_file(self, **kwargs):
         filepath = kwargs.get("filepath", None)
         override = kwargs.get("override", False)
         preserve_orientation = kwargs.get("preserve_orientation", False)
+        add_file = kwargs.get("add_file", False)
 
         if preserve_orientation:
             camera_state = self.f3d_viewer.get_camera_state()
@@ -837,13 +839,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.logger.debug(
             f"load file: {filepath}")
-        self.logger.debug(
-            f"Load Type: {self.window_settings.get_setting('load-type').value}")
 
         self.change_checker.stop()
 
         if (self.window_settings.get_setting("auto-best").value
-                and not override):
+                and not override) and not add_file:
             self.logger.debug("choosing best settings")
             settings = "general"
             for key, value in self.configurations.items():
@@ -855,44 +855,17 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.logger.debug(f"best settings is {settings}")
             self.change_setting_state(GLib.Variant("s", settings))
 
-        scene_loaded = False
-        geometry_loaded = False
+        if add_file and self.f3d_viewer.supports(filepath):
+            self.f3d_viewer.add_file(filepath)
 
-        if self.window_settings.get_setting("load-type").value is None:
-            if self.f3d_viewer.has_scene_loader(filepath):
-                self.f3d_viewer.load_scene(filepath)
-                scene_loaded = True
-                self.model_load_combo.set_sensitive(True)
-            elif self.f3d_viewer.has_geometry_loader(filepath):
-                self.f3d_viewer.load_geometry(filepath)
-                geometry_loaded = True
-                self.model_load_combo.set_sensitive(False)
+        elif self.f3d_viewer.supports(filepath):
+            self.f3d_viewer.load_file(filepath)
 
-        elif self.window_settings.get_setting("load-type").value == 0:
-            if self.f3d_viewer.has_geometry_loader(filepath):
-                self.f3d_viewer.load_geometry(filepath)
-                geometry_loaded = True
-        elif self.window_settings.get_setting("load-type").value == 1:
-            if self.f3d_viewer.has_scene_loader(filepath):
-                self.f3d_viewer.load_scene(filepath)
-                scene_loaded = True
-
-        if not scene_loaded and not geometry_loaded:
+        else:
             self.on_file_not_opened(filepath)
             return
 
-        if (self.f3d_viewer.has_geometry_loader(filepath) and
-                self.f3d_viewer.has_scene_loader(filepath)):
-            self.model_load_combo.set_sensitive(True)
-        else:
-            self.model_load_combo.set_sensitive(False)
-
-        if scene_loaded:
-            self.window_settings.set_setting("load-type", 1)
-        elif geometry_loaded:
-            self.window_settings.set_setting("load-type", 0)
-
-        if (scene_loaded or geometry_loaded) and preserve_orientation:
+        if preserve_orientation:
             self.f3d_viewer.set_camera_state(camera_state)
 
         self.filepath = filepath
@@ -912,9 +885,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.stack.set_visible_child_name("3d_page")
 
         self.no_file_loaded = False
-
-        self.drop_revealer.set_reveal_child(False)
-        self.toast_overlay.remove_css_class("blurred")
 
         if self.window_settings.get_setting("load-type").value == 0:
             self.material_group.set_sensitive(True)
@@ -1015,13 +985,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback("on_drop_enter")
     def on_drop_enter(self, drop_target, *args):
-        self.drop_revealer.set_reveal_child(True)
-        self.toast_overlay.add_css_class("blurred")
+        drop_target.get_widget().set_visible_child_name("drop")
 
     @Gtk.Template.Callback("on_drop_leave")
-    def on_drop_leave(self, *args):
-        self.drop_revealer.set_reveal_child(False)
-        self.toast_overlay.remove_css_class("blurred")
+    def on_drop_leave(self, drop_target, *args):
+        drop_target.get_widget().set_visible_child_name("content")
 
     @Gtk.Template.Callback("on_close_sidebar_clicked")
     def on_close_sidebar_clicked(self, *args):

@@ -77,7 +77,7 @@ class F3DViewer(Gtk.GLArea):
         "point-type": "model.point_sprites.type",
         "volume": "model.volume.enable",
         "inverse": "model.volume.inverse",
-        "final-shader": "render.effect.final_shader",
+        # "final-shader": "render.effect.final_shader",
         "grid-unit": "render.grid.unit",
         "grid-subdivisions": "render.grid.subdivisions",
         "grid-color": "render.grid.color",
@@ -230,37 +230,28 @@ class F3DViewer(Gtk.GLArea):
     def render_image(self):
         self.get_context().make_current()
         img = self.window.render_to_image()
+        # print(img.to_terminal_text())
         return img
 
-    def has_geometry_loader(self, filepath):
-        return True
-        # return self.engine.loader.hasGeometryReader(filepath)
+    def supports(self, filepath):
+        return self.scene.supports(filepath)
 
-    def has_scene_loader(self, filepath):
-        return True
-        # return self.engine.loader.hasSceneReader(filepath)
-
-    def load_geometry(self, filepath):
+    def load_file(self, filepath):
         if self.settings["render.hdri.ambient"]:
             f3d_options = {"render.hdri.ambient": False}
             self.engine.options.update(f3d_options)
 
-        # self.engine.loader.load_geometry(filepath, True)
         self.scene.clear()
-        self.scene.add(filepath)
 
+        self.scene.add(filepath)
         self.notify("lower-time-range")
         self.notify("upper-time-range")
 
-        self.get_distance()
-
-    def load_scene(self, filepath):
+    def add_file(self, filepath):
         if self.settings["render.hdri.ambient"]:
             f3d_options = {"render.hdri.ambient": False}
             self.engine.options.update(f3d_options)
 
-        # self.engine.loader.load_scene(filepath)
-        self.scene.clear()
         self.scene.add(filepath)
 
         self.notify("lower-time-range")
@@ -273,6 +264,8 @@ class F3DViewer(Gtk.GLArea):
             f3d_options = {"render.hdri.ambient": True}
             self.engine.options.update(f3d_options)
             self.queue_render()
+
+        # self.reset_to_bounds()
 
     def on_resize(self, gl_area, width, height):
         self.width = width
@@ -296,7 +289,7 @@ class F3DViewer(Gtk.GLArea):
 
     def on_render(self, area, ctx):
         self.get_context().make_current()
-        self.engine.window.size = self.width, self.height
+        self.window.size = self.width, self.height
         self.window.render()
 
     def get_camera_to_focal_distance(self):

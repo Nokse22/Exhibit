@@ -2,21 +2,6 @@
   background-color: black;
 }
 
-.drag-overlay-status-page {
-  background-color: alpha(@accent_bg_color, 0.5);
-  color: @accent_fg_color;
-  padding: 32px;
-}
-
-.blurred {
-  filter: blur(6px);
-}
-
-.view-borders {
-  border-top-right-radius: 12px;
-  border-bottom-right-radius: 12px;
-}
-
 .suggested-picture {
   border-radius: 6px;
 }
@@ -31,7 +16,7 @@ flowbox flowboxchild {
 }
 
 .main-view headerbar button:hover {
- background-color: alpha(var(--view-bg-color), 0.7);
+ background-color: mix(alpha(var(--view-bg-color), 0.7), black, 0.1);
 }
 
 .main-view headerbar button:active {
@@ -49,4 +34,27 @@ windowcontrols button{
 windowcontrols {
  padding-left: 6px;
  padding-right: 6px;
+}
+
+.drop-target-remove-border {
+  box-shadow: transparent 1px 1px;
+}
+
+.overlay-status {
+  color: var(--accent-color);
+  background-color: color-mix(in srgb, var(--accent-bg-color) 20%, transparent);
+  /* Same color for border as for icon and label */
+  /* Probably due to a GTK bug, this currently does not give the exact same color */
+  border: 2px dashed color-mix(in srgb, currentColor var(--dim-opacity), transparent);
+  border-radius: 2px;
+  margin: 12px;
+}
+
+.overlay-status label {
+  opacity: 1;
+}
+
+.overlay-status image {
+  opacity: 1;
+  color: var(--accent-color);
 }
