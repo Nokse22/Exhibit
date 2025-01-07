@@ -2,12 +2,6 @@
     "name": "F3D",
     "buildsystem": "cmake-ninja",
     "builddir": true,
-    "build-options": {
-        "env": {
-            "LIBRARY_PATH": "/app/lib:/usr/lib",
-            "LD_LIBRARY_PATH": "/app/lib:/usr/lib"
-        }
-    },
     "config-opts": [
         "-DF3D_BUILD_APPLICATION:BOOL=OFF",
         "-DF3D_MODULE_EXR:BOOL=ON",
@@ -15,20 +9,20 @@
         "-DF3D_BINDINGS_PYTHON:BOOL=ON",
         "-DCMAKE_INSTALL_PREFIX:PATH=/app",
         "-DBUILD_TESTING:BOOL=OFF",
-        "-DF3D_LINUX_INSTALL_DEFAULT_CONFIGURATION_FILE_IN_PREFIX:BOOL=ON",
         "-DF3D_PLUGINS_STATIC_BUILD=ON",
         "-DF3D_PLUGIN_BUILD_ALEMBIC=ON",
         "-DF3D_PLUGIN_BUILD_ASSIMP:BOOL=ON",
         "-DF3D_PLUGIN_BUILD_DRACO:BOOL=ON",
         "-DF3D_PLUGIN_BUILD_EXODUS:BOOL=ON",
         "-DF3D_PLUGIN_BUILD_OCCT:BOOL=ON",
-        "-DF3D_PLUGIN_BUILD_USD:BOOL=ON"
+        "-DF3D_PLUGIN_BUILD_USD:BOOL=ON",
+        "-DF3D_LINUX_LINK_FILESYSTEM:BOOL=OFF"
     ],
     "sources": [
         {
             "type": "git",
             "url": "https://github.com/f3d-app/f3d",
-            "commit": "346269c3acec41d3081d47707db607b8d7156c81"
+            "branch": "master"
         }
     ],
     "modules": [
