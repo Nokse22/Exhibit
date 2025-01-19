@@ -11,20 +11,24 @@ flowbox flowboxchild {
 }
 
 .main-view headerbar button {
- background-color: alpha(var(--view-bg-color), 0.6);
+ background-color: var(--view-bg-color);
  border-radius:9999px;
 }
 
 .main-view headerbar button:hover {
- background-color: mix(alpha(var(--view-bg-color), 0.7), black, 0.1);
+ background-color: mix(var(--view-bg-color), var(--view-fg-color), 0.05);
 }
 
 .main-view headerbar button:active {
- background-color: alpha(var(--view-bg-color), 0.9);
+ background-color: mix(var(--view-bg-color), var(--view-fg-color), 0.15);
 }
 
-.main-view headerbar button:selected {
- background-color: alpha(var(--view-bg-color), 1);
+.main-view headerbar button:checked {
+ background-color: mix(var(--view-bg-color), var(--view-fg-color), 0.1);
+}
+
+.main-view headerbar button:checked:hover {
+ background-color: mix(var(--view-bg-color), var(--view-fg-color), 0.15);
 }
 
 windowcontrols button{
@@ -57,4 +61,8 @@ windowcontrols {
 .overlay-status image {
   opacity: 1;
   color: var(--accent-color);
+}
+
+flowbox > flowboxchild {
+  box-shadow: 0px 0px 0px 1px var(--border-color);
 }
