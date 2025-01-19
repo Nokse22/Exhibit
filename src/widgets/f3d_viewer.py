@@ -135,13 +135,11 @@ class F3DViewer(Gtk.GLArea):
     @GObject.Property(type=float)
     def upper_time_range(self):
         _lower, upper = self.scene.animation_time_range()
-        print("TIME RANGE", _lower, upper)
         return upper
 
     @GObject.Property(type=float)
     def lower_time_range(self):
         lower, _upper = self.scene.animation_time_range()
-        print("TIME RANGE", lower, _upper)
         return lower
 
     @GObject.Property(type=float)

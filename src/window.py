@@ -178,9 +178,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     save_settings_expander = Gtk.Template.Child()
 
     animation_group = Gtk.Template.Child()
-    animation_adj = Gtk.Template.Child()
     animation_time_adj = Gtk.Template.Child()
-    animation_spin_button = Gtk.Template.Child()
+    animation_index_adj = Gtk.Template.Child()
     play_button = Gtk.Template.Child()
 
     width = 600
@@ -430,8 +429,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.f3d_viewer.connect("notify::playing", self.on_playing_changed)
 
-        self.animation_spin_button.connect(
-            "notify::value", self.on_animation_index_changed)
+        self.animation_index_adj.connect(
+            "value-changed", self.on_animation_index_changed)
 
         self.block_reload = True
 
@@ -441,8 +440,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.block_reload = False
 
         if startup_filepath:
-            self.block_reload = True
-            self.window_settings.set_setting("load-type", None, False)
             self.logger.info(f"startup file detected: {startup_filepath}")
             self.load_file(filepath=startup_filepath)
 
@@ -553,12 +550,12 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     # Functions that are called when a UI changes, they should only
     #   set the corresponding setting.
 
-    def on_animation_index_changed(self, spin, *args):
-        val = int(spin.get_value())
-        options = {"animation-index": val}
-        self.f3d_viewer.update_options(options)
+    def on_animation_index_changed(self, *args):
+        self.f3d_viewer.update_options(
+            {"animation-index": int(self.animation_index_adj.get_value())})
         self.f3d_viewer.animation_time = self.f3d_viewer.lower_time_range
         self.f3d_viewer.playing = False
+
         self.reload_file(True)
 
     def on_switch_toggled(self, switch, active, name):
@@ -578,10 +575,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def on_up_direction_combo_changed(self, combo, *args):
         direction = up_dir_n_to_string[combo.get_selected()]
         self.window_settings.set_setting("up", direction)
-
-    def on_load_type_combo_changed(self, combo, *args):
-        load_type = combo.get_selected()
-        self.window_settings.set_setting("load-type", load_type)
 
     def on_scivis_component_combo_changed(self, *args):
         selected = self.model_scivis_component_combo.get_selected()
@@ -609,7 +602,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     def reload_file(self, pres_or=False):
         if not self.block_reload:
-            self.logger.info("Loading file because load type or up changed")
+            self.logger.info("Reloading file")
             self.load_file(
                 filepath=self.filepath,
                 override=True,
@@ -665,9 +658,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     def on_internal_setting_changed(self, window_settings, setting):
         self.logger.info(f"Setting: {setting.name} to {setting.value}")
-        if setting.name == "load-type":
-            self.reload_file()
-        elif setting.name == "auto-best":
+        if setting.name == "auto-best":
             pass
         elif setting.name == "sidebar-show":
             pass
@@ -847,8 +838,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         if file:
             filepath = file.get_path()
-            self.block_reload = True
-            self.window_settings.set_setting("load-type", None, False)
             self.logger.info("open file response")
             self.load_file(filepath=filepath)
 
@@ -858,6 +847,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.loading_label.set_label(
             _("Loading {}").format(
                 os.path.basename(kwargs.get("filepath", "Nothing"))))
+        self.block_reload = True
         GLib.timeout_add(
             100,
             lambda *args: threading.Thread(
@@ -929,16 +919,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.stack.set_visible_child_name("3d_page")
 
         self.no_file_loaded = False
-
-        if self.window_settings.get_setting("load-type").value == 0:
-            self.material_group.set_sensitive(True)
-            self.points_group.set_sensitive(True)
-            self.color_group.set_sensitive(True)
-        elif self.window_settings.get_setting("load-type").value == 1:
-            self.material_group.set_sensitive(False)
-            self.points_group.set_sensitive(False)
-            self.color_group.set_sensitive(False)
-            self.window_settings.set_setting("point-sprites", False)
 
         self.update_background_color()
 
@@ -1018,9 +998,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if extension in image_patterns:
             self.load_hdri(filepath)
         elif extension in file_patterns:
-            self.block_reload = True
-
-            self.window_settings.set_setting("load-type", None, False)
             self.logger.info("drop received")
             self.load_file(filepath=filepath)
 
@@ -1080,7 +1057,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     def on_playing_changed(self, *args):
         if self.f3d_viewer.playing:
-            self.play_button.set_icon_name("media-playback-stop-symbolic")
+            self.play_button.set_icon_name("media-playback-pause-symbolic")
             self.play_button.set_tooltip_text(_("Stop"))
         else:
             self.play_button.set_icon_name("media-playback-start-symbolic")

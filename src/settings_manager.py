@@ -167,7 +167,6 @@ class WindowSettings(Gio.ListStore):
 
     internal_settings = {
         "auto-best": True,
-        "load-type": None,  # 0 for geometry and 1 for scene
         "sidebar-show": True
     }
 

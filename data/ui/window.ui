@@ -695,10 +695,10 @@
                                       <object class="AdwPreferencesGroup" id="animation_group">
                                         <property name="title" translatable="yes">Animation</property>
                                         <child>
-                                          <object class="AdwSpinRow" id="animation_spin_button">
+                                          <object class="AdwSpinRow">
                                             <property name="title" translatable="yes">Animation Index</property>
                                             <property name="adjustment">
-                                              <object class="GtkAdjustment" id="animation_adj">
+                                              <object class="GtkAdjustment" id="animation_index_adj">
                                                 <property name="upper">99</property>
                                                 <property name="step-increment">1.0</property>
                                               </object>
