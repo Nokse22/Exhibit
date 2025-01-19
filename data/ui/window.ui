@@ -206,14 +206,6 @@
                             <property name="title" translatable="yes">Exhibit</property>
                           </object>
                         </property>
-                        <child type="start">
-                          <object class="GtkButton">
-                            <property name="icon-name">share-symbolic</property>
-                            <property name="tooltip-text" translatable="yes">Open With External App</property>
-                            <signal name="clicked" handler="on_open_with_external_app_clicked"/>
-                            <property name="visible" bind-source="split_view" bind-property="collapsed" bind-flags="invert-boolean | sync-create">True</property>
-                          </object>
-                        </child>
                         <child type="end">
                           <object class="GtkButton" id="close_sidebar_button">
                             <property name="visible">False</property>
@@ -360,19 +352,28 @@
                                         </child>
                                         <child>
                                           <object class="AdwPreferencesGroup" id="points_group">
-                                            <property name="hexpand">True</property>
-                                            <property name="hexpand-set">True</property>
                                             <child>
                                               <object class="AdwSwitchRow" id="spheres_switch">
                                                 <property name="hexpand">True</property>
                                                 <property name="hexpand-set">True</property>
-                                                <property name="title" translatable="yes">Show Spheres</property>
+                                                <property name="title" translatable="yes">Show Point Sprites</property>
+                                              </object>
+                                            </child>
+                                            <child>
+                                              <object class="AdwComboRow" id="point_sprites_type_combo">
+                                                <property name="title" translatable="yes">Point Sprites Type</property>
+                                                <property name="model">
+                                                  <object class="GtkStringList">
+                                                    <items>
+                                                      <item translatable="yes">Sphere</item>
+                                                      <item translatable="yes">Gaussian</item>
+                                                    </items>
+                                                  </object>
+                                                </property>
                                               </object>
                                             </child>
                                             <child>
                                               <object class="AdwSpinRow" id="points_size_spin">
-                                                <property name="hexpand">True</property>
-                                                <property name="hexpand-set">True</property>
                                                 <property name="title" translatable="yes">Points Size</property>
                                                 <!-- <property name="digits">1</property> -->
                                                 <property name="adjustment">
@@ -463,6 +464,16 @@
                                             </child>
                                       </object>
                                     </child>
+                                        <child>
+                                          <object class="AdwPreferencesGroup">
+                                            <!-- <property name="title" translatable="yes">Model Rendering</property> -->
+                                            <child>
+                                              <object class="AdwSwitchRow" id="armature_switch">
+                                                <property name="title" translatable="yes">Show Armature</property>
+                                              </object>
+                                            </child>
+                                          </object>
+                                        </child>
                                         <child>
                                           <object class="AdwPreferencesGroup" id="color_group">
                                             <property name="hexpand">True</property>
@@ -806,37 +817,17 @@
                                 <property name="icon-name">sidebar-show-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Reveal Sidebar</property>
                                 <property name="active" bind-source="split_view" bind-property="show-sidebar" bind-flags="sync-create | bidirectional">True</property>
-                                <!-- <signal name="toggled" handler="on_reveal_sidebar_toggled"/> -->
                               </object>
                             </child>
-                            <child type="start">
+                            <child type="end">
                               <object class="GtkMenuButton">
                                 <property name="primary">True</property>
                                 <property name="icon-name">open-menu-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Menu</property>
                                 <property name="menu-model">primary_menu</property>
-                                <!-- <property name="visible" bind-source="split_view" bind-property="show-sidebar" bind-flags="sync-create | invert-boolean">False</property> -->
                               </object>
                             </child>
                             <child type="start">
-                              <object class="GtkButton" id="preview_open_with_button">
-                                <property name="icon-name">share-symbolic</property>
-                                <property name="tooltip-text" translatable="yes">Open With External App</property>
-                                <signal name="clicked" handler="on_open_with_external_app_clicked"/>
-                                <property name="visible" bind-source="split_view" bind-property="show-sidebar" bind-flags="sync-create | invert-boolean">False</property>
-                              </object>
-                            </child>
-                            <child type="end">
-                              <object class="GtkButton" id="view_button_headerbar">
-                                <property name="icon-name">perspective-symbolic</property>
-                                <property name="tooltip-text" translatable="yes">Toggle Orthographic</property>
-                                <signal name="clicked" handler="on_view_clicked"/>
-                                <style>
-                                  <class name="flat"/>
-                                </style>
-                              </object>
-                            </child>
-                            <child type="end">
                               <object class="GtkButton" id="home_button_headerbar">
                                 <property name="icon-name">go-home-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Reset to Bounds</property>
@@ -957,6 +948,13 @@
       <item>
         <attribute name="label" translatable="yes">Save Current Settings</attribute>
         <attribute name="action">win.save-settings</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Orthonographic</attribute>
+        <attribute name="action">win.orthonographic</attribute>
+        <attribute name="target">true</attribute>
       </item>
     </section>
     <section>
