@@ -5,6 +5,7 @@
   <requires lib="gtk" version="4.12"/>
   <requires lib="libadwaita" version="1.0"/>
   <template class="FileRow" parent="AdwPreferencesRow">
+    <property name="css-name">file-row</property>
     <child>
       <object class="GtkDropTarget" id="drop_target">
         <property name="actions">copy</property>
@@ -79,6 +80,7 @@
                     <property name="valign">center</property>
                     <child>
                       <object class="GtkButton" id="file_button">
+                        <property name="tooltip-text" translatable="yes">Open HDRI</property>
                         <child>
                           <object class="GtkBox">
                             <child>
