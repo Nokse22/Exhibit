@@ -131,8 +131,8 @@ class Viewer3dApplication(Adw.Application):
         about = Adw.AboutDialog(
             application_name='Exhibit',
             application_icon='io.github.nokse22.Exhibit',
-            developer_name='Nokse22',
-            version='1.4.2',
+            developer_name='Nokse',
+            version='1.5.0',
             website='https://github.com/Nokse22/Exhibit',
             issue_url='https://github.com/Nokse22/Exhibit/issues',
             developers=['Nokse'],
