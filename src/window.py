@@ -112,8 +112,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     stack = Gtk.Template.Child()
     toolbar_view = Gtk.Template.Child()
 
-    view_button_headerbar = Gtk.Template.Child()
-
     view_drop_target = Gtk.Template.Child()
     loading_drop_target = Gtk.Template.Child()
 
@@ -151,6 +149,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     points_group = Gtk.Template.Child()
     spheres_switch = Gtk.Template.Child()
     points_size_spin = Gtk.Template.Child()
+    point_sprites_type_combo = Gtk.Template.Child()
 
     material_group = Gtk.Template.Child()
 
@@ -158,6 +157,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     model_metallic_spin = Gtk.Template.Child()
     model_color_button = Gtk.Template.Child()
     model_opacity_spin = Gtk.Template.Child()
+
+    armature_switch = Gtk.Template.Child()
 
     model_color_row = Gtk.Template.Child()
     model_scivis_component_combo = Gtk.Template.Child()
@@ -199,7 +200,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         # Flags
         self.applying_breakpoint = False
-        self.loading_file = False
+        self.block_reload = True
+
+        # Settings
+        self.window_settings = WindowSettings()
+        self.saved_settings = Gio.Settings.new('io.github.nokse22.Exhibit')
 
         # Defining all the actions
         self.save_as_action = self.create_action(
@@ -208,6 +213,18 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             'open-new', self.open_file_chooser)
         self.open_new_action = self.create_action(
             'add-new', self.open_file_chooser)
+
+        self.orthonographic_action = Gio.SimpleAction.new_stateful(
+            "orthonographic",
+            GLib.VariantType.new("b"),
+            GLib.Variant(
+                "b",
+                self.window_settings.get_setting("orthographic")),
+        )
+        self.orthonographic_action.connect(
+            "change-state",
+            lambda action, state: self.orthonographic_state_changed(state))
+        self.add_action(self.orthonographic_action)
 
         self.settings_action = Gio.SimpleAction.new_stateful(
             "settings",
@@ -249,9 +266,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.loading_drop_target.set_gtypes([Gdk.FileList])
 
         # Setting the window to the last state
-        self.window_settings = WindowSettings()
-        self.saved_settings = Gio.Settings.new('io.github.nokse22.Exhibit')
-
         self.set_default_size(
             self.saved_settings.get_int("startup-width"),
             self.saved_settings.get_int("startup-height")
@@ -278,9 +292,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             except Exception:
                 self.logger.warning(
                     f"Couldn't open HDRI file {filepath}, skipping")
-
-        if self.window_settings.get_setting("orthographic").value:
-            self.toggle_orthographic()
 
         self.style_manager = Adw.StyleManager().get_default()
         self.style_manager.connect(
@@ -342,6 +353,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             (self.automatic_settings_switch, "auto-best"),
             (self.automatic_reload_switch, "auto-reload"),
             (self.point_up_switch, "point-up"),
+            (self.armature_switch, "armature-enable")
         ]
 
         for switch, name in switches:
@@ -392,6 +404,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             "changed", self.set_scivis_component_combo)
         self.window_settings.get_setting("cells").connect(
             "changed", self.set_scivis_component_combo)
+        self.point_sprites_type_combo.connect(
+            "notify::selected", self.point_sprites_type_combo_changed)
+        self.window_settings.get_setting("point-type").connect(
+            "changed", self.set_point_sprites_type_combo_changed)
 
         # Others
         self.background_color_button.connect(
@@ -417,16 +433,18 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.animation_spin_button.connect(
             "notify::value", self.on_animation_index_changed)
 
+        self.block_reload = True
+
         # Sync the UI with the settings
-        # self.window_settings.sync_all_settings()
+        self.window_settings.sync_all_settings()
+
+        self.block_reload = False
 
         if startup_filepath:
-            self.loading_file = True
+            self.block_reload = True
             self.window_settings.set_setting("load-type", None, False)
             self.logger.info(f"startup file detected: {startup_filepath}")
             self.load_file(filepath=startup_filepath)
-            # GLib.idle_add(
-            #     lambda *args: self.load_file(filepath=startup_filepath))
 
         self.logger.info("Started")
 
@@ -526,7 +544,12 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.model_scivis_component_combo.set_selected(
                 -self.window_settings.get_setting("comp").value + 1)
 
-    #
+    def set_point_sprites_type_combo_changed(self, setting, *args):
+        if self.window_settings.get_setting("comp").value == "spheres":
+            self.point_sprites_type_combo.set_selected(0)
+        else:
+            self.point_sprites_type_combo.set_selected(1)
+
     # Functions that are called when a UI changes, they should only
     #   set the corresponding setting.
 
@@ -537,9 +560,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.f3d_viewer.animation_time = self.f3d_viewer.lower_time_range
         self.f3d_viewer.playing = False
         self.reload_file(True)
-
-        if self.f3d_viewer.upper_time_range == 0.0:
-            self.animation_group.set_visible(False)
 
     def on_switch_toggled(self, switch, active, name):
         self.window_settings.set_setting(name, switch.get_active())
@@ -570,16 +590,25 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if selected == 0:
             self.window_settings.set_setting("comp", -1, False)
             self.window_settings.set_setting("cells", True)
+            self.window_settings.set_setting("scalar-coloring", False)
         else:
             self.window_settings.set_setting("comp", -(selected - 1))
             self.window_settings.set_setting("cells", False)
+            self.window_settings.set_setting("scalar-coloring", True)
 
+    def point_sprites_type_combo_changed(self, *args):
+        selected = self.point_sprites_type_combo.get_selected()
+
+        if selected == 0:
+            self.window_settings.set_setting("point-type", "sphere", False)
+        else:
+            self.window_settings.set_setting("point-type", "gaussian", False)
     #
     # Special functions called when a setting changes that trigger
     #   an action like reloading.
 
     def reload_file(self, pres_or=False):
-        if not self.loading_file:
+        if not self.block_reload:
             self.logger.info("Loading file because load type or up changed")
             self.load_file(
                 filepath=self.filepath,
@@ -597,7 +626,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             GLib.idle_add(self.f3d_viewer.queue_render)
             return
         if self.style_manager.get_dark():
-            options = {"bg-color": [0.2, 0.2, 0.2]}
+            options = {"bg-color": [0.117, 0.117, 0.117]}
         else:
             options = {"bg-color": [1.0, 1.0, 1.0]}
         self.f3d_viewer.update_options(options)
@@ -725,7 +754,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.window_settings.set_setting(key, value)
 
     def check_for_options_change(self):
-        if self.loading_file:
+        if self.block_reload:
             return
 
         state_name = self.settings_action.get_state().get_string()
@@ -813,12 +842,12 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         try:
             file = dialog.open_finish(response)
         except Exception as e:
-            self.logger.error("Exception Opening file: " + e)
+            self.logger.error(f"Exception Opening file: {e}")
             return
 
         if file:
             filepath = file.get_path()
-            self.loading_file = True
+            self.block_reload = True
             self.window_settings.set_setting("load-type", None, False)
             self.logger.info("open file response")
             self.load_file(filepath=filepath)
@@ -867,12 +896,15 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.logger.debug(f"best settings is {settings}")
             self.change_setting_state(GLib.Variant("s", settings))
 
-        if add_file and self.f3d_viewer.supports(filepath):
-            self.f3d_viewer.add_file(filepath)
-
-        elif self.f3d_viewer.supports(filepath):
-            self.f3d_viewer.load_file(filepath)
-
+        if self.f3d_viewer.supports(filepath):
+            if add_file:
+                if not self.f3d_viewer.add_file(filepath):
+                    self.on_file_not_opened(filepath)
+                    return
+            else:
+                if not self.f3d_viewer.load_file(filepath):
+                    self.on_file_not_opened(filepath)
+                    return
         else:
             self.on_file_not_opened(filepath)
             return
@@ -910,7 +942,12 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.update_background_color()
 
-        self.loading_file = False
+        if self.f3d_viewer.upper_time_range == 0.0:
+            self.animation_group.set_visible(False)
+        else:
+            self.animation_group.set_visible(True)
+
+        self.block_reload = False
         GLib.timeout_add(100, self.f3d_viewer.done)
 
     def on_file_not_opened(self, filepath):
@@ -925,7 +962,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.update_background_color()
 
-        self.loading_file = False
+        self.block_reload = False
 
     def send_toast(self, message):
         toast = Adw.Toast(title=message, timeout=2)
@@ -968,18 +1005,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def on_open_button_clicked(self, btn):
         self.open_file_chooser()
 
-    @Gtk.Template.Callback("on_view_clicked")
-    def toggle_orthographic(self, *args):
-        btn = self.view_button_headerbar
-        if (btn.get_icon_name() == "perspective-symbolic"):
-            btn.set_icon_name("orthographic-symbolic")
-            camera_options = {"orthographic": True}
-            self.window_settings.set_setting("orthographic", True)
-        else:
-            btn.set_icon_name("perspective-symbolic")
-            camera_options = {"orthographic": False}
-            self.window_settings.set_setting("orthographic", False)
-        self.f3d_viewer.update_options(camera_options)
+    def orthonographic_state_changed(self, state):
+        self.window_settings.set_setting("orthographic", state.get_boolean())
+
+        self.f3d_viewer.update_options({"orthographic": state.get_boolean()})
 
     @Gtk.Template.Callback("on_drop_received")
     def on_drop_received(self, drop, value, x, y):
@@ -989,7 +1018,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if extension in image_patterns:
             self.load_hdri(filepath)
         elif extension in file_patterns:
-            self.loading_file = True
+            self.block_reload = True
 
             self.window_settings.set_setting("load-type", None, False)
             self.logger.info("drop received")
@@ -1007,13 +1036,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def on_close_sidebar_clicked(self, *args):
         self.split_view.set_show_sidebar(False)
 
-    @Gtk.Template.Callback("on_open_with_external_app_clicked")
-    def on_open_with_external_app_clicked(self, *args):
+    def on_open_with_external_app(self, *args):
         try:
             file = Gio.File.new_for_path(self.filepath)
-        except GLib.GError:
-            self.logger.error(
-                "Failed to construct a new Gio.File object from path.")
+        except Exception:
+            self.logger.error("Failed to construct a new Gio.File from path.")
         else:
             launcher = Gtk.FileLauncher.new(file)
             launcher.set_always_ask(True)
@@ -1021,10 +1048,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             def open_file_finish(_, result, *args):
                 try:
                     launcher.launch_finish(result)
-                except GLib.GError as e:
-                    if e.code != 2:
-                        self.logger.error(
-                            "Failed to finish Gtk.FileLauncher procedure.")
+                except Exception as e:
+                    self.logger.error(e)
 
             launcher.launch(self, None, open_file_finish)
 

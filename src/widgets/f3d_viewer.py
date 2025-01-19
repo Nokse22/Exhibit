@@ -55,8 +55,9 @@ class F3DViewer(Gtk.GLArea):
         "show-edges": "render.show_edges",
         "edges-width": "render.line_width",
         "up": "scene.up_direction",
-        "point-sprites": "model.point_sprites.enable",
-        "point-size": "render.point_size",
+        "point-sprites": "model.point_sprites.enable",  # rename to sprites-enabled
+        "point-size": "model.point_sprites.size",  # rename to sprites-size
+        "point-type": "model.point_sprites.type",  # rename to sprites-type
         "model-color": "model.color.rgb",
         "model-metallic": "model.material.metallic",
         "model-roughness": "model.material.roughness",
@@ -64,24 +65,25 @@ class F3DViewer(Gtk.GLArea):
         "comp": "model.scivis.component",
         "hdri-file": "render.hdri.file",
         "cells": "model.scivis.cells",
+        "scalar-coloring": "model.scivis.enable",  # rename to scivis-enabled
+        "armature-enable": "render.armature.enable",
 
         # The following settings don't have an UI
 
         "texture-matcap": "model.matcap.texture",
         "texture-base-color": "model.color.texture",
         "emissive-factor": "model.emissive.factor",
-        "texture-emissive": "model.emissive.texture",
-        "texture-material": "model.material.texture",
+        "texture-emissive": "model.emissive.texture",  # rename to material-emissive
+        "texture-material": "model.material.texture",  # rename to material-texture
         "normal-scale": "model.normal.scale",
-        "texture-normal": "model.normal.texture",
-        "point-type": "model.point_sprites.type",
-        "volume": "model.volume.enable",
-        "inverse": "model.volume.inverse",
-        "final-shader": "render.effect.final_shader",
+        "texture-normal": "model.normal.texture",  # rename to normal-texture
+        "volume": "model.volume.enable",  # rename to volume-enabled
+        "inverse": "model.volume.inverse",  # rename to volume-inverse
+        # "final-shader": "render.effect.final_shader",
         "grid-unit": "render.grid.unit",
         "grid-subdivisions": "render.grid.subdivisions",
         "grid-color": "render.grid.color",
-        "scalar": "model.scivis.array_name",
+        "scalar": "model.scivis.array_name",  # rename to scivis-name
         "animation-index": "scene.animation.index"
     }
 
@@ -99,10 +101,11 @@ class F3DViewer(Gtk.GLArea):
         self.connect("resize", self.on_resize)
 
         self.settings = {
-            "scene.up_direction": "+Y",
-            "model.scivis.cells": True,
-            "model.scivis.array_name": "",
-            "render.hdri.ambient": False,
+            # "scene.up_direction": "+Y",
+            # "model.scivis.cells": True,
+            # "model.scivis.array_name": "",
+            # "render.hdri.ambient": False,
+            "render.grid.enable": True
         }
 
         self.prev_pan_offset = 0
@@ -179,7 +182,8 @@ class F3DViewer(Gtk.GLArea):
         up_v = up_dirs_vector[self.settings["scene.up_direction"]]
         vector = v_mul(tuple([up_v[2], up_v[0], up_v[1]]), 1000)
         self.camera.position = v_add(self.camera.focal_point, vector)
-        self.camera.view_up = up_dirs_vector[self.settings["scene.up_direction"]]
+        self.camera.view_up = up_dirs_vector[
+            self.settings["scene.up_direction"]]
         self.camera.reset_to_bounds()
         self.get_distance()
         self.queue_render()
@@ -188,7 +192,8 @@ class F3DViewer(Gtk.GLArea):
         up_v = up_dirs_vector[self.settings["scene.up_direction"]]
         vector = v_mul(tuple([up_v[1], up_v[2], up_v[0]]), 1000)
         self.camera.position = v_add(self.camera.focal_point, vector)
-        self.camera.view_up = up_dirs_vector[self.settings["scene.up_direction"]]
+        self.camera.view_up = up_dirs_vector[
+            self.settings["scene.up_direction"]]
         self.camera.reset_to_bounds()
         self.get_distance()
         self.queue_render()
@@ -210,7 +215,8 @@ class F3DViewer(Gtk.GLArea):
             tuple([up_v[1], up_v[2], up_v[0]])
         )
         self.camera.position = v_mul(v_norm(v_add(vector, up_v)), 1000)
-        self.camera.view_up = up_dirs_vector[self.settings["scene.up_direction"]]
+        self.camera.view_up = up_dirs_vector[
+            self.settings["scene.up_direction"]]
         self.camera.reset_to_bounds()
         self.get_distance()
         self.queue_render()
@@ -243,21 +249,34 @@ class F3DViewer(Gtk.GLArea):
 
         self.scene.clear()
 
-        self.scene.add(filepath)
+        try:
+            self.scene.add(filepath)
+        except Exception as e:
+            self.logger.error(f"Error while loading file: {e}")
+            return False
+
         self.notify("lower-time-range")
         self.notify("upper-time-range")
+
+        return True
 
     def add_file(self, filepath):
         if self.settings["render.hdri.ambient"]:
             f3d_options = {"render.hdri.ambient": False}
             self.engine.options.update(f3d_options)
 
-        self.scene.add(filepath)
+        try:
+            self.scene.add(filepath)
+        except Exception as e:
+            self.logger.error(f"Error while loading file: {e}")
+            return False
 
         self.notify("lower-time-range")
         self.notify("upper-time-range")
 
         self.get_distance()
+
+        return True
 
     def done(self):
         if self.settings["render.hdri.ambient"]:
@@ -265,7 +284,10 @@ class F3DViewer(Gtk.GLArea):
             self.engine.options.update(f3d_options)
             self.queue_render()
 
-        # self.reset_to_bounds()
+        # f3d_options = {"model.scivis.cells": False, "model.scivis.enable": True}
+        # self.engine.options.update(f3d_options)
+
+        self.reset_to_bounds()
 
     def on_resize(self, gl_area, width, height):
         self.width = width

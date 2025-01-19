@@ -112,13 +112,17 @@ class WindowSettings(Gio.ListStore):
 
         "point-sprites": False,
         "point-size": 1.0,
+        "point-type": "sphere",
 
         "model-metallic": 0.0,
         "model-roughness": 0.3,
         "model-opacity": 1.0,
 
+        "armature-enable": False,
+
         "comp": -1,
         "cells": True,
+        "scalar-coloring": False,
         "model-color": (1.0, 1.0, 1.0),
 
         "grid": True,
@@ -141,19 +145,18 @@ class WindowSettings(Gio.ListStore):
 
         # "texture-matcap": "",
         # "texture-base-color": "",
-        "emissive-factor": (1.0, 1.0, 1.0),
+        # "emissive-factor": (1.0, 1.0, 1.0),
         # "texture-emissive": "",
         # "texture-material": "",
         "normal-scale": 1.0,
         # "texture-normal": "",
-        "point-type": "sphere",
         "volume": False,
         "inverse": False,
         # "final-shader": "",
-        # "grid-unit": 0.0,
+        # "grid-unit": 10.0,
         # "grid-subdivisions": 10,
         "grid-color": (0.0, 0.0, 0.0),
-        "scalar": ""
+        # "scalar": ""
     }
 
     other_settings = {

@@ -17,11 +17,12 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import gi
-from gi.repository import Adw
-from gi.repository import Gtk, Gdk, Gio, GLib, GObject
+from gi.repository import Adw, Gtk, Gdk, Gio, GObject
+
+from gettext import gettext as _
 
 import os
+
 
 class ImageThumbnail(Gtk.FlowBoxChild):
     __gtype_name__ = 'ImageThumbnail'
@@ -74,10 +75,13 @@ class FileRow(Adw.PreferencesRow):
 
         self.file_button.connect("clicked", self.on_open_clicked)
         self.delete_button.connect("clicked", self.on_delete_clicked)
-        self.suggestions_box.connect("child-activated", self.on_image_activated)
+        self.suggestions_box.connect(
+            "child-activated", self.on_image_activated)
         self.drop_target.connect("drop", self.on_drop_received)
 
         self.drop_target.set_gtypes([Gdk.FileList])
+
+        self.css_name("file-row")
 
     def on_open_clicked(self, btn):
         self.on_open_file_dialog()
