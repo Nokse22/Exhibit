@@ -35,7 +35,29 @@
             "comp": -2,
             "translucency-support": true,
             "cells": false,
+            "scalar-coloring": true,
             "grid": false
+        },
+        "other-settings": {
+            "point-up": false
+        }
+    },
+    "splat": {
+        "name": "Splat",
+        "formats": ".*(splat)",
+        "view-settings": {
+            "anti-aliasing": true,
+	    "point-size": 1.0,
+	    "point-type": "gaussian",
+	    "point-sprites": true,
+	    "scalar-coloring": true,
+	    "comp": -2,
+	    "cells": false,
+	    "up": "-Y",
+	    "tone-mapping": false,
+	    "grid": false,
+	    "anti-aliasing": false,
+	    "translucency-support": false
         },
         "other-settings": {
             "point-up": false
