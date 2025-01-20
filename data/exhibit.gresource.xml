@@ -8,14 +8,11 @@
     <file preprocess="xml-stripblanks">ui/f3d_viewer.ui</file>
     <file preprocess="xml-stripblanks">gtk/help-overlay.ui</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/go-home-symbolic.svg</file>
-    <file preprocess="xml-stripblanks">icons/16x16/actions/orthographic-symbolic.svg</file>
-    <file preprocess="xml-stripblanks">icons/16x16/actions/perspective-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/photo-camera-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/image-alt-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/shapes-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/left-large-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/arrow-into-box-symbolic.svg</file>
-    <file preprocess="xml-stripblanks">icons/16x16/actions/share-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/sidebar-show-symbolic.svg</file>
 
     <file compressed="true">HDRIs/city.hdr</file>
