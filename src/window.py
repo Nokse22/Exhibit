@@ -1,6 +1,6 @@
 # window.py
 #
-# Copyright 2024 Nokse22
+# Copyright 2024-2025 Nokse <nokse@posteo.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -150,6 +150,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     spheres_switch = Gtk.Template.Child()
     points_size_spin = Gtk.Template.Child()
     point_sprites_type_combo = Gtk.Template.Child()
+    sprite_size_spin = Gtk.Template.Child()
 
     material_group = Gtk.Template.Child()
 
@@ -213,23 +214,21 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.open_new_action = self.create_action(
             'add-new', self.open_file_chooser)
 
-        self.orthonographic_action = Gio.SimpleAction.new_stateful(
-            "orthonographic",
-            GLib.VariantType.new("b"),
+        self.orthographic_action = Gio.SimpleAction.new_stateful(
+            "orthographic",
+            None,
             GLib.Variant(
-                "b",
-                self.window_settings.get_setting("orthographic")),
-        )
-        self.orthonographic_action.connect(
-            "change-state",
-            lambda action, state: self.orthonographic_state_changed(state))
-        self.add_action(self.orthonographic_action)
+                "b", self.window_settings.get_setting("orthographic")))
+        self.orthographic_action.connect(
+            "change-state", self.orthographic_state_changed)
+        self.window_settings.get_setting("orthographic").connect(
+            "changed", self.on_orthographic_changed)
+        self.add_action(self.orthographic_action)
 
         self.settings_action = Gio.SimpleAction.new_stateful(
             "settings",
             GLib.VariantType.new("s"),
-            GLib.Variant("s", "general"),
-        )
+            GLib.Variant("s", "general"))
         self.settings_action.connect(
             "change-state",
             lambda action, state: self.change_setting_state(state))
@@ -345,7 +344,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             (self.anti_aliasing_switch, "anti-aliasing"),
             (self.hdri_ambient_switch, "hdri-ambient"),
             (self.edges_switch, "show-edges"),
-            (self.spheres_switch, "point-sprites"),
+            (self.spheres_switch, "sprite-enabled"),
             (self.use_skybox_switch, "hdri-skybox"),
             (self.blur_switch, "blur-background"),
             (self.use_color_switch, "use-color"),
@@ -364,6 +363,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         spins = [
             (self.edges_width_spin, "edges-width"),
             (self.points_size_spin, "point-size"),
+            (self.sprite_size_spin, "sprites-size"),
             (self.model_roughness_spin, "model-roughness"),
             (self.model_metallic_spin, "model-metallic"),
             (self.model_opacity_spin, "model-opacity"),
@@ -399,13 +399,13 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             "notify::selected", self.on_scivis_component_combo_changed)
         self.window_settings.get_setting("up").connect(
             "changed", self.set_up_direction_combo)
-        self.window_settings.get_setting("comp").connect(
+        self.window_settings.get_setting("scivis-component").connect(
             "changed", self.set_scivis_component_combo)
         self.window_settings.get_setting("cells").connect(
             "changed", self.set_scivis_component_combo)
         self.point_sprites_type_combo.connect(
             "notify::selected", self.point_sprites_type_combo_changed)
-        self.window_settings.get_setting("point-type").connect(
+        self.window_settings.get_setting("sprites-type").connect(
             "changed", self.set_point_sprites_type_combo_changed)
 
         # Others
@@ -429,7 +429,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         self.f3d_viewer.connect("notify::playing", self.on_playing_changed)
 
-        self.animation_index_adj.connect(
+        self.animation_index_adj.connect_after(
             "value-changed", self.on_animation_index_changed)
 
         self.block_reload = True
@@ -534,15 +534,15 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             f"Setting scivis component combo, selected: {selected}")
         self.model_color_row.set_sensitive(True if selected == 0 else False)
 
-        if (self.window_settings.get_setting("comp").value == -1 and
+        if (self.window_settings.get_setting("scivis-component").value == -1 and
                 self.window_settings.get_setting("cells").value):
             self.model_scivis_component_combo.set_selected(0)
         else:
             self.model_scivis_component_combo.set_selected(
-                -self.window_settings.get_setting("comp").value + 1)
+                -self.window_settings.get_setting("scivis-component").value + 1)
 
     def set_point_sprites_type_combo_changed(self, setting, *args):
-        if self.window_settings.get_setting("comp").value == "spheres":
+        if self.window_settings.get_setting("scivis-component").value == "spheres":
             self.point_sprites_type_combo.set_selected(0)
         else:
             self.point_sprites_type_combo.set_selected(1)
@@ -556,7 +556,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.f3d_viewer.animation_time = self.f3d_viewer.lower_time_range
         self.f3d_viewer.playing = False
 
-        self.reload_file(True)
+        GLib.timeout_add(100, self.reload_file, True)
 
     def on_switch_toggled(self, switch, active, name):
         self.window_settings.set_setting(name, switch.get_active())
@@ -581,21 +581,21 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.model_color_row.set_sensitive(True if selected == 0 else False)
 
         if selected == 0:
-            self.window_settings.set_setting("comp", -1, False)
+            self.window_settings.set_setting("scivis-component", -1, False)
             self.window_settings.set_setting("cells", True)
-            self.window_settings.set_setting("scalar-coloring", False)
+            self.window_settings.set_setting("scivis-enabled", False)
         else:
-            self.window_settings.set_setting("comp", -(selected - 1))
+            self.window_settings.set_setting("scivis-component", -(selected - 1))
             self.window_settings.set_setting("cells", False)
-            self.window_settings.set_setting("scalar-coloring", True)
+            self.window_settings.set_setting("scivis-enabled", True)
 
     def point_sprites_type_combo_changed(self, *args):
         selected = self.point_sprites_type_combo.get_selected()
 
         if selected == 0:
-            self.window_settings.set_setting("point-type", "sphere", False)
+            self.window_settings.set_setting("sprites-type", "sphere", False)
         else:
-            self.window_settings.set_setting("point-type", "gaussian", False)
+            self.window_settings.set_setting("sprites-type", "gaussian", False)
     #
     # Special functions called when a setting changes that trigger
     #   an action like reloading.
@@ -889,21 +889,21 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if self.f3d_viewer.supports(filepath):
             if add_file:
                 if not self.f3d_viewer.add_file(filepath):
-                    self.on_file_not_opened(filepath)
+                    GLib.idle_add(self.on_file_not_opened, filepath)
                     return
             else:
                 if not self.f3d_viewer.load_file(filepath):
-                    self.on_file_not_opened(filepath)
+                    GLib.idle_add(self.on_file_not_opened, filepath)
                     return
         else:
-            self.on_file_not_opened(filepath)
+            GLib.idle_add(self.on_file_not_opened, filepath)
             return
 
         if preserve_orientation:
             self.f3d_viewer.set_camera_state(camera_state)
 
         self.filepath = filepath
-        self.on_file_opened()
+        GLib.idle_add(self.on_file_opened)
 
     def on_file_opened(self):
         self.logger.debug("on file opened")
@@ -985,10 +985,20 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def on_open_button_clicked(self, btn):
         self.open_file_chooser()
 
-    def orthonographic_state_changed(self, state):
+    def orthographic_state_changed(self, action, state):
+        action.set_state(state)
         self.window_settings.set_setting("orthographic", state.get_boolean())
-
         self.f3d_viewer.update_options({"orthographic": state.get_boolean()})
+
+    def on_orthographic_changed(self, setting, *args):
+        self.orthographic_action.set_state(
+            GLib.Variant(
+                "b", self.window_settings.get_setting("orthographic").value))
+
+    def toggle_orthographic(self, *args):
+        self.window_settings.set_setting(
+            "orthographic",
+            not self.window_settings.get_setting("orthographic").value)
 
     @Gtk.Template.Callback("on_drop_received")
     def on_drop_received(self, drop, value, x, y):
@@ -1013,7 +1023,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def on_close_sidebar_clicked(self, *args):
         self.split_view.set_show_sidebar(False)
 
-    def on_open_with_external_app(self, *args):
+    def on_open_externally(self, *args):
         try:
             file = Gio.File.new_for_path(self.filepath)
         except Exception:
@@ -1021,14 +1031,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         else:
             launcher = Gtk.FileLauncher.new(file)
             launcher.set_always_ask(True)
-
-            def open_file_finish(_, result, *args):
-                try:
-                    launcher.launch_finish(result)
-                except Exception as e:
-                    self.logger.error(e)
-
-            launcher.launch(self, None, open_file_finish)
+            launcher.launch(self, None, None)
 
     @Gtk.Template.Callback("on_apply_breakpoint")
     def on_apply_breakpoint(self, *args):

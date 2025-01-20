@@ -146,10 +146,10 @@
             <td><p>Direction of the up</p></td>
         </tr>
         <tr>
-            <td><p>point-sprites</p></td>
+            <td><p>sprite-enabled</p></td>
             <td><p>bool</p></td>
             <td><p>False</p></td>
-            <td><p>model.point-sprites.enable</p></td>
+            <td><p>model.sprite-enabled.enable</p></td>
             <td><p>Show sphere points sprites instead of the geometry</p></td>
         </tr>
         <tr>
@@ -188,7 +188,7 @@
             <td><p>Opacity on the geometry. Usually used with Depth Peeling option. Multiplied with the model.color.texture when present</p></td>
         </tr>
         <tr>
-            <td><p>comp</p></td>
+            <td><p>scivis-component</p></td>
             <td><p>int</p></td>
             <td><p>-1</p></td>
             <td><p>model.scivis.component</p></td>
@@ -274,10 +274,10 @@
             <td><p>Path to a texture file that sets the normal map of the object.</p></td>
         </tr>
         <tr>
-            <td><p>point-type</p></td>
+            <td><p>sprites-type</p></td>
             <td><p>string</p></td>
             <td><p>&quot;sphere&quot;</p></td>
-            <td><p>model.point-sprites.type</p></td>
+            <td><p>model.sprite-enabled.type</p></td>
             <td><p>Set the sprites type when showing point sprites (can be sphere or gaussian).</p></td>
         </tr>
         <tr>

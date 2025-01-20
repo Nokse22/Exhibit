@@ -1,6 +1,6 @@
 # window.py
 #
-# Copyright 2024 Nokse22
+# Copyright 2024-2025 Nokse <nokse@posteo.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -80,8 +80,6 @@ class FileRow(Adw.PreferencesRow):
         self.drop_target.connect("drop", self.on_drop_received)
 
         self.drop_target.set_gtypes([Gdk.FileList])
-
-        self.css_name("file-row")
 
     def on_open_clicked(self, btn):
         self.on_open_file_dialog()

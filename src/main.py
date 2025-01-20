@@ -1,6 +1,6 @@
 # main.py
 #
-# Copyright 2024 Nokse22
+# Copyright 2024-2025 Nokse <nokse@posteo.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -49,6 +49,12 @@ class Viewer3dApplication(Adw.Application):
         self.create_action('help', self.on_help_action, ['F1'])
 
         self.create_action('open-hdri-folder', self.on_open_hdri_folder)
+        self.create_action('open-configs-folder', self.on_open_configs_folder)
+
+        self.create_action(
+            'open-externally',
+            lambda *_: self.props.active_window.on_open_externally(),
+            ['<primary>O'])
 
         self.create_action(
             'open-new-window',
@@ -100,9 +106,7 @@ class Viewer3dApplication(Adw.Application):
             GLib.Variant("s", self.saved_settings.get_string("theme")),
         )
         theme_action.connect("activate", self.on_theme_setting_changed)
-
         self.update_theme()
-
         self.add_action(theme_action)
 
     def do_open(self, files, n_files, hint):
@@ -137,7 +141,7 @@ class Viewer3dApplication(Adw.Application):
             issue_url='https://github.com/Nokse22/Exhibit/issues',
             developers=['Nokse'],
             license_type="GTK_LICENSE_GPL_3_0",
-            copyright='© 2024 Nokse22',
+            copyright='© 2024-2025 Nokse',
             artists=["Jakub Steiner https://jimmac.eu"])
         about.add_link(_("Checkout F3D"), "https://f3d.app")
 
@@ -158,6 +162,9 @@ class Viewer3dApplication(Adw.Application):
 
     def on_open_hdri_folder(self, *args):
         webbrowser.open(self.props.active_window.hdri_path)
+
+    def on_open_configs_folder(self, *args):
+        webbrowser.open(self.props.active_window.user_configurations_path)
 
     def on_theme_setting_changed(self, action, state):
         action.set_state(state)

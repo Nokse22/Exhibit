@@ -1,6 +1,6 @@
 # settings_manager.py
 #
-# Copyright 2024 Nokse22
+# Copyright 2024-2025 Nokse <nokse@posteo.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -110,9 +110,11 @@ class WindowSettings(Gio.ListStore):
         "show-edges": False,
         "edges-width": 1.0,
 
-        "point-sprites": False,
+        "sprite-enabled": False,
         "point-size": 1.0,
-        "point-type": "sphere",
+        "sprites-type": "sphere",
+
+        "sprites-size": 1.0,
 
         "model-metallic": 0.0,
         "model-roughness": 0.3,
@@ -120,9 +122,9 @@ class WindowSettings(Gio.ListStore):
 
         "armature-enable": False,
 
-        "comp": -1,
+        "scivis-component": -1,
         "cells": True,
-        "scalar-coloring": False,
+        "scivis-enabled": False,
         "model-color": (1.0, 1.0, 1.0),
 
         "grid": True,

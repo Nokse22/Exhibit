@@ -373,12 +373,24 @@
                                               </object>
                                             </child>
                                             <child>
-                                              <object class="AdwSpinRow" id="points_size_spin">
-                                                <property name="title" translatable="yes">Points Size</property>
-                                                <!-- <property name="digits">1</property> -->
+                                              <object class="AdwSpinRow" id="sprite_size_spin">
+                                                <property name="title" translatable="yes">Sprite Size</property>
                                                 <property name="adjustment">
                                                   <object class="GtkAdjustment">
-                                                    <property name="lower">1</property>
+                                                    <property name="lower">0</property>
+                                                    <property name="upper">10</property>
+                                                    <property name="value">1</property>
+                                                    <property name="step-increment">1</property>
+                                                  </object>
+                                                </property>
+                                              </object>
+                                            </child>
+                                            <child>
+                                              <object class="AdwSpinRow" id="points_size_spin">
+                                                <property name="title" translatable="yes">Points Size</property>
+                                                <property name="adjustment">
+                                                  <object class="GtkAdjustment">
+                                                    <property name="lower">0</property>
                                                     <property name="upper">10</property>
                                                     <property name="value">1</property>
                                                     <property name="step-increment">1</property>
@@ -397,7 +409,7 @@
                             <child>
                               <object class="AdwViewStackPage">
                                 <property name="name">model</property>
-                                <property name="icon-name">globe-symbolic</property>
+                                <property name="icon-name">shapes-symbolic</property>
                                 <property name="title" translatable="yes">Model</property>
                                 <property name="child">
                                   <object class="GtkScrolledWindow">
@@ -465,16 +477,6 @@
                                       </object>
                                     </child>
                                         <child>
-                                          <object class="AdwPreferencesGroup">
-                                            <!-- <property name="title" translatable="yes">Model Rendering</property> -->
-                                            <child>
-                                              <object class="AdwSwitchRow" id="armature_switch">
-                                                <property name="title" translatable="yes">Show Armature</property>
-                                              </object>
-                                            </child>
-                                          </object>
-                                        </child>
-                                        <child>
                                           <object class="AdwPreferencesGroup" id="color_group">
                                             <property name="hexpand">True</property>
                                             <property name="hexpand-set">True</property>
@@ -514,6 +516,15 @@
                                                     </property>
                                                   </object>
                                                 </child>
+                                              </object>
+                                            </child>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="AdwPreferencesGroup">
+                                            <child>
+                                              <object class="AdwSwitchRow" id="armature_switch">
+                                                <property name="title" translatable="yes">Show Armature</property>
                                               </object>
                                             </child>
                                           </object>
@@ -928,6 +939,12 @@
     </section>
     <section>
       <item>
+        <attribute name="label" translatable="yes">_Open File Externally</attribute>
+        <attribute name="action">app.open-externally</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
         <attribute name="label" translatable="yes">_Help</attribute>
         <attribute name="action">app.help</attribute>
       </item>
@@ -953,14 +970,17 @@
     <section>
       <item>
         <attribute name="label" translatable="yes">Orthonographic</attribute>
-        <attribute name="action">win.orthonographic</attribute>
-        <attribute name="target">true</attribute>
+        <attribute name="action">win.orthographic</attribute>
       </item>
     </section>
     <section>
       <item>
         <attribute name="label" translatable="yes">Open HDRI Folder</attribute>
         <attribute name="action">app.open-hdri-folder</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Open Configurations Folder</attribute>
+        <attribute name="action">app.open-configs-folder</attribute>
       </item>
     </section>
   </menu>
@@ -1001,12 +1021,7 @@
                     <property name="orientation">vertical</property>
                     <property name="spacing">12</property>
                     <child>
-                      <object class="GtkListBox">
-                        <style>
-                          <class name="boxed-list"/>
-                        </style>
-                        <property name="hexpand">True</property>
-                        <property name="valign">center</property>
+                      <object class="AdwPreferencesGroup">
                         <child>
                           <object class="AdwEntryRow" id="save_settings_name_entry">
                             <property name="title">Name</property>
@@ -1015,6 +1030,17 @@
                         <child>
                           <object class="AdwEntryRow" id="save_settings_extensions_entry">
                             <property name="title">Extensions</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Comma separated list of the supported extensions</property>
+                            <property name="halign">start</property>
+                            <property name="margin-top">6</property>
+                            <style>
+                              <class name="dim-label"/>
+                              <class name="caption"/>
+                            </style>
                           </object>
                         </child>
                       </object>
