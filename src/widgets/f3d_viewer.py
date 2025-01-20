@@ -1,6 +1,6 @@
 # window.py
 #
-# Copyright 2024 Nokse22
+# Copyright 2024-2025 Nokse <nokse@posteo.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -55,17 +55,18 @@ class F3DViewer(Gtk.GLArea):
         "show-edges": "render.show_edges",
         "edges-width": "render.line_width",
         "up": "scene.up_direction",
-        "point-sprites": "model.point_sprites.enable",  # rename to sprites-enabled
-        "point-size": "model.point_sprites.size",  # rename to sprites-size
-        "point-type": "model.point_sprites.type",  # rename to sprites-type
+        "sprite-enabled": "model.point_sprites.enable",
+        "sprites-size": "model.point_sprites.size",
+        "sprites-type": "model.point_sprites.type",
+        "point-size": "render.point_size",
         "model-color": "model.color.rgb",
         "model-metallic": "model.material.metallic",
         "model-roughness": "model.material.roughness",
         "model-opacity": "model.color.opacity",
-        "comp": "model.scivis.component",
+        "scivis-component": "model.scivis.component",
         "hdri-file": "render.hdri.file",
         "cells": "model.scivis.cells",
-        "scalar-coloring": "model.scivis.enable",  # rename to scivis-enabled
+        "scivis-enabled": "model.scivis.enable",
         "armature-enable": "render.armature.enable",
 
         # The following settings don't have an UI
@@ -79,7 +80,7 @@ class F3DViewer(Gtk.GLArea):
         "texture-normal": "model.normal.texture",  # rename to normal-texture
         "volume": "model.volume.enable",  # rename to volume-enabled
         "inverse": "model.volume.inverse",  # rename to volume-inverse
-        # "final-shader": "render.effect.final_shader",
+        "final-shader": "render.effect.final_shader",
         "grid-unit": "render.grid.unit",
         "grid-subdivisions": "render.grid.subdivisions",
         "grid-color": "render.grid.color",
@@ -92,8 +93,8 @@ class F3DViewer(Gtk.GLArea):
         self.logger = logger_lib.logger
 
         f3d.Log.set_use_coloring(True)
-        f3d.Log.set_verbose_level(f3d.Log.DEBUG)
-        f3d.Log.print(f3d.Log.DEBUG, 'debug')
+        # f3d.Log.set_verbose_level(f3d.Log.DEBUG)
+        # f3d.Log.print(f3d.Log.DEBUG, 'debug')
 
         self.set_auto_render(True)
         self.connect("realize", self.on_realize)

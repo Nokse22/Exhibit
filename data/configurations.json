@@ -29,13 +29,12 @@
         "name": "Point Cloud",
         "formats": ".*(ply)",
         "view-settings": {
-            "point-sprites": false,
             "point-size": 2.0,
             "up": "-X",
-            "comp": -2,
+            "scivis-component": -2,
             "translucency-support": true,
             "cells": false,
-            "scalar-coloring": true,
+            "scivis-enabled": true,
             "grid": false
         },
         "other-settings": {
@@ -47,11 +46,12 @@
         "formats": ".*(splat)",
         "view-settings": {
             "anti-aliasing": true,
-	    "point-size": 1.0,
-	    "point-type": "gaussian",
-	    "point-sprites": true,
-	    "scalar-coloring": true,
-	    "comp": -2,
+            "tone-mapping": true,
+	    "sprites-size": 1.0,
+	    "sprites-type": "gaussian",
+	    "sprite-enabled": true,
+	    "scivis-enabled": true,
+	    "scivis-component": -2,
 	    "cells": false,
 	    "up": "-Y",
 	    "tone-mapping": false,
