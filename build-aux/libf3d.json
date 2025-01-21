@@ -22,7 +22,7 @@
         {
             "type": "git",
             "url": "https://github.com/f3d-app/f3d",
-            "commit": "3309b29274d105eb514e8fdee53aebd514bb0cb8"
+            "tag": "v3.0.0"
         }
     ],
     "modules": [

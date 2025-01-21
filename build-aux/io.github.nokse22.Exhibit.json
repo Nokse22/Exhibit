@@ -15,15 +15,10 @@
         "/lib/pkgconfig",
         "/man",
         "/share/doc",
-        "/share/gtk-doc",
         "/share/man",
         "/share/pkgconfig",
         "*.la",
-        "*.a",
-        "/etc",
-        "/vtkext",
-        "/cmake",
-        "/CMakeFiles"
+        "*.a"
     ],
     "modules": [
         "imagemagick.json",
