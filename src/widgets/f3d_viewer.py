@@ -92,12 +92,17 @@ class F3DViewer(Gtk.GLArea):
 
         self.logger = logger_lib.logger
 
+        self.engine = None
+        self.scene = None
+        self.window = None
+        self.camera = None
+
         f3d.Log.set_use_coloring(True)
-        # f3d.Log.set_verbose_level(f3d.Log.DEBUG)
-        # f3d.Log.print(f3d.Log.DEBUG, 'debug')
+        f3d.Log.set_verbose_level(f3d.Log.DEBUG)
+        f3d.Log.print(f3d.Log.DEBUG, 'debug')
 
         self.set_auto_render(True)
-        self.connect("realize", self.on_realize)
+        # self.connect("realize", self.on_realize)
         self.connect("render", self.on_render)
         self.connect("resize", self.on_resize)
 
@@ -124,7 +129,17 @@ class F3DViewer(Gtk.GLArea):
         self._animation_time = 0
         self._playing = False
 
-        self.engine = f3d.Engine.create_external_egl()
+        self.initialize()
+
+    def initialize(self):
+        print(f3d.Engine.get_rendering_backend_list())
+
+        try:
+            self.engine = f3d.Engine.create_external_glx()
+        except Exception as e:
+            self.logger.critical(f"Could not initialize F3D {e}")
+            return
+
         self.scene = self.engine.scene
         self.window = self.engine.window
         self.camera = self.window.camera
@@ -132,6 +147,8 @@ class F3DViewer(Gtk.GLArea):
         self.engine.autoload_plugins()
 
         self.engine.options.update(self.settings)
+
+        self.logger.info("F3D viewer initialized successfully")
 
     @GObject.Property(type=float)
     def upper_time_range(self):
@@ -229,8 +246,9 @@ class F3DViewer(Gtk.GLArea):
                 f3d_options[f3d_key] = value
 
         print(f3d_options)
-        self.engine.options.update(f3d_options)
-        self.queue_render()
+        if self.engine:
+            self.engine.options.update(f3d_options)
+            self.queue_render()
 
     def render_image(self):
         self.get_context().make_current()
@@ -292,10 +310,6 @@ class F3DViewer(Gtk.GLArea):
         self.width = width
         self.height = height
 
-    def on_realize(self, area):
-        if self.get_context() is None:
-            self.logger.critical("Could not create GL context")
-
     def on_show(self, *args):
         self.is_showed = True
         self.logger.debug("F3D Viewer has been showed")
@@ -309,7 +323,6 @@ class F3DViewer(Gtk.GLArea):
             GLib.timeout_add(100, _set_hdri_ambient_true)
 
     def on_render(self, area, ctx):
-        self.get_context().make_current()
         self.window.size = self.width, self.height
         self.window.render()
 

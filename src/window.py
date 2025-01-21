@@ -845,6 +845,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             _("Loading {}").format(
                 os.path.basename(kwargs.get("filepath", "Nothing"))))
         self.block_reload = True
+        self.f3d_viewer.initialize()
         GLib.timeout_add(
             100,
             lambda *args: threading.Thread(
