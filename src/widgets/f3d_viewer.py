@@ -135,7 +135,7 @@ class F3DViewer(Gtk.GLArea):
         print(f3d.Engine.get_rendering_backend_list())
 
         try:
-            self.engine = f3d.Engine.create_external_glx()
+            self.engine = f3d.Engine.create_external_egl()
         except Exception as e:
             self.logger.critical(f"Could not initialize F3D {e}")
             return

@@ -42,6 +42,7 @@ class Viewer3dApplication(Adw.Application):
         logger_lib.init()
 
         self.lib_info = f3d.Engine.get_lib_info()
+        self.backends = f3d.Engine.get_rendering_backend_list()
 
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action)
@@ -157,8 +158,10 @@ class Viewer3dApplication(Adw.Application):
             f"Build System: {self.lib_info.build_system}\n" +
             f"VTK Version: {self.lib_info.vtk_version}\n" +
             f"F3D License: {self.lib_info.license}\n" +
-            f"\nModules:\n{'\n'.join([f'{key}: {val}' for key, val in self.lib_info.modules.items()])}\n" +
-            f"\nF3D Copyrights:\n{'\n'.join(self.lib_info.copyrights)}\n"
+            "\n" +
+            f"Modules:\n{'\n'.join([f'- {key}: {val}' for key, val in self.lib_info.modules.items()])}\n" +
+            f"Backends:\n{'\n'.join([f'- {key}: {val}' for key, val in self.backends.items()])}" +
+            f"\nF3D Copyrights:\n- {'\n- '.join(self.lib_info.copyrights)}\n"
         )
 
         about.present(self.props.active_window)
