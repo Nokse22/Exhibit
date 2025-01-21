@@ -20,17 +20,14 @@
 import sys
 import os
 import webbrowser
-import asyncio
+import f3d
 
 from gi.repository import Gtk, Gio, Adw, GLib
-from gi.events import GLibEventLoopPolicy
 from .window import Viewer3dWindow
 
 from gettext import gettext as _
 
 from . import logger_lib
-
-asyncio.set_event_loop_policy(GLibEventLoopPolicy())
 
 
 class Viewer3dApplication(Adw.Application):
@@ -43,6 +40,8 @@ class Viewer3dApplication(Adw.Application):
                          flags=Gio.ApplicationFlags.HANDLES_OPEN)
 
         logger_lib.init()
+
+        self.lib_info = f3d.Engine.get_lib_info()
 
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action)
@@ -103,8 +102,7 @@ class Viewer3dApplication(Adw.Application):
         theme_action = Gio.SimpleAction.new_stateful(
             "theme",
             GLib.VariantType.new("s"),
-            GLib.Variant("s", self.saved_settings.get_string("theme")),
-        )
+            GLib.Variant("s", self.saved_settings.get_string("theme")))
         theme_action.connect("activate", self.on_theme_setting_changed)
         self.update_theme()
         self.add_action(theme_action)
@@ -152,7 +150,15 @@ class Viewer3dApplication(Adw.Application):
             f"XDG_SESSION_TYPE: {GLib.getenv('XDG_SESSION_TYPE')}\n" +
             f"XDG_SESSION_DESKTOP: {GLib.getenv('XDG_SESSION_DESKTOP')}\n" +
             f"GTK_THEME: {GLib.getenv('GTK_THEME')}\n" +
-            f"GTK Version: {Gtk.MAJOR_VERSION}.{Gtk.MINOR_VERSION}.{Gtk.MICRO_VERSION}\n"
+            f"GTK Version: {Gtk.MAJOR_VERSION}.{Gtk.MINOR_VERSION}.{Gtk.MICRO_VERSION}\n" +
+            "\n" +
+            f"F3D Version: {self.lib_info.version_full}\n" +
+            f"Build Date: {self.lib_info.build_date}\n" +
+            f"Build System: {self.lib_info.build_system}\n" +
+            f"VTK Version: {self.lib_info.vtk_version}\n" +
+            f"F3D License: {self.lib_info.license}\n" +
+            f"\nModules:\n{'\n'.join([f'{key}: {val}' for key, val in self.lib_info.modules.items()])}\n" +
+            f"\nF3D Copyrights:\n{'\n'.join(self.lib_info.copyrights)}\n"
         )
 
         about.present(self.props.active_window)
