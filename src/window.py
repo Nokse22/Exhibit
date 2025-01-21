@@ -29,6 +29,8 @@ from wand.image import Image
 from . import logger_lib
 from .settings_manager import WindowSettings
 
+import f3d
+
 from gettext import gettext as _
 
 up_dir_n_to_string = {
@@ -58,20 +60,16 @@ up_dirs_vector = {
     "+Z": (0.0, 0.0, 1.0)
 }
 
-file_patterns = [
-    "*.vtk", "*.vtp", "*.vtu", "*.vtr", "*.vti", "*.vts", "*.vtm", "*.ply",
-    "*.stl", "*.dcm", "*.drc", "*.nrrd", "*.nhrd", "*.mhd", "*.mha", "*.ex2",
-    "*.e", "*.exo", "*.g", "*.gml", "*.pts", "*.splat", "*.ply", "*.step",
-    "*.stp", "*.iges", "*.igs", "*.brep", "*.abc", "*.obj", "*.gltf", "*.glb",
-    "*.3ds", "*.wrl", "*.fbx", "*.dae", "*.off", "*.dxf", "*.x", "*.3mf",
-    "*.usd", "*.usda", "*.usdc", "*.usdz"
-]
+allowed_extensions = []
 
-allowed_extensions = [pattern.lstrip('*.') for pattern in file_patterns]
+for reader in f3d.Engine.get_readers_info():
+    # print(f"Reader: {reader.name}\nDescr: {reader.description}\nExt: {reader.extensions}\nMime: {reader.mime_types}\np name: {reader.plugin_name}\nscene: {reader.has_scene_reader}\ngeom: {reader.has_geometry_reader}\n\n")
+    # print(reader.has_scene_reader)
+    allowed_extensions += reader.extensions
 
-image_patterns = [
-    "*.hdr", "*.exr", "*.png", "*.jpg", "*.pnm", "*.tiff", "*.bmp"
-]
+print(allowed_extensions)
+
+image_patterns = ["hdr", "exr", "png", "jpg", "pnm", "tiff", "bmp"]
 
 
 class PeriodicChecker(GObject.Object):
@@ -816,16 +814,15 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def open_file_chooser(self, *args):
         file_filter = Gtk.FileFilter(name=_("All supported formats"))
 
-        for patt in file_patterns:
-            file_filter.add_pattern(patt)
+        for patt in allowed_extensions:
+            file_filter.add_pattern("*." + patt)
 
         filter_list = Gio.ListStore.new(Gtk.FileFilter())
         filter_list.append(file_filter)
 
         dialog = Gtk.FileDialog(
             title=_("Open File"),
-            filters=filter_list,
-        )
+            filters=filter_list)
 
         dialog.open(self, None, self.on_open_file_response)
 
@@ -1003,11 +1000,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     @Gtk.Template.Callback("on_drop_received")
     def on_drop_received(self, drop, value, x, y):
         filepath = value.get_files()[0].get_path()
-        extension = "*." + os.path.splitext(filepath)[1][1:].lower()
+        extension = os.path.splitext(filepath)[1][1:].lower()
 
         if extension in image_patterns:
             self.load_hdri(filepath)
-        elif extension in file_patterns:
+        elif extension in allowed_extensions:
             self.logger.info("drop received")
             self.load_file(filepath=filepath)
 

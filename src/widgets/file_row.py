@@ -103,7 +103,7 @@ class FileRow(Adw.PreferencesRow):
 
     def on_drop_received(self, drop, value, x, y):
         filepath = value.get_files()[0].get_path()
-        extension = "*." + os.path.splitext(filepath)[1][1:].lower()
+        extension = os.path.splitext(filepath)[1][1:].lower()
         if extension in self.file_patterns:
             self.emit("file-added", filepath)
             self.set_filename(filepath)
@@ -125,10 +125,10 @@ class FileRow(Adw.PreferencesRow):
         self.emit("file-added", filepath)
 
     def on_open_file_dialog(self, *args):
-        file_filter = Gtk.FileFilter(name="All supported formats")
+        file_filter = Gtk.FileFilter(name=_("All supported formats"))
 
         for patt in self.file_patterns:
-            file_filter.add_pattern(patt)
+            file_filter.add_pattern("*." + patt)
 
         filter_list = Gio.ListStore.new(Gtk.FileFilter())
         filter_list.append(file_filter)
