@@ -32,6 +32,9 @@
                     "url": "https://github.com/nokse22/Exhibit",
                     "branch": "master"
                 }
+            ],
+            "config-opts" : [
+                "--libdir=lib"
             ]
         }
     ]
