@@ -138,7 +138,6 @@ class F3DViewer(Gtk.GLArea):
             self.engine = f3d.Engine.create_external_egl()
         except Exception as e:
             self.logger.critical(f"Could not initialize F3D {e}")
-            f3d.Log.print(f3d.Log.DEBUG, 'debug')
             return
 
         self.scene = self.engine.scene

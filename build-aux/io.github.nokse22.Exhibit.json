@@ -8,7 +8,9 @@
         "--share=ipc",
         "--socket=wayland",
         "--socket=fallback-x11",
-        "--device=dri"
+        "--device=dri",
+        "--filesystem=host-os",
+        "--env=LD_LIBRARY_PATH=/app/lib"
     ],
     "cleanup": [
         "/include",
@@ -26,15 +28,15 @@
         {
             "name": "exhibit",
             "buildsystem": "meson",
+            "config-opts" : [
+                "--libdir=lib"
+            ],
             "sources": [
                 {
                     "type": "git",
                     "url": "https://github.com/nokse22/Exhibit",
                     "branch": "master"
                 }
-            ],
-            "config-opts" : [
-                "--libdir=lib"
             ]
         }
     ]
