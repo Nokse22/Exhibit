@@ -22,7 +22,7 @@
         {
             "type": "git",
             "url": "https://github.com/f3d-app/f3d",
-            "tag": "v3.0.0"
+            "tag": "v3.1.0"
         }
     ],
     "modules": [
@@ -412,12 +412,8 @@
             "sources": [
                 {
                     "type": "archive",
-                    "url": "https://github.com/PixarAnimationStudios/OpenUSD/archive/refs/tags/v23.05.tar.gz",
-                    "sha256": "f5c3e72cd584bab383a8054628b6ed98aa17b1cbbe896eb98257ac19641d10c7"
-                },
-                {
-                    "type": "patch",
-                    "path": "0001-usd-onetbb.patch"
+                    "url": "https://github.com/PixarAnimationStudios/OpenUSD/archive/refs/tags/v25.05.tar.gz",
+                    "sha256": "231faca9ab71fa63d6c1e0da18bda0c365f82d9bef1cfd4b3d3d6784c8d5fb96"
                 },
                 {
                     "type": "patch",

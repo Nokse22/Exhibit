@@ -44,7 +44,7 @@ class F3DViewer(Gtk.GLArea):
         "translucency-support": "render.effect.translucency_support",
         "tone-mapping": "render.effect.tone_mapping",
         "ambient-occlusion": "render.effect.ambient_occlusion",
-        "anti-aliasing": "render.effect.anti_aliasing",
+        "anti-aliasing": "render.effect.antialiasing.enable",
         "hdri-ambient": "render.hdri.ambient",
         "hdri-skybox": "render.background.skybox",
         "light-intensity": "render.light.intensity",
