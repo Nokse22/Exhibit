@@ -28,9 +28,6 @@
             "tag": "v3.1.0"
         }
     ],
-    "post-install": [
-        "ldconfig"
-    ],
     "modules": [
         "shared-modules/glew/glew.json",
         {

@@ -137,9 +137,8 @@ class F3DViewer(Gtk.GLArea):
 
         # Try multiple backends in order of preference
         create_methods = [
-            (f3d.Engine.create_external_glx, "GLX external"),
             (f3d.Engine.create_external_egl, "EGL external"),
-            (f3d.Engine.create, "Auto detection")
+            (f3d.Engine.create_external_glx, "GLX external")
         ]
         
         for create_func, backend_name in create_methods:
@@ -150,6 +149,13 @@ class F3DViewer(Gtk.GLArea):
             except Exception as e:
                 self.logger.warning(f"Could not initialize F3D with {backend_name}: {e}")
         
+        if not self.engine:
+            try:
+                self.engine = f3d.Engine.create(True)
+            except Exception as e:
+                self.logger.warning(f"Could not initialize F3D with Auto: {e}")
+
+
         if not self.engine:
             self.logger.critical("Failed to initialize F3D with any available backend")
             return
@@ -468,3 +474,4 @@ class F3DViewer(Gtk.GLArea):
     @Gtk.Template.Callback("on_drag_end")
     def on_drag_end(self, gesture, *args):
         self.drag_prev_offset = (0, 0)
+
