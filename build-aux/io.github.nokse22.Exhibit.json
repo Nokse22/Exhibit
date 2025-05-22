@@ -4,13 +4,25 @@
     "runtime-version": "48",
     "sdk": "org.gnome.Sdk",
     "command": "exhibit",
+    "add-extensions": {
+        "org.freedesktop.Platform.GL": {
+            "directory": "lib/GL",
+            "version": "23.08",
+            "subdirectories": true,
+            "no-autodownload": true,
+            "autodelete": false,
+            "add-ld-path": "lib"
+        }
+    },
     "finish-args": [
         "--share=ipc",
         "--socket=wayland",
         "--socket=fallback-x11",
         "--device=dri",
         "--filesystem=host-os",
-        "--env=LD_LIBRARY_PATH=/app/lib"
+        "--env=LD_LIBRARY_PATH=/app/lib:/app/lib/GL/lib:/usr/lib/x86_64-linux-gnu",
+        "--env=GI_EXTRA_MODULES=/app/lib/girepository-1.0",
+        "--talk-name=org.freedesktop.Flatpak"
     ],
     "cleanup": [
         "/include",
@@ -25,6 +37,20 @@
     "modules": [
         "imagemagick.json",
         "libf3d.json",
+        {
+            "name": "mesa-libs",
+            "buildsystem": "simple",
+            "build-commands": [
+                "mkdir -p /app/lib",
+                "mkdir -p /app/lib/GL/lib",
+                "mkdir -p /app/lib/GL/default",
+                "mkdir -p /app/lib/GL/mesa-git",
+                "mkdir -p /app/lib/GL/nvidia-*",
+                "ln -sf /usr/lib/x86_64-linux-gnu/libEGL.so* /app/lib/ || true",
+                "ln -sf /usr/lib/x86_64-linux-gnu/libGL.so* /app/lib/ || true",
+                "ln -sf /usr/lib/x86_64-linux-gnu/libGLX.so* /app/lib/ || true"
+            ]
+        },
         {
             "name": "exhibit",
             "buildsystem": "meson",

@@ -16,7 +16,10 @@
         "-DF3D_PLUGIN_BUILD_EXODUS:BOOL=ON",
         "-DF3D_PLUGIN_BUILD_OCCT:BOOL=ON",
         "-DF3D_PLUGIN_BUILD_USD:BOOL=ON",
-        "-DF3D_LINUX_LINK_FILESYSTEM:BOOL=OFF"
+        "-DF3D_LINUX_LINK_FILESYSTEM:BOOL=OFF",
+        "-DF3D_TESTING_ENABLE_EGL_TESTS:BOOL=ON",
+        "-DF3D_TESTING_ENABLE_GLX_TESTS:BOOL=ON",
+        "-DF3D_TESTING_ENABLE_OSMESA_TESTS:BOOL=ON"
     ],
     "sources": [
         {
@@ -24,6 +27,9 @@
             "url": "https://github.com/f3d-app/f3d",
             "tag": "v3.1.0"
         }
+    ],
+    "post-install": [
+        "ldconfig"
     ],
     "modules": [
         "shared-modules/glew/glew.json",

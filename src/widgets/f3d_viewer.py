@@ -132,12 +132,26 @@ class F3DViewer(Gtk.GLArea):
         self.initialize()
 
     def initialize(self):
-        print(f3d.Engine.get_rendering_backend_list())
+        backends_list = f3d.Engine.get_rendering_backend_list()
+        self.logger.info(f"Available F3D backends: {backends_list}")
 
-        try:
-            self.engine = f3d.Engine.create_external_egl()
-        except Exception as e:
-            self.logger.critical(f"Could not initialize F3D {e}")
+        # Try multiple backends in order of preference
+        create_methods = [
+            (f3d.Engine.create_external_glx, "GLX external"),
+            (f3d.Engine.create_external_egl, "EGL external"),
+            (f3d.Engine.create, "Auto detection")
+        ]
+        
+        for create_func, backend_name in create_methods:
+            try:
+                self.engine = create_func()
+                self.logger.info(f"F3D initialized successfully with {backend_name}")
+                break
+            except Exception as e:
+                self.logger.warning(f"Could not initialize F3D with {backend_name}: {e}")
+        
+        if not self.engine:
+            self.logger.critical("Failed to initialize F3D with any available backend")
             return
 
         self.scene = self.engine.scene
@@ -145,9 +159,8 @@ class F3DViewer(Gtk.GLArea):
         self.camera = self.window.camera
 
         self.engine.autoload_plugins()
-
         self.engine.options.update(self.settings)
-
+        
         self.logger.info("F3D viewer initialized successfully")
 
     @GObject.Property(type=float)
