@@ -52,11 +52,6 @@
                 </style>
                 <child>
                   <object class="GtkLabel" id="title">
-                    <binding name="visible">
-                      <closure function="string_is_not_empty" type="gboolean">
-                        <lookup name="label">title</lookup>
-                      </closure>
-                    </binding>
                     <property name="ellipsize">none</property>
                     <property name="label" bind-source="FileRow" bind-property="title" bind-flags="sync-create"/>
                     <property name="lines">0</property>
@@ -79,7 +74,9 @@
                 </style>
                 <child>
                   <object class="GtkBox">
-                    <property name="css-classes">linked</property>
+                    <style>
+                      <class name="linked"/>
+                    </style>
                     <property name="valign">center</property>
                     <child>
                       <object class="GtkButton" id="file_button">
