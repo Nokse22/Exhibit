@@ -36,6 +36,16 @@ You can use an HDRI image or a custom color as a background.</p>
     <color type="primary" scheme_preference="dark">#1a5fb4</color>
   </branding>
 
+  <requires>
+    <internet>offline-only</internet>
+    <display_length compare="ge">360</display_length>
+  </requires>
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+    <control>touch</control>
+  </supports>
+
   <screenshots>
     <screenshot type="default">
       <image>https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%201.png</image>
