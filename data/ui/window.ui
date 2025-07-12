@@ -98,6 +98,7 @@
                               </child>
                               <child>
                                 <object class="GtkStackPage">
+                                <property name="name">error_page</property>
                                   <property name="child">
                                     <object class="AdwStatusPage">
                                       <property name="child">
@@ -119,11 +120,11 @@
                                       <property name="vexpand">True</property>
                                     </object>
                                   </property>
-                                <property name="name">error_page</property>
                               </object>
                             </child>
                             <child>
                               <object class="GtkStackPage">
+                                <property name="name">loading_page</property>
                                 <property name="child">
                                   <object class="GtkBox">
                                     <property name="margin-bottom">12</property>
@@ -143,7 +144,6 @@
                                     <child>
                                       <object class="GtkLabel" id="loading_label">
                                         <property name="justify">center</property>
-                                        <property name="label">Loading some_file_with_a_very_very_long_filename.stl</property>
                                         <property name="wrap">True</property>
                                         <property name="wrap-mode">word-char</property>
                                         <style>
@@ -153,7 +153,6 @@
                                     </child>
                                   </object>
                                 </property>
-                                <property name="name">loading_page</property>
                               </object>
                             </child>
                           </object>

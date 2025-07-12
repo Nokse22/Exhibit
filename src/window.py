@@ -176,6 +176,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     save_settings_extensions_entry = Gtk.Template.Child()
     save_settings_expander = Gtk.Template.Child()
 
+    loading_label = Gtk.Template.Child()
+
     width = 600
     height = 600
     distance = 0
@@ -578,7 +580,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             GLib.idle_add(self.f3d_viewer.queue_render)
             return
         if self.style_manager.get_dark():
-            options = {"bg-color": [0.2, 0.2, 0.2]}
+            options = {"bg-color": [0.11372549, 0.11372549, 0.125490196]}
         else:
             options = {"bg-color": [1.0, 1.0, 1.0]}
         self.f3d_viewer.update_options(options)
@@ -805,17 +807,14 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             return
 
     def load_file(self, **kwargs):
-        filepath = None
-        override = False
-        preserve_orientation = False
+        filepath = kwargs.get("filepath", None)
+        override = kwargs.get("override", False)
+        preserve_orientation = kwargs.get("preserve_orientation", False)
 
-        if "filepath" in kwargs:
-            filepath = kwargs["filepath"]
-        if "override" in kwargs:
-            override = kwargs["override"]
-        if "preserve_orientation" in kwargs:
-            preserve_orientation = kwargs["preserve_orientation"]
+        if preserve_orientation:
             camera_state = self.f3d_viewer.get_camera_state()
+        else:
+            camera_state = None
 
         if filepath is None:
             filepath = self.filepath
@@ -843,25 +842,35 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.logger.debug(f"best settings is {settings}")
             self.change_setting_state(GLib.Variant("s", settings))
 
+        self.loading_label.set_label(_("Loading") + " " + os.path.basename(filepath))
+        self.stack.set_visible_child_name("startup_page")
+        self.startup_stack.set_visible_child_name("loading_page")
+
+        GLib.idle_add(self.try_loading, filepath, preserve_orientation, camera_state)
+
+    def try_loading(self, filepath, preserve_orientation, camera_state):
         scene_loaded = False
         geometry_loaded = False
 
+        has_scene_loader = self.f3d_viewer.has_scene_loader(filepath)
+        has_geometry_loader = self.f3d_viewer.has_geometry_loader(filepath)
+
         if self.window_settings.get_setting("load-type").value is None:
-            if self.f3d_viewer.has_scene_loader(filepath):
+            if has_scene_loader:
                 self.f3d_viewer.load_scene(filepath)
                 scene_loaded = True
                 self.model_load_combo.set_sensitive(True)
-            elif self.f3d_viewer.has_geometry_loader(filepath):
+            elif has_geometry_loader:
                 self.f3d_viewer.load_geometry(filepath)
                 geometry_loaded = True
                 self.model_load_combo.set_sensitive(False)
 
         elif self.window_settings.get_setting("load-type").value == 0:
-            if self.f3d_viewer.has_geometry_loader(filepath):
+            if has_geometry_loader:
                 self.f3d_viewer.load_geometry(filepath)
                 geometry_loaded = True
         elif self.window_settings.get_setting("load-type").value == 1:
-            if self.f3d_viewer.has_scene_loader(filepath):
+            if has_scene_loader:
                 self.f3d_viewer.load_scene(filepath)
                 scene_loaded = True
 
@@ -869,8 +878,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.on_file_not_opened(filepath)
             return
 
-        if (self.f3d_viewer.has_geometry_loader(filepath) and
-                self.f3d_viewer.has_scene_loader(filepath)):
+        if (has_geometry_loader and has_scene_loader):
             self.model_load_combo.set_sensitive(True)
         else:
             self.model_load_combo.set_sensitive(False)
