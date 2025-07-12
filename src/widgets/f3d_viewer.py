@@ -83,7 +83,6 @@ class F3DViewer(Gtk.GLArea):
     }
 
     def __init__(self, *args):
-
         self.logger = logger_lib.logger
 
         f3d.Log.set_use_coloring(True)

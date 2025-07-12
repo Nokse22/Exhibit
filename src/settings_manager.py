@@ -6,34 +6,50 @@ from enum import IntEnum
 
 from . import logger_lib
 
- #
- #   Other special
- #   functions if  <──────┐                 On change
- #   connected            │     ┌─────────┐ update the UI
- #                        │     │         ∨
- #                       ┌─────────┐     ┌──┐
- #      Update       ━━━▶│ListStore│     │UI│
- #      the settings     └─────────┘     └──┘
- #                        │     ∧         │
- #                        │     └─────────┘ On change update
- #                        │                 the ListStore
- #        ┏━━━━━━┓        │ On change
- #        ┃Viewer┃<───────┘ update the
- #        ┗━━━━━━┛          view options
- #
- # Made with  ASCII Draw
+#
+#   Other special
+#   functions if  <──────┐                 On change
+#   connected            │     ┌─────────┐ update the UI
+#                        │     │         ∨
+#                       ┌─────────┐     ┌──┐
+#      Update       ━━━▶│ListStore│     │UI│
+#      the settings     └─────────┘     └──┘
+#                        │     ∧         │
+#                        │     └─────────┘ On change update
+#                        │                 the ListStore
+#        ┏━━━━━━┓        │ On change
+#        ┃Viewer┃<───────┘ update the
+#        ┗━━━━━━┛          view options
+#
+# Made with  ASCII Draw
+
 
 class SettingType(IntEnum):
     VIEW = 0
     OTHER = 1
     INTERNAL = 2
 
+
 class Setting(GObject.Object):
-    __gtype_name__ = 'Setting'
+    __gtype_name__ = "Setting"
 
     __gsignals__ = {
-        'changed': (GObject.SignalFlags.RUN_FIRST, None, (str, int, )),
-        'changed-no-ui-update': (GObject.SignalFlags.RUN_FIRST, None, (str, int, )),
+        "changed": (
+            GObject.SignalFlags.RUN_FIRST,
+            None,
+            (
+                str,
+                int,
+            ),
+        ),
+        "changed-no-ui-update": (
+            GObject.SignalFlags.RUN_FIRST,
+            None,
+            (
+                str,
+                int,
+            ),
+        ),
     }
 
     def __init__(self, name, value, setting_type):
@@ -68,13 +84,14 @@ class Setting(GObject.Object):
     def __repr__(self):
         return f"<Setting {self._name}: {self._value}>"
 
+
 class WindowSettings(Gio.ListStore):
-    __gtype_name__ = 'WindowSettings'
+    __gtype_name__ = "WindowSettings"
 
     __gsignals__ = {
-        'changed-view': (GObject.SignalFlags.RUN_FIRST, None, (Setting, )),
-        'changed-other': (GObject.SignalFlags.RUN_FIRST, None, (Setting, )),
-        'changed-internal': (GObject.SignalFlags.RUN_FIRST, None, (Setting, )),
+        "changed-view": (GObject.SignalFlags.RUN_FIRST, None, (Setting,)),
+        "changed-other": (GObject.SignalFlags.RUN_FIRST, None, (Setting,)),
+        "changed-internal": (GObject.SignalFlags.RUN_FIRST, None, (Setting,)),
     }
 
     default_settings = {
@@ -84,34 +101,25 @@ class WindowSettings(Gio.ListStore):
         "anti-aliasing": True,
         "hdri-ambient": False,
         "light-intensity": 1.5,
-
         "show-edges": False,
         "edges-width": 1.0,
-
         "point-sprites": False,
         "point-size": 1.0,
-
         "model-metallic": 0.0,
         "model-roughness": 0.3,
         "model-opacity": 1.0,
-
         "comp": -1,
         "cells": True,
         "model-color": (1.0, 1.0, 1.0),
-
         "grid": True,
         "grid-absolute": False,
-
         "hdri-skybox": False,
         "hdri-file": "",
         "blur-background": True,
         "blur-coc": 20.0,
-
         "bg-color": (1.0, 1.0, 1.0),
-
         "up": "+Y",
         "orthographic": False,
-
         # There is no UI for the following ones
         "texture-matcap": "",
         "texture-base-color": "",
@@ -127,19 +135,15 @@ class WindowSettings(Gio.ListStore):
         "grid-unit": 0.0,
         "grid-subdivisions": 10,
         "grid-color": (0.0, 0.0, 0.0),
-        "scalar" : ""
+        "scalar": "",
     }
 
-    other_settings = {
-        "use-color": False,
-        "point-up" : True,
-        "auto-reload": True
-    }
+    other_settings = {"use-color": False, "point-up": True, "auto-reload": True}
 
     internal_settings = {
-        "auto-best" : True,
-        "load-type": None, # 0 for geometry and 1 for scene
-        "sidebar-show": True
+        "auto-best": True,
+        "load-type": None,  # 0 for geometry and 1 for scene
+        "sidebar-show": True,
     }
 
     def __init__(self):

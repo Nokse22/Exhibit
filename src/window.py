@@ -33,23 +33,9 @@ from gettext import gettext as _
 
 start = time.time()
 
-up_dir_n_to_string = {
-    0: "-X",
-    1: "+X",
-    2: "-Y",
-    3: "+Y",
-    4: "-Z",
-    5: "+Z"
-}
+up_dir_n_to_string = {0: "-X", 1: "+X", 2: "-Y", 3: "+Y", 4: "-Z", 5: "+Z"}
 
-up_dir_string_to_n = {
-    "-X": 0,
-    "+X": 1,
-    "-Y": 2,
-    "+Y": 3,
-    "-Z": 4,
-    "+Z": 5
-}
+up_dir_string_to_n = {"-X": 0, "+X": 1, "-Y": 2, "+Y": 3, "-Z": 4, "+Z": 5}
 
 up_dirs_vector = {
     "-X": (-1.0, 0.0, 0.0),
@@ -57,23 +43,59 @@ up_dirs_vector = {
     "-Y": (0.0, -1.0, 0.0),
     "+Y": (0.0, 1.0, 0.0),
     "-Z": (0.0, 0.0, -1.0),
-    "+Z": (0.0, 0.0, 1.0)
+    "+Z": (0.0, 0.0, 1.0),
 }
 
 file_patterns = [
-    "*.vtk", "*.vtp", "*.vtu", "*.vtr", "*.vti", "*.vts", "*.vtm", "*.ply",
-    "*.stl", "*.dcm", "*.drc", "*.nrrd", "*.nhrd", "*.mhd", "*.mha", "*.ex2",
-    "*.e", "*.exo", "*.g", "*.gml", "*.pts", "*.splat", "*.ply", "*.step",
-    "*.stp", "*.iges", "*.igs", "*.brep", "*.abc", "*.obj", "*.gltf", "*.glb",
-    "*.3ds", "*.wrl", "*.fbx", "*.dae", "*.off", "*.dxf", "*.x", "*.3mf",
-    "*.usd", "*.usda", "*.usdc", "*.usdz"
+    "*.vtk",
+    "*.vtp",
+    "*.vtu",
+    "*.vtr",
+    "*.vti",
+    "*.vts",
+    "*.vtm",
+    "*.ply",
+    "*.stl",
+    "*.dcm",
+    "*.drc",
+    "*.nrrd",
+    "*.nhrd",
+    "*.mhd",
+    "*.mha",
+    "*.ex2",
+    "*.e",
+    "*.exo",
+    "*.g",
+    "*.gml",
+    "*.pts",
+    "*.splat",
+    "*.ply",
+    "*.step",
+    "*.stp",
+    "*.iges",
+    "*.igs",
+    "*.brep",
+    "*.abc",
+    "*.obj",
+    "*.gltf",
+    "*.glb",
+    "*.3ds",
+    "*.wrl",
+    "*.fbx",
+    "*.dae",
+    "*.off",
+    "*.dxf",
+    "*.x",
+    "*.3mf",
+    "*.usd",
+    "*.usda",
+    "*.usdc",
+    "*.usdz",
 ]
 
-allowed_extensions = [pattern.lstrip('*.') for pattern in file_patterns]
+allowed_extensions = [pattern.lstrip("*.") for pattern in file_patterns]
 
-image_patterns = [
-    "*.hdr", "*.exr", "*.png", "*.jpg", "*.pnm", "*.tiff", "*.bmp"
-]
+image_patterns = ["*.hdr", "*.exr", "*.png", "*.jpg", "*.pnm", "*.tiff", "*.bmp"]
 
 
 class PeriodicChecker(GObject.Object):
@@ -100,9 +122,9 @@ class PeriodicChecker(GObject.Object):
             return False
 
 
-@Gtk.Template(resource_path='/io/github/nokse22/Exhibit/ui/window.ui')
+@Gtk.Template(resource_path="/io/github/nokse22/Exhibit/ui/window.ui")
 class Viewer3dWindow(Adw.ApplicationWindow):
-    __gtype_name__ = 'Viewer3dWindow'
+    __gtype_name__ = "Viewer3dWindow"
 
     split_view = Gtk.Template.Child()
 
@@ -198,15 +220,14 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.loading_file = False
 
         # Defining all the actions
-        self.create_action('save-as-image', self.open_save_file_chooser)
-        self.create_action('open-new', self.open_file_chooser)
-        self.create_action('open-external', self.open_with_external_app)
+        self.create_action("save-as-image", self.open_save_file_chooser)
+        self.create_action("open-new", self.open_file_chooser)
+        self.create_action("open-external", self.open_with_external_app)
 
         self.ortho_action = Gio.SimpleAction.new_stateful(
-                'orthographic',
-                None,
-                GLib.Variant("b", False))
-        self.ortho_action.connect('activate', self.toggle_orthographic)
+            "orthographic", None, GLib.Variant("b", False)
+        )
+        self.ortho_action.connect("activate", self.toggle_orthographic)
         self.add_action(self.ortho_action)
 
         self.settings_action = Gio.SimpleAction.new_stateful(
@@ -215,23 +236,23 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             GLib.Variant("s", "general"),
         )
         self.settings_action.connect(
-            "change-state",
-            lambda action, state: self.change_setting_state(state))
+            "change-state", lambda action, state: self.change_setting_state(state)
+        )
         self.add_action(self.settings_action)
 
         self.save_settings_action = self.create_action(
-            'save-settings', self.on_save_settings)
+            "save-settings", self.on_save_settings
+        )
         self.save_settings_action.set_enabled(False)
 
         # Initialize the change checker
-        self.change_checker = PeriodicChecker(
-            self.periodic_check_for_file_change)
+        self.change_checker = PeriodicChecker(self.periodic_check_for_file_change)
 
         # Saving all the useful paths
         if GLib.getenv("FLATPAK_ID"):
             data_home = GLib.getenv("XDG_DATA_HOME")
         else:
-            data_home = GLib.getenv('HOME') + "/.exhibit/"
+            data_home = GLib.getenv("HOME") + "/.exhibit/"
 
         self.hdri_path = data_home + "/HDRIs/"
         self.hdri_thumbnails_path = self.hdri_path + "/thumbnails/"
@@ -253,17 +274,18 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         # Setting the window to the last state
         self.window_settings = WindowSettings()
-        self.saved_settings = Gio.Settings.new('io.github.nokse22.Exhibit')
+        self.saved_settings = Gio.Settings.new("io.github.nokse22.Exhibit")
 
         self.set_default_size(
             self.saved_settings.get_int("startup-width"),
-            self.saved_settings.get_int("startup-height")
+            self.saved_settings.get_int("startup-height"),
         )
         self.split_view.set_show_sidebar(
-            self.saved_settings.get_boolean("startup-sidebar-show"))
+            self.saved_settings.get_boolean("startup-sidebar-show")
+        )
         self.window_settings.set_setting(
-            "sidebar-show",
-            self.saved_settings.get_boolean("startup-sidebar-show"))
+            "sidebar-show", self.saved_settings.get_boolean("startup-sidebar-show")
+        )
 
         # Getting the saved HDRI and generating thumbnails
         self.hdri_file_row.file_patterns = image_patterns
@@ -279,15 +301,13 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                     thumbnail = self.generate_thumbnail(filepath)
                 self.hdri_file_row.add_suggested_file(thumbnail, filepath)
             except Exception:
-                self.logger.warning(
-                    f"Couldn't open HDRI file {filepath}, skipping")
+                self.logger.warning(f"Couldn't open HDRI file {filepath}, skipping")
 
         if self.window_settings.get_setting("orthographic").value:
             self.toggle_orthographic()
 
         self.style_manager = Adw.StyleManager().get_default()
-        self.style_manager.connect(
-            "notify::dark", self.update_background_color)
+        self.style_manager.connect("notify::dark", self.update_background_color)
 
         self.update_background_color()
 
@@ -302,31 +322,37 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             label_widget.set_label(str(getattr(setting, what)))
 
         self.settings_column_view_name_column.get_factory().connect(
-            "setup", _on_factory_setup)
+            "setup", _on_factory_setup
+        )
         self.settings_column_view_name_column.get_factory().connect(
-            "bind", _on_factory_bind, "name")
+            "bind", _on_factory_bind, "name"
+        )
         self.settings_column_view_value_column.get_factory().connect(
-            "setup", _on_factory_setup)
+            "setup", _on_factory_setup
+        )
         self.settings_column_view_value_column.get_factory().connect(
-            "bind", _on_factory_bind, "value")
+            "bind", _on_factory_bind, "value"
+        )
 
         selection = Gtk.NoSelection.new(model=self.window_settings)
         self.settings_column_view.set_model(model=selection)
 
         self.save_settings_button.connect(
-            "clicked", self.on_save_settings_button_clicked)
+            "clicked", self.on_save_settings_button_clicked
+        )
         self.save_settings_name_entry.connect(
-            "changed", self.on_save_settings_name_entry_changed)
+            "changed", self.on_save_settings_name_entry_changed
+        )
         self.save_settings_extensions_entry.connect(
-            "changed", self.on_save_settings_extensions_entry_changed)
+            "changed", self.on_save_settings_extensions_entry_changed
+        )
 
         # Setting the UI and connecting widgets
+        self.window_settings.connect("changed-other", self.on_other_setting_changed)
         self.window_settings.connect(
-            "changed-other", self.on_other_setting_changed)
-        self.window_settings.connect(
-            "changed-internal", self.on_internal_setting_changed)
-        self.window_settings.connect(
-            "changed-view", self.on_view_setting_changed)
+            "changed-internal", self.on_internal_setting_changed
+        )
+        self.window_settings.connect("changed-view", self.on_view_setting_changed)
 
         # Switches signals
         switches = [
@@ -370,46 +396,60 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
         # Color buttons
         self.model_color_button.connect(
-            "notify::rgba", self.on_color_changed, "model-color")
+            "notify::rgba", self.on_color_changed, "model-color"
+        )
         self.background_color_button.connect(
-            "notify::rgba", self.on_color_changed, "bg-color")
+            "notify::rgba", self.on_color_changed, "bg-color"
+        )
         self.window_settings.get_setting("model-color").connect(
-            "changed", self.set_color_button, self.model_color_button)
+            "changed", self.set_color_button, self.model_color_button
+        )
         self.window_settings.get_setting("bg-color").connect(
-            "changed", self.set_color_button, self.background_color_button)
+            "changed", self.set_color_button, self.background_color_button
+        )
 
         # File rows
+        self.hdri_file_row.connect("delete-file", self.on_delete_skybox)
         self.hdri_file_row.connect(
-            "delete-file", self.on_delete_skybox)
-        self.hdri_file_row.connect(
-            "file-added", lambda row, filepath: self.load_hdri(filepath))
+            "file-added", lambda row, filepath: self.load_hdri(filepath)
+        )
         self.window_settings.get_setting("hdri-file").connect(
-            "changed", self.set_hdri_file_row)
+            "changed", self.set_hdri_file_row
+        )
 
         # Combos
         self.model_scivis_component_combo.connect(
-            "notify::selected", self.on_scivis_component_combo_changed)
+            "notify::selected", self.on_scivis_component_combo_changed
+        )
         self.model_load_combo.connect(
-            "notify::selected", self.on_load_type_combo_changed)
+            "notify::selected", self.on_load_type_combo_changed
+        )
         self.window_settings.get_setting("up").connect(
-            "changed", self.set_up_direction_combo)
+            "changed", self.set_up_direction_combo
+        )
         self.window_settings.get_setting("comp").connect(
-            "changed", self.set_scivis_component_combo)
+            "changed", self.set_scivis_component_combo
+        )
         self.window_settings.get_setting("cells").connect(
-            "changed", self.set_scivis_component_combo)
+            "changed", self.set_scivis_component_combo
+        )
 
         # Others
         self.background_color_button.connect(
-            "notify::rgba", self.update_background_color)
+            "notify::rgba", self.update_background_color
+        )
 
         self.up_direction_combo.connect(
-            "notify::selected", self.on_up_direction_combo_changed)
+            "notify::selected", self.on_up_direction_combo_changed
+        )
 
         self.window_settings.get_setting("load-type").connect(
-            "changed", self.set_model_load_combo)
+            "changed", self.set_model_load_combo
+        )
 
         self.window_settings.set_setting(
-            "auto-best", self.saved_settings.get_boolean("auto-best"))
+            "auto-best", self.saved_settings.get_boolean("auto-best")
+        )
 
         # Sync the UI with the settings
         self.window_settings.sync_all_settings()
@@ -424,31 +464,38 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.logger.info(f"Startup in {end - start} seconds")
 
     def setup_configurations(self):
-        self.configurations = Gio.resources_lookup_data(
-            '/io/github/nokse22/Exhibit/configurations.json',
-            Gio.ResourceLookupFlags.NONE).get_data().decode('utf-8')
+        self.configurations = (
+            Gio.resources_lookup_data(
+                "/io/github/nokse22/Exhibit/configurations.json",
+                Gio.ResourceLookupFlags.NONE,
+            )
+            .get_data()
+            .decode("utf-8")
+        )
         self.configurations = json.loads(self.configurations)
 
         for filename in os.listdir(self.configs_path):
-            if filename.endswith('.json'):
-                filepath = os.path.join(
-                    self.configs_path, filename)
-                with open(filepath, 'r') as file:
+            if filename.endswith(".json"):
+                filepath = os.path.join(self.configs_path, filename)
+                with open(filepath, "r") as file:
                     try:
                         configuration = json.load(file)
 
                         # Check if the loaded configurations
                         #   has all the required keys
                         required_keys = {
-                            "name", "formats",
-                            "view-settings", "other-settings"
+                            "name",
+                            "formats",
+                            "view-settings",
+                            "other-settings",
                         }
                         first_key_value = next(iter(configuration.values()))
                         if required_keys.issubset(first_key_value.keys()):
                             self.configurations.update(configuration)
                         else:
                             self.logger.error(
-                                f"Error: {filepath} is missing required keys.")
+                                f"Error: {filepath} is missing required keys."
+                            )
 
                     except json.JSONDecodeError as e:
                         self.logger.error(f"Error reading {filename}: {e}")
@@ -473,10 +520,11 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         for hdri_filename in hdri_names:
             if not os.path.isfile(self.hdri_path + hdri_filename):
                 hdri = Gio.resources_lookup_data(
-                    '/io/github/nokse22/Exhibit/HDRIs/' + hdri_filename,
-                    Gio.ResourceLookupFlags.NONE).get_data()
+                    "/io/github/nokse22/Exhibit/HDRIs/" + hdri_filename,
+                    Gio.ResourceLookupFlags.NONE,
+                ).get_data()
                 hdri_bytes = bytearray(hdri)
-                with open(self.hdri_path + hdri_filename, 'wb') as output_file:
+                with open(self.hdri_path + hdri_filename, "wb") as output_file:
                     output_file.write(hdri_bytes)
                 self.logger.info(f"Added {hdri_filename}")
 
@@ -512,16 +560,18 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     def set_scivis_component_combo(self, setting, *args):
         selected = self.model_scivis_component_combo.get_selected()
-        self.logger.debug(
-            f"Setting scivis component combo, selected: {selected}")
+        self.logger.debug(f"Setting scivis component combo, selected: {selected}")
         self.model_color_row.set_sensitive(True if selected == 0 else False)
 
-        if (self.window_settings.get_setting("comp").value == -1 and
-                self.window_settings.get_setting("cells").value):
+        if (
+            self.window_settings.get_setting("comp").value == -1
+            and self.window_settings.get_setting("cells").value
+        ):
             self.model_scivis_component_combo.set_selected(0)
         else:
             self.model_scivis_component_combo.set_selected(
-                -self.window_settings.get_setting("comp").value + 1)
+                -self.window_settings.get_setting("comp").value + 1
+            )
 
     #
     # Functions that are called when a UI changes, they should only
@@ -571,7 +621,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
 
     def update_background_color(self, *args):
         self.logger.info(
-            f"Use color is: {self.window_settings.get_setting('use-color').value}")
+            f"Use color is: {self.window_settings.get_setting('use-color').value}"
+        )
         if self.window_settings.get_setting("use-color").value:
             options = {
                 "bg-color": self.window_settings.get_setting("bg-color").value,
@@ -604,8 +655,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         elif setting.name == "point-up":
             if setting.value:
                 self.f3d_viewer.set_view_up(
-                    up_dirs_vector[
-                        self.window_settings.get_setting("up").value])
+                    up_dirs_vector[self.window_settings.get_setting("up").value]
+                )
                 self.f3d_viewer.always_point_up = True
             else:
                 self.f3d_viewer.always_point_up = False
@@ -636,7 +687,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         formats = self.save_settings_extensions_entry.get_text()
 
         # Format the key
-        key = name.lower().replace(' ', '_')
+        key = name.lower().replace(" ", "_")
 
         # Construct the dictionary
         settings_dict = {
@@ -644,12 +695,12 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 "name": name,
                 "formats": f".*({formats.replace(', ', '|')})",
                 "view-settings": view_settings,
-                "other-settings": other_settings
+                "other-settings": other_settings,
             }
         }
 
         # Save to JSON file
-        with open(self.configs_path + key + '.json', 'w') as j_f:
+        with open(self.configs_path + key + ".json", "w") as j_f:
             json.dump(settings_dict, j_f, indent=4)
 
         # Update configurations and menu UI
@@ -673,7 +724,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             entry.remove_css_class("error")
             return
 
-        entered_exts = [ext.strip() for ext in extensions_text.split(',')]
+        entered_exts = [ext.strip() for ext in extensions_text.split(",")]
 
         if all(ext in allowed_extensions for ext in entered_exts):
             entry.remove_css_class("error")
@@ -730,7 +781,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             if key in curr_settings:
                 if curr_settings[key] != value:
                     self.logger.info(
-                        f"curr key: {key}'s value is {curr_settings[key]} != {value}")
+                        f"curr key: {key}'s value is {curr_settings[key]} != {value}"
+                    )
                     self.change_setting_state(GLib.Variant("s", "custom"))
                     return
 
@@ -822,15 +874,14 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         if filepath == "" or filepath is None:
             return
 
+        self.logger.debug(f"load file: {filepath}")
         self.logger.debug(
-            f"load file: {filepath}")
-        self.logger.debug(
-            f"Load Type: {self.window_settings.get_setting('load-type').value}")
+            f"Load Type: {self.window_settings.get_setting('load-type').value}"
+        )
 
         self.change_checker.stop()
 
-        if (self.window_settings.get_setting("auto-best").value
-                and not override):
+        if self.window_settings.get_setting("auto-best").value and not override:
             self.logger.debug("choosing best settings")
             settings = "general"
             for key, value in self.configurations.items():
@@ -878,7 +929,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.on_file_not_opened(filepath)
             return
 
-        if (has_geometry_loader and has_scene_loader):
+        if has_geometry_loader and has_scene_loader:
             self.model_load_combo.set_sensitive(True)
         else:
             self.model_load_combo.set_sensitive(False)
@@ -967,7 +1018,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 timeout=2,
                 button_label="Open",
                 action_name="app.show-image-externally",
-                action_target=GLib.Variant("s", file_path)
+                action_target=GLib.Variant("s", file_path),
             )
             self.toast_overlay.add_toast(toast)
 
@@ -1009,8 +1060,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         try:
             file = Gio.File.new_for_path(self.filepath)
         except GLib.GError:
-            self.logger.error(
-                "Failed to construct a new Gio.File object from path.")
+            self.logger.error("Failed to construct a new Gio.File object from path.")
         else:
             launcher = Gtk.FileLauncher.new(file)
             launcher.set_always_ask(True)
@@ -1021,7 +1071,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 except GLib.GError as e:
                     if e.code != 2:
                         self.logger.error(
-                            "Failed to finish Gtk.FileLauncher procedure.")
+                            "Failed to finish Gtk.FileLauncher procedure."
+                        )
 
             launcher.launch(self, None, open_file_finish)
 
@@ -1065,9 +1116,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.window_settings.set_setting("hdri-file", "")
         self.window_settings.set_setting("hdri-skybox", False)
         self.use_skybox_switch.set_active(False)
-        options = {
-            "hdri-file": "",
-            "hdri-skybox": False}
+        options = {"hdri-file": "", "hdri-skybox": False}
         self.f3d_viewer.update_options(options)
         self.check_for_options_change()
 
@@ -1076,9 +1125,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.window_settings.set_setting("hdri-skybox", True)
         self.use_skybox_switch.set_active(True)
         self.hdri_file_row.set_filename(filepath)
-        options = {
-            "hdri-file": filepath,
-            "hdri-skybox": True}
+        options = {"hdri-file": filepath, "hdri-skybox": True}
         self.f3d_viewer.update_options(options)
         self.check_for_options_change()
 
@@ -1093,14 +1140,13 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         name, _ = os.path.splitext(base_name)
 
         thumbnail_name = f"{name}.jpeg"
-        thumbnail_filepath = os.path.join(
-            self.hdri_thumbnails_path, thumbnail_name)
+        thumbnail_filepath = os.path.join(self.hdri_thumbnails_path, thumbnail_name)
 
         with Image(filename=hdri_file_path) as img:
             img.thumbnail(width, height)
             img.gamma(1.7)
             img.brightness_contrast(0, -5)
-            img.format = 'jpeg'
+            img.format = "jpeg"
             img.save(filename=thumbnail_filepath)
 
         return thumbnail_filepath
@@ -1108,18 +1154,18 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     @Gtk.Template.Callback("on_close_request")
     def on_close_request(self, window):
         self.logger.debug("window closed, saving settings")
-        self.saved_settings.set_int(
-            "startup-width", window.get_width())
-        self.saved_settings.set_int(
-            "startup-height", window.get_height())
+        self.saved_settings.set_int("startup-width", window.get_width())
+        self.saved_settings.set_int("startup-height", window.get_height())
         self.saved_settings.set_boolean(
-            "startup-sidebar-show", window.split_view.get_show_sidebar())
+            "startup-sidebar-show", window.split_view.get_show_sidebar()
+        )
         self.saved_settings.set_boolean(
-            "auto-best", self.window_settings.get_setting("auto-best").value)
+            "auto-best", self.window_settings.get_setting("auto-best").value
+        )
 
 
 def rgb_to_list(rgb):
-    values = tuple(int(x) / 255 for x in rgb[4:-1].split(','))
+    values = tuple(int(x) / 255 for x in rgb[4:-1].split(","))
     return values
 
 
@@ -1129,7 +1175,5 @@ def list_to_rgb(lst):
 
 def list_files(directory):
     items = os.listdir(directory)
-    files = [
-        item for item in items if os.path.isfile(os.path.join(directory, item))
-    ]
+    files = [item for item in items if os.path.isfile(os.path.join(directory, item))]
     return files

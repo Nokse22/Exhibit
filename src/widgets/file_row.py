@@ -23,8 +23,9 @@ from gi.repository import Gtk, Gdk, Gio, GLib, GObject
 
 import os
 
+
 class ImageThumbnail(Gtk.FlowBoxChild):
-    __gtype_name__ = 'ImageThumbnail'
+    __gtype_name__ = "ImageThumbnail"
 
     def __init__(self, file_thumbnail, hdri_file):
         super().__init__()
@@ -37,7 +38,7 @@ class ImageThumbnail(Gtk.FlowBoxChild):
             css_classes=["suggested-picture"],
             hexpand=True,
             vexpand=True,
-            content_fit=Gtk.ContentFit.COVER
+            content_fit=Gtk.ContentFit.COVER,
         )
         self.set_child(image)
 
@@ -45,13 +46,13 @@ class ImageThumbnail(Gtk.FlowBoxChild):
         self.set_tooltip_text(base_name)
 
 
-@Gtk.Template(resource_path='/io/github/nokse22/Exhibit/ui/file_row.ui')
+@Gtk.Template(resource_path="/io/github/nokse22/Exhibit/ui/file_row.ui")
 class FileRow(Adw.PreferencesRow):
-    __gtype_name__ = 'FileRow'
+    __gtype_name__ = "FileRow"
 
     __gsignals__ = {
-        'delete-file': (GObject.SignalFlags.RUN_FIRST, None, ()),
-        'file-added': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
+        "delete-file": (GObject.SignalFlags.RUN_FIRST, None, ()),
+        "file-added": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
     }
 
     file_button = Gtk.Template.Child()

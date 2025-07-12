@@ -3,7 +3,6 @@ import os
 
 
 class CustomFormatter(logging.Formatter):
-
     log_end = ": %(message)s"
     log_start = "%(asctime)s (%(filename)s:%(lineno)d) "
     level_name = "\x1b[31;20m%(levelname)s\x1b[0m"
@@ -14,7 +13,7 @@ class CustomFormatter(logging.Formatter):
         logging.INFO: log_start + "\x1b[32;1m%(levelname)s\x1b[0m" + log_end,
         logging.WARNING: log_start + "\x1b[33;1m%(levelname)s\x1b[0m" + log_end,
         logging.ERROR: log_start + "\x1b[31;1m%(levelname)s\x1b[0m" + log_end,
-        logging.CRITICAL: log_start + "\x1b[31;1m%(levelname)s\x1b[0m" + log_end
+        logging.CRITICAL: log_start + "\x1b[31;1m%(levelname)s\x1b[0m" + log_end,
     }
 
     def format(self, record):
@@ -33,9 +32,10 @@ def init():
 
     logging.basicConfig(
         filename=log_path,
-        filemode='a',
-        format=f'%(asctime)s (%(filename)s:%(lineno)d) %(levelname)s: %(message)s',
-        datefmt='%H:%M:%S',)
+        filemode="a",
+        format=f"%(asctime)s (%(filename)s:%(lineno)d) %(levelname)s: %(message)s",
+        datefmt="%H:%M:%S",
+    )
 
     ch = logging.StreamHandler()
     ch.setLevel(logging.DEBUG)

@@ -35,62 +35,60 @@ class Viewer3dApplication(Adw.Application):
     open_filepath = None
 
     def __init__(self):
-        super().__init__(application_id='io.github.nokse22.Exhibit',
-                         flags=Gio.ApplicationFlags.HANDLES_OPEN)
+        super().__init__(
+            application_id="io.github.nokse22.Exhibit",
+            flags=Gio.ApplicationFlags.HANDLES_OPEN,
+        )
 
         logger_lib.init()
         self.logger = logger_lib.logger
 
-        self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
-        self.create_action('about', self.on_about_action)
-        self.create_action('help', self.on_help_action, ['F1'])
+        self.create_action("quit", lambda *_: self.quit(), ["<primary>q"])
+        self.create_action("about", self.on_about_action)
+        self.create_action("help", self.on_help_action, ["F1"])
 
-        self.create_action('open-hdri-folder', self.on_open_hdri_folder)
-        self.create_action('open-configs-folder', self.on_open_configs_folder)
-
-        self.create_action(
-            'open-new-window',
-            self.open_new_window_action, ['<primary><shift>n'])
-        self.create_action(
-            'toggle-orthographic', self.toggle_orthographic, ['<primary>5'])
-        self.create_action('front-view', self.front_view, ['<primary>1'])
-        self.create_action('right-view', self.right_view, ['<primary>3'])
-        self.create_action('top-view', self.top_view, ['<primary>7'])
-        self.create_action(
-            'isometric-view', self.isometric_view, ['<primary>9'])
+        self.create_action("open-hdri-folder", self.on_open_hdri_folder)
+        self.create_action("open-configs-folder", self.on_open_configs_folder)
 
         self.create_action(
-            'move-camera-w', self.on_move_camera, ['<primary>w'], "w")
+            "open-new-window", self.open_new_window_action, ["<primary><shift>n"]
+        )
         self.create_action(
-            'move-camera-a', self.on_move_camera, ['<primary>a'], "a")
-        self.create_action(
-            'move-camera-s', self.on_move_camera, ['<primary>s'], "s")
-        self.create_action(
-            'move-camera-d', self.on_move_camera, ['<primary>d'], "d")
+            "toggle-orthographic", self.toggle_orthographic, ["<primary>5"]
+        )
+        self.create_action("front-view", self.front_view, ["<primary>1"])
+        self.create_action("right-view", self.right_view, ["<primary>3"])
+        self.create_action("top-view", self.top_view, ["<primary>7"])
+        self.create_action("isometric-view", self.isometric_view, ["<primary>9"])
+
+        self.create_action("move-camera-w", self.on_move_camera, ["<primary>w"], "w")
+        self.create_action("move-camera-a", self.on_move_camera, ["<primary>a"], "a")
+        self.create_action("move-camera-s", self.on_move_camera, ["<primary>s"], "s")
+        self.create_action("move-camera-d", self.on_move_camera, ["<primary>d"], "d")
 
         self.create_action(
-            'rotate-camera-left',
-            self.on_rotate_camera, ['<primary>Left'], "left")
+            "rotate-camera-left", self.on_rotate_camera, ["<primary>Left"], "left"
+        )
         self.create_action(
-            'rotate-camera-right',
-            self.on_rotate_camera, ['<primary>Right'], "right")
+            "rotate-camera-right", self.on_rotate_camera, ["<primary>Right"], "right"
+        )
         self.create_action(
-            'rotate-camera-up',
-            self.on_rotate_camera, ['<primary>Up'], "up")
+            "rotate-camera-up", self.on_rotate_camera, ["<primary>Up"], "up"
+        )
         self.create_action(
-            'rotate-camera-down',
-            self.on_rotate_camera, ['<primary>Down'], "down")
+            "rotate-camera-down", self.on_rotate_camera, ["<primary>Down"], "down"
+        )
 
         user_home_dir = os.environ.get("XDG_CONFIG_HOME", os.environ["HOME"])
         show_image_external_action = Gio.SimpleAction.new_stateful(
-                'show-image-externally',
-                GLib.VariantType.new("s"),
-                GLib.Variant("s", user_home_dir))
-        show_image_external_action.connect(
-            'activate', self.show_image_external)
+            "show-image-externally",
+            GLib.VariantType.new("s"),
+            GLib.Variant("s", user_home_dir),
+        )
+        show_image_external_action.connect("activate", self.show_image_external)
         self.add_action(show_image_external_action)
 
-        self.saved_settings = Gio.Settings.new('io.github.nokse22.Exhibit')
+        self.saved_settings = Gio.Settings.new("io.github.nokse22.Exhibit")
 
         theme_action = Gio.SimpleAction.new_stateful(
             "theme",
@@ -127,26 +125,27 @@ class Viewer3dApplication(Adw.Application):
 
     def on_about_action(self, *args):
         about = Adw.AboutDialog(
-            application_name='Exhibit',
-            application_icon='io.github.nokse22.Exhibit',
-            developer_name='Nokse',
-            version='1.5.0',
-            website='https://github.com/Nokse22/Exhibit',
-            issue_url='https://github.com/Nokse22/Exhibit/issues',
-            developers=['Nokse'],
+            application_name="Exhibit",
+            application_icon="io.github.nokse22.Exhibit",
+            developer_name="Nokse",
+            version="1.5.0",
+            website="https://github.com/Nokse22/Exhibit",
+            issue_url="https://github.com/Nokse22/Exhibit/issues",
+            developers=["Nokse"],
             license_type="GTK_LICENSE_GPL_3_0",
-            copyright='© 2024 Nokse22',
-            artists=["Jakub Steiner https://jimmac.eu"])
+            copyright="© 2024 Nokse22",
+            artists=["Jakub Steiner https://jimmac.eu"],
+        )
         about.add_link(_("Checkout F3D"), "https://f3d.app")
 
         about.set_debug_info(
-            f"GDK_DEBUG: {GLib.getenv('GDK_DEBUG')}\n" +
-            f"GSK_RENDERER: {GLib.getenv('GSK_RENDERER')}\n" +
-            f"DISPLAY: {GLib.getenv('DISPLAY')}\n" +
-            f"XDG_SESSION_TYPE: {GLib.getenv('XDG_SESSION_TYPE')}\n" +
-            f"XDG_SESSION_DESKTOP: {GLib.getenv('XDG_SESSION_DESKTOP')}\n" +
-            f"GTK_THEME: {GLib.getenv('GTK_THEME')}\n" +
-            f"GTK: {Gtk.MAJOR_VERSION}.{Gtk.MINOR_VERSION}.{Gtk.MICRO_VERSION}\n"
+            f"GDK_DEBUG: {GLib.getenv('GDK_DEBUG')}\n"
+            + f"GSK_RENDERER: {GLib.getenv('GSK_RENDERER')}\n"
+            + f"DISPLAY: {GLib.getenv('DISPLAY')}\n"
+            + f"XDG_SESSION_TYPE: {GLib.getenv('XDG_SESSION_TYPE')}\n"
+            + f"XDG_SESSION_DESKTOP: {GLib.getenv('XDG_SESSION_DESKTOP')}\n"
+            + f"GTK_THEME: {GLib.getenv('GTK_THEME')}\n"
+            + f"GTK: {Gtk.MAJOR_VERSION}.{Gtk.MINOR_VERSION}.{Gtk.MICRO_VERSION}\n"
         )
 
         about.present(self.props.active_window)
@@ -209,7 +208,8 @@ class Viewer3dApplication(Adw.Application):
         if not win:
             if self.open_filepath:
                 win = Viewer3dWindow(
-                    application=self, startup_filepath=self.open_filepath)
+                    application=self, startup_filepath=self.open_filepath
+                )
             else:
                 win = Viewer3dWindow(application=self)
         win.present()
