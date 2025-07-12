@@ -13,30 +13,39 @@ flowbox flowboxchild {
 .overlay-button {
   background-color: alpha(var(--view-bg-color), 0.6);
   border-radius:9999px;
+  transition: background-color 100ms;
+}
+
+.overlay-button button {
+  background-color: transparent;
 }
 
 .overlay-button:hover {
-  background-color: mix(alpha(var(--view-bg-color), 0.7), black, 0.1);
+  background-color: mix(alpha(var(--view-bg-color), 0.7), black, 0.06);
 }
 
 .overlay-button:active {
-  background-color: alpha(var(--view-bg-color), 0.9);
-}
-
-.overlay-button:checked {
-  background-color: alpha(var(--view-bg-color), 1);
-}
-
-.main-view windowcontrols image{
   background-color: mix(alpha(var(--view-bg-color), 0.7), black, 0.1);
 }
 
-.main-view windowcontrols image:hover {
+.overlay-button:checked {
+  background-color: mix(alpha(var(--view-bg-color), 0.7), black, 0.15);
+}
+
+.overlay-button:checked:hover {
   background-color: mix(alpha(var(--view-bg-color), 0.7), black, 0.2);
 }
 
+.main-view windowcontrols image{
+  background-color: mix(alpha(var(--view-bg-color), 0.7), black, 0.06);
+}
+
+.main-view windowcontrols image:hover {
+  background-color: mix(alpha(var(--view-bg-color), 0.7), black, 0.1);
+}
+
 .main-view windowcontrols image:active {
-  background-color: mix(alpha(var(--view-bg-color), 0.7), black, 0.3);
+  background-color: mix(alpha(var(--view-bg-color), 0.7), black, 0.15);
 }
 
 .drop-target-remove-border {
