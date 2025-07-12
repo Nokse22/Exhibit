@@ -10,30 +10,33 @@ flowbox flowboxchild {
   padding: 0px;
 }
 
-.main-view headerbar button {
- background-color: alpha(var(--view-bg-color), 0.6);
- border-radius:9999px;
+.overlay-button {
+  background-color: alpha(var(--view-bg-color), 0.6);
+  border-radius:9999px;
 }
 
-.main-view headerbar button:hover {
- background-color: mix(alpha(var(--view-bg-color), 0.7), black, 0.1);
+.overlay-button:hover {
+  background-color: mix(alpha(var(--view-bg-color), 0.7), black, 0.1);
 }
 
-.main-view headerbar button:active {
- background-color: alpha(var(--view-bg-color), 0.9);
+.overlay-button:active {
+  background-color: alpha(var(--view-bg-color), 0.9);
 }
 
-.main-view headerbar button:selected {
- background-color: alpha(var(--view-bg-color), 1);
+.overlay-button:checked {
+  background-color: alpha(var(--view-bg-color), 1);
 }
 
-windowcontrols button{
- padding: 0px;
+.main-view windowcontrols image{
+  background-color: mix(alpha(var(--view-bg-color), 0.7), black, 0.1);
 }
 
-windowcontrols {
- padding-left: 6px;
- padding-right: 6px;
+.main-view windowcontrols image:hover {
+  background-color: mix(alpha(var(--view-bg-color), 0.7), black, 0.2);
+}
+
+.main-view windowcontrols image:active {
+  background-color: mix(alpha(var(--view-bg-color), 0.7), black, 0.3);
 }
 
 .drop-target-remove-border {
