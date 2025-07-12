@@ -12,7 +12,7 @@
     <file preprocess="xml-stripblanks">icons/16x16/actions/perspective-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/photo-camera-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/image-alt-symbolic.svg</file>
-    <file preprocess="xml-stripblanks">icons/16x16/actions/globe-symbolic.svg</file>
+    <file preprocess="xml-stripblanks">icons/16x16/actions/shapes-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/left-large-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/arrow-into-box-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/share-symbolic.svg</file>
