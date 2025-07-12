@@ -764,12 +764,12 @@
                             </style>
                             <child type="start">
                               <object class="GtkToggleButton" id="sidebar_toggle_button">
-                                <style>
-                                  <class name="flat"/>
-                                </style>
                                 <property name="icon-name">sidebar-show-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Reveal Sidebar</property>
                                 <property name="active" bind-source="split_view" bind-property="show-sidebar" bind-flags="sync-create | bidirectional">True</property>
+                                <style>
+                                  <class name="overlay-button"/>
+                                </style>
                               </object>
                             </child>
                             <child type="end">
@@ -778,6 +778,9 @@
                                 <property name="icon-name">open-menu-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Menu</property>
                                 <property name="menu-model">primary_menu</property>
+                                <style>
+                                  <class name="overlay-button"/>
+                                </style>
                               </object>
                             </child>
                             <child type="start">
@@ -786,7 +789,7 @@
                                 <property name="tooltip-text" translatable="yes">Reset to Bounds</property>
                                 <signal name="clicked" handler="on_home_clicked"/>
                                 <style>
-                                  <class name="flat"/>
+                                  <class name="overlay-button"/>
                                 </style>
                               </object>
                             </child>
@@ -828,8 +831,6 @@
                   </object>
                 </child>
               </object>
-
-
             </property>
           </object>
               </property>
@@ -862,17 +863,17 @@
         <attribute name="label" translatable="yes">_New Window</attribute>
         <attribute name="action">app.open-new-window</attribute>
       </item>
-    </section>
-    <section>
       <item>
         <attribute name="label" translatable="yes">_Load New File</attribute>
         <attribute name="action">win.open-new</attribute>
       </item>
-    </section>
-    <section>
       <item>
         <attribute name="label" translatable="yes">_Export Image</attribute>
         <attribute name="action">win.save-as-image</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Open In External App</attribute>
+        <attribute name="action">win.open-external</attribute>
       </item>
     </section>
     <section>
@@ -903,6 +904,7 @@
       <item>
         <attribute name="label" translatable="yes">Orthonographic</attribute>
         <attribute name="action">win.orthographic</attribute>
+        <attribute name="accel">&lt;control&gt;5</attribute>
       </item>
     </section>
     <section>

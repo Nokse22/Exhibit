@@ -112,8 +112,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     stack = Gtk.Template.Child()
     toolbar_view = Gtk.Template.Child()
 
-    view_button_headerbar = Gtk.Template.Child()
-
     view_drop_target = Gtk.Template.Child()
     loading_drop_target = Gtk.Template.Child()
 
@@ -198,10 +196,16 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.loading_file = False
 
         # Defining all the actions
-        self.save_as_action = self.create_action(
-            'save-as-image', self.open_save_file_chooser)
-        self.open_new_action = self.create_action(
-            'open-new', self.open_file_chooser)
+        self.create_action('save-as-image', self.open_save_file_chooser)
+        self.create_action('open-new', self.open_file_chooser)
+        self.create_action('open-external', self.open_with_external_app)
+
+        self.ortho_action = Gio.SimpleAction.new_stateful(
+                'orthographic',
+                None,
+                GLib.Variant("b", False))
+        self.ortho_action.connect('activate', self.toggle_orthographic)
+        self.add_action(self.ortho_action)
 
         self.settings_action = Gio.SimpleAction.new_stateful(
             "settings",
@@ -222,14 +226,17 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.periodic_check_for_file_change)
 
         # Saving all the useful paths
-        data_home = os.environ["XDG_DATA_HOME"]
+        if GLib.getenv("FLATPAK_ID"):
+            data_home = GLib.getenv("XDG_DATA_HOME")
+        else:
+            data_home = GLib.getenv('HOME') + "/.exhibit/"
 
         self.hdri_path = data_home + "/HDRIs/"
         self.hdri_thumbnails_path = self.hdri_path + "/thumbnails/"
 
-        self.user_configurations_path = data_home + "/configurations/"
+        self.configs_path = data_home + "/configurations/"
 
-        os.makedirs(self.user_configurations_path, exist_ok=True)
+        os.makedirs(self.configs_path, exist_ok=True)
         os.makedirs(data_home + "/other files/", exist_ok=True)
 
         # Create the hdri folder and add the default if there are none
@@ -420,10 +427,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             Gio.ResourceLookupFlags.NONE).get_data().decode('utf-8')
         self.configurations = json.loads(self.configurations)
 
-        for filename in os.listdir(self.user_configurations_path):
+        for filename in os.listdir(self.configs_path):
             if filename.endswith('.json'):
                 filepath = os.path.join(
-                    self.user_configurations_path, filename)
+                    self.configs_path, filename)
                 with open(filepath, 'r') as file:
                     try:
                         configuration = json.load(file)
@@ -640,7 +647,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         }
 
         # Save to JSON file
-        with open(self.user_configurations_path + key + '.json', 'w') as j_f:
+        with open(self.configs_path + key + '.json', 'w') as j_f:
             json.dump(settings_dict, j_f, indent=4)
 
         # Update configurations and menu UI
@@ -716,12 +723,12 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         for key, value in self.configurations[state_name]["other-settings"].items():
             state_options[key] = value
 
-        current_settings = self.window_settings.get_user_customized_settings()
+        curr_settings = self.window_settings.get_user_customized_settings()
         for key, value in state_options.items():
-            if key in current_settings:
-                if current_settings[key] != value:
+            if key in curr_settings:
+                if curr_settings[key] != value:
                     self.logger.info(
-                        f"current key: {key}'s value is {current_settings[key]} != {value}")
+                        f"curr key: {key}'s value is {curr_settings[key]} != {value}")
                     self.change_setting_state(GLib.Variant("s", "custom"))
                     return
 
@@ -964,19 +971,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def on_open_button_clicked(self, btn):
         self.open_file_chooser()
 
-    @Gtk.Template.Callback("on_view_clicked")
-    def toggle_orthographic(self, *args):
-        btn = self.view_button_headerbar
-        if (btn.get_icon_name() == "perspective-symbolic"):
-            btn.set_icon_name("orthographic-symbolic")
-            camera_options = {"orthographic": True}
-            self.window_settings.set_setting("orthographic", True)
-        else:
-            btn.set_icon_name("perspective-symbolic")
-            camera_options = {"orthographic": False}
-            self.window_settings.set_setting("orthographic", False)
-        self.f3d_viewer.update_options(camera_options)
-
     @Gtk.Template.Callback("on_drop_received")
     def on_drop_received(self, drop, value, x, y):
         filepath = value.get_files()[0].get_path()
@@ -1003,8 +997,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def on_close_sidebar_clicked(self, *args):
         self.split_view.set_show_sidebar(False)
 
-    @Gtk.Template.Callback("on_open_with_external_app_clicked")
-    def on_open_with_external_app_clicked(self, *args):
+    def open_with_external_app(self, *args):
         try:
             file = Gio.File.new_for_path(self.filepath)
         except GLib.GError:
@@ -1045,6 +1038,17 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             return
         state = self.split_view.get_show_sidebar()
         self.window_settings.set_setting("sidebar-show", state)
+
+    def toggle_orthographic(self, *args):
+        state = self.ortho_action.get_state().get_boolean()
+        self.ortho_action.set_state(GLib.Variant("b", not state))
+        if not state:
+            camera_options = {"orthographic": True}
+            self.window_settings.set_setting("orthographic", True)
+        else:
+            camera_options = {"orthographic": False}
+            self.window_settings.set_setting("orthographic", False)
+        self.f3d_viewer.update_options(camera_options)
 
     #
     # Function called when the HDRI is deleted/added...
