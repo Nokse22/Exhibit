@@ -39,13 +39,14 @@ class Viewer3dApplication(Adw.Application):
                          flags=Gio.ApplicationFlags.HANDLES_OPEN)
 
         logger_lib.init()
-        logger = logger_lib.logger
+        self.logger = logger_lib.logger
 
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action)
         self.create_action('help', self.on_help_action, ['F1'])
 
         self.create_action('open-hdri-folder', self.on_open_hdri_folder)
+        self.create_action('open-configs-folder', self.on_open_configs_folder)
 
         self.create_action(
             'open-new-window',
@@ -145,7 +146,7 @@ class Viewer3dApplication(Adw.Application):
             f"XDG_SESSION_TYPE: {GLib.getenv('XDG_SESSION_TYPE')}\n" +
             f"XDG_SESSION_DESKTOP: {GLib.getenv('XDG_SESSION_DESKTOP')}\n" +
             f"GTK_THEME: {GLib.getenv('GTK_THEME')}\n" +
-            f"GTK Version: {Gtk.MAJOR_VERSION}.{Gtk.MINOR_VERSION}.{Gtk.MICRO_VERSION}\n"
+            f"GTK: {Gtk.MAJOR_VERSION}.{Gtk.MINOR_VERSION}.{Gtk.MICRO_VERSION}\n"
         )
 
         about.present(self.props.active_window)
@@ -155,6 +156,9 @@ class Viewer3dApplication(Adw.Application):
 
     def on_open_hdri_folder(self, *args):
         webbrowser.open(self.props.active_window.hdri_path)
+
+    def on_open_configs_folder(self, *args):
+        webbrowser.open(self.props.active_window.configs_path)
 
     def on_theme_setting_changed(self, action, state):
         action.set_state(state)
