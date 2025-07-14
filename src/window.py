@@ -245,6 +245,8 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         )
         self.save_settings_action.set_enabled(False)
 
+        self.connect("show", self.on_show)
+
         # Initialize the change checker
         self.change_checker = PeriodicChecker(self.periodic_check_for_file_change)
 
@@ -454,14 +456,14 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         # Sync the UI with the settings
         self.window_settings.sync_all_settings()
 
-        if startup_filepath:
-            self.loading_file = True
-            self.window_settings.set_setting("load-type", None, False)
-            self.logger.info(f"startup file detected: {startup_filepath}")
-            self.load_file(filepath=startup_filepath)
+        self.startup_filepath = startup_filepath
 
-        end = time.time()
-        self.logger.info(f"Startup in {end - start} seconds")
+        self.logger.info("Started")
+
+    def on_show(self, *args):
+        if self.startup_filepath:
+            self.logger.info(f"startup file detected: {self.startup_filepath}")
+            GLib.idle_add(self.load_file, self.startup_filepath)
 
     def setup_configurations(self):
         self.configurations = (
@@ -617,7 +619,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def reload_file(self, *args):
         if not self.loading_file:
             self.logger.info("Loading file because load type or up changed")
-            self.load_file(filepath=self.filepath, override=True)
+            self.load_file(self.filepath, override=True)
 
     def update_background_color(self, *args):
         self.logger.info(
@@ -853,13 +855,12 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 self.loading_file = True
                 self.window_settings.set_setting("load-type", None, False)
                 self.logger.info("open file response")
-                self.load_file(filepath=filepath)
+                self.load_file(filepath)
         except Exception as e:
             self.logger.error("Exception Opening file: " + e)
             return
 
-    def load_file(self, **kwargs):
-        filepath = kwargs.get("filepath", None)
+    def load_file(self, filepath=None, **kwargs):
         override = kwargs.get("override", False)
         preserve_orientation = kwargs.get("preserve_orientation", False)
 
