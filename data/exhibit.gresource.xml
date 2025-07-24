@@ -3,6 +3,7 @@
   <gresource prefix="/io/github/nokse22/Exhibit">
     <file>configurations.json</file>
     <file>style.css</file>
+    <file>style-dark.css</file>
     <file preprocess="xml-stripblanks">ui/window.ui</file>
     <file preprocess="xml-stripblanks">ui/file_row.ui</file>
     <file preprocess="xml-stripblanks">ui/f3d_viewer.ui</file>

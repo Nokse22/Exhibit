@@ -768,6 +768,7 @@
                                 <property name="active" bind-source="split_view" bind-property="show-sidebar" bind-flags="sync-create | bidirectional">True</property>
                                 <style>
                                   <class name="overlay-button"/>
+                                  <class name="circular"/>
                                 </style>
                               </object>
                             </child>
@@ -779,6 +780,7 @@
                                 <property name="menu-model">primary_menu</property>
                                 <style>
                                   <class name="overlay-button"/>
+                                  <class name="circular"/>
                                 </style>
                               </object>
                             </child>
@@ -789,6 +791,7 @@
                                 <signal name="clicked" handler="on_home_clicked"/>
                                 <style>
                                   <class name="overlay-button"/>
+                                  <class name="circular"/>
                                 </style>
                               </object>
                             </child>
