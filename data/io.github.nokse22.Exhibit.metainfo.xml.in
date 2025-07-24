@@ -78,11 +78,23 @@ You can use an HDRI image or a custom color as a background.</p>
   </screenshots>
 
   <releases>
-    <release version="1.4.2" date="2024-11-16">
+    <release version="1.5.0" date="2025-07-24">
       <description translate="no">
         <ul>
+          <li>Added loader</li>
+          <li>Improve overlaid buttons visibility</li>
+          <li>Simplify UI removing some buttons</li>
+          <li>Improve drop UI</li>
+          <li>Update GNOME runtime</li>
           <li>Added Norwegian Bokmål translation (turtlegarden)</li>
           <li>Added German translation (Vortex Acherontic)</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.4.2" date="2025-01-01">
+      <description translate="no">
+        <ul>
+          <li>Fixed packaging issue</li>
         </ul>
       </description>
     </release>
