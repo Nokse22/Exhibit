@@ -120,8 +120,13 @@ class Viewer3dApplication(Adw.Application):
             developers=['Nokse'],
             license_type="GTK_LICENSE_GPL_3_0",
             copyright='© 2024-2025 Nokse',
-            artists=["Jakub Steiner https://jimmac.eu"])
+            artists=["Jakub Steiner https://jimmac.eu"]
+        )
+
         about.add_link(_("Checkout F3D"), "https://f3d.app")
+
+        about.add_link(_("Donate with Ko-Fi"), "https://ko-fi.com/nokse22")
+        about.add_link(_("Donate with Github"), "https://github.com/sponsors/Nokse22")
 
         about.set_debug_info(
             f"GDK_DEBUG: {GLib.getenv('GDK_DEBUG')}\n" +
