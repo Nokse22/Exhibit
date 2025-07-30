@@ -875,7 +875,7 @@
       </item>
       <item>
         <attribute name="label" translatable="yes">_Open In External App</attribute>
-        <attribute name="action">win.open-external</attribute>
+        <attribute name="action">app.open-external</attribute>
       </item>
     </section>
     <section>

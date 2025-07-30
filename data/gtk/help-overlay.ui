@@ -19,94 +19,102 @@
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes" context="shortcut window">Quit</property>
                 <property name="action-name">app.quit</property>
+                <property name="accelerator">&lt;Primary&gt;q</property>
               </object>
             </child>
           </object>
         </child>
+
         <child>
           <object class="GtkShortcutsGroup">
             <property name="title" translatable="yes" context="shortcut window">Camera</property>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Front View</property>
-                <property name="action-name">app.front-view</property>
+                <property name="title" translatable="yes">Front View</property>
+                <property name="accelerator">&lt;Primary&gt;1</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Right View</property>
-                <property name="action-name">app.right-view</property>
+                <property name="title" translatable="yes">Right View</property>
+                <property name="accelerator">&lt;Primary&gt;3</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Toggle Orthographic</property>
-                <property name="action-name">app.toggle-orthographic</property>
+                <property name="title" translatable="yes">Top View</property>
+                <property name="accelerator">&lt;Primary&gt;7</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Top View</property>
-                <property name="action-name">app.top-view</property>
+                <property name="title" translatable="yes">Isometric View</property>
+                <property name="accelerator">&lt;Primary&gt;9</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Isometric View</property>
-                <property name="action-name">app.isometric-view</property>
+                <property name="title" translatable="yes">Toggle Orthographic</property>
+                <property name="accelerator">&lt;Primary&gt;5</property>
               </object>
             </child>
           </object>
         </child>
+
+        <!-- Camera Movement -->
         <child>
           <object class="GtkShortcutsGroup">
-            <property name="title" translatable="yes" context="shortcut window">Camera Movements</property>
+            <property name="title" translatable="yes">Camera Movements</property>
+
+            <!-- WASD -->
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Translate Forward</property>
-                <property name="action-name">app.move-camera-w</property>
+                <property name="title" translatable="yes">Move Forward</property>
+                <property name="accelerator">&lt;Primary&gt;w</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Translate Left</property>
-                <property name="action-name">app.move-camera-a</property>
+                <property name="title" translatable="yes">Move Left</property>
+                <property name="accelerator">&lt;Primary&gt;a</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Translate Backward</property>
-                <property name="action-name">app.move-camera-s</property>
+                <property name="title" translatable="yes">Move Backward</property>
+                <property name="accelerator">&lt;Primary&gt;s</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Translate Right</property>
-                <property name="action-name">app.move-camera-d</property>
+                <property name="title" translatable="yes">Move Right</property>
+                <property name="accelerator">&lt;Primary&gt;d</property>
+              </object>
+            </child>
+
+            <!-- Arrows -->
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Tilt Left</property>
+                <property name="accelerator">&lt;Primary&gt;Left</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Rotate Left</property>
-                <property name="action-name">app.rotate-camera-left</property>
+                <property name="title" translatable="yes">Tilt Right</property>
+                <property name="accelerator">&lt;Primary&gt;Right</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Rotate Right</property>
-                <property name="action-name">app.rotate-camera-right</property>
+                <property name="title" translatable="yes">Tilt Up</property>
+                <property name="accelerator">&lt;Primary&gt;Up</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Rotate Up</property>
-                <property name="action-name">app.rotate-camera-up</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Rotate Down</property>
-                <property name="action-name">app.rotate-camera-down</property>
+                <property name="title" translatable="yes">Tilt Down</property>
+                <property name="accelerator">&lt;Primary&gt;Down</property>
               </object>
             </child>
           </object>
@@ -115,3 +123,4 @@
     </child>
   </object>
 </interface>
+

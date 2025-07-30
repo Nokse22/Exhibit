@@ -222,12 +222,18 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         # Defining all the actions
         self.create_action("save-as-image", self.open_save_file_chooser)
         self.create_action("open-new", self.open_file_chooser)
-        self.create_action("open-external", self.open_with_external_app)
 
         self.ortho_action = Gio.SimpleAction.new_stateful(
             "orthographic", None, GLib.Variant("b", False)
         )
-        self.ortho_action.connect("activate", self.toggle_orthographic)
+        self.ortho_action.connect(
+            "activate",
+            lambda *_: self.f3d_viewer.toggle_orthographic()
+        )
+        self.f3d_viewer.connect(
+            "notify::orthographic",
+            self.on_orthographic_changed
+        )
         self.add_action(self.ortho_action)
 
         self.settings_action = Gio.SimpleAction.new_stateful(
@@ -306,7 +312,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                 self.logger.warning(f"Couldn't open HDRI file {filepath}, skipping")
 
         if self.window_settings.get_setting("orthographic").value:
-            self.toggle_orthographic()
+            self.f3d_viewer.orthographic = self.window_settings.get_setting("orthographic").value
 
         self.style_manager = Adw.StyleManager().get_default()
         self.style_manager.connect("notify::dark", self.update_background_color)
@@ -958,6 +964,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.set_title(f"View {self.file_name}")
         self.title_widget.set_subtitle(self.file_name)
         self.stack.set_visible_child_name("3d_page")
+        self.f3d_viewer.grab_focus()
 
         self.no_file_loaded = False
 
@@ -1057,7 +1064,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def on_close_sidebar_clicked(self, *args):
         self.split_view.set_show_sidebar(False)
 
-    def open_with_external_app(self, *args):
+    def open_with_external_app(self):
         try:
             file = Gio.File.new_for_path(self.filepath)
         except GLib.GError:
@@ -1099,16 +1106,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         state = self.split_view.get_show_sidebar()
         self.window_settings.set_setting("sidebar-show", state)
 
-    def toggle_orthographic(self, *args):
-        state = self.ortho_action.get_state().get_boolean()
-        self.ortho_action.set_state(GLib.Variant("b", not state))
-        if not state:
-            camera_options = {"orthographic": True}
-            self.window_settings.set_setting("orthographic", True)
-        else:
-            camera_options = {"orthographic": False}
-            self.window_settings.set_setting("orthographic", False)
-        self.f3d_viewer.update_options(camera_options)
+    def on_orthographic_changed(self, *args):
+        self.ortho_action.set_state(GLib.Variant("b", self.f3d_viewer.orthographic))
+        self.window_settings.set_setting("orthographic", self.f3d_viewer.orthographic)
 
     #
     # Function called when the HDRI is deleted/added...

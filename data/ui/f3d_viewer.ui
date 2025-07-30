@@ -5,9 +5,95 @@
   <requires lib="Gdk" version="1.0"/>
   <template class="F3DViewer" parent="GtkGLArea">
     <property name="has-depth-buffer">true</property>
-    <property name="has-stencil-buffer">true</property>
+    <property name="has-stencil-buffer">false</property>
     <property name="vexpand">true</property>
     <property name="overflow">hidden</property>
+    <child>
+      <object class="GtkShortcutController">
+        <property name="propagation-phase">capture</property>
+        <property name="scope">global</property>
+        <child>
+          <object class="GtkShortcut">
+            <property name="trigger">&lt;Control&gt;1</property>
+            <property name="action">action(f3dviewer.front-view)</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkShortcut">
+            <property name="trigger">&lt;Control&gt;3</property>
+            <property name="action">action(f3dviewer.right-view)</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkShortcut">
+            <property name="trigger">&lt;Control&gt;7</property>
+            <property name="action">action(f3dviewer.top-view)</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkShortcut">
+            <property name="trigger">&lt;Control&gt;9</property>
+            <property name="action">action(f3dviewer.isometric-view)</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkShortcut">
+            <property name="trigger">&lt;Control&gt;5</property>
+            <property name="action">action(f3dviewer.toggle-orthographic)</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkShortcut">
+            <property name="trigger">&lt;Control&gt;w</property>
+            <property name="action">action(f3dviewer.move-forward)</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkShortcut">
+            <property name="trigger">&lt;Control&gt;s</property>
+            <property name="action">action(f3dviewer.move-backward)</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkShortcut">
+            <property name="trigger">&lt;Control&gt;a</property>
+            <property name="action">action(f3dviewer.move-left)</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkShortcut">
+            <property name="trigger">&lt;Control&gt;d</property>
+            <property name="action">action(f3dviewer.move-right)</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkShortcut">
+            <property name="trigger">&lt;Control&gt;Up</property>
+            <property name="action">action(f3dviewer.tilt-up)</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkShortcut">
+            <property name="trigger">&lt;Control&gt;Down</property>
+            <property name="action">action(f3dviewer.tilt-down)</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkShortcut">
+            <property name="trigger">&lt;Control&gt;Left</property>
+            <property name="action">action(f3dviewer.tilt-left)</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkShortcut">
+            <property name="trigger">&lt;Control&gt;Right</property>
+            <property name="action">action(f3dviewer.tilt-right)</property>
+          </object>
+        </child>
+      </object>
+    </child>
     <style>
       <class name="f3dviewer"/>
     </style>

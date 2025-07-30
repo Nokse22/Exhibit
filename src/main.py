@@ -47,36 +47,24 @@ class Viewer3dApplication(Adw.Application):
         self.create_action("about", self.on_about_action)
         self.create_action("help", self.on_help_action, ["F1"])
 
-        self.create_action("open-hdri-folder", self.on_open_hdri_folder)
-        self.create_action("open-configs-folder", self.on_open_configs_folder)
+        self.create_action(
+            "open-hdri-folder",
+            lambda *_: webbrowser.open(self.props.active_window.hdri_path)
+        )
+        self.create_action(
+            "open-configs-folder",
+            lambda *_: webbrowser.open(self.props.active_window.configs_path)
+        )
 
         self.create_action(
-            "open-new-window", self.open_new_window_action, ["<primary><shift>n"]
+            "open-new-window",
+            lambda *_: Viewer3dWindow(application=self).present(),
+            ["<primary><shift>n"]
         )
         self.create_action(
-            "toggle-orthographic", self.toggle_orthographic, ["<primary>5"]
-        )
-        self.create_action("front-view", self.front_view, ["<primary>1"])
-        self.create_action("right-view", self.right_view, ["<primary>3"])
-        self.create_action("top-view", self.top_view, ["<primary>7"])
-        self.create_action("isometric-view", self.isometric_view, ["<primary>9"])
-
-        self.create_action("move-camera-w", self.on_move_camera, ["<primary>w"], "w")
-        self.create_action("move-camera-a", self.on_move_camera, ["<primary>a"], "a")
-        self.create_action("move-camera-s", self.on_move_camera, ["<primary>s"], "s")
-        self.create_action("move-camera-d", self.on_move_camera, ["<primary>d"], "d")
-
-        self.create_action(
-            "rotate-camera-left", self.on_rotate_camera, ["<primary>Left"], "left"
-        )
-        self.create_action(
-            "rotate-camera-right", self.on_rotate_camera, ["<primary>Right"], "right"
-        )
-        self.create_action(
-            "rotate-camera-up", self.on_rotate_camera, ["<primary>Up"], "up"
-        )
-        self.create_action(
-            "rotate-camera-down", self.on_rotate_camera, ["<primary>Down"], "down"
+            "open-external",
+            lambda *_: self.props.active_window.open_with_external_app(),
+            ["<primary><shift>e"]
         )
 
         user_home_dir = os.environ.get("XDG_CONFIG_HOME", os.environ["HOME"])
@@ -157,30 +145,10 @@ class Viewer3dApplication(Adw.Application):
     def on_help_action(self, *args):
         Gio.AppInfo.launch_default_for_uri("help:exhibit")
 
-    def on_open_hdri_folder(self, *args):
-        webbrowser.open(self.props.active_window.hdri_path)
-
-    def on_open_configs_folder(self, *args):
-        webbrowser.open(self.props.active_window.configs_path)
-
     def on_theme_setting_changed(self, action, state):
         action.set_state(state)
         self.saved_settings.set_string("theme", state.get_string())
         self.update_theme()
-
-    def on_move_camera(self, action, _, direction):
-        match direction:
-            case "w":
-                self.props.active_window.f3d_viewer.pan(0, 0, 1)
-            case "a":
-                self.props.active_window.f3d_viewer.pan(-1, 0, 0)
-            case "s":
-                self.props.active_window.f3d_viewer.pan(0, 0, -1)
-            case "d":
-                self.props.active_window.f3d_viewer.pan(1, 0, 0)
-
-    def on_rotate_camera(self, action, _, direction):
-        self.props.active_window.f3d_viewer.rotate_camera(direction)
 
     def update_theme(self):
         manager = Adw.StyleManager().get_default()
@@ -191,21 +159,6 @@ class Viewer3dApplication(Adw.Application):
                 manager.set_color_scheme(Adw.ColorScheme.FORCE_LIGHT)
             case "dark":
                 manager.set_color_scheme(Adw.ColorScheme.FORCE_DARK)
-
-    def toggle_orthographic(self, *args):
-        self.props.active_window.toggle_orthographic()
-
-    def front_view(self, *args):
-        self.props.active_window.f3d_viewer.front_view()
-
-    def right_view(self, *args):
-        self.props.active_window.f3d_viewer.right_view()
-
-    def top_view(self, *args):
-        self.props.active_window.f3d_viewer.top_view()
-
-    def isometric_view(self, *args):
-        self.props.active_window.f3d_viewer.isometric_view()
 
     def do_activate(self):
         win = self.props.active_window
@@ -218,14 +171,10 @@ class Viewer3dApplication(Adw.Application):
                 win = Viewer3dWindow(application=self)
         win.present()
 
-    def open_new_window_action(self, *args):
-        win = Viewer3dWindow(application=self)
-        win.present()
-
-    def create_action(self, name, callback, shortcuts=None, argument=None):
+    def create_action(self, name, callback, shortcuts=None, *args):
         action = Gio.SimpleAction.new(name, None)
-        if argument:
-            action.connect("activate", callback, argument)
+        if args:
+            action.connect("activate", callback, *args)
         else:
             action.connect("activate", callback)
         self.add_action(action)
