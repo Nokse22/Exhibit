@@ -154,54 +154,6 @@
             ]
         },
         {
-            "name": "Tcl",
-            "buildsystem": "autotools",
-            "subdir": "unix",
-            "build-options": {
-                "no-debuginfo": true
-            },
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://prdownloads.sourceforge.net/tcl/tcl8.6.15-src.tar.gz",
-                    "sha256": "861e159753f2e2fbd6ec1484103715b0be56be3357522b858d3cbb5f893ffef1",
-                    "x-checker-data": {
-                        "type": "anitya",
-                        "project-id": 4941,
-                        "stable-only": true,
-                        "url-template": "https://prdownloads.sourceforge.net/tcl/tcl$version-src.tar.gz"
-                    }
-                }
-            ]
-        },
-        {
-            "name": "tk",
-            "subdir": "unix",
-            "build-options": {
-                "no-debuginfo": true
-            },
-            "make-install-args": [
-                "install-private-headers"
-            ],
-            "cleanup": [
-                "/bin",
-                "/man"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://prdownloads.sourceforge.net/tcl/tk8.6.15-src.tar.gz",
-                    "sha256": "550969f35379f952b3020f3ab7b9dd5bfd11c1ef7c9b7c6a75f5c49aca793fec",
-                    "x-checker-data": {
-                        "type": "anitya",
-                        "project-id": 11426,
-                        "stable-only": true,
-                        "url-template": "https://prdownloads.sourceforge.net/tcl/tk$version-src.tar.gz"
-                    }
-                }
-            ]
-        },
-        {
             "name": "Draco",
             "buildsystem": "cmake-ninja",
             "builddir": true,
@@ -213,13 +165,7 @@
                 {
                     "type": "archive",
                     "url": "https://github.com/google/draco/archive/refs/tags/1.5.7.tar.gz",
-                    "sha256": "bf6b105b79223eab2b86795363dfe5e5356050006a96521477973aba8f036fe1",
-                    "x-checker-data": {
-                        "type": "anitya",
-                        "project-id": 322269,
-                        "stable-only": true,
-                        "url-template": "https://github.com/google/draco/archive/refs/tags/$version.tar.gz"
-                    }
+                    "sha256": "bf6b105b79223eab2b86795363dfe5e5356050006a96521477973aba8f036fe1"
                 }
             ]
         },
@@ -256,13 +202,7 @@
                 {
                     "type": "archive",
                     "url": "https://github.com/assimp/assimp/archive/refs/tags/v5.4.3.tar.gz",
-                    "sha256": "66dfbaee288f2bc43172440a55d0235dfc7bf885dda6435c038e8000e79582cb",
-                    "x-checker-data": {
-                        "type": "anitya",
-                        "project-id": 6988,
-                        "stable-only": true,
-                        "url-template": "https://github.com/assimp/assimp/archive/refs/tags/v$version.tar.gz"
-                    }
+                    "sha256": "66dfbaee288f2bc43172440a55d0235dfc7bf885dda6435c038e8000e79582cb"
                 }
             ]
         },
@@ -276,12 +216,7 @@
                 {
                     "type": "git",
                     "url": "https://github.com/AcademySoftwareFoundation/Imath.git",
-                    "tag": "v3.1.12",
-                    "x-checker-data": {
-                        "type": "git",
-                        "tag-pattern": "^(v[\\d.]+)$"
-                    },
-                    "commit": "c0396a055a01bc537d32f435aee11a9b7ed6f0b5"
+                    "tag": "v3.1.12"
                 }
             ]
         },
@@ -296,13 +231,7 @@
                 {
                     "type": "archive",
                     "url": "https://github.com/alembic/alembic/archive/refs/tags/1.8.6.tar.gz",
-                    "sha256": "c572ebdea3a5f0ce13774dd1fceb5b5815265cd1b29d142cf8c144b03c131c8c",
-                    "x-checker-data": {
-                        "type": "anitya",
-                        "project-id": 13980,
-                        "stable-only": true,
-                        "url-template": "https://github.com/alembic/alembic/archive/refs/tags/$version.tar.gz"
-                    }
+                    "sha256": "c572ebdea3a5f0ce13774dd1fceb5b5815265cd1b29d142cf8c144b03c131c8c"
                 }
             ]
         },
@@ -318,12 +247,7 @@
                 {
                     "type": "archive",
                     "url": "https://github.com/pybind/pybind11/archive/refs/tags/v2.13.6.tar.gz",
-                    "sha256": "e08cb87f4773da97fa7b5f035de8763abc656d87d5773e62f6da0587d1f0ec20",
-                    "x-checker-data": {
-                        "type": "anitya",
-                        "project-id": 13384,
-                        "url-template": "https://github.com/pybind/pybind11/archive/refs/tags/v$version.tar.gz"
-                    }
+                    "sha256": "e08cb87f4773da97fa7b5f035de8763abc656d87d5773e62f6da0587d1f0ec20"
                 }
             ]
         },
