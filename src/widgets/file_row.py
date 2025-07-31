@@ -17,11 +17,12 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import gi
 from gi.repository import Adw
-from gi.repository import Gtk, Gdk, Gio, GLib, GObject
+from gi.repository import Gtk, Gdk, Gio, GObject
 
 import os
+
+from gettext import gettext as _
 
 
 class ImageThumbnail(Gtk.FlowBoxChild):
