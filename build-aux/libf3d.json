@@ -200,25 +200,6 @@
             ]
         },
         {
-            "name": "libXmu",
-            "cleanup": [
-                "/share/doc"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://www.x.org/archive/individual/lib/libXmu-1.2.1.tar.gz",
-                    "sha256": "bf0902583dd1123856c11e0a5085bd3c6e9886fbbd44954464975fd7d52eb599",
-                    "x-checker-data": {
-                        "type": "anitya",
-                        "project-id": 1785,
-                        "stable-only": true,
-                        "url-template": "https://www.x.org/archive/individual/lib/libXmu-$version.tar.gz"
-                    }
-                }
-            ]
-        },
-        {
             "name": "Draco",
             "buildsystem": "cmake-ninja",
             "builddir": true,
