@@ -28,7 +28,7 @@
         {
             "type": "git",
             "url": "https://github.com/f3d-app/f3d.git",
-            "tag": "v0.2.5"
+            "tag": "v2.5.0"
         }
     ],
     "modules": [
