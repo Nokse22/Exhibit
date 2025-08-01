@@ -78,7 +78,14 @@ You can use an HDRI image or a custom color as a background.</p>
   </screenshots>
 
   <releases>
-    <release version="1.5.0" date="2025-07-24">
+    <release version="1.5.1" date="2025-08-01">
+      <description translate="no">
+        <ul>
+          <li>Fixed bug</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.5.0" date="2025-07-31">
       <description translate="no">
         <ul>
           <li>Added loader</li>
