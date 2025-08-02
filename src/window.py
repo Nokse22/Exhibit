@@ -485,7 +485,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.settings_section.append_item(item)
 
     def setup_hdri_folder(self):
-        if not os.path.isdir(self.hdri_path):
+        if os.path.isdir(self.hdri_path):
             return
 
         os.makedirs(self.hdri_path, exist_ok=True)
