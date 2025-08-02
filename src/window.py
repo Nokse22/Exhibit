@@ -286,8 +286,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
                     thumbnail = self.generate_thumbnail(filepath)
                 self.hdri_file_row.add_suggested_file(thumbnail, filepath)
             except Exception:
-                self.logger.warning(
-                    f"Couldn't open HDRI file {filepath}, skipping")
+                self.logger.warning(f"Couldn't open HDRI file {filepath}, skipping")
+
+        if self.window_settings.get_setting("orthographic").value:
+            self.f3d_viewer.orthographic = self.window_settings.get_setting("orthographic").value
 
         self.style_manager = Adw.StyleManager().get_default()
         self.style_manager.connect(
@@ -915,6 +917,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         self.set_title(_("Exhibit - {}").format(self.file_name))
         self.title_widget.set_subtitle(self.file_name)
         self.stack.set_visible_child_name("3d_page")
+        self.f3d_viewer.grab_focus()
 
         self.no_file_loaded = False
 
@@ -1021,7 +1024,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
     def on_close_sidebar_clicked(self, *args):
         self.split_view.set_show_sidebar(False)
 
-    def on_open_externally(self, *args):
+    def open_with_external_app(self):
         try:
             file = Gio.File.new_for_path(self.filepath)
         except Exception:
@@ -1053,6 +1056,7 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         state = self.split_view.get_show_sidebar()
         self.window_settings.set_setting("sidebar-show", state)
 
+<<<<<<< ours
     def on_play_button_clicked(self, btn):
         self.f3d_viewer.playing = not self.f3d_viewer.playing
 
@@ -1063,6 +1067,10 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         else:
             self.play_button.set_icon_name("media-playback-start-symbolic")
             self.play_button.set_tooltip_text(_("Start"))
+
+    def on_orthographic_changed(self, *args):
+        self.ortho_action.set_state(GLib.Variant("b", self.f3d_viewer.orthographic))
+        self.window_settings.set_setting("orthographic", self.f3d_viewer.orthographic)
 
     #
     # Function called when the HDRI is deleted/added...

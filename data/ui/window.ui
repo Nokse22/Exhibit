@@ -939,8 +939,8 @@
     </section>
     <section>
       <item>
-        <attribute name="label" translatable="yes">_Open File Externally</attribute>
-        <attribute name="action">app.open-externally</attribute>
+        <attribute name="label" translatable="yes">_Open In External App</attribute>
+        <attribute name="action">app.open-external</attribute>
       </item>
     </section>
     <section>

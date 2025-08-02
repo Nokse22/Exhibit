@@ -17,7 +17,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from gi.repository import Gtk, GLib, GObject
+from gi.repository import Gtk, Gdk, GLib, Gio, GObject
 
 import f3d
 
@@ -101,6 +101,28 @@ class F3DViewer(Gtk.GLArea):
         f3d.Log.set_verbose_level(f3d.Log.DEBUG)
         f3d.Log.print(f3d.Log.DEBUG, 'debug')
 
+        self.action_group = Gio.SimpleActionGroup()
+        self.insert_action_group("f3dviewer", self.action_group)
+
+        self.create_action(
+            "toggle-orthographic",
+            lambda *_: self.toggle_orthographic(),
+        )
+        self.create_action("front-view", self.front_view)
+        self.create_action("right-view", self.right_view)
+        self.create_action("top-view", self.top_view)
+        self.create_action("isometric-view", self.isometric_view)
+
+        self.create_action("move-forward", self.pan_action, 0, 0, 1)
+        self.create_action("move-left", self.pan_action, -1, 0, 0)
+        self.create_action("move-backward", self.pan_action, 0, 0, -1)
+        self.create_action("move-right", self.pan_action, 1, 0, 0)
+
+        self.create_action("tilt-left", self.tilt_action, "left")
+        self.create_action("tilt-right", self.tilt_action, "right")
+        self.create_action("tilt-up", self.tilt_action, "up")
+        self.create_action("tilt-down", self.tilt_action, "down")
+
         self.set_auto_render(True)
         # self.connect("realize", self.on_realize)
         self.connect("render", self.on_render)
@@ -125,6 +147,7 @@ class F3DViewer(Gtk.GLArea):
         self.distance = 0
 
         self.is_showed = False
+        self._orthographic = False
 
         self._animation_time = 0
         self._playing = False
@@ -207,6 +230,19 @@ class F3DViewer(Gtk.GLArea):
         if self.animation_time >= self.upper_time_range:
             self.playing = False
         return self._playing
+
+    @GObject.Property(type=bool, default=False)
+    def orthographic(self):
+        return self._orthographic
+
+    @orthographic.setter
+    def orthographic(self, value):
+        self._orthographic = value
+        self.update_options({"orthographic": self._orthographic})
+        self.notify("orthographic")
+
+    def toggle_orthographic(self, *args):
+        self.orthographic = not self.orthographic
 
     def reset_to_bounds(self):
         self.camera.reset_to_bounds()
@@ -376,7 +412,13 @@ class F3DViewer(Gtk.GLArea):
         self.camera.pan(x * val, y * val, z * val)
         self.queue_render()
 
-    def rotate_camera(self, direction):
+    def pan_action(self, action, _, x, y, z):
+        self.pan(x, y, z)
+
+    def tilt_action(self, action, _, direction):
+        self.tilt(direction)
+
+    def tilt(self, direction):
         val = self.distance / 40
 
         focal_point = self.camera.focal_point
@@ -475,3 +517,8 @@ class F3DViewer(Gtk.GLArea):
     def on_drag_end(self, gesture, *args):
         self.drag_prev_offset = (0, 0)
 
+    def create_action(self, name, callback, *args):
+        action = Gio.SimpleAction.new(name, None)
+        action.connect("activate", callback, *args)
+        self.action_group.add_action(action)
+        return action
