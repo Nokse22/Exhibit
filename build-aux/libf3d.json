@@ -25,7 +25,7 @@
         {
             "type": "git",
             "url": "https://github.com/f3d-app/f3d",
-            "tag": "v3.1.0"
+            "tag": "v3.2.0"
         }
     ],
     "modules": [
@@ -38,13 +38,7 @@
                 {
                     "type": "archive",
                     "url": "https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.bz2",
-                    "sha256": "b4c198460eba6f28d34894e3a5710998818515104d6e74e5cc331ce31e46e626",
-                    "x-checker-data": {
-                        "type": "anitya",
-                        "project-id": 13751,
-                        "stable-only": true,
-                        "url-template": "https://gitlab.com/libeigen/eigen/-/archive/$version/eigen-$version.tar.bz2"
-                    }
+                    "sha256": "b4c198460eba6f28d34894e3a5710998818515104d6e74e5cc331ce31e46e626"
                 }
             ],
             "cleanup": [
@@ -66,14 +60,8 @@
             "sources": [
                 {
                     "type": "archive",
-                    "url": "https://github.com/HDFGroup/hdf5/archive/refs/tags/hdf5-1_14_3.tar.gz",
-                    "sha256": "df5ee33c74d5efb59738075ef96f4201588e1f1eeb233f047ac7fd1072dee1f6",
-                    "x-checker-data": {
-                        "type": "anitya",
-                        "project-id": 1303,
-                        "stable-only": true,
-                        "url-template": "https://github.com/HDFGroup/hdf5/archive/refs/tags/hdf5-$version.tar.gz"
-                    }
+                    "url": "https://github.com/HDFGroup/hdf5/archive/refs/tags/hdf5-1.14.6.tar.gz",
+                    "sha256": "6df53f84376d87e96eeb255703e3b1a348fc08a48e06e37053f1bfb379970189"
                 }
             ]
         },
@@ -88,8 +76,8 @@
             "sources": [
                 {
                     "type": "archive",
-                    "url": "https://github.com/oneapi-src/oneTBB/archive/refs/tags/v2021.13.0.tar.gz",
-                    "sha256": "3ad5dd08954b39d113dc5b3f8a8dc6dc1fd5250032b7c491eb07aed5c94133e1"
+                    "url": "https://github.com/oneapi-src/oneTBB/archive/refs/tags/v2021.9.0.tar.gz",
+                    "sha256": "1ce48f34dada7837f510735ff1172f6e2c261b09460e3bf773b49791d247d24e"
                 }
             ]
         },
@@ -140,14 +128,8 @@
             "sources": [
                 {
                     "type": "archive",
-                    "url": "https://www.vtk.org/files/release/9.4/VTK-9.4.1.tar.gz",
-                    "sha256": "c253b0c8d002aaf98871c6d0cb76afc4936c301b72358a08d5f3f72ef8bc4529",
-                    "x-checker-data": {
-                        "type": "anitya",
-                        "project-id": 15084,
-                        "stable-only": true,
-                        "url-template": "https://www.vtk.org/files/release/$major.$minor/VTK-$version.tar.gz"
-                    }
+                    "url": "https://www.vtk.org/files/release/9.5/VTK-9.5.0.tar.gz",
+                    "sha256": "04ae86246b9557c6b61afbc534a6df099244fbc8f3937f82e6bc0570953af87d"
                 }
             ]
         },
@@ -199,8 +181,8 @@
             "sources": [
                 {
                     "type": "archive",
-                    "url": "https://github.com/assimp/assimp/archive/refs/tags/v5.4.3.tar.gz",
-                    "sha256": "66dfbaee288f2bc43172440a55d0235dfc7bf885dda6435c038e8000e79582cb"
+                    "url": "https://github.com/assimp/assimp/archive/refs/tags/v6.0.2.tar.gz",
+                    "sha256": "d1822d9a19c9205d6e8bc533bf897174ddb360ce504680f294170cc1d6319751"
                 }
             ]
         },
@@ -228,8 +210,8 @@
             "sources": [
                 {
                     "type": "archive",
-                    "url": "https://github.com/alembic/alembic/archive/refs/tags/1.8.6.tar.gz",
-                    "sha256": "c572ebdea3a5f0ce13774dd1fceb5b5815265cd1b29d142cf8c144b03c131c8c"
+                    "url": "https://github.com/alembic/alembic/archive/refs/tags/1.8.8.tar.gz",
+                    "sha256": "ba1f34544608ef7d3f68cafea946ec9cc84792ddf9cda3e8d5590821df71f6c6"
                 }
             ]
         },
@@ -320,12 +302,8 @@
             "sources": [
                 {
                     "type": "archive",
-                    "url": "https://github.com/PixarAnimationStudios/OpenUSD/archive/refs/tags/v25.05.tar.gz",
-                    "sha256": "231faca9ab71fa63d6c1e0da18bda0c365f82d9bef1cfd4b3d3d6784c8d5fb96"
-                },
-                {
-                    "type": "patch",
-                    "path": "0002-install-bin.patch"
+                    "url": "https://github.com/PixarAnimationStudios/OpenUSD/archive/refs/tags/v25.05.01.tar.gz",
+                    "sha256": "f424e8db26e063a1b005423ee52142e75c38185bbd4b8126ef64173e906dd50f"
                 }
             ]
         }
