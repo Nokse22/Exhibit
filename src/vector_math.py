@@ -40,8 +40,7 @@ def v_dot_p(vector1, vector2):
 
 def v_cross(vector1, vector2):
     if len(vector1) != 3 or len(vector2) != 3:
-        raise ValueError(
-            "Cross product is defined only for 3-dimensional vectors.")
+        raise ValueError("Cross product is defined only for 3-dimensional vectors.")
 
     x = vector1[1] * vector2[2] - vector1[2] * vector2[1]
     y = vector1[2] * vector2[0] - vector1[0] * vector2[2]

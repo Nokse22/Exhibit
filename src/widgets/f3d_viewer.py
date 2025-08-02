@@ -68,9 +68,7 @@ class F3DViewer(Gtk.GLArea):
         "cells": "model.scivis.cells",
         "scivis-enabled": "model.scivis.enable",
         "armature-enable": "render.armature.enable",
-
         # The following settings don't have an UI
-
         "texture-matcap": "model.matcap.texture",
         "texture-base-color": "model.color.texture",
         "emissive-factor": "model.emissive.factor",
@@ -85,11 +83,10 @@ class F3DViewer(Gtk.GLArea):
         "grid-subdivisions": "render.grid.subdivisions",
         "grid-color": "render.grid.color",
         "scalar": "model.scivis.array_name",  # rename to scivis-name
-        "animation-index": "scene.animation.index"
+        "animation-index": "scene.animation.index",
     }
 
     def __init__(self, *args):
-
         self.logger = logger_lib.logger
 
         self.engine = None
@@ -99,7 +96,7 @@ class F3DViewer(Gtk.GLArea):
 
         f3d.Log.set_use_coloring(True)
         f3d.Log.set_verbose_level(f3d.Log.DEBUG)
-        f3d.Log.print(f3d.Log.DEBUG, 'debug')
+        f3d.Log.print(f3d.Log.DEBUG, "debug")
 
         self.action_group = Gio.SimpleActionGroup()
         self.insert_action_group("f3dviewer", self.action_group)
@@ -161,23 +158,24 @@ class F3DViewer(Gtk.GLArea):
         # Try multiple backends in order of preference
         create_methods = [
             (f3d.Engine.create_external_egl, "EGL external"),
-            (f3d.Engine.create_external_glx, "GLX external")
+            (f3d.Engine.create_external_glx, "GLX external"),
         ]
-        
+
         for create_func, backend_name in create_methods:
             try:
                 self.engine = create_func()
                 self.logger.info(f"F3D initialized successfully with {backend_name}")
                 break
             except Exception as e:
-                self.logger.warning(f"Could not initialize F3D with {backend_name}: {e}")
-        
+                self.logger.warning(
+                    f"Could not initialize F3D with {backend_name}: {e}"
+                )
+
         if not self.engine:
             try:
                 self.engine = f3d.Engine.create(True)
             except Exception as e:
                 self.logger.warning(f"Could not initialize F3D with Auto: {e}")
-
 
         if not self.engine:
             self.logger.critical("Failed to initialize F3D with any available backend")
@@ -189,7 +187,7 @@ class F3DViewer(Gtk.GLArea):
 
         self.engine.autoload_plugins()
         self.engine.options.update(self.settings)
-        
+
         self.logger.info("F3D viewer initialized successfully")
 
     @GObject.Property(type=float)
@@ -253,8 +251,7 @@ class F3DViewer(Gtk.GLArea):
         up_v = up_dirs_vector[self.settings["scene.up_direction"]]
         vector = v_mul(tuple([up_v[2], up_v[0], up_v[1]]), 1000)
         self.camera.position = v_add(self.camera.focal_point, vector)
-        self.camera.view_up = up_dirs_vector[
-            self.settings["scene.up_direction"]]
+        self.camera.view_up = up_dirs_vector[self.settings["scene.up_direction"]]
         self.camera.reset_to_bounds()
         self.get_distance()
         self.queue_render()
@@ -263,8 +260,7 @@ class F3DViewer(Gtk.GLArea):
         up_v = up_dirs_vector[self.settings["scene.up_direction"]]
         vector = v_mul(tuple([up_v[1], up_v[2], up_v[0]]), 1000)
         self.camera.position = v_add(self.camera.focal_point, vector)
-        self.camera.view_up = up_dirs_vector[
-            self.settings["scene.up_direction"]]
+        self.camera.view_up = up_dirs_vector[self.settings["scene.up_direction"]]
         self.camera.reset_to_bounds()
         self.get_distance()
         self.queue_render()
@@ -282,12 +278,10 @@ class F3DViewer(Gtk.GLArea):
     def isometric_view(self, *args):
         up_v = up_dirs_vector[self.settings["scene.up_direction"]]
         vector = v_add(
-            tuple([up_v[2], up_v[0], up_v[1]]),
-            tuple([up_v[1], up_v[2], up_v[0]])
+            tuple([up_v[2], up_v[0], up_v[1]]), tuple([up_v[1], up_v[2], up_v[0]])
         )
         self.camera.position = v_mul(v_norm(v_add(vector, up_v)), 1000)
-        self.camera.view_up = up_dirs_vector[
-            self.settings["scene.up_direction"]]
+        self.camera.view_up = up_dirs_vector[self.settings["scene.up_direction"]]
         self.camera.reset_to_bounds()
         self.get_distance()
         self.queue_render()

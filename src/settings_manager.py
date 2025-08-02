@@ -48,13 +48,25 @@ class SettingType(IntEnum):
 
 
 class Setting(GObject.Object):
-    __gtype_name__ = 'Setting'
+    __gtype_name__ = "Setting"
 
     __gsignals__ = {
-        'changed': (
-            GObject.SignalFlags.RUN_FIRST, None, (str, int, )),
-        'changed-no-ui-update': (
-            GObject.SignalFlags.RUN_FIRST, None, (str, int, )),
+        "changed": (
+            GObject.SignalFlags.RUN_FIRST,
+            None,
+            (
+                str,
+                int,
+            ),
+        ),
+        "changed-no-ui-update": (
+            GObject.SignalFlags.RUN_FIRST,
+            None,
+            (
+                str,
+                int,
+            ),
+        ),
     }
 
     def __init__(self, name, value, setting_type):
@@ -91,12 +103,12 @@ class Setting(GObject.Object):
 
 
 class WindowSettings(Gio.ListStore):
-    __gtype_name__ = 'WindowSettings'
+    __gtype_name__ = "WindowSettings"
 
     __gsignals__ = {
-        'changed-view': (GObject.SignalFlags.RUN_FIRST, None, (Setting, )),
-        'changed-other': (GObject.SignalFlags.RUN_FIRST, None, (Setting, )),
-        'changed-internal': (GObject.SignalFlags.RUN_FIRST, None, (Setting, )),
+        "changed-view": (GObject.SignalFlags.RUN_FIRST, None, (Setting,)),
+        "changed-other": (GObject.SignalFlags.RUN_FIRST, None, (Setting,)),
+        "changed-internal": (GObject.SignalFlags.RUN_FIRST, None, (Setting,)),
     }
 
     default_settings = {
@@ -106,45 +118,32 @@ class WindowSettings(Gio.ListStore):
         "anti-aliasing": True,
         "hdri-ambient": False,
         "light-intensity": 1.5,
-
         "show-edges": False,
         "edges-width": 1.0,
-
         "sprite-enabled": False,
         "point-size": 1.0,
         "sprites-type": "sphere",
-
         "sprites-size": 1.0,
-
         "model-metallic": 0.0,
         "model-roughness": 0.3,
         "model-opacity": 1.0,
-
         "armature-enable": False,
-
         "scivis-component": -1,
         "cells": True,
         "scivis-enabled": False,
         "model-color": (1.0, 1.0, 1.0),
-
         "grid": True,
         "grid-absolute": False,
-
         "hdri-skybox": False,
         "hdri-file": "",
         "blur-background": True,
         "blur-coc": 20.0,
-
         "bg-color": (1.0, 1.0, 1.0),
-
         "up": "+Y",
         "orthographic": False,
-
         "animation-index": 0,
         "animation-time": 0.0,
-
         # There is no UI for the following ones
-
         # "texture-matcap": "",
         # "texture-base-color": "",
         # "emissive-factor": (1.0, 1.0, 1.0),
@@ -161,16 +160,9 @@ class WindowSettings(Gio.ListStore):
         # "scalar": ""
     }
 
-    other_settings = {
-        "use-color": False,
-        "point-up": True,
-        "auto-reload": True
-    }
+    other_settings = {"use-color": False, "point-up": True, "auto-reload": True}
 
-    internal_settings = {
-        "auto-best": True,
-        "sidebar-show": True
-    }
+    internal_settings = {"auto-best": True, "sidebar-show": True}
 
     def __init__(self):
         super().__init__()
@@ -180,22 +172,19 @@ class WindowSettings(Gio.ListStore):
         for name, value in self.default_settings.items():
             setting = Setting(name, value, SettingType.VIEW)
             setting.connect("changed", self.on_view_setting_changed)
-            setting.connect(
-                "changed-no-ui-update", self.on_other_setting_changed)
+            setting.connect("changed-no-ui-update", self.on_other_setting_changed)
             self.append(setting)
 
         for name, value in self.other_settings.items():
             setting = Setting(name, value, SettingType.OTHER)
             setting.connect("changed", self.on_other_setting_changed)
-            setting.connect(
-                "changed-no-ui-update", self.on_other_setting_changed)
+            setting.connect("changed-no-ui-update", self.on_other_setting_changed)
             self.append(setting)
 
         for name, value in self.internal_settings.items():
             setting = Setting(name, value, SettingType.INTERNAL)
             setting.connect("changed", self.on_internal_setting_changed)
-            setting.connect(
-                "changed-no-ui-update", self.on_other_setting_changed)
+            setting.connect("changed-no-ui-update", self.on_other_setting_changed)
             self.append(setting)
 
     def sync_all_settings(self):

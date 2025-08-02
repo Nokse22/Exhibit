@@ -36,53 +36,56 @@ class Viewer3dApplication(Adw.Application):
     open_filepath = None
 
     def __init__(self):
-        super().__init__(application_id='io.github.nokse22.Exhibit',
-                         flags=Gio.ApplicationFlags.HANDLES_OPEN)
+        super().__init__(
+            application_id="io.github.nokse22.Exhibit",
+            flags=Gio.ApplicationFlags.HANDLES_OPEN,
+        )
 
         logger_lib.init()
 
         self.lib_info = f3d.Engine.get_lib_info()
         self.backends = f3d.Engine.get_rendering_backend_list()
 
-        self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
-        self.create_action('about', self.on_about_action)
-        self.create_action('help', self.on_help_action, ['F1'])
+        self.create_action("quit", lambda *_: self.quit(), ["<primary>q"])
+        self.create_action("about", self.on_about_action)
+        self.create_action("help", self.on_help_action, ["F1"])
 
         self.create_action(
             "open-hdri-folder",
-            lambda *_: webbrowser.open(self.props.active_window.hdri_path)
+            lambda *_: webbrowser.open(self.props.active_window.hdri_path),
         )
         self.create_action(
             "open-configs-folder",
-            lambda *_: webbrowser.open(self.props.active_window.configs_path)
+            lambda *_: webbrowser.open(self.props.active_window.configs_path),
         )
 
         self.create_action(
             "open-new-window",
             lambda *_: Viewer3dWindow(application=self).present(),
-            ["<primary><shift>n"]
+            ["<primary><shift>n"],
         )
         self.create_action(
             "open-external",
             lambda *_: self.props.active_window.open_with_external_app(),
-            ["<primary><shift>e"]
+            ["<primary><shift>e"],
         )
 
         user_home_dir = os.environ.get("XDG_CONFIG_HOME", os.environ["HOME"])
         show_image_external_action = Gio.SimpleAction.new_stateful(
-                'show-image-externally',
-                GLib.VariantType.new("s"),
-                GLib.Variant("s", user_home_dir))
-        show_image_external_action.connect(
-            'activate', self.show_image_external)
+            "show-image-externally",
+            GLib.VariantType.new("s"),
+            GLib.Variant("s", user_home_dir),
+        )
+        show_image_external_action.connect("activate", self.show_image_external)
         self.add_action(show_image_external_action)
 
-        self.saved_settings = Gio.Settings.new('io.github.nokse22.Exhibit')
+        self.saved_settings = Gio.Settings.new("io.github.nokse22.Exhibit")
 
         theme_action = Gio.SimpleAction.new_stateful(
             "theme",
             GLib.VariantType.new("s"),
-            GLib.Variant("s", self.saved_settings.get_string("theme")))
+            GLib.Variant("s", self.saved_settings.get_string("theme")),
+        )
         theme_action.connect("activate", self.on_theme_setting_changed)
         self.update_theme()
         self.add_action(theme_action)
@@ -111,16 +114,16 @@ class Viewer3dApplication(Adw.Application):
 
     def on_about_action(self, *args):
         about = Adw.AboutDialog(
-            application_name='Exhibit',
-            application_icon='io.github.nokse22.Exhibit',
-            developer_name='Nokse',
-            version='1.5.0',
-            website='https://github.com/Nokse22/Exhibit',
-            issue_url='https://github.com/Nokse22/Exhibit/issues',
-            developers=['Nokse'],
+            application_name="Exhibit",
+            application_icon="io.github.nokse22.Exhibit",
+            developer_name="Nokse",
+            version="1.5.0",
+            website="https://github.com/Nokse22/Exhibit",
+            issue_url="https://github.com/Nokse22/Exhibit/issues",
+            developers=["Nokse"],
             license_type="GTK_LICENSE_GPL_3_0",
-            copyright='© 2024-2025 Nokse',
-            artists=["Jakub Steiner https://jimmac.eu"]
+            copyright="© 2024-2025 Nokse",
+            artists=["Jakub Steiner https://jimmac.eu"],
         )
 
         about.add_link(_("Checkout F3D"), "https://f3d.app")
@@ -129,23 +132,23 @@ class Viewer3dApplication(Adw.Application):
         about.add_link(_("Donate with Github"), "https://github.com/sponsors/Nokse22")
 
         about.set_debug_info(
-            f"GDK_DEBUG: {GLib.getenv('GDK_DEBUG')}\n" +
-            f"GSK_RENDERER: {GLib.getenv('GSK_RENDERER')}\n" +
-            f"DISPLAY: {GLib.getenv('DISPLAY')}\n" +
-            f"XDG_SESSION_TYPE: {GLib.getenv('XDG_SESSION_TYPE')}\n" +
-            f"XDG_SESSION_DESKTOP: {GLib.getenv('XDG_SESSION_DESKTOP')}\n" +
-            f"GTK_THEME: {GLib.getenv('GTK_THEME')}\n" +
-            f"GTK Version: {Gtk.MAJOR_VERSION}.{Gtk.MINOR_VERSION}.{Gtk.MICRO_VERSION}\n" +
-            "\n" +
-            f"F3D Version: {self.lib_info.version_full}\n" +
-            f"Build Date: {self.lib_info.build_date}\n" +
-            f"Build System: {self.lib_info.build_system}\n" +
-            f"VTK Version: {self.lib_info.vtk_version}\n" +
-            f"F3D License: {self.lib_info.license}\n" +
-            "\n" +
-            f"Modules:\n{'\n'.join([f'- {key}: {val}' for key, val in self.lib_info.modules.items()])}\n" +
-            f"Backends:\n{'\n'.join([f'- {key}: {val}' for key, val in self.backends.items()])}" +
-            f"\nF3D Copyrights:\n- {'\n- '.join(self.lib_info.copyrights)}\n"
+            f"GDK_DEBUG: {GLib.getenv('GDK_DEBUG')}\n"
+            + f"GSK_RENDERER: {GLib.getenv('GSK_RENDERER')}\n"
+            + f"DISPLAY: {GLib.getenv('DISPLAY')}\n"
+            + f"XDG_SESSION_TYPE: {GLib.getenv('XDG_SESSION_TYPE')}\n"
+            + f"XDG_SESSION_DESKTOP: {GLib.getenv('XDG_SESSION_DESKTOP')}\n"
+            + f"GTK_THEME: {GLib.getenv('GTK_THEME')}\n"
+            + f"GTK Version: {Gtk.MAJOR_VERSION}.{Gtk.MINOR_VERSION}.{Gtk.MICRO_VERSION}\n"
+            + "\n"
+            + f"F3D Version: {self.lib_info.version_full}\n"
+            + f"Build Date: {self.lib_info.build_date}\n"
+            + f"Build System: {self.lib_info.build_system}\n"
+            + f"VTK Version: {self.lib_info.vtk_version}\n"
+            + f"F3D License: {self.lib_info.license}\n"
+            + "\n"
+            + f"Modules:\n{'\n'.join([f'- {key}: {val}' for key, val in self.lib_info.modules.items()])}\n"
+            + f"Backends:\n{'\n'.join([f'- {key}: {val}' for key, val in self.backends.items()])}"
+            + f"\nF3D Copyrights:\n- {'\n- '.join(self.lib_info.copyrights)}\n"
         )
 
         about.present(self.props.active_window)
@@ -173,7 +176,8 @@ class Viewer3dApplication(Adw.Application):
         if not win:
             if self.open_filepath:
                 win = Viewer3dWindow(
-                    application=self, startup_filepath=self.open_filepath)
+                    application=self, startup_filepath=self.open_filepath
+                )
             else:
                 win = Viewer3dWindow(application=self)
         win.present()
