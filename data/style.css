@@ -1,3 +1,7 @@
+:root {
+  --btn-color: black;
+}
+
 .fix-render {
   background-color: black;
 }
@@ -10,34 +14,42 @@ flowbox flowboxchild {
   padding: 0px;
 }
 
-.main-view headerbar button {
- background-color: var(--view-bg-color);
- border-radius:9999px;
+.overlay-button {
+  background-color: alpha(var(--view-bg-color), 0.6);
+  border-radius: 9999px;
+  transition: background-color 200ms ease-in-out;
 }
 
-.main-view headerbar button:hover {
- background-color: mix(var(--view-bg-color), var(--view-fg-color), 0.05);
+.overlay-button button {
+  background-color: transparent;
 }
 
-.main-view headerbar button:active {
- background-color: mix(var(--view-bg-color), var(--view-fg-color), 0.15);
+.overlay-button:hover {
+  background-color: mix(alpha(var(--view-bg-color), 0.7), var(--btn-color), 0.06);
 }
 
-.main-view headerbar button:checked {
- background-color: mix(var(--view-bg-color), var(--view-fg-color), 0.1);
+.overlay-button:active {
+  background-color: mix(alpha(var(--view-bg-color), 0.7), var(--btn-color), 0.14);
 }
 
-.main-view headerbar button:checked:hover {
- background-color: mix(var(--view-bg-color), var(--view-fg-color), 0.15);
+.overlay-button:checked {
+  background-color: mix(alpha(var(--view-bg-color), 0.7), var(--btn-color), 0.08);
 }
 
-windowcontrols button{
- padding: 0px;
+.overlay-button:checked:hover {
+  background-color: mix(alpha(var(--view-bg-color), 0.7), var(--btn-color), 0.1);
 }
 
-windowcontrols {
- padding-left: 6px;
- padding-right: 6px;
+.main-view windowcontrols image{
+  background-color: mix(alpha(var(--view-bg-color), 0.7), var(--btn-color), 0.06);
+}
+
+.main-view windowcontrols image:hover {
+  background-color: mix(alpha(var(--view-bg-color), 0.7), var(--btn-color), 0.1);
+}
+
+.main-view windowcontrols image:active {
+  background-color: mix(alpha(var(--view-bg-color), 0.7), var(--btn-color), 0.15);
 }
 
 .drop-target-remove-border {
@@ -63,6 +75,4 @@ windowcontrols {
   color: var(--accent-color);
 }
 
-flowbox > flowboxchild {
-  box-shadow: 0px 0px 0px 1px var(--border-color);
-}
+

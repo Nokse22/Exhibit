@@ -822,12 +822,13 @@
                             </style>
                             <child type="start">
                               <object class="GtkToggleButton" id="sidebar_toggle_button">
-                                <style>
-                                  <class name="flat"/>
-                                </style>
                                 <property name="icon-name">sidebar-show-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Reveal Sidebar</property>
                                 <property name="active" bind-source="split_view" bind-property="show-sidebar" bind-flags="sync-create | bidirectional">True</property>
+                                <style>
+                                  <class name="overlay-button"/>
+                                  <class name="circular"/>
+                                </style>
                               </object>
                             </child>
                             <child type="end">
@@ -836,6 +837,10 @@
                                 <property name="icon-name">open-menu-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Menu</property>
                                 <property name="menu-model">primary_menu</property>
+                                <style>
+                                  <class name="overlay-button"/>
+                                  <class name="circular"/>
+                                </style>
                               </object>
                             </child>
                             <child type="start">
@@ -844,7 +849,8 @@
                                 <property name="tooltip-text" translatable="yes">Reset to Bounds</property>
                                 <signal name="clicked" handler="on_home_clicked"/>
                                 <style>
-                                  <class name="flat"/>
+                                  <class name="overlay-button"/>
+                                  <class name="circular"/>
                                 </style>
                               </object>
                             </child>
