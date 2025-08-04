@@ -157,16 +157,15 @@ class F3DViewer(Gtk.GLArea):
         backends_list = f3d.Engine.get_rendering_backend_list()
         self.logger.info(f"Available F3D backends: {backends_list}")
 
-        try:
+        if GLib.getenv("WAYLAND_DISPLAY"):
+            self.logger.info("Initializing F3D with EGL")
             self.engine = f3d.Engine.create_external_egl()
-        except Exception as e:
-            self.logger.warning(f"Could not initialize F3D: {e}")
-
-        if not self.engine:
-            try:
-                self.engine = f3d.Engine.create(True)
-            except Exception as e:
-                self.logger.warning(f"Could not initialize F3D with Auto: {e}")
+        elif GLib.getenv("DISPLAY"):
+            self.logger.info("Initializing F3D with GLX")
+            self.engine = f3d.Engine.create_external_glx()
+        else:
+            self.logger.info("Initializing F3D with automatic")
+            self.engine = f3d.Engine.create(True)
 
         if not self.engine:
             self.logger.critical("Failed to initialize F3D with any available backend")
@@ -507,3 +506,4 @@ class F3DViewer(Gtk.GLArea):
         action.connect("activate", callback, *args)
         self.action_group.add_action(action)
         return action
+
