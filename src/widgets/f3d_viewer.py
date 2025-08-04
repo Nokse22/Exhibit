@@ -149,27 +149,18 @@ class F3DViewer(Gtk.GLArea):
         self._animation_time = 0
         self._playing = False
 
+        self.set_allowed_apis(Gdk.GLAPI.GL)
+
         self.initialize()
 
     def initialize(self):
         backends_list = f3d.Engine.get_rendering_backend_list()
         self.logger.info(f"Available F3D backends: {backends_list}")
 
-        # Try multiple backends in order of preference
-        create_methods = [
-            (f3d.Engine.create_external_egl, "EGL external"),
-            (f3d.Engine.create_external_glx, "GLX external"),
-        ]
-
-        for create_func, backend_name in create_methods:
-            try:
-                self.engine = create_func()
-                self.logger.info(f"F3D initialized successfully with {backend_name}")
-                break
-            except Exception as e:
-                self.logger.warning(
-                    f"Could not initialize F3D with {backend_name}: {e}"
-                )
+        try:
+            self.engine = f3d.Engine.create_external_egl()
+        except Exception as e:
+            self.logger.warning(f"Could not initialize F3D: {e}")
 
         if not self.engine:
             try:
