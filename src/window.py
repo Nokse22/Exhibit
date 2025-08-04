@@ -1056,7 +1056,6 @@ class Viewer3dWindow(Adw.ApplicationWindow):
         state = self.split_view.get_show_sidebar()
         self.window_settings.set_setting("sidebar-show", state)
 
-<<<<<<< ours
     def on_play_button_clicked(self, btn):
         self.f3d_viewer.playing = not self.f3d_viewer.playing
 
@@ -1068,9 +1067,9 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.play_button.set_icon_name("media-playback-start-symbolic")
             self.play_button.set_tooltip_text(_("Start"))
 
-    def on_orthographic_changed(self, *args):
-        self.ortho_action.set_state(GLib.Variant("b", self.f3d_viewer.orthographic))
-        self.window_settings.set_setting("orthographic", self.f3d_viewer.orthographic)
+    # def on_orthographic_changed(self, *args):
+    #     self.ortho_action.set_state(GLib.Variant("b", self.f3d_viewer.orthographic))
+    #     self.window_settings.set_setting("orthographic", self.f3d_viewer.orthographic)
 
     #
     # Function called when the HDRI is deleted/added...
