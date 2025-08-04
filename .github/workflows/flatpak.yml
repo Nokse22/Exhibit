@@ -25,6 +25,6 @@ jobs:
         with:
           bundle: Exhibit.flatpak
           manifest-path: build-aux/io.github.nokse22.Exhibit.json
-          cache-key: flatpak-builder-${{ github.sha }}
+          cache-key: flatpak-builder-${{ github.sha }}-${{ matrix.variant.arch }}
           arch: ${{ matrix.variant.arch }}
           verbose: true
