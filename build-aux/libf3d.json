@@ -7,6 +7,7 @@
         "-DF3D_MODULE_EXR:BOOL=ON",
         "-DF3D_MODULE_UI:BOOL=OFF",
         "-DF3D_BINDINGS_PYTHON:BOOL=ON",
+        "-DF3D_BINDINGS_C:BOOL=ON",
         "-DCMAKE_INSTALL_PREFIX:PATH=/app",
         "-DBUILD_TESTING:BOOL=OFF",
         "-DF3D_PLUGINS_STATIC_BUILD=ON",
@@ -25,7 +26,7 @@
         {
             "type": "git",
             "url": "https://github.com/f3d-app/f3d",
-            "tag": "v3.2.0"
+            "commit": "61646f67e133a62247eb6ea3d9182ae9a4c6ff5b"
         }
     ],
     "modules": [
@@ -71,12 +72,13 @@
             "builddir": true,
             "config-opts": [
                 "-DTBB_TEST=OFF",
-                "-DTBB_EXAMPLES=OFF"
+                "-DTBB_EXAMPLES=OFF",
+                "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
             ],
             "sources": [
                 {
                     "type": "archive",
-                    "url": "https://github.com/oneapi-src/oneTBB/archive/refs/tags/v2021.9.0.tar.gz",
+                    "url": "https://github.com/oneapi-src/oneTBB/archive/v2021.9.0.tar.gz",
                     "sha256": "1ce48f34dada7837f510735ff1172f6e2c261b09460e3bf773b49791d247d24e"
                 }
             ]
@@ -86,6 +88,7 @@
             "buildsystem": "cmake-ninja",
             "builddir": true,
             "config-opts": [
+                "-DCMAKE_INSTALL_PREFIX=/app",
                 "-DBUILD_SHARED_LIBS=ON",
                 "-DOpenGL_GL_PREFERENCE=GLVND",
                 "-DVTK_ENABLE_LOGGING=ON",
@@ -112,6 +115,7 @@
                 "-DVTK_MODULE_ENABLE_VTK_IOParallel=YES",
                 "-DVTK_MODULE_ENABLE_VTK_IOPLY=YES",
                 "-DVTK_MODULE_ENABLE_VTK_IOXML=YES",
+                "-DVTK_MODULE_ENABLE_VTK_IOLegacy=YES",
                 "-DVTK_MODULE_ENABLE_VTK_IONetCDF:STRING=YES",
                 "-DVTK_MODULE_ENABLE_VTK_IOHDF:STRING=YES",
                 "-DVTK_MODULE_ENABLE_VTK_RenderingAnnotation=YES",
@@ -119,6 +123,7 @@
                 "-DVTK_MODULE_ENABLE_VTK_RenderingExternal=YES",
                 "-DVTK_MODULE_ENABLE_VTK_RenderingLabel=YES",
                 "-DVTK_MODULE_ENABLE_VTK_RenderingOpenGL2=YES",
+                "-DVTK_MODULE_ENABLE_VTK_RenderingGridAxes=YES",
                 "-DVTK_MODULE_ENABLE_VTK_RenderingVolumeOpenGL2=YES",
                 "-DVTK_MODULE_ENABLE_VTK_TestingCore=YES",
                 "-DVTK_MODULE_ENABLE_VTK_RenderingRayTracing=NO",
@@ -130,8 +135,8 @@
             "sources": [
                 {
                     "type": "archive",
-                    "url": "https://www.vtk.org/files/release/9.5/VTK-9.5.0.tar.gz",
-                    "sha256": "04ae86246b9557c6b61afbc534a6df099244fbc8f3937f82e6bc0570953af87d"
+                    "url": "https://www.vtk.org/files/release/9.5/VTK-9.5.2.tar.gz",
+                    "sha256": "cee64b98d270ff7302daf1ef13458dff5d5ac1ecb45d47723835f7f7d562c989"
                 }
             ]
         },
@@ -163,7 +168,8 @@
                 "-DBUILD_MODULE_ModelingData=OFF",
                 "-DBUILD_MODULE_Visualization=OFF",
                 "-DBUILD_DOC_Overview=OFF",
-                "-DCMAKE_CXX_FLAGS=-fpermissive"
+                "-DCMAKE_CXX_FLAGS=-fpermissive",
+                "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
             ],
             "sources": [
                 {
@@ -198,7 +204,7 @@
                 {
                     "type": "git",
                     "url": "https://github.com/AcademySoftwareFoundation/Imath.git",
-                    "tag": "v3.1.12"
+                    "tag": "v3.2.2"
                 }
             ]
         },
@@ -212,8 +218,8 @@
             "sources": [
                 {
                     "type": "archive",
-                    "url": "https://github.com/alembic/alembic/archive/refs/tags/1.8.8.tar.gz",
-                    "sha256": "ba1f34544608ef7d3f68cafea946ec9cc84792ddf9cda3e8d5590821df71f6c6"
+                    "url": "https://github.com/alembic/alembic/archive/refs/tags/1.8.9.tar.gz",
+                    "sha256": "8c59c10813feee917d262c71af77d6fa3db1acaf7c5fecfd4104167077403955"
                 }
             ]
         },

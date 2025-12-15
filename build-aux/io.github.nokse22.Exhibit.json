@@ -1,18 +1,17 @@
 {
-    "id": "io.github.nokse22.Exhibit",
-    "runtime": "org.gnome.Platform",
-    "runtime-version": "48",
-    "sdk": "org.gnome.Sdk",
-    "command": "exhibit",
-    "finish-args": [
+    "id" : "io.github.nokse22.Exhibit",
+    "runtime" : "org.gnome.Platform",
+    "runtime-version" : "49",
+    "sdk" : "org.gnome.Sdk",
+    "command" : "exhibit",
+    "finish-args" : [
         "--share=ipc",
         "--socket=wayland",
         "--socket=fallback-x11",
         "--device=dri",
-        "--filesystem=host-os",
-        "--env=LD_LIBRARY_PATH=/app/lib:/app/lib/GL/lib:/usr/lib/x86_64-linux-gnu"
+        "--filesystem=host-os"
     ],
-    "cleanup": [
+    "cleanup" : [
         "/include",
         "/lib/pkgconfig",
         "/man",
@@ -22,21 +21,22 @@
         "*.la",
         "*.a"
     ],
-    "modules": [
+    "modules" : [
         "imagemagick.json",
         "libf3d.json",
         {
-            "name": "exhibit",
-            "buildsystem": "meson",
+            "name" : "exhibit",
+            "buildsystem" : "meson",
             "config-opts" : [
                 "--libdir=lib"
             ],
-            "sources": [
+            "sources" : [
                 {
-                    "type": "dir",
-                    "path": "../."
+                    "type" : "dir",
+                    "path" : "../."
                 }
-            ]
+            ],
+            "builddir" : true
         }
     ]
 }
