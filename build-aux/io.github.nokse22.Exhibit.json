@@ -8,8 +8,7 @@
         "--share=ipc",
         "--socket=wayland",
         "--socket=fallback-x11",
-        "--device=dri",
-        "--filesystem=host-os"
+        "--device=dri"
     ],
     "cleanup" : [
         "/include",
