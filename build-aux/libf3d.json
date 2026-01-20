@@ -3,30 +3,37 @@
     "buildsystem": "cmake-ninja",
     "builddir": true,
     "config-opts": [
-        "-DF3D_BUILD_APPLICATION:BOOL=OFF",
-        "-DF3D_MODULE_EXR:BOOL=ON",
-        "-DF3D_MODULE_UI:BOOL=OFF",
-        "-DF3D_BINDINGS_PYTHON:BOOL=ON",
-        "-DF3D_BINDINGS_C:BOOL=ON",
-        "-DCMAKE_INSTALL_PREFIX:PATH=/app",
-        "-DBUILD_TESTING:BOOL=OFF",
+        "-DCMAKE_INSTALL_PREFIX=/app",
+        "-DCMAKE_PREFIX_PATH=/app",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DF3D_BUILD_APPLICATION=ON",
+        "-DF3D_MODULE_UI=OFF",
+        "-DF3D_MODULE_RAYTRACING=OFF",
+        "-DF3D_MODULE_EXR=ON",
+        "-DF3D_BINDINGS_PYTHON=ON",
+        "-DF3D_BINDINGS_JAVA=OFF",
+        "-DF3D_BINDINGS_C=OFF",
+        "-DF3D_LINUX_GENERATE_MAN=OFF",
         "-DF3D_PLUGINS_STATIC_BUILD=ON",
         "-DF3D_PLUGIN_BUILD_ALEMBIC=ON",
-        "-DF3D_PLUGIN_BUILD_ASSIMP:BOOL=ON",
-        "-DF3D_PLUGIN_BUILD_DRACO:BOOL=ON",
-        "-DF3D_PLUGIN_BUILD_EXODUS:BOOL=ON",
-        "-DF3D_PLUGIN_BUILD_OCCT:BOOL=ON",
-        "-DF3D_PLUGIN_BUILD_USD:BOOL=ON",
-        "-DF3D_LINUX_LINK_FILESYSTEM:BOOL=OFF",
-        "-DF3D_TESTING_ENABLE_EGL_TESTS:BOOL=OFF",
-        "-DF3D_TESTING_ENABLE_GLX_TESTS:BOOL=OFF",
-        "-DF3D_TESTING_ENABLE_OSMESA_TESTS:BOOL=OFF"
+        "-DF3D_PLUGIN_BUILD_ASSIMP=ON",
+        "-DF3D_PLUGIN_BUILD_DRACO=ON",
+        "-DF3D_PLUGIN_BUILD_HDF=ON",
+        "-DF3D_PLUGIN_BUILD_OCCT=ON",
+        "-DF3D_PLUGIN_BUILD_USD=ON",
+        "-DF3D_PLUGIN_BUILD_VDB=OFF",
+        "-DBUILD_TESTING=OFF",
+        "-DF3D_LINUX_LINK_FILESYSTEM=OFF"
     ],
     "sources": [
         {
             "type": "git",
             "url": "https://github.com/f3d-app/f3d",
-            "commit": "61646f67e133a62247eb6ea3d9182ae9a4c6ff5b"
+            "branch": "master"
+        },
+        {
+            "type": "patch",
+            "path": "./0001-Fix-rendering-backend-detection.patch"
         }
     ],
     "modules": [
@@ -47,23 +54,19 @@
             ]
         },
         {
-            "name": "hdf5",
-            "buildsystem": "cmake-ninja",
-            "builddir": true,
-            "config-opts": [
-                "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
-                "-DBUILD_TESTING:BOOL=OFF",
-                "-DHDF5_BUILD_EXAMPLES:BOOL=OFF"
-            ],
-            "cleanup": [
-                "/share/hdf5_examples"
-            ],
+            "name": "Boost",
+            "buildsystem": "simple",
             "sources": [
                 {
                     "type": "archive",
-                    "url": "https://github.com/HDFGroup/hdf5/archive/refs/tags/hdf5-1.14.6.tar.gz",
-                    "sha256": "6df53f84376d87e96eeb255703e3b1a348fc08a48e06e37053f1bfb379970189"
+                    "url": "https://archives.boost.io/release/1.83.0/source/boost_1_83_0.tar.gz",
+                    "sha256": "c0685b68dd44cc46574cce86c4e17c0f611b15e195be9848dfd0769a0a207628"
                 }
+            ],
+            "build-commands": [
+                "./bootstrap.sh --prefix=/app --with-libraries=iostreams,filesystem,system,date_time,regex,program_options,python",
+                "./b2 headers",
+                "./b2 -j$FLATPAK_BUILDER_N_JOBS install variant=release cxxstd=17 --layout=system"
             ]
         },
         {
@@ -73,6 +76,7 @@
             "config-opts": [
                 "-DTBB_TEST=OFF",
                 "-DTBB_EXAMPLES=OFF",
+                "-DCMAKE_BUILD_TYPE=Release",
                 "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
             ],
             "sources": [
@@ -84,53 +88,83 @@
             ]
         },
         {
+            "name": "Imath",
+            "buildsystem": "cmake-ninja",
+            "builddir": true,
+            "config-opts": [
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DBUILD_TESTING=OFF",
+                "-DBUILD_SHARED_LIBS=ON"
+            ],
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://github.com/AcademySoftwareFoundation/Imath.git",
+                    "tag": "v3.2.2"
+                }
+            ]
+        },
+        {
+            "name": "hdf5",
+            "buildsystem": "cmake-ninja",
+            "builddir": true,
+            "config-opts": [
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DBUILD_TESTING=OFF",
+                "-DHDF5_BUILD_EXAMPLES=OFF"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/HDFGroup/hdf5/archive/refs/tags/hdf5-1.14.6.tar.gz",
+                    "sha256": "6df53f84376d87e96eeb255703e3b1a348fc08a48e06e37053f1bfb379970189"
+                }
+            ]
+        },
+        {
             "name": "VTK",
             "buildsystem": "cmake-ninja",
             "builddir": true,
             "config-opts": [
                 "-DCMAKE_INSTALL_PREFIX=/app",
+                "-DCMAKE_BUILD_TYPE=Release",
                 "-DBUILD_SHARED_LIBS=ON",
-                "-DOpenGL_GL_PREFERENCE=GLVND",
-                "-DVTK_ENABLE_LOGGING=ON",
-                "-DVTK_OPENGL_HAS_EGL=ON",
-                "-DVTK_ENABLE_WRAPPING=OFF",
-                "-DVTK_ENABLE_REMOTE_MODULES=OFF",
-                "-DVTK_BUILD_TESTING=OFF",
                 "-DVTK_LEGACY_REMOVE=ON",
                 "-DVTK_VERSIONED_INSTALL=OFF",
+                "-DVTK_BUILD_TESTING=OFF",
+                "-DVTK_DEBUG_LEAKS=ON",
+                "-DVTK_ENABLE_LOGGING=OFF",
+                "-DVTK_ENABLE_REMOTE_MODULES=OFF",
+                "-DVTK_ENABLE_WRAPPING=OFF",
                 "-DVTK_GROUP_ENABLE_Rendering=DEFAULT",
                 "-DVTK_GROUP_ENABLE_StandAlone=DEFAULT",
+                "-DVTK_SMP_IMPLEMENTATION_TYPE=TBB",
+                "-DVTK_OPENGL_HAS_EGL=ON",
                 "-DVTK_MODULE_ENABLE_VTK_CommonSystem=YES",
                 "-DVTK_MODULE_ENABLE_VTK_FiltersGeneral=YES",
                 "-DVTK_MODULE_ENABLE_VTK_FiltersGeometry=YES",
+                "-DVTK_MODULE_ENABLE_VTK_IOCityGML=YES",
+                "-DVTK_MODULE_ENABLE_VTK_IOExodus=YES",
+                "-DVTK_MODULE_ENABLE_VTK_IOGeometry=YES",
+                "-DVTK_MODULE_ENABLE_VTK_IOHDF=YES",
+                "-DVTK_MODULE_ENABLE_VTK_IOImage=YES",
+                "-DVTK_MODULE_ENABLE_VTK_IOImport=YES",
+                "-DVTK_MODULE_ENABLE_VTK_IOLegacy=YES",
+                "-DVTK_MODULE_ENABLE_VTK_IONetCDF=YES",
+                "-DVTK_MODULE_ENABLE_VTK_IOOpenVDB=DEFAULT",
+                "-DVTK_MODULE_ENABLE_VTK_IOPLY=YES",
+                "-DVTK_MODULE_ENABLE_VTK_IOXML=YES",
                 "-DVTK_MODULE_ENABLE_VTK_ImagingCore=YES",
                 "-DVTK_MODULE_ENABLE_VTK_ImagingHybrid=YES",
                 "-DVTK_MODULE_ENABLE_VTK_InteractionStyle=YES",
                 "-DVTK_MODULE_ENABLE_VTK_InteractionWidgets=YES",
-                "-DVTK_MODULE_ENABLE_VTK_IOCityGML=YES",
-                "-DVTK_MODULE_ENABLE_VTK_IOExodus=YES",
-                "-DVTK_MODULE_ENABLE_VTK_IOGeometry=YES",
-                "-DVTK_MODULE_ENABLE_VTK_IOImage=YES",
-                "-DVTK_MODULE_ENABLE_VTK_IOImport=YES",
-                "-DVTK_MODULE_ENABLE_VTK_IOParallel=YES",
-                "-DVTK_MODULE_ENABLE_VTK_IOPLY=YES",
-                "-DVTK_MODULE_ENABLE_VTK_IOXML=YES",
-                "-DVTK_MODULE_ENABLE_VTK_IOLegacy=YES",
-                "-DVTK_MODULE_ENABLE_VTK_IONetCDF:STRING=YES",
-                "-DVTK_MODULE_ENABLE_VTK_IOHDF:STRING=YES",
                 "-DVTK_MODULE_ENABLE_VTK_RenderingAnnotation=YES",
                 "-DVTK_MODULE_ENABLE_VTK_RenderingCore=YES",
-                "-DVTK_MODULE_ENABLE_VTK_RenderingExternal=YES",
-                "-DVTK_MODULE_ENABLE_VTK_RenderingLabel=YES",
-                "-DVTK_MODULE_ENABLE_VTK_RenderingOpenGL2=YES",
                 "-DVTK_MODULE_ENABLE_VTK_RenderingGridAxes=YES",
+                "-DVTK_MODULE_ENABLE_VTK_RenderingOpenGL2=YES",
+                "-DVTK_MODULE_ENABLE_VTK_RenderingRayTracing=DEFAULT",
                 "-DVTK_MODULE_ENABLE_VTK_RenderingVolumeOpenGL2=YES",
-                "-DVTK_MODULE_ENABLE_VTK_TestingCore=YES",
-                "-DVTK_MODULE_ENABLE_VTK_RenderingRayTracing=NO",
-                "-DVTK_SMP_IMPLEMENTATION_TYPE=TBB",
-                "-DVTK_SMP_ENABLE_SEQUENTIAL=OFF",
-                "-DVTK_SMP_ENABLE_STDTHREAD=OFF",
-                "-DVTK_SMP_ENABLE_TBB=ON"
+                "-DVTK_MODULE_ENABLE_VTK_TestingCore=YES"
             ],
             "sources": [
                 {
@@ -144,15 +178,52 @@
             "name": "Draco",
             "buildsystem": "cmake-ninja",
             "builddir": true,
-            "build-options": {
-                "cflags": "-fPIC",
-                "cxxflags": "-fPIC"
-            },
+            "config-opts": [
+                "-DBUILD_SHARED_LIBS=ON"
+            ],
             "sources": [
                 {
                     "type": "archive",
                     "url": "https://github.com/google/draco/archive/refs/tags/1.5.7.tar.gz",
                     "sha256": "bf6b105b79223eab2b86795363dfe5e5356050006a96521477973aba8f036fe1"
+                }
+            ]
+        },
+        {
+            "name": "pybind11",
+            "buildsystem": "cmake-ninja",
+            "builddir": true,
+            "config-opts": [
+                "-DPYBIND11_FINDPYTHON=ON",
+                "-DPYBIND11_TEST=OFF"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/pybind/pybind11/archive/refs/tags/v2.13.6.tar.gz",
+                    "sha256": "e08cb87f4773da97fa7b5f035de8763abc656d87d5773e62f6da0587d1f0ec20"
+                }
+            ]
+        },
+        {
+            "name": "libdeflate",
+            "buildsystem": "cmake-ninja",
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/ebiggers/libdeflate/releases/download/v1.20/libdeflate-1.20.tar.gz",
+                    "sha256": "c52cf0239fd644d71c9e88613dd7431a5306ebee1280c5791c71ca264869250a"
+                }
+            ]
+        },
+        {
+            "name": "openexr",
+            "buildsystem": "cmake-ninja",
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/AcademySoftwareFoundation/openexr/archive/refs/tags/v3.2.4.tar.gz",
+                    "sha256": "81e6518f2c4656fdeaf18a018f135e96a96e7f66dbe1c1f05860dd94772176cc"
                 }
             ]
         },
@@ -195,20 +266,6 @@
             ]
         },
         {
-            "name": "Imath",
-            "buildsystem": "cmake-ninja",
-            "config-opts": [
-                "-DBUILD_TESTING:BOOL=OFF"
-            ],
-            "sources": [
-                {
-                    "type": "git",
-                    "url": "https://github.com/AcademySoftwareFoundation/Imath.git",
-                    "tag": "v3.2.2"
-                }
-            ]
-        },
-        {
             "name": "Alembic",
             "buildsystem": "cmake-ninja",
             "config-opts": [
@@ -221,60 +278,6 @@
                     "url": "https://github.com/alembic/alembic/archive/refs/tags/1.8.9.tar.gz",
                     "sha256": "8c59c10813feee917d262c71af77d6fa3db1acaf7c5fecfd4104167077403955"
                 }
-            ]
-        },
-        {
-            "name": "pybind11",
-            "config-opts": [
-                "-DPYBIND11_FINDPYTHON=ON",
-                "-DPYBIND11_TEST=OFF"
-            ],
-            "buildsystem": "cmake-ninja",
-            "builddir": true,
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://github.com/pybind/pybind11/archive/refs/tags/v2.13.6.tar.gz",
-                    "sha256": "e08cb87f4773da97fa7b5f035de8763abc656d87d5773e62f6da0587d1f0ec20"
-                }
-            ]
-        },
-        {
-            "name": "libdeflate",
-            "buildsystem": "cmake-ninja",
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://github.com/ebiggers/libdeflate/releases/download/v1.20/libdeflate-1.20.tar.gz",
-                    "sha256": "c52cf0239fd644d71c9e88613dd7431a5306ebee1280c5791c71ca264869250a"
-                }
-            ]
-        },
-        {
-            "name": "openexr",
-            "buildsystem": "cmake-ninja",
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://github.com/AcademySoftwareFoundation/openexr/archive/refs/tags/v3.2.4.tar.gz",
-                    "sha256": "81e6518f2c4656fdeaf18a018f135e96a96e7f66dbe1c1f05860dd94772176cc"
-                }
-            ]
-        },
-        {
-            "name": "Boost",
-            "buildsystem": "simple",
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://archives.boost.io/release/1.83.0/source/boost_1_83_0.tar.gz",
-                    "sha256": "c0685b68dd44cc46574cce86c4e17c0f611b15e195be9848dfd0769a0a207628"
-                }
-            ],
-            "build-commands": [
-                "./bootstrap.sh --prefix=/app --with-libraries=iostreams,filesystem,system,date_time,regex,program_options,python",
-                "./b2 headers",
-                "./b2 -j$FLATPAK_BUILDER_N_JOBS install variant=release cxxstd=17 --layout=system"
             ]
         },
         {
