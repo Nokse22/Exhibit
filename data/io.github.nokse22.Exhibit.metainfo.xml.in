@@ -68,6 +68,35 @@ You can use an HDRI image or a custom color as a background.</p>
   </screenshots>
 
   <releases>
+    <release version="1.6.0" date="2026-01-20">
+      <description translate="no">
+        <ul>
+          <li>Add animation support</li>
+          <li>Update to work with the latest version of f3d</li>
+          <li>Improve overlaid buttons visibility</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.5.1" date="2025-08-01">
+      <description translate="no">
+        <ul>
+          <li>Fixed bug</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.5.0" date="2025-07-31">
+      <description translate="no">
+        <ul>
+          <li>Added loader</li>
+          <li>Improve overlaid buttons visibility</li>
+          <li>Simplify UI removing some buttons</li>
+          <li>Improve drop UI</li>
+          <li>Update GNOME runtime</li>
+          <li>Added Norwegian Bokmål translation (turtlegarden)</li>
+          <li>Added German translation (Vortex Acherontic)</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.4.2" date="2024-11-16">
       <description translate="no">
         <ul>
