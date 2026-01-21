@@ -29,7 +29,11 @@
         {
             "type": "git",
             "url": "https://github.com/f3d-app/f3d",
-            "tag": "v3.4.1"
+            "branch": "master"
+        },
+        {
+            "type": "patch",
+            "path": "./0001-Fix-rendering-backend-detection.patch"
         }
     ],
     "modules": [
