@@ -55,15 +55,15 @@ You can use an HDRI image or a custom color as a background.</p>
 	  </screenshot>
     <screenshot>
 	    <image>https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%205.png</image>
-	    <caption>Nissan Fairlady with dark theme</caption>
-	  </screenshot>
-    <screenshot>
-	    <image>https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%206.png</image>
 	    <caption>Vase 3d scan with HDRI skybox</caption>
 	  </screenshot>
     <screenshot>
-	    <image>https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%207.png</image>
+	    <image>https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%206.png</image>
 	    <caption>Point cloud of a boat with dark theme</caption>
+	  </screenshot>
+    <screenshot>
+	    <image>https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%207.png</image>
+	    <caption>Rigged model showing armature with dark theme</caption>
 	  </screenshot>
   </screenshots>
 
