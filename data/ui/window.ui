@@ -926,24 +926,18 @@
         <attribute name="label" translatable="yes">_New Window</attribute>
         <attribute name="action">app.open-new-window</attribute>
       </item>
-    </section>
-    <section>
       <item>
         <attribute name="label" translatable="yes">_Load New File</attribute>
         <attribute name="action">win.open-new</attribute>
       </item>
-      <item>
-        <attribute name="label" translatable="yes">_Add File to Scene</attribute>
-        <attribute name="action">win.add-new</attribute>
-      </item>
-    </section>
-    <section>
+      <!-- <item> -->
+      <!--   <attribute name="label" translatable="yes">_Add File to Scene</attribute> -->
+      <!--   <attribute name="action">win.add-new</attribute> -->
+      <!-- </item> -->
       <item>
         <attribute name="label" translatable="yes">_Export Image</attribute>
         <attribute name="action">win.save-as-image</attribute>
       </item>
-    </section>
-    <section>
       <item>
         <attribute name="label" translatable="yes">_Open In External App</attribute>
         <attribute name="action">app.open-external</attribute>
