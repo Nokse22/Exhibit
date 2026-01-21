@@ -68,12 +68,12 @@ You can use an HDRI image or a custom color as a background.</p>
   </screenshots>
 
   <releases>
-    <release version="1.6.0" date="2026-01-20">
+    <release version="1.6.0" date="2026-01-21">
       <description translate="no">
         <ul>
           <li>Add animation support</li>
           <li>Update to work with the latest version of f3d</li>
-          <li>Improve overlaid buttons visibility</li>
+          <li>Add support for showing model armature</li>
         </ul>
       </description>
     </release>
