@@ -7,10 +7,14 @@
   <name>Exhibit</name>
   <summary>Preview your 3D models</summary>
   <description>
-    <p>Based on the F3D library, it supports many file formats, from digital content to scientific datasets including glTF, STL, STEP, PLY, OBJ, FBX, USD, Alembic and many more.
-You can drag and drop 3d models into the app and export an image of the rendered model.
-Change many settings like tone mapping, ambient occlusion, anti aliasing, material roughness, metallic, color and opacity to achieve the perfect render.
-You can use an HDRI image or a custom color as a background.</p>
+    <p>
+      Based on the F3D library, it supports many file formats, from digital content to scientific
+      datasets including glTF, STL, STEP, PLY, OBJ, FBX, USD, Alembic and many more. You can drag
+      and drop 3d models into the app and export an image of the rendered model. Change many
+      settings like tone mapping, ambient occlusion, anti aliasing, material roughness, metallic,
+      color and opacity to achieve the perfect render. You can use an HDRI image or a custom color
+      as a background.
+    </p>
   </description>
 
   <developer id="io.github.nokse22">
@@ -25,9 +29,11 @@ You can use an HDRI image or a custom color as a background.</p>
 
   <translation type="gettext">exhibit</translation>
   <!-- All graphical applications having a desktop file must have this tag in the MetaInfo.
-     If this is present, appstreamcli compose will pull icons, keywords and categories from the desktop file. -->
+  If this is present, appstreamcli compose will pull icons, keywords and categories from the desktop
+  file. -->
   <launchable type="desktop-id">io.github.nokse22.Exhibit.desktop</launchable>
-  <!-- Use the OARS website (https://hughsie.github.io/oars/generate.html) to generate these and make sure to use oars-1.1 -->
+  <!-- Use the OARS website (https://hughsie.github.io/oars/generate.html) to generate these and
+  make sure to use oars-1.1 -->
   <content_rating type="oars-1.1" />
 
   <!-- Applications should set a brand color in both light and dark variants like so -->
@@ -38,33 +44,47 @@ You can use an HDRI image or a custom color as a background.</p>
 
   <screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%201.png</image>
-      <caption>3D Bechy</caption>
+      <image>
+        https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%201.png
+      </image>
+      <caption>3D Benchy</caption>
     </screenshot>
-	  <screenshot>
-	    <image>https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%202.png</image>
-	    <caption>Retro Computer Setup with a HDRI skybox</caption>
-	  </screenshot>
     <screenshot>
-	    <image>https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%203.png</image>
-	    <caption>Green Metallic Suzanne</caption>
-	  </screenshot>
+      <image>
+        https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%202.png
+      </image>
+      <caption>Retro Computer Setup with a HDRI skybox</caption>
+    </screenshot>
     <screenshot>
-	    <image>https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%204.png</image>
-	    <caption>Cow with an HDRI background and dark theme</caption>
-	  </screenshot>
+      <image>
+        https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%203.png
+      </image>
+      <caption>Green Metallic Suzanne</caption>
+    </screenshot>
     <screenshot>
-	    <image>https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%205.png</image>
-	    <caption>Vase 3d scan with HDRI skybox</caption>
-	  </screenshot>
+      <image>
+        https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%204.png
+      </image>
+      <caption>Cow with an HDRI background and dark theme</caption>
+    </screenshot>
     <screenshot>
-	    <image>https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%206.png</image>
-	    <caption>Point cloud of a boat with dark theme</caption>
-	  </screenshot>
+      <image>
+        https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%205.png
+      </image>
+      <caption>Vase 3d scan with HDRI skybox</caption>
+    </screenshot>
     <screenshot>
-	    <image>https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%207.png</image>
-	    <caption>Rigged model showing armature with dark theme</caption>
-	  </screenshot>
+      <image>
+        https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%206.png
+      </image>
+      <caption>Point cloud of a boat with dark theme</caption>
+    </screenshot>
+    <screenshot>
+      <image>
+        https://raw.githubusercontent.com/Nokse22/Exhibit/master/data/resources/screenshot%207.png
+      </image>
+      <caption>Rigged model showing armature with dark theme</caption>
+    </screenshot>
   </screenshots>
 
   <releases>

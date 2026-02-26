@@ -1,13 +1,13 @@
-# ITALIAN TRANSLATION.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# Italian translation.
+# Copyright (C) 2026, Nokse22
+# This file is distributed under the same license as the Exhibit package.
 # ALBANO BATTISTELLA <albanobattistella@gmail.com>, 2024.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: Exhibit\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-04 22:15+0200\n"
+"POT-Creation-Date: 2026-02-26 21:13+0100\n"
 "PO-Revision-Date: 2024-06-07 08:00+0200\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
@@ -16,292 +16,573 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/io.github.nokse22.Exhibit.desktop.in:3
-#: data/io.github.nokse22.Exhibit.metainfo.xml.in:7 data/window.ui:20
-#: data/window.ui:84
+#: data/io.github.nokse22.Exhibit.desktop.in:2
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:7 src/window.py:937
+#: data/ui/window.ui:11 data/ui/window.ui:53 data/ui/window.ui:90
+#: data/ui/window.ui:206
 msgid "Exhibit"
 msgstr "Exhibit"
 
-#: data/io.github.nokse22.Exhibit.desktop.in:4
+#: data/io.github.nokse22.Exhibit.desktop.in:3
 msgid "3D Model Viewer"
 msgstr "Visualizzatore di modelli 3D"
 
-#: data/io.github.nokse22.Exhibit.metainfo.xml.in:8
+#: data/io.github.nokse22.Exhibit.desktop.in:10
+msgid "fbx;step;stl;dcm;ex2;gml;obj;3ds;gltf;pbr;rendering;3d-model;3d-viewer;"
+msgstr ""
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:8 data/ui/window.ui:86
 msgid "Preview your 3D models"
 msgstr "Visualizza l'anteprima dei tuoi modelli 3D"
 
 #: data/io.github.nokse22.Exhibit.metainfo.xml.in:10
+#, fuzzy
+#| msgid ""
+#| "Based on the F3D library that supports many file formats, from digital "
+#| "content to scientific datasets including glTF, USD, STL, STEP, PLY, OBJ, "
+#| "FBX, Alembic and many more. Drag and drop 3d models into the app and "
+#| "export an image of the 3d model. It supports tone mapping, ambient "
+#| "occlusion, anti aliasing and more. You can use an HDRI image or a custom "
+#| "color as a background."
 msgid ""
-"Based on the F3D library that supports many file formats, from digital "
-"content to scientific datasets including glTF, USD, STL, STEP, PLY, OBJ, "
-"FBX, Alembic and many more. Drag and drop 3d models into the app and export "
-"an image of the 3d model. It supports tone mapping, ambient occlusion, anti "
-"aliasing and more. You can use an HDRI image or a custom color as a "
-"background."
+"Based on the F3D library, it supports many file formats, from digital "
+"content to scientific datasets including glTF, STL, STEP, PLY, OBJ, FBX, "
+"USD, Alembic and many more. You can drag and drop 3d models into the app and "
+"export an image of the rendered model. Change many settings like tone "
+"mapping, ambient occlusion, anti aliasing, material roughness, metallic, "
+"color and opacity to achieve the perfect render. You can use an HDRI image "
+"or a custom color as a background."
 msgstr ""
-"Basato sulla libreria F3D che supporta moltissimi formati di file, dal contenuto "
-"digitale di set di dati scientifici tra cui glTF, USD, STL, STEP, PLY, OBJ, "
-"FBX, Alembic e molti altri. Trascina e rilascia i modelli 3D nell'app ed esporta"
-"un'immagine del modello 3d. Supporta la mappatura dei toni, l'occlusione ambientale, l'anti "
-"aliasing e altro ancora. Puoi utilizzare un'immagine HDRI o un colore personalizzato come "
-"sfondo."
-
-#: data/io.github.nokse22.Exhibit.metainfo.xml.in:42
-msgid "Planetary Reducer"
-msgstr "Riduttore planetario"
+"Basato sulla libreria F3D che supporta moltissimi formati di file, dal "
+"contenuto digitale di set di dati scientifici tra cui glTF, USD, STL, STEP, "
+"PLY, OBJ, FBX, Alembic e molti altri. Trascina e rilascia i modelli 3D "
+"nell'app ed esportaun'immagine del modello 3d. Supporta la mappatura dei "
+"toni, l'occlusione ambientale, l'anti aliasing e altro ancora. Puoi "
+"utilizzare un'immagine HDRI o un colore personalizzato come sfondo."
 
 #: data/io.github.nokse22.Exhibit.metainfo.xml.in:46
-msgid "Nissan Fairlady"
+msgid "3D Benchy"
 msgstr ""
 
-#: data/io.github.nokse22.Exhibit.metainfo.xml.in:50
-msgid "Retro Computer Setup with a HDRI background"
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:51
+#, fuzzy
+#| msgid "Retro Computer Setup with a HDRI background"
+msgid "Retro Computer Setup with a HDRI skybox"
 msgstr "Configurazione del computer retrò con sfondo HDRI"
 
-#: data/io.github.nokse22.Exhibit.metainfo.xml.in:54
-msgid "Benchy with dark theme"
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:56
+msgid "Green Metallic Suzanne"
+msgstr ""
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:61
+msgid "Cow with an HDRI background and dark theme"
+msgstr ""
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:66
+msgid "Vase 3d scan with HDRI skybox"
+msgstr ""
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:71
+#, fuzzy
+#| msgid "Benchy with dark theme"
+msgid "Point cloud of a boat with dark theme"
 msgstr "Panchina con tema scuro"
 
-#: src/window.py:293
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:76
+#, fuzzy
+#| msgid "Benchy with dark theme"
+msgid "Rigged model showing armature with dark theme"
+msgstr "Panchina con tema scuro"
+
+#: src/main.py:129
+msgid "Checkout F3D"
+msgstr ""
+
+#: src/main.py:131
+msgid "Donate with Ko-Fi"
+msgstr ""
+
+#: src/main.py:132
+msgid "Donate with Github"
+msgstr ""
+
+#: src/window.py:817
+msgid "All supported formats"
+msgstr ""
+
+#: src/window.py:826
 msgid "Open File"
 msgstr "Apri file"
 
-#: src/window.py:341
-msgid "Can't open "
+#: src/window.py:847
+#, fuzzy
+#| msgid "Load"
+msgid "Loading {}"
+msgstr "Carica"
+
+#: src/window.py:917
+#, fuzzy
+#| msgid "Exhibit"
+msgid "Exhibit - {}"
+msgstr "Exhibit"
+
+#: src/window.py:942
+#, fuzzy
+#| msgid "Can't open "
+msgid "Can't open"
 msgstr "Impossibile aprire"
 
-#: src/window.py:374
+#: src/window.py:958
 msgid "Save File"
 msgstr "Salva file"
 
-#: src/window.py:375
-msgid "image.png"
-msgstr "immagine.png"
+#: src/window.py:1065
+msgid "Stop"
+msgstr ""
 
-#: src/window.py:576
-msgid "Open Skybox File"
-msgstr "Apri il file Skybox"
+#: src/window.py:1068
+msgid "Start"
+msgstr ""
 
-#: data/window.ui:27
-msgid "Reset to Bounds"
-msgstr "Ripristina i limiti"
-
-#: data/window.ui:35
-msgid "Toggle Orthographic"
-msgstr "Attiva/disattiva ortografica"
-
-#: data/window.ui:43
+#: data/ui/window.ui:63 data/ui/window.ui:223 data/ui/window.ui:230
+#: data/ui/window.ui:838
 msgid "Menu"
 msgstr "Menù"
 
-#: data/window.ui:76
+#: data/ui/window.ui:82
 msgid "Load"
 msgstr "Carica"
 
-#: data/window.ui:80
-msgid "Load any file to view it in 3D"
-msgstr "Carica qualsiasi file per visualizzarlo in 3D"
+#: data/ui/window.ui:110
+msgid "Try Another"
+msgstr ""
 
-#: data/window.ui:145
-msgid "_Open New Window"
-msgstr "_Apri una nuova finestra"
+#: data/ui/window.ui:114
+msgid "Couldn't load the file"
+msgstr ""
 
-#: data/window.ui:151
-msgid "_Load New Model"
-msgstr "_Carica nuovo modello"
+#: data/ui/window.ui:118
+msgid "Error Loading File"
+msgstr ""
 
-#: data/window.ui:157
-msgid "_Save As Image"
-msgstr "_Salva come immagine"
+#: data/ui/window.ui:216
+msgid "Close Sidebar"
+msgstr ""
 
-#: data/window.ui:163
-msgid "_Preferences"
-msgstr "_Preferenze"
-
-#: data/window.ui:167
-msgid "_Keyboard Shortcuts"
-msgstr "_Scorciatoie da tastiera"
-
-#: data/window.ui:171
-msgid "_About Exhibit"
-msgstr "_Informazioni su Exhibit"
-
-#: data/preferences.ui:12 data/preferences.ui:17
+#: data/ui/window.ui:253
 msgid "Render"
 msgstr "Rendering"
 
-#: data/preferences.ui:22
+#: data/ui/window.ui:267
+#, fuzzy
+#| msgid "Render"
+msgid "Rendering"
+msgstr "Rendering"
+
+#: data/ui/window.ui:272
 msgid "Translucency"
 msgstr "Traslucenza"
 
-#: data/preferences.ui:29
+#: data/ui/window.ui:279
 msgid "Tone Mapping"
 msgstr "Mappatura dei toni"
 
-#: data/preferences.ui:30
+#: data/ui/window.ui:280
 msgid "Map colors properly to the monitor colors"
 msgstr "Mappa i colori correttamente sui colori del monitor"
 
-#: data/preferences.ui:37
+#: data/ui/window.ui:287
 msgid "Ambient Occlusion"
 msgstr "Occlusione ambientale"
 
-#: data/preferences.ui:38
+#: data/ui/window.ui:288
 msgid "Provides approximate shadows"
 msgstr "Fornisce ombre approssimative"
 
-#: data/preferences.ui:45
+#: data/ui/window.ui:295
 msgid "Anti Aliasing"
 msgstr "Anti Aliasing"
 
-#: data/preferences.ui:52
+#: data/ui/window.ui:302
 msgid "Light with HDRI"
 msgstr "Luce con HDRI"
 
-#: data/preferences.ui:53
+#: data/ui/window.ui:303
 msgid "Light the scene using a the loaded HDRI or the default"
 msgstr "Illumina la scena utilizzando l'HDRI caricato o quello predefinito"
 
-#: data/preferences.ui:68
+#: data/ui/window.ui:318
 msgid "Light Intensity"
 msgstr "Intensità luminosa"
 
-#: data/preferences.ui:77
-msgid "Edges"
-msgstr "Bordi"
+#: data/ui/window.ui:327
+#, fuzzy
+#| msgid "3D Model Viewer"
+msgid "Model Rendering"
+msgstr "Visualizzatore di modelli 3D"
 
-#: data/preferences.ui:82
-msgid "Show Edges"
+#: data/ui/window.ui:332
+#, fuzzy
+#| msgid "Show Edges"
+msgid "Show All Edges"
 msgstr "Mostra bordi"
 
-#: data/preferences.ui:89
+#: data/ui/window.ui:339
 msgid "Edges Width"
 msgstr "Larghezza dei bordi"
 
-#: data/preferences.ui:109
+#: data/ui/window.ui:359
+#, fuzzy
+#| msgid "Show Edges"
+msgid "Show Point Sprites"
+msgstr "Mostra bordi"
+
+#: data/ui/window.ui:364
+msgid "Point Sprites Type"
+msgstr ""
+
+#: data/ui/window.ui:368
+#, fuzzy
+#| msgid "Show Edges"
+msgid "Sphere"
+msgstr "Mostra bordi"
+
+#: data/ui/window.ui:369
+msgid "Gaussian"
+msgstr ""
+
+#: data/ui/window.ui:377
+msgid "Sprite Size"
+msgstr ""
+
+#: data/ui/window.ui:390
+msgid "Points Size"
+msgstr ""
+
+#: data/ui/window.ui:413
+msgid "Model"
+msgstr ""
+
+#: data/ui/window.ui:427
+msgid "Material"
+msgstr ""
+
+#: data/ui/window.ui:432
+msgid "Model Metallic"
+msgstr ""
+
+#: data/ui/window.ui:448
+msgid "Model Roughness"
+msgstr ""
+
+#: data/ui/window.ui:465
+msgid "Model Opacity"
+msgstr ""
+
+#: data/ui/window.ui:483
+msgid "Color"
+msgstr ""
+
+#: data/ui/window.ui:489
+msgid "Coloration"
+msgstr ""
+
+#: data/ui/window.ui:493
+msgid "Custom"
+msgstr ""
+
+#: data/ui/window.ui:494
+msgid "Normal"
+msgstr ""
+
+#: data/ui/window.ui:495
+msgid "Magnitude"
+msgstr ""
+
+#: data/ui/window.ui:496
+#, fuzzy
+#| msgid "Up Direction"
+msgid "Direct"
+msgstr "Direzione verso l'alto"
+
+#: data/ui/window.ui:506 data/ui/window.ui:513
+msgid "Model Color"
+msgstr ""
+
+#: data/ui/window.ui:527
+msgid "Show Armature"
+msgstr ""
+
+#: data/ui/window.ui:542
 msgid "Scene"
 msgstr "Scena"
 
-#: data/preferences.ui:114
+#: data/ui/window.ui:556
 msgid "Grid"
 msgstr "Griglia"
 
-#: data/preferences.ui:119
+#: data/ui/window.ui:561
 msgid "View Grid"
 msgstr "Vista griglia"
 
-#: data/preferences.ui:126
+#: data/ui/window.ui:568
 msgid "Grid Absolute"
 msgstr "griglia assoluta"
 
-#: data/preferences.ui:135
+#: data/ui/window.ui:577
 msgid "Background"
 msgstr "Sfondo"
 
-#: data/preferences.ui:140
-msgid "HDRI as Backgound"
+#: data/ui/window.ui:582
+#, fuzzy
+#| msgid "HDRI as Backgound"
+msgid "HDRI as Background"
 msgstr "HDRI come sfondo"
 
-#: data/preferences.ui:141
+#: data/ui/window.ui:583
 msgid "Use the loaded HDRI or the default one as a background"
 msgstr "Utilizza l'HDRI caricato o quello predefinito come sfondo"
 
-#: data/preferences.ui:148
+#: data/ui/window.ui:590
 msgid "HDRI Image"
 msgstr "Immagine HDRI"
 
-#: data/preferences.ui:161
+#: data/ui/window.ui:597
 msgid "Blur Background"
 msgstr "Sfocatura dello sfondo"
 
-#: data/preferences.ui:168
+#: data/ui/window.ui:604
 msgid "Blur Circle Of Confusion"
 msgstr "Cerchio Sfocato Di Confusione"
 
-#: data/preferences.ui:190
+#: data/ui/window.ui:626
 msgid "Use Custom Color"
 msgstr "Usa colore personalizzato"
 
-#: data/preferences.ui:191
+#: data/ui/window.ui:627
 msgid "HDRI background takes priority over this"
 msgstr "Lo sfondo HDRI ha la priorità su questo"
 
-#: data/preferences.ui:198
+#: data/ui/window.ui:634 data/ui/window.ui:641
 msgid "Background Color"
 msgstr "Colore di sfondo"
 
-#: data/preferences.ui:199
-msgid "Transparent colors not supported"
-msgstr "Colori trasparenti non supportati"
-
-#: data/preferences.ui:219
+#: data/ui/window.ui:661
 msgid "More"
 msgstr "Altro"
 
-#: data/preferences.ui:225
+#: data/ui/window.ui:675
 msgid "Navigation"
 msgstr "Navigazione"
 
-#: data/preferences.ui:230
-msgid "Alwayas Point Up"
+#: data/ui/window.ui:680
+#, fuzzy
+#| msgid "Alwayas Point Up"
+msgid "Always Point Up"
 msgstr "Punta sempre verso l'alto"
 
-#: data/preferences.ui:237
+#: data/ui/window.ui:687
 msgid "Up Direction"
 msgstr "Direzione verso l'alto"
 
-#: data/preferences.ui:242
+#: data/ui/window.ui:688
+msgid "Changing it will reload the file"
+msgstr ""
+
+#: data/ui/window.ui:692
 msgid "- X"
 msgstr ""
 
-#: data/preferences.ui:243
+#: data/ui/window.ui:693
 msgid "+ X"
 msgstr ""
 
-#: data/preferences.ui:244
+#: data/ui/window.ui:694
 msgid "- Y"
 msgstr ""
 
-#: data/preferences.ui:245
+#: data/ui/window.ui:695
 msgid "+ Y"
 msgstr ""
 
-#: data/preferences.ui:246
+#: data/ui/window.ui:696
 msgid "- Z"
 msgstr ""
 
-#: data/preferences.ui:247
+#: data/ui/window.ui:697
 msgid "+ Z"
 msgstr ""
 
-#: data/preferences.ui:259
-msgid "Other Settings"
-msgstr "Altre impostazioni"
+#: data/ui/window.ui:707
+#, fuzzy
+#| msgid "Navigation"
+msgid "Animation"
+msgstr "Navigazione"
 
-#: data/preferences.ui:264
-msgid "Automatic Up Direction"
+#: data/ui/window.ui:710
+msgid "Animation Index"
+msgstr ""
+
+#: data/ui/window.ui:731
+msgid "Play"
+msgstr ""
+
+#: data/ui/window.ui:756
+#, fuzzy
+#| msgid "Load"
+msgid "Loading"
+msgstr "Carica"
+
+#: data/ui/window.ui:761
+#, fuzzy
+#| msgid "Automatic Up Direction"
+msgid "Automatic Settings"
 msgstr "Direzione automatica verso l'alto"
 
-#: data/preferences.ui:265
-msgid "When loading choose the best up direction"
+#: data/ui/window.ui:762
+#, fuzzy
+#| msgid "When loading choose the best up direction"
+msgid "When loading choose the best presets for the file"
 msgstr "Durante il caricamento scegliere la migliore direzione verso l'alto"
 
-#: data/preferences.ui:272
-msgid "Save Settings"
+#: data/ui/window.ui:775
+msgid "Reload On Change"
+msgstr ""
+
+#: data/ui/window.ui:776
+msgid "Check for file change"
+msgstr ""
+
+#: data/ui/window.ui:826
+msgid "Reveal Sidebar"
+msgstr ""
+
+#: data/ui/window.ui:849
+msgid "Reset to Bounds"
+msgstr "Ripristina i limiti"
+
+#: data/ui/window.ui:911
+msgid "Follow System"
+msgstr ""
+
+#: data/ui/window.ui:916
+msgid "Light Theme"
+msgstr ""
+
+#: data/ui/window.ui:921
+msgid "Dark Theme"
+msgstr ""
+
+#: data/ui/window.ui:926 data/ui/window.ui:990
+#, fuzzy
+#| msgid "_Open New Window"
+msgid "_New Window"
+msgstr "_Apri una nuova finestra"
+
+#: data/ui/window.ui:930
+#, fuzzy
+#| msgid "_Load New Model"
+msgid "_Load New File"
+msgstr "_Carica nuovo modello"
+
+#: data/ui/window.ui:938
+msgid "_Export Image"
+msgstr ""
+
+#: data/ui/window.ui:942
+msgid "_Open In External App"
+msgstr ""
+
+#: data/ui/window.ui:948 data/ui/window.ui:996
+msgid "_Help"
+msgstr ""
+
+#: data/ui/window.ui:952 data/ui/window.ui:1000
+msgid "_Keyboard Shortcuts"
+msgstr "_Scorciatoie da tastiera"
+
+#: data/ui/window.ui:956 data/ui/window.ui:1004
+msgid "_About Exhibit"
+msgstr "_Informazioni su Exhibit"
+
+#: data/ui/window.ui:966
+#, fuzzy
+#| msgid "Save Settings"
+msgid "Save Current Settings"
 msgstr "Salva le impostazioni"
 
-#: data/preferences.ui:282
-msgid "Restore Settings"
-msgstr "Ripristino delle impostazioni"
+#: data/ui/window.ui:972
+#, fuzzy
+#| msgid "Toggle Orthographic"
+msgid "Orthonographic"
+msgstr "Attiva/disattiva ortografica"
 
-#: data/preferences.ui:298
-msgid "Reset Settings"
-msgstr "Ripristina impostazioni"
+#: data/ui/window.ui:978
+#, fuzzy
+#| msgid "Open File"
+msgid "Open HDRI Folder"
+msgstr "Apri file"
 
-#: data/preferences.ui:307
-msgid ""
-"Preferences are per window basis, if you save them next time you will open "
-"the app it will start with these preferences"
+#: data/ui/window.ui:982
+msgid "Open Configurations Folder"
 msgstr ""
-"Le preferenze sono per finestra, se le salvi la prossima volta che le aprirai "
-"l'app partirà con queste preferenze"
+
+#: data/ui/window.ui:1037
+msgid "Comma separated list of the supported extensions"
+msgstr ""
+
+#: data/ui/file_row.ui:83
+#, fuzzy
+#| msgid "Open File"
+msgid "Open HDRI"
+msgstr "Apri file"
+
+#, fuzzy
+#~| msgid "Benchy with dark theme"
+#~ msgid "Nissan Fairlady with dark theme"
+#~ msgstr "Panchina con tema scuro"
+
+#, fuzzy
+#~| msgid "Load"
+#~ msgid "Load type"
+#~ msgstr "Carica"
+
+#~ msgid "Transparent colors not supported"
+#~ msgstr "Colori trasparenti non supportati"
+
+#~ msgid "Planetary Reducer"
+#~ msgstr "Riduttore planetario"
+
+#~ msgid "image.png"
+#~ msgstr "immagine.png"
+
+#~ msgid "Open Skybox File"
+#~ msgstr "Apri il file Skybox"
+
+#~ msgid "Load any file to view it in 3D"
+#~ msgstr "Carica qualsiasi file per visualizzarlo in 3D"
+
+#~ msgid "_Save As Image"
+#~ msgstr "_Salva come immagine"
+
+#~ msgid "_Preferences"
+#~ msgstr "_Preferenze"
+
+#~ msgid "Edges"
+#~ msgstr "Bordi"
+
+#~ msgid "Other Settings"
+#~ msgstr "Altre impostazioni"
+
+#~ msgid "Restore Settings"
+#~ msgstr "Ripristino delle impostazioni"
+
+#~ msgid "Reset Settings"
+#~ msgstr "Ripristina impostazioni"
+
+#~ msgid ""
+#~ "Preferences are per window basis, if you save them next time you will "
+#~ "open the app it will start with these preferences"
+#~ msgstr ""
+#~ "Le preferenze sono per finestra, se le salvi la prossima volta che le "
+#~ "aprirai l'app partirà con queste preferenze"
