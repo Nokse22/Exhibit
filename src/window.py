@@ -241,15 +241,15 @@ class Viewer3dWindow(Adw.ApplicationWindow):
             self.periodic_check_for_file_change)
 
         # Saving all the useful paths
-        data_home = os.environ["XDG_DATA_HOME"]
+        data_home = os.environ.get("XDG_DATA_HOME", os.path.expanduser("~/.local/share"))
 
-        self.hdri_path = data_home + "/HDRIs/"
-        self.hdri_thumbnails_path = self.hdri_path + "/thumbnails/"
+        self.hdri_path = os.path.join(data_home, "HDRIs/")
+        self.hdri_thumbnails_path = os.path.join(self.hdri_path, "thumbnails/")
 
-        self.user_configurations_path = data_home + "/configurations/"
+        self.user_configurations_path = os.path.join(data_home, "configurations/")
 
         os.makedirs(self.user_configurations_path, exist_ok=True)
-        os.makedirs(data_home + "/other files/", exist_ok=True)
+        os.makedirs(os.path.join(data_home, "other files/"), exist_ok=True)
 
         # Create the hdri folder and add the default if there are none
         self.setup_hdri_folder()

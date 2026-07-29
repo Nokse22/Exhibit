@@ -38,6 +38,30 @@ View 3D models, powered by the [F3D](https://github.com/f3d-app/f3d) library tha
 <img height='80' alt='Get it on Flathub on Flathub' src='https://flathub.org/api/badge'/>
 </a>
 
+### Debian Package (.deb)
+
+A Debian package is available for Debian-based distributions (Ubuntu, Linux Mint, etc.). Download the latest `.deb` file from the [Actions page](https://github.com/Nokse22/Exhibit/actions) under the "Build deb package" workflow.
+
+**Installation:**
+
+```sh
+sudo dpkg -i exhibit_1.0-1_amd64.deb
+```
+
+**Python Dependencies:**
+
+The deb package requires Python dependencies that are not bundled due to version compatibility. Install them with pip:
+
+```sh
+pip install --break-system-packages f3d Wand
+```
+
+**Note:** The `--break-system-packages` flag is used to install system-wide. Alternatively, you can use a virtual environment or `pipx` if preferred.
+
+**Troubleshooting:**
+
+If you encounter any issues during installation or runtime, please refer to the [PACKAGING_TROUBLESHOOTING.md](PACKAGING_TROUBLESHOOTING.md) guide for solutions to common problems.
+
 ### From latest build
 
 Go to the [Actions page](https://github.com/Nokse22/Exhibit/actions), click on the latest working build and download the Artifact.

@@ -1,0 +1,7 @@
+exhibit (1.0-1) unstable; urgency=medium
+
+  * Initial Debian package release.
+  * Add GitHub Actions workflow for automated building.
+  * Fix XDG environment variable handling.
+
+ -- nokse22 <nokse22@users.noreply.github.com>  Tue, 28 Jul 2026 22:00:00 -0400

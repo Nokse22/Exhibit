@@ -1,0 +1,37 @@
+Source: exhibit
+Section: utils
+Priority: optional
+Maintainer: nokse22 <nokse22@users.noreply.github.com>
+Build-Depends: debhelper-compat (= 13),
+                 meson,
+                 ninja-build,
+                 python3,
+                 python3-gi,
+                 libglib2.0-dev,
+                 libgtk-4-dev,
+                 libadwaita-1-dev,
+                 desktop-file-utils,
+                 appstream,
+                 gettext,
+                 itstool,
+                 librsvg2-bin,
+                 libvtk9-dev,
+                 libopengl-dev,
+                 cmake,
+                 python3-pybind11
+Standards-Version: 4.6.2
+Homepage: https://github.com/Nokse22/Exhibit
+
+Package: exhibit
+Architecture: any
+Depends: ${shlibs:Depends},
+         ${misc:Depends},
+         python3,
+         python3-gi,
+         libgtk-4-1,
+         libadwaita-1-0,
+         libvtk9-1,
+         libopengl1
+Description: 3D model viewer for GNOME
+ Exhibit is a 3D model viewer for GNOME that uses f3d for rendering.
+ It supports various 3D file formats and provides a clean, modern interface.

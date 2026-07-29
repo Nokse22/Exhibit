@@ -1,0 +1,16 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	meson setup builddir --prefix=/usr
+
+override_dh_auto_build:
+	ninja -C builddir
+
+override_dh_auto_install:
+	DESTDIR=$(CURDIR)/debian/exhibit ninja -C builddir install
+
+override_dh_auto_clean:
+	rm -rf builddir

@@ -24,8 +24,8 @@ class CustomFormatter(logging.Formatter):
 
 def init():
     global logger
-    data_home = os.environ["XDG_DATA_HOME"]
-    log_path = data_home + "/log.txt"
+    data_home = os.environ.get("XDG_DATA_HOME", os.path.expanduser("~/.local/share"))
+    log_path = os.path.join(data_home, "log.txt")
 
     if os.path.exists(log_path):
         os.remove(log_path)

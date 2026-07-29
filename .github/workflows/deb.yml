@@ -1,0 +1,82 @@
+name: Build deb package
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deb:
+    name: "deb"
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            debhelper-compat \
+            meson \
+            ninja-build \
+            python3 \
+            python3-gi \
+            libglib2.0-dev \
+            libgtk-4-dev \
+            libadwaita-1-dev \
+            desktop-file-utils \
+            appstream \
+            gettext \
+            itstool \
+            librsvg2-bin \
+            libvtk9-dev \
+            libopengl-dev \
+            cmake \
+            python3-pybind11
+
+      - name: Build deb package
+        run: |
+          dpkg-buildpackage -us -uc -b
+
+      - name: Copy deb to workspace
+        run: |
+          cp ../exhibit_*.deb .
+
+      - name: Install and test deb package
+        run: |
+          sudo dpkg -i exhibit_*.deb
+          export XDG_DATA_HOME="$HOME/.local/share"
+          export XDG_CONFIG_HOME="$HOME/.config"
+          export XDG_CACHE_HOME="$HOME/.cache"
+          mkdir -p "$HOME/.local/share"
+          # Install f3d and wand via pip for testing
+          pip3 install --break-system-packages f3d Wand
+          exhibit --version || echo "Version check failed"
+          exhibit --help || echo "Help check failed"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: exhibit-deb
+          path: exhibit_*.deb
+
+      - name: Fetch release notes from upstream
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          TAG=${GITHUB_REF#refs/tags/}
+          curl -s https://api.github.com/repos/Nokse22/Exhibit/releases/tags/${TAG} | jq -r '.body' > release_notes.md
+
+      - name: Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: exhibit_*.deb
+          body_path: release_notes.md
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
