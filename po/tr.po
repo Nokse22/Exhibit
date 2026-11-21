@@ -1,0 +1,466 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the Exhibit package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Exhibit\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-01 19:11+0200\n"
+"PO-Revision-Date: 2026-11-21 20:15+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: tr_TR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.10\n"
+
+#: data/io.github.nokse22.Exhibit.desktop.in:2
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:7 src/window.py:444
+#: src/window.ui:11 src/window.ui:53 src/window.ui:90 src/window.ui:173
+msgid "Exhibit"
+msgstr "Exhibit"
+
+#: data/io.github.nokse22.Exhibit.desktop.in:3
+msgid "3D Model Viewer"
+msgstr "3B Model Görüntüleyici"
+
+#: data/io.github.nokse22.Exhibit.desktop.in:10
+msgid "fbx;step;stl;dcm;ex2;gml;obj;3ds;gltf;pbr;rendering;3d-model;3d-viewer;"
+msgstr ""
+"fbx;step;stl;dcm;ex2;gml;obj;3ds;gltf;pbr;render;3b-model;3b-görüntüleyici;"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:8 src/window.ui:86
+msgid "Preview your 3D models"
+msgstr "3B modellerinizi önizleyin"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:10
+msgid ""
+"Based on the F3D library, it supports many file formats, from digital content "
+"to scientific datasets including glTF, STL, STEP, PLY, OBJ, FBX, USD, Alembic "
+"and many more. You can drag and drop 3d models into the app and export an "
+"image of the rendered model. Change many settings like tone mapping, ambient "
+"occlusion, anti aliasing, material roughness, metallic, color and opacity to "
+"achieve the perfect render. You can use an HDRI image or a custom color as a "
+"background."
+msgstr ""
+"F3D kütüphanesine dayanır; glTF, STL, STEP, PLY, OBJ, FBX, USD, Alembic ve "
+"daha birçokları dahil olmak üzere dijital içerikten bilimsel veri kümelerine "
+"kadar birçok dosya biçimini destekler. 3B modelleri uygulamaya sürükleyip "
+"bırakabilir ve işlenen modelin bir görüntüsünü dışa aktarabilirsiniz. "
+"Mükemmel render'ı elde etmek için ton eşleme, ortam gölgelemesi, kenar "
+"yumuşatma, malzeme pürüzlülüğü, metaliklik, renk ve opaklık gibi birçok ayarı "
+"değiştirebilirsiniz. Arka plan olarak bir HDRI görüntüsü veya özel bir renk "
+"kullanabilirsiniz."
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:50
+msgid "3D Benchy"
+msgstr "3B Benchy"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:56
+msgid "Retro Computer Setup with a HDRI skybox"
+msgstr "HDRI skybox'lu Retro Bilgisayar Düzeni"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:62
+msgid "Green Metallic Suzanne"
+msgstr "Yeşil Metalik Suzanne"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:68
+msgid "Cow with an HDRI background and dark theme"
+msgstr "HDRI arka planlı ve koyu temalı inek"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:74
+msgid "Vase 3d scan with HDRI skybox"
+msgstr "HDRI skybox ile 3B vazo taraması"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:80
+msgid "Point cloud of a boat with dark theme"
+msgstr "Koyu temalı bir teknenin nokta bulutu"
+
+#: data/io.github.nokse22.Exhibit.metainfo.xml.in:86
+msgid "Rigged model showing armature with dark theme"
+msgstr "Koyu temada iskeleti gösteren riglenmiş model"
+
+#: src/main.py:124
+msgid "Checkout F3D"
+msgstr "F3D'yi inceleyin"
+
+#: src/main.py:126
+msgid "Donate with Ko-Fi"
+msgstr "Ko-Fi ile bağış yapın"
+
+#: src/main.py:127
+msgid "Donate with Github"
+msgstr "GitHub ile bağış yapın"
+
+#: src/window.py:373
+msgid "All supported formats"
+msgstr "Desteklenen tüm biçimler"
+
+#: src/window.py:384
+msgid "Open File"
+msgstr "Dosya Aç"
+
+#: src/window.py:417
+#, python-brace-format
+msgid "Loading {}"
+msgstr "Yükleniyor {}"
+
+#: src/window.py:427
+#, python-brace-format
+msgid "Exhibit - {}"
+msgstr "Exhibit - {}"
+
+#: src/window.py:449
+msgid "Can't open"
+msgstr "Açılamıyor"
+
+#: src/window.py:463
+msgid "Save File"
+msgstr "Dosyayı Kaydet"
+
+#: src/window.py:569
+msgid "Stop"
+msgstr "Durdur"
+
+#: src/window.py:572
+msgid "Start"
+msgstr "Başlat"
+
+#: src/window.ui:63 src/window.ui:190 src/window.ui:197 src/window.ui:804
+msgid "Menu"
+msgstr "Menü"
+
+#: src/window.ui:82
+msgid "Load"
+msgstr "Yükle"
+
+#: src/window.ui:110
+msgid "Try Another"
+msgstr "Başka Bir Dosya Dene"
+
+#: src/window.ui:114
+msgid "Couldn't load the file"
+msgstr "Dosya yüklenemedi"
+
+#: src/window.ui:118
+msgid "Error Loading File"
+msgstr "Dosya Yükleme Hatası"
+
+#: src/window.ui:183
+msgid "Close Sidebar"
+msgstr "Kenar Çubuğunu Kapat"
+
+#: src/window.ui:220
+msgid "Render"
+msgstr "Render"
+
+#: src/window.ui:234
+msgid "Rendering"
+msgstr "Render Ayarları"
+
+#: src/window.ui:239
+msgid "Translucency"
+msgstr "Yarı Saydamlık"
+
+#: src/window.ui:247
+msgid "Tone Mapping"
+msgstr "Ton Eşleme"
+
+#: src/window.ui:248
+msgid "Map colors properly to the monitor colors"
+msgstr "Renkleri monitör renklerine doğru şekilde eşler"
+
+#: src/window.ui:256
+msgid "Ambient Occlusion"
+msgstr "Ortam Gölgelemesi"
+
+#: src/window.ui:257
+msgid "Provides approximate shadows"
+msgstr "Yaklaşık gölgeler sağlar"
+
+#: src/window.ui:265
+msgid "Anti Aliasing"
+msgstr "Kenar Yumuşatma"
+
+#: src/window.ui:273
+msgid "Light with HDRI"
+msgstr "HDRI ile Aydınlat"
+
+#: src/window.ui:274
+msgid "Light the scene using a the loaded HDRI or the default"
+msgstr "Sahneyi yüklenen HDRI veya varsayılan olanla aydınlat"
+
+#: src/window.ui:290
+msgid "Light Intensity"
+msgstr "Işık Yoğunluğu"
+
+#: src/window.ui:299
+msgid "Model Rendering"
+msgstr "Model Render"
+
+#: src/window.ui:304
+msgid "Show All Edges"
+msgstr "Tüm Kenarları Göster"
+
+#: src/window.ui:312
+msgid "Edges Width"
+msgstr "Kenar Genişliği"
+
+#: src/window.ui:332
+msgid "Show Point Sprites"
+msgstr "Nokta Sprite'larını Göster"
+
+#: src/window.ui:338
+msgid "Point Sprites Type"
+msgstr "Nokta Sprite Türü"
+
+#: src/window.ui:342
+msgid "Sphere"
+msgstr "Küre"
+
+#: src/window.ui:343
+msgid "Gaussian"
+msgstr "Gauss"
+
+#: src/window.ui:351
+msgid "Sprite Size"
+msgstr "Sprite Boyutu"
+
+#: src/window.ui:364
+msgid "Points Size"
+msgstr "Nokta Boyutu"
+
+#: src/window.ui:387
+msgid "Model"
+msgstr "Model"
+
+#: src/window.ui:401
+msgid "Material"
+msgstr "Malzeme"
+
+#: src/window.ui:406
+msgid "Model Metallic"
+msgstr "Model Metalikliği"
+
+#: src/window.ui:422
+msgid "Model Roughness"
+msgstr "Model Pürüzlülüğü"
+
+#: src/window.ui:439
+msgid "Model Opacity"
+msgstr "Model Opaklığı"
+
+#: src/window.ui:457
+msgid "Color"
+msgstr "Renk"
+
+#: src/window.ui:463
+msgid "Coloration"
+msgstr "Renklendirme"
+
+#: src/window.ui:467
+msgid "Custom"
+msgstr "Özel"
+
+#: src/window.ui:468
+msgid "Normal"
+msgstr "Normal"
+
+#: src/window.ui:469
+msgid "Magnitude"
+msgstr "Büyüklük"
+
+#: src/window.ui:470
+msgid "Direct"
+msgstr "Doğrudan"
+
+#: src/window.ui:480 src/window.ui:487
+msgid "Model Color"
+msgstr "Model Rengi"
+
+#: src/window.ui:501
+msgid "Show Armature"
+msgstr "İskeleti Göster"
+
+#: src/window.ui:517
+msgid "Scene"
+msgstr "Sahne"
+
+#: src/window.ui:531
+msgid "Grid"
+msgstr "Izgara"
+
+#: src/window.ui:536
+msgid "View Grid"
+msgstr "Izgarayı Göster"
+
+#: src/window.ui:544
+msgid "Grid Absolute"
+msgstr "Mutlak Izgara"
+
+#: src/window.ui:554
+msgid "Background"
+msgstr "Arka Plan"
+
+#: src/window.ui:559
+msgid "HDRI as Background"
+msgstr "Arka Plan Olarak HDRI"
+
+#: src/window.ui:560
+msgid "Use the loaded HDRI or the default one as a background"
+msgstr "Yüklenen HDRI'yi veya varsayılan olanı arka plan olarak kullan"
+
+#: src/window.ui:568
+msgid "HDRI Image"
+msgstr "HDRI Görüntüsü"
+
+#: src/window.ui:576
+msgid "Blur Background"
+msgstr "Arka Planı Bulanıklaştır"
+
+#: src/window.ui:584
+msgid "Blur Circle Of Confusion"
+msgstr "Bulanıklık Çemberi"
+
+#: src/window.ui:606
+msgid "Use Custom Color"
+msgstr "Özel Renk Kullan"
+
+#: src/window.ui:607
+msgid "HDRI background takes priority over this"
+msgstr "HDRI arka planı bunun yerine önceliklidir"
+
+#: src/window.ui:614 src/window.ui:621
+msgid "Background Color"
+msgstr "Arka Plan Rengi"
+
+#: src/window.ui:641
+msgid "More"
+msgstr "Daha Fazla"
+
+#: src/window.ui:655
+msgid "Navigation"
+msgstr "Gezinme"
+
+#: src/window.ui:660
+msgid "Always Point Up"
+msgstr "Her Zaman Yukarıyı Göster"
+
+#: src/window.ui:668
+msgid "Up Direction"
+msgstr "Yukarı Yönü"
+
+#: src/window.ui:669
+msgid "Changing it will reload the file"
+msgstr "Değiştirilmesi dosyayı yeniden yükler"
+
+#: src/window.ui:676
+msgid "Animation"
+msgstr "Animasyon"
+
+#: src/window.ui:679
+msgid "Animation Index"
+msgstr "Animasyon Dizini"
+
+#: src/window.ui:701
+msgid "Play"
+msgstr "Oynat"
+
+#: src/window.ui:722
+msgid "Loading"
+msgstr "Yükleniyor"
+
+#: src/window.ui:727
+msgid "Automatic Settings"
+msgstr "Otomatik Ayarlar"
+
+#: src/window.ui:728
+msgid "When loading choose the best presets for the file"
+msgstr "Yüklerken dosya için en iyi ön ayarları seç"
+
+#: src/window.ui:741
+msgid "Reload On Change"
+msgstr "Değişiklikte Yeniden Yükle"
+
+#: src/window.ui:742
+msgid "Check for file change"
+msgstr "Dosya değişikliğini denetle"
+
+#: src/window.ui:792
+msgid "Reveal Sidebar"
+msgstr "Kenar Çubuğunu Göster"
+
+#: src/window.ui:815
+msgid "Reset to Bounds"
+msgstr "Sınırlara Sıfırla"
+
+#: src/window.ui:889
+msgid "Follow System"
+msgstr "Sistemi Takip Et"
+
+#: src/window.ui:894
+msgid "Light Theme"
+msgstr "Açık Tema"
+
+#: src/window.ui:899
+msgid "Dark Theme"
+msgstr "Koyu Tema"
+
+#: src/window.ui:904 src/window.ui:968
+msgid "_New Window"
+msgstr "_Yeni Pencere"
+
+#: src/window.ui:908
+msgid "_Load New File"
+msgstr "_Yeni Dosya Yükle"
+
+#: src/window.ui:912
+msgid "_Add File to Scene"
+msgstr "Sahneye _Dosya Ekle"
+
+#: src/window.ui:916
+msgid "_Export Image"
+msgstr "_Görüntü Dışa Aktar"
+
+#: src/window.ui:920
+msgid "_Open In External App"
+msgstr "_Harici Uygulamada Aç"
+
+#: src/window.ui:926 src/window.ui:974
+msgid "_Help"
+msgstr "_Yardım"
+
+#: src/window.ui:930 src/window.ui:978
+msgid "_Keyboard Shortcuts"
+msgstr "_Klavye Kısayolları"
+
+#: src/window.ui:934 src/window.ui:982
+msgid "_About Exhibit"
+msgstr "Exhibit _Hakkında"
+
+#: src/window.ui:944
+msgid "Save Current Settings"
+msgstr "Mevcut Ayarları Kaydet"
+
+#: src/window.ui:950
+msgid "Orthonographic"
+msgstr "Ortografik"
+
+#: src/window.ui:956
+msgid "Open HDRI Folder"
+msgstr "HDRI Klasörünü Aç"
+
+#: src/window.ui:960
+msgid "Open Configurations Folder"
+msgstr "Yapılandırmalar Klasörünü Aç"
+
+#: src/file_row.ui:83
+msgid "Open HDRI"
+msgstr "HDRI Aç"
+
+#: src/settings_dialog.ui:34
+msgid "Comma separated list of the supported extensions"
+msgstr "Desteklenen uzantıların virgülle ayrılmış listesi"
